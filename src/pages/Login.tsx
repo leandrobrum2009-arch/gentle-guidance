@@ -1,15 +1,36 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useAuth();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const { error } = await signIn(email, password);
+    setIsLoading(false);
+    if (error) {
+      toast({ title: "Erro ao entrar", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Bem-vindo de volta!" });
+      navigate("/");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -22,50 +43,34 @@ const Login = () => {
         >
           <div className="text-center">
             <h1 className="font-display text-2xl font-bold">Entrar</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Acesse sua conta para ver seus bilhetes
-            </p>
+            <p className="mt-1 text-sm text-muted-foreground">Acesse sua conta para ver seus bilhetes</p>
           </div>
 
-          <div className="rounded-xl border border-border/50 bg-card p-6 space-y-4">
+          <form onSubmit={handleSubmit} className="rounded-xl border border-border/50 bg-card p-6 space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">E-mail ou CPF</Label>
-              <Input id="email" placeholder="seu@email.com" />
+              <Label htmlFor="email">E-mail</Label>
+              <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="seu@email.com" required />
             </div>
-
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Senha</Label>
-                <a href="#" className="text-xs text-primary hover:underline">
-                  Esqueceu a senha?
-                </a>
+                <a href="#" className="text-xs text-primary hover:underline">Esqueceu a senha?</a>
               </div>
               <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  placeholder="Sua senha"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-                >
+                <Input id="password" type={showPassword ? "text" : "password"} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Sua senha" required />
+                <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
                   {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                 </button>
               </div>
             </div>
-
-            <Button className="w-full font-semibold" size="lg">
-              Entrar
+            <Button className="w-full font-semibold" size="lg" type="submit" disabled={isLoading}>
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
-          </div>
+          </form>
 
           <p className="text-center text-sm text-muted-foreground">
             Não tem conta?{" "}
-            <Link to="/cadastrar" className="font-semibold text-primary hover:underline">
-              Cadastre-se
-            </Link>
+            <Link to="/cadastrar" className="font-semibold text-primary hover:underline">Cadastre-se</Link>
           </p>
         </motion.div>
       </div>
