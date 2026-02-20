@@ -14,16 +14,316 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliates: {
+        Row: {
+          commission_rate: number
+          created_at: string
+          id: string
+          referral_code: string
+          total_earned: number
+          user_id: string
+        }
+        Insert: {
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          referral_code: string
+          total_earned?: number
+          user_id: string
+        }
+        Update: {
+          commission_rate?: number
+          created_at?: string
+          id?: string
+          referral_code?: string
+          total_earned?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      announcements: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          published_at: string
+          title: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          published_at?: string
+          title: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          published_at?: string
+          title?: string
+        }
+        Relationships: []
+      }
+      campaigns: {
+        Row: {
+          created_at: string
+          description: string | null
+          draw_date: string | null
+          id: string
+          image_url: string | null
+          ltp_code: string | null
+          slug: string
+          sold_tickets: number
+          status: string
+          subtitle: string | null
+          ticket_price: number
+          title: string
+          total_tickets: number
+          updated_at: string
+          urgency_tag: string | null
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          draw_date?: string | null
+          id?: string
+          image_url?: string | null
+          ltp_code?: string | null
+          slug: string
+          sold_tickets?: number
+          status?: string
+          subtitle?: string | null
+          ticket_price?: number
+          title: string
+          total_tickets?: number
+          updated_at?: string
+          urgency_tag?: string | null
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          draw_date?: string | null
+          id?: string
+          image_url?: string | null
+          ltp_code?: string | null
+          slug?: string
+          sold_tickets?: number
+          status?: string
+          subtitle?: string | null
+          ticket_price?: number
+          title?: string
+          total_tickets?: number
+          updated_at?: string
+          urgency_tag?: string | null
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          expires_at: string | null
+          id: string
+          paid_at: string | null
+          payment_status: string
+          pix_code: string | null
+          quantity: number
+          total_amount: number
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_status?: string
+          pix_code?: string | null
+          quantity?: number
+          total_amount?: number
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          paid_at?: string | null
+          payment_status?: string
+          pix_code?: string | null
+          quantity?: number
+          total_amount?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "orders_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          cpf: string | null
+          created_at: string
+          id: string
+          name: string
+          phone: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          cpf?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          phone?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          cpf?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          phone?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      tickets: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          number: string
+          order_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          number: string
+          order_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          number?: string
+          order_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tickets_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      winners: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          draw_date: string
+          id: string
+          phone_masked: string | null
+          prize_description: string
+          ticket_number: string
+          user_id: string | null
+          video_url: string | null
+          winner_name: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          draw_date: string
+          id?: string
+          phone_masked?: string | null
+          prize_description: string
+          ticket_number: string
+          user_id?: string | null
+          video_url?: string | null
+          winner_name: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          draw_date?: string
+          id?: string
+          phone_masked?: string | null
+          prize_description?: string
+          ticket_number?: string
+          user_id?: string | null
+          video_url?: string | null
+          winner_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "winners_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "moderator" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +450,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "moderator", "user"],
+    },
   },
 } as const
