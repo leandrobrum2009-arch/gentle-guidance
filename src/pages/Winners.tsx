@@ -1,11 +1,13 @@
 import { motion } from "framer-motion";
-import { Trophy } from "lucide-react";
+import { Trophy, Loader2 } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WinnerCard from "@/components/WinnerCard";
-import { mockWinners } from "@/data/mockData";
+import { useWinners } from "@/hooks/useData";
 
 const Winners = () => {
+  const { data: winners, isLoading } = useWinners();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -19,11 +21,17 @@ const Winners = () => {
           <h1 className="font-display text-2xl font-bold">Ganhadores</h1>
         </motion.div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          {mockWinners.map((winner, i) => (
-            <WinnerCard key={winner.id} winner={winner} index={i} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2">
+            {winners?.map((winner, i) => (
+              <WinnerCard key={winner.id} winner={winner} index={i} />
+            ))}
+          </div>
+        )}
       </div>
       <Footer />
     </div>
