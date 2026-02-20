@@ -12,6 +12,10 @@ import Winners from "./pages/Winners";
 import Announcements from "./pages/Announcements";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminCampaigns from "./pages/admin/Campaigns";
+import AdminOrders from "./pages/admin/Orders";
+import AdminWinners from "./pages/admin/Winners";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,10 @@ const App = () => (
             <Route path="/ganhadores" element={<Winners />} />
             <Route path="/comunicados" element={<Announcements />} />
             <Route path="/contato" element={<Support />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/campanhas" element={<AdminCampaigns />} />
+            <Route path="/admin/pedidos" element={<AdminOrders />} />
+            <Route path="/admin/ganhadores" element={<AdminWinners />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
