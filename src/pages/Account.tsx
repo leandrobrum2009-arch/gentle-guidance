@@ -42,26 +42,6 @@ export default function Account() {
     }
   }, [user]);
 
-  const markAsRead = async (id: string) => {
-    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
-    queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-  };
-
-  const deleteNotification = async (id: string) => {
-    await supabase.from("notifications").delete().eq("id", id);
-    toast.success("Notificação excluída");
-    queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-  };
-
-  const copyReferral = () => {
-    if (affiliate?.referral_code) {
-      const url = `${window.location.origin}/register?ref=${affiliate.referral_code}`;
-      navigator.clipboard.writeText(url);
-      toast.success("Link de afiliado copiado!");
-    }
-  };
-
-  const xpToNextLevel = 1000 - ((profile?.xp || 0) % 1000);
   const progressPercent = ((profile?.xp || 0) % 1000) / 10;
 
   if (isLoading) {
