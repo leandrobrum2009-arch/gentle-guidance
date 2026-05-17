@@ -718,6 +718,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_balance: {
+        Args: { amount: number; user_uuid: string }
+        Returns: undefined
+      }
       perform_draw: { Args: { p_campaign_id: string }; Returns: string }
       reserve_tickets: {
         Args: {
