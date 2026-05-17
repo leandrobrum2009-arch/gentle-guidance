@@ -96,7 +96,8 @@
      setIsRevealing(true);
      await supabase.from("mystery_box_wins").insert({
        user_id: user.id,
-       config_id: selectedBox.id,
+      box_id: selectedBox.id,
+      config_id: selectedBox.id,
        prize_id: prize.id,
        prize_title: prize.title,
        prize_value: prize.prize_value
