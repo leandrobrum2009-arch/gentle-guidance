@@ -89,17 +89,49 @@ export interface Notification {
   created_at: string;
 }
 
-export interface Winner {
-  id: string;
-  campaign_id: string;
-  winner_name: string;
-  ticket_number: string;
-  prize_description: string;
-  phone_masked: string | null;
-  video_url: string | null;
-  draw_date: string;
-  campaigns?: { title: string } | null;
-}
+ export interface Winner {
+   id: string;
+   campaign_id: string;
+   winner_name: string;
+   ticket_number: string;
+   prize_description: string;
+   phone_masked: string | null;
+   video_url: string | null;
+   draw_date: string;
+   campaigns?: { title: string } | null;
+ }
+ 
+ export interface WalletTransaction {
+   id: string;
+   user_id: string;
+   type: 'deposit' | 'withdrawal' | 'referral_bonus' | 'cashback' | 'prize_win';
+   amount: number;
+   status: 'pending' | 'completed' | 'rejected' | 'cancelled';
+   pix_key: string | null;
+   description: string | null;
+   created_at: string;
+ }
+ 
+ export interface UserAchievement {
+   id: string;
+   user_id: string;
+   achievement_key: string;
+   title: string;
+   description: string | null;
+   icon: string | null;
+    points_reward: number;
+    created_at: string;
+  }
+  
+  export interface UserReward {
+    id: string;
+    user_id: string;
+    title: string;
+    description: string | null;
+    points_cost: number;
+    status: 'pending' | 'claimed' | 'cancelled';
+    created_at: string;
+  }
 
 export interface RouletteSpin {
   id: string;
@@ -358,18 +390,66 @@ export const useRanking = (limit = 10) =>
    });
  };
  
- export const useUserMysteryBoxWins = (userId: string) => {
-   return useQuery({
-     queryKey: ["user-mystery-box-wins", userId],
-     queryFn: async () => {
-       const { data, error } = await supabase
-         .from("mystery_box_wins")
-         .select("*")
-         .eq("user_id", userId)
-         .order("created_at", { ascending: false });
-       if (error) throw error;
-       return data;
-     },
-     enabled: !!userId,
-   });
- };
+   export const useUserMysteryBoxWins = (userId: string) => {
+     return useQuery({
+       queryKey: ["user-mystery-box-wins", userId],
+       queryFn: async () => {
+         const { data, error } = await supabase
+           .from("mystery_box_wins")
+           .select("*")
+           .eq("user_id", userId)
+           .order("created_at", { ascending: false });
+         if (error) throw error;
+         return data;
+       },
+       enabled: !!userId,
+     });
+   };
+   
+   export const useUserWalletTransactions = (userId: string) => {
+     return useQuery({
+       queryKey: ["user-wallet-transactions", userId],
+       queryFn: async () => {
+         const { data, error } = await supabase
+           .from("wallet_transactions")
+           .select("*")
+           .eq("user_id", userId)
+           .order("created_at", { ascending: false });
+         if (error) throw error;
+         return data as WalletTransaction[];
+       },
+       enabled: !!userId,
+     });
+   };
+   
+   export const useUserAchievements = (userId: string) => {
+     return useQuery({
+       queryKey: ["user-achievements", userId],
+       queryFn: async () => {
+         const { data, error } = await supabase
+           .from("user_achievements")
+           .select("*")
+           .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data as UserAchievement[];
+      },
+      enabled: !!userId,
+    });
+  };
+  
+  export const useUserRewards = (userId: string) => {
+    return useQuery({
+      queryKey: ["user-rewards", userId],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("user_rewards")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data as UserReward[];
+      },
+      enabled: !!userId,
+    });
+  };
