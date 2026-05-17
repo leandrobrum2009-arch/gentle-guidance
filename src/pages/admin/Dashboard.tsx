@@ -7,7 +7,7 @@
  } from "lucide-react";
  import { 
    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
-   ResponsiveContainer, BarChart, Bar 
+   ResponsiveContainer, BarChart, Bar, Cell
  } from 'recharts';
  import { format, subDays, startOfDay, isSameDay } from 'date-fns';
  import { ptBR } from 'date-fns/locale';
@@ -201,11 +201,11 @@
                      <Tooltip 
                         contentStyle={{ backgroundColor: '#131316', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
                      />
-                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
-                        { [0, 1, 2].map((entry, index) => (
-                          <cell key={`cell-${index}`} fill={index === 0 ? 'hsl(var(--primary))' : index === 1 ? '#8b5cf6' : '#ec4899'} />
-                        )) }
-                     </Bar>
+                      <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                         { [0, 1, 2].map((_, index) => (
+                           <Cell key={`cell-${index}`} fill={index === 0 ? 'hsl(var(--primary))' : index === 1 ? '#8b5cf6' : '#ec4899'} />
+                         )) }
+                      </Bar>
                    </BarChart>
                  </ResponsiveContainer>
                </CardContent>
