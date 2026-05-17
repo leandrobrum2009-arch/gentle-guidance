@@ -217,8 +217,7 @@ export default function Account() {
                  </Card>
               </TabsContent>
             </Tabs>
-          </main>
-        </div>
+           </main>
          </div>
        </motion.div>
        <Footer />
