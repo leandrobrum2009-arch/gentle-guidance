@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import RouletteComponent from "@/components/Roulette";
 import { useCampaigns, useRoulettePrizes } from "@/hooks/useData";
 import { Loader2 } from "lucide-react";
+import { motion } from "framer-motion";
 
 export default function Roulette() {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
