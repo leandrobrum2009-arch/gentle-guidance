@@ -1,3 +1,4 @@
+ import confetti from "canvas-confetti";
 import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { RotateCw, Star, Trophy, Users, Zap } from "lucide-react";
@@ -62,6 +63,15 @@ const Roulette = ({ prizes, onSpinComplete, campaignId }: RouletteProps) => {
     }
 
     setIsSpinning(false);
+    
+    // Celebration
+    confetti({
+      particleCount: 150,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: [prize.color || '#FACC15', '#ffffff']
+    });
+
     toast.success(`Parabéns! Você ganhou: ${prize.label}!`);
     if (onSpinComplete) onSpinComplete(prize);
   };
