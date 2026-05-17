@@ -1,22 +1,35 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
-import { RotateCw, Star, Trophy } from "lucide-react";
+import { RotateCw, Star, Trophy, Users, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { RoulettePrize } from "@/hooks/useData";
+import { RoulettePrize, RouletteSpin } from "@/hooks/useData";
 import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 
 interface RouletteProps {
   prizes: RoulettePrize[];
   onSpinComplete?: (prize: RoulettePrize) => void;
+  campaignId?: string;
 }
 
-const Roulette = ({ prizes, onSpinComplete }: RouletteProps) => {
+const Roulette = ({ prizes, onSpinComplete, campaignId }: RouletteProps) => {
   const [isSpinning, setIsSpinning] = useState(false);
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
   const controls = useAnimation();
   const wheelRef = useRef<HTMLDivElement>(null);
 
   const spin = async () => {
     if (isSpinning || prizes.length === 0) return;
+    
+    if (!user) {
+      toast.error("Você precisa estar logado para girar a roleta!");
+      return;
+    }
     
     setIsSpinning(true);
     
@@ -33,13 +46,37 @@ const Roulette = ({ prizes, onSpinComplete }: RouletteProps) => {
       transition: { duration: 4, ease: [0.15, 0, 0.15, 1] }
     });
     
+    // Save spin result to database if campaignId is provided
+    if (campaignId && user) {
+      const { error } = await supabase.from("roulette_spins").insert({
+        user_id: user.id,
+        campaign_id: campaignId,
+        prize_label: prize.label,
+        prize_type: prize.prize_type,
+        prize_value: prize.value
+      });
+      
+      if (!error) {
+        queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
+      }
+    }
+
     setIsSpinning(false);
-    toast.success(`Você ganhou: ${prize.label}!`);
+    toast.success(`Parabéns! Você ganhou: ${prize.label}!`);
     if (onSpinComplete) onSpinComplete(prize);
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 py-8">
+    <div className="flex flex-col items-center gap-8 py-6">
+      <div className="flex items-center gap-2 mb-2">
+        <Badge className="bg-destructive animate-pulse flex items-center gap-1 text-[10px] font-bold px-2">
+          <span className="h-1 w-1 rounded-full bg-white animate-ping" /> AO VIVO
+        </Badge>
+        <div className="flex items-center gap-1 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
+          <Users className="h-3 w-3" /> {(Math.random() * 50 + 10).toFixed(0)} pessoas assistindo
+        </div>
+      </div>
+
       <div className="relative">
         {/* Pointer */}
         <div className="absolute -top-4 left-1/2 z-10 -translate-x-1/2 transform">
