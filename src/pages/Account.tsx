@@ -43,6 +43,7 @@ import { cn } from "@/lib/utils";
    const { data: boxWins } = useUserMysteryBoxWins(user?.id || "");
    const { data: txs } = useUserWalletTransactions(user?.id || "");
    const { data: achievements } = useUserAchievements(user?.id || "");
+   const { data: rewards } = useUserRewards(user?.id || "");
    const { data: ranking } = useRanking(10);
    const queryClient = useQueryClient();
  
