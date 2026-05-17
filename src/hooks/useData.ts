@@ -29,6 +29,15 @@ export interface Campaign {
   roulette_enabled: boolean;
   ranking_enabled: boolean;
   featured: boolean;
+  gallery_urls?: string[];
+  video_url?: string;
+  regulations?: string;
+  auto_numbers?: boolean;
+  manual_numbers?: boolean;
+  lucky_numbers_prizes?: any[];
+  federal_lottery_draw?: boolean;
+  draw_number?: string;
+  payment_methods?: string[];
   created_at: string;
 }
 
@@ -177,6 +186,32 @@ export const useUserNotifications = (userId: string) =>
       return data as Notification[];
     },
     enabled: !!userId,
+  });
+
+export interface Ticket {
+  id: string;
+  order_id: string;
+  campaign_id: string;
+  user_id: string;
+  number: string;
+  status: string;
+  is_lucky: boolean;
+  reservation_expires_at: string | null;
+  created_at: string;
+}
+
+export const useTickets = (campaignId: string) =>
+  useQuery({
+    queryKey: ["tickets", campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tickets")
+        .select("*")
+        .eq("campaign_id", campaignId);
+      if (error) throw error;
+      return data as Ticket[];
+    },
+    enabled: !!campaignId,
   });
 
 export const useRanking = (limit = 10) =>
