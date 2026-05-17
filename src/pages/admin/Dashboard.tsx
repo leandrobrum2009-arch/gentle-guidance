@@ -211,6 +211,65 @@
                </CardContent>
              </Card>
            </div>
+ 
+           {/* Recent Activity / Top Campaigns */}
+           <div className="grid gap-6 lg:grid-cols-2">
+             <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+               <CardHeader>
+                 <CardTitle className="text-lg font-bold text-white">Campanhas em Destaque</CardTitle>
+                 <p className="text-xs text-slate-400">Desempenho das rifas mais populares</p>
+               </CardHeader>
+               <CardContent>
+                 <div className="space-y-4">
+                   {campaigns?.slice(0, 4).map((c) => (
+                     <div key={c.id} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 group hover:border-primary/20 transition-all">
+                       <div className="flex items-center gap-3">
+                         <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+                           {c.title.substring(0, 1)}
+                         </div>
+                         <div>
+                           <p className="text-sm font-bold text-white tracking-tight">{c.title}</p>
+                           <p className="text-[10px] text-slate-500 uppercase font-bold tracking-widest">{c.status}</p>
+                         </div>
+                       </div>
+                       <div className="text-right">
+                         <p className="text-sm font-bold text-emerald-400">R$ {((Number(c.ticket_price) * c.sold_tickets) || 0).toFixed(2)}</p>
+                         <p className="text-[10px] text-slate-500">{c.sold_tickets} vendas</p>
+                       </div>
+                     </div>
+                   ))}
+                 </div>
+               </CardContent>
+             </Card>
+ 
+             <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+               <CardHeader>
+                 <CardTitle className="text-lg font-bold text-white">Logs do Sistema</CardTitle>
+                 <p className="text-xs text-slate-400">Últimas ações administrativas</p>
+               </CardHeader>
+               <CardContent>
+                 <div className="space-y-4">
+                   {[
+                     { action: "Pagamento Aprovado", user: "Admin", target: "#ORD-5432", time: "2 min atrás", icon: CheckCircle2, color: "text-emerald-400" },
+                     { action: "Nova Campanha Criada", user: "Admin", target: "Rifa iPhone 15", time: "15 min atrás", icon: Plus, color: "text-blue-400" },
+                     { action: "Cupom Gerado", user: "Admin", target: "PROMO20", time: "1h atrás", icon: Percent, color: "text-purple-400" },
+                     { action: "Notificação Enviada", user: "Admin", target: "Todos usuários", time: "3h atrás", icon: Bell, color: "text-amber-400" },
+                   ].map((log, i) => (
+                     <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                       <div className="flex items-center gap-3">
+                         <log.icon className={`h-4 w-4 ${log.color}`} />
+                         <div>
+                           <p className="text-xs font-bold text-slate-200">{log.action}</p>
+                           <p className="text-[10px] text-slate-500">{log.user} • {log.target}</p>
+                         </div>
+                       </div>
+                       <span className="text-[10px] text-slate-600 font-medium">{log.time}</span>
+                     </div>
+                   ))}
+                 </div>
+               </CardContent>
+             </Card>
+           </div>
          </div>
        )}
      </AdminLayout>
