@@ -119,9 +119,19 @@ export interface Notification {
    title: string;
    description: string | null;
    icon: string | null;
-   points_reward: number;
-   created_at: string;
- }
+    points_reward: number;
+    created_at: string;
+  }
+  
+  export interface UserReward {
+    id: string;
+    user_id: string;
+    title: string;
+    description: string | null;
+    points_cost: number;
+    status: 'pending' | 'claimed' | 'cancelled';
+    created_at: string;
+  }
 
 export interface RouletteSpin {
   id: string;
@@ -420,10 +430,26 @@ export const useRanking = (limit = 10) =>
            .from("user_achievements")
            .select("*")
            .eq("user_id", userId)
-           .order("created_at", { ascending: false });
-         if (error) throw error;
-         return data as UserAchievement[];
-       },
-       enabled: !!userId,
-     });
-   };
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data as UserAchievement[];
+      },
+      enabled: !!userId,
+    });
+  };
+  
+  export const useUserRewards = (userId: string) => {
+    return useQuery({
+      queryKey: ["user-rewards", userId],
+      queryFn: async () => {
+        const { data, error } = await supabase
+          .from("user_rewards")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false });
+        if (error) throw error;
+        return data as UserReward[];
+      },
+      enabled: !!userId,
+    });
+  };
