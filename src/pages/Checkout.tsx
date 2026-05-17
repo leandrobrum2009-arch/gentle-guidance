@@ -21,24 +21,47 @@
    const [loading, setLoading] = useState(true);
    const [paymentMethod, setPaymentMethod] = useState("pix");
  
-   useEffect(() => {
-     if (orderId) {
-       const fetchOrder = async () => {
-         const { data, error } = await supabase
-           .from("orders")
-           .select("*, campaigns(title, ticket_price)")
-           .eq("id", orderId)
-           .maybeSingle();
-         
-         if (error || !data) {
-           toast.error("Pedido não encontrado");
-           navigate("/");
-           return;
-         }
-         setOrder(data);
-         setLoading(false);
-       };
-       fetchOrder();
+    const fetchOrder = async () => {
+      if (!orderId) return;
+      
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*, campaigns(title, ticket_price)")
+        .eq("id", orderId)
+        .maybeSingle();
+      
+      if (error || !data) {
+        toast.error("Pedido não encontrado");
+        navigate("/");
+        return;
+      }
+      setOrder(data);
+      setLoading(false);
+
+      // If not paid and doesn't have pix code, generate it
+      if (data.payment_status !== 'paid' && !data.pix_code) {
+        try {
+          const { data: pixData, error: pixError } = await supabase.functions.invoke('pix-payment', {
+            body: { orderId, path: 'create' },
+            method: 'POST'
+          });
+          
+          if (!pixError && pixData) {
+            setOrder(prev => ({ 
+              ...prev, 
+              pix_code: pixData.pix_code, 
+              pix_qr_code_base64: pixData.pix_qr_code_base64 
+            }));
+          }
+        } catch (err) {
+          console.error('Error generating PIX:', err);
+        }
+      }
+    };
+
+    useEffect(() => {
+      if (orderId) {
+        fetchOrder();
  
        // Realtime check for payment
        const channel = supabase.channel(`order-${orderId}`)
@@ -54,10 +77,14 @@
      }
    }, [orderId, navigate]);
  
-   const copyPix = () => {
-     navigator.clipboard.writeText("00020126330014BR.GOV.BCB.PIX01111234567890152040000530398654041.005802BR5913LOVABLE RAFFL6009SAO PAULO62070503***6304");
-     toast.success("Código PIX copiado!");
-   };
+    const copyPix = () => {
+      if (order?.pix_code) {
+        navigator.clipboard.writeText(order.pix_code);
+        toast.success("Código PIX copiado!");
+      } else {
+        toast.error("Código PIX não disponível");
+      }
+    };
  
    if (loading) return (
      <div className="min-h-screen bg-background">
@@ -113,10 +140,18 @@
                    </CardHeader>
                    <CardContent className="space-y-6">
                      <div className="flex flex-col items-center gap-6 p-6 rounded-2xl bg-secondary/30 border border-border/50">
-                       <div className="relative p-4 bg-white rounded-xl shadow-lg">
-                         <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PIX_CODE_SIMULATION_${order.id}`} alt="QR Code PIX" className="h-40 w-40" />
-                         <div className="absolute inset-0 bg-primary/5 animate-pulse rounded-xl" />
-                       </div>
+                        {order.pix_qr_code_base64 ? (
+                          <div className="relative p-4 bg-white rounded-xl shadow-lg">
+                            <img src={`data:image/png;base64,${order.pix_qr_code_base64}`} alt="QR Code PIX" className="h-40 w-40" />
+                          </div>
+                        ) : (
+                          <div className="relative p-4 bg-white rounded-xl shadow-lg">
+                            <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PENDING_ORDER_${order.id}`} alt="QR Code PIX" className="h-40 w-40 opacity-20 grayscale" />
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                            </div>
+                          </div>
+                        )}
                        <div className="text-center space-y-1">
                          <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Valor a pagar</p>
                          <p className="text-3xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
