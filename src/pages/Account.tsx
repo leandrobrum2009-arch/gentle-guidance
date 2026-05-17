@@ -1,26 +1,107 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
-import { 
-  User, Ticket, Users, Award, Wallet, TrendingUp, 
-   Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
-   ChevronRight, Sparkles, Star, Zap, Bell, CheckCircle, Trash2
-} from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin } from "@/hooks/useAdmin";
- import { useUserNotifications, Notification } from "@/hooks/useData";
+ import { useState, useEffect } from "react";
+ import { useNavigate } from "react-router-dom";
+ import { motion, AnimatePresence } from "framer-motion";
+ import { 
+   User, Ticket, Users, Award, Wallet, TrendingUp, 
+    Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
+    ChevronRight, Sparkles, Star, Zap, Bell, CheckCircle, Trash2,
+    CreditCard, ArrowUpRight, ArrowDownLeft, Trophy, Gift, Dices,
+    History, Coins, Activity, Crown, Search, Clock
+ } from "lucide-react";
+ import { useAuth } from "@/contexts/AuthContext";
+ import { useIsAdmin } from "@/hooks/useAdmin";
+ import { 
+   useUserNotifications, 
+   useUserOrders, 
+   useUserSpins, 
+   useUserMysteryBoxWins,
+   Notification 
+ } from "@/hooks/useData";
  import { useQueryClient } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { toast } from "sonner";
-
-export default function Account() {
+ import { supabase } from "@/integrations/supabase/client";
+ import Header from "@/components/Header";
+ import Footer from "@/components/Footer";
+ import { Button } from "@/components/ui/button";
+ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+ import { Badge } from "@/components/ui/badge";
+ import { Separator } from "@/components/ui/separator";
+ import { toast } from "sonner";
+ import { format } from "date-fns";
+ import { ptBR } from "date-fns/locale";
+ 
+ export default function Account() {
+   const { user, signOut } = useAuth();
+   const navigate = useNavigate();
+   const { data: isAdmin } = useIsAdmin();
+   const { data: notifications } = useUserNotifications(user?.id || "");
+   const { data: orders } = useUserOrders(user?.id || "");
+   const { data: spins } = useUserSpins(user?.id || "");
+   const { data: boxWins } = useUserMysteryBoxWins(user?.id || "");
+   const queryClient = useQueryClient();
+ 
+   const [profile, setProfile] = useState<any>(null);
+   const [affiliate, setAffiliate] = useState<any>(null);
+   const [isLoading, setIsLoading] = useState(true);
+   const [activeTab, setActiveTab] = useState("overview");
+ 
+   useEffect(() => {
+     if (user) {
+       const fetchData = async () => {
+         const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+         setProfile(p);
+         const { data: a } = await supabase.from("affiliates").select("*").eq("user_id", user.id).maybeSingle();
+         setAffiliate(a);
+         setIsLoading(false);
+       };
+       fetchData();
+     }
+   }, [user]);
+ 
+   const markAsRead = async (id: string) => {
+     const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+     if (!error) queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+   };
+ 
+   const deleteNotification = async (id: string) => {
+     const { error } = await supabase.from("notifications").delete().eq("id", id);
+     if (!error) {
+       toast.success("Notificação excluída");
+       queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+     }
+   };
+ 
+   const copyReferral = () => {
+     if (affiliate?.referral_code) {
+       const url = `${window.location.origin}/register?ref=${affiliate.referral_code}`;
+       navigator.clipboard.writeText(url);
+       toast.success("Link de afiliado copiado!");
+     }
+   };
+ 
+   const xpToNextLevel = 1000 - ((profile?.xp || 0) % 1000);
+   const progressPercent = ((profile?.xp || 0) % 1000) / 10;
+ 
+   const getStatusBadge = (status: string) => {
+     switch(status) {
+       case 'paid': return <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/20 text-[10px] font-bold">PAGO</Badge>;
+       case 'pending': return <Badge className="bg-amber-500/20 text-amber-400 border-amber-500/20 text-[10px] font-bold">PENDENTE</Badge>;
+       case 'cancelled': return <Badge className="bg-rose-500/20 text-rose-400 border-rose-500/20 text-[10px] font-bold">CANCELADO</Badge>;
+       default: return <Badge variant="outline" className="text-[10px]">{status}</Badge>;
+     }
+   };
+ 
+   if (isLoading) {
+     return (
+       <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
+         <div className="relative">
+           <div className="h-24 w-24 rounded-full border-4 border-primary/20"></div>
+           <div className="absolute top-0 h-24 w-24 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+           <Sparkles className="absolute inset-0 m-auto h-8 w-8 animate-pulse text-primary" />
+         </div>
+       </div>
+     );
+   }
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const { data: isAdmin } = useIsAdmin();
