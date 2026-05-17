@@ -8,6 +8,7 @@ import {
   CreditCard, ArrowUpRight, ArrowDownLeft, Trophy, Gift, Dices,
   History, Coins, Activity, Crown, Search, Clock, Package
 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { 
@@ -27,6 +28,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { toast } from "sonner";
 import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 export default function Account() {
   const { user, signOut } = useAuth();
