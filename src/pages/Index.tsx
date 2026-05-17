@@ -205,7 +205,11 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-                <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest glow-primary">
+                 <Button 
+                   size="lg" 
+                   className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest glow-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] animate-pulse"
+                   onClick={() => { playSound('click'); hapticFeedback(); }}
+                 >
                   Ver Tudo <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>
