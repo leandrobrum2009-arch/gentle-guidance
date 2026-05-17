@@ -228,15 +228,24 @@ export const useTickets = (campaignId: string) =>
 
 export const useRouletteSpins = (limit = 10) =>
   useQuery({
-    queryKey: ["roulette_spins"],
+    queryKey: ["roulette_spins", limit],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("roulette_spins")
-        .select("*, profiles:user_id(name, avatar_url), campaigns(title)")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          ),
+          campaigns (
+            title
+          )
+        `)
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return data as RouletteSpin[];
+      return (data as any) as RouletteSpin[];
     },
   });
 
