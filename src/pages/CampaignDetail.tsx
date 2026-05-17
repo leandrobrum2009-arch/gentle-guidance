@@ -195,40 +195,37 @@ import { useAuth } from "@/contexts/AuthContext";
                        <p className="text-xs text-muted-foreground text-center">
                          Escolha seus números da sorte abaixo. Clique para selecionar.
                        </p>
-                       <TicketGrid 
-                         totalTickets={campaign.total_tickets}
-                         soldTickets={soldTickets}
-                         selectedTickets={selectedTickets}
-                         onSelect={handleToggleTicket}
-                          luckyNumbers={luckyNumbersList}
-               {/* Lucky Numbers Section */}
-               {luckyNumbers.length > 0 && (
-                 <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 space-y-4 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
-                   <h2 className="flex items-center gap-2 text-lg font-bold text-amber-500">
-                     <Star className="h-5 w-5 fill-current" /> Números da Sorte Premiados
-                   </h2>
-                   <p className="text-xs text-muted-foreground">
-                     Se você comprar um destes números, ganha o prêmio instantaneamente!
-                   </p>
-                   <div className="grid gap-3 sm:grid-cols-2">
-                     {luckyNumbers.map((p: any, i: number) => (
-                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-background/50 border border-amber-500/20">
-                         <div className="flex items-center gap-3">
-                           <div className="h-8 w-8 rounded-lg bg-amber-500 text-white flex items-center justify-center font-mono font-bold text-xs shadow-lg shadow-amber-500/20">
-                             {p.number}
-                           </div>
-                           <span className="text-sm font-bold">{p.prize}</span>
-                         </div>
-                         <Badge variant={soldTickets.includes(p.number) ? "secondary" : "default"} className={soldTickets.includes(p.number) ? "" : "bg-amber-500 text-white"}>
-                           {soldTickets.includes(p.number) ? "Ganhado" : "Disponível"}
-                         </Badge>
-                       </div>
-                     ))}
-                   </div>
-                 </div>
-               )}
+                        {/* Lucky Numbers Section */}
+                        {luckyNumbers.length > 0 && (
+                          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
+                            <h2 className="flex items-center gap-2 text-sm font-bold text-amber-500 uppercase tracking-wider">
+                              <Star className="h-4 w-4 fill-current" /> Números Premiados
+                            </h2>
+                            <div className="grid gap-2">
+                              {luckyNumbers.map((p: any, i: number) => (
+                                <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-amber-500/10">
+                                  <div className="flex items-center gap-2">
+                                    <div className="h-7 w-7 rounded bg-amber-500 text-white flex items-center justify-center font-mono font-bold text-[10px] shadow-lg shadow-amber-500/20">
+                                      {p.number}
+                                    </div>
+                                    <span className="text-[10px] font-bold">{p.prize}</span>
+                                  </div>
+                                  <Badge variant={soldTickets.includes(p.number) ? "secondary" : "default"} className={cn("text-[8px] h-5", !soldTickets.includes(p.number) && "bg-amber-500 text-white")}>
+                                    {soldTickets.includes(p.number) ? "Ganhado" : "Livre"}
+                                  </Badge>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
  
-                       />
+                        <TicketGrid 
+                          totalTickets={campaign.total_tickets}
+                          soldTickets={soldTickets}
+                          selectedTickets={selectedTickets}
+                          onSelect={handleToggleTicket}
+                          luckyNumbers={luckyNumbersList}
+                        />
                        
                        <Button 
                          className="w-full h-14 rounded-2xl gap-3 text-lg font-black uppercase tracking-wide glow-primary"
