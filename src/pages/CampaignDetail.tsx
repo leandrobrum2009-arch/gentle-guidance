@@ -55,9 +55,14 @@ import { useAuth } from "@/contexts/AuthContext";
      return allWinners?.filter(w => w.campaign_id === id) || [];
    }, [allWinners, id]);
  
-   const progress = campaign
-     ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
-     : 0;
+   const progress = useMemo(() => {
+     if (!campaign) return 0;
+     if (campaign.sales_goal && campaign.sales_goal > 0) {
+       const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
+       return Math.min(100, Math.round((currentSales / campaign.sales_goal) * 100));
+     }
+     return Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
+   }, [campaign]);
  
    const handleToggleTicket = (number: string) => {
      setSelectedTickets(prev => 
