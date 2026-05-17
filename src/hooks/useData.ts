@@ -49,6 +49,7 @@ export interface MysteryBox {
   prize_value: number | null;
   chance_percent: number;
   is_active: boolean;
+  cost_to_open?: number;
 }
 
 export interface RoulettePrize {
@@ -183,6 +184,36 @@ export const useRoulettePrizes = (campaignId: string) =>
       return data as RoulettePrize[];
     },
     enabled: !!campaignId,
+  });
+
+export interface MysteryBoxWin {
+  id: string;
+  user_id: string;
+  box_id: string;
+  prize_title: string;
+  prize_value: number | null;
+  created_at: string;
+  profiles?: { name: string; avatar_url: string | null } | null;
+}
+
+export const useMysteryBoxWins = (limit = 5) =>
+  useQuery({
+    queryKey: ["mystery_box_wins", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("mystery_box_wins")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          )
+        `)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as MysteryBoxWin[];
+    },
   });
 
 export const useUserNotifications = (userId: string) =>
