@@ -1,3 +1,5 @@
+ import Checkout from "./pages/Checkout";
+             <Route path="/checkout/:orderId" element={<Checkout />} />
 import Account from "./pages/Account";
             <Route path="/conta" element={<Account />} />
 import { Toaster } from "@/components/ui/toaster";
