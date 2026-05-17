@@ -1,5 +1,5 @@
- import { useState, useEffect, useMemo } from "react";
- import { motion, AnimatePresence } from "framer-motion";
+ import { useState, useEffect, useMemo, useRef } from "react";
+ import { motion, AnimatePresence, useAnimation } from "framer-motion";
  import { 
    Gift, Sparkles, Box, Loader2, Trophy, Zap, 
    Coins, Package, Star, Crown, ChevronRight, X,
@@ -34,6 +34,13 @@
    legendary: { color: "#eab308", glow: "shadow-[0_0_50px_rgba(234,179,8,0.6)]", bg: "from-amber-500/20 to-amber-950/40", border: "border-amber-500/40", icon: Crown, label: "Lendário" }
  };
  
+ const SOUND_URLS = {
+   shake: "https://assets.mixkit.co/active_storage/sfx/2012/2012-preview.mp3",
+   reveal: "https://assets.mixkit.co/active_storage/sfx/1435/1435-preview.mp3",
+   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3",
+   open: "https://assets.mixkit.co/active_storage/sfx/1103/1103-preview.mp3"
+ };
+ 
  const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
    const [selectedBox, setSelectedBox] = useState<MysteryBoxConfig | null>(null);
    const [isOpening, setIsOpening] = useState(false);
@@ -42,7 +49,14 @@
    const [userProfile, setUserProfile] = useState<any>(null);
    const { user } = useAuth();
    const queryClient = useQueryClient();
-   const { data: recentWins } = useMysteryBoxWins(10);
+    const { data: recentWins } = useMysteryBoxWins(10);
+    const boxControls = useAnimation();
+ 
+    const playSound = (type: keyof typeof SOUND_URLS) => {
+      const audio = new Audio(SOUND_URLS[type]);
+      audio.volume = 0.4;
+      audio.play().catch(() => {});
+    };
    const [potentialPrizes, setPotentialPrizes] = useState<MysteryBoxPrize[]>([]);
  
    const fetchUserProfile = async () => {
@@ -64,15 +78,15 @@
        toast.error("Saldo insuficiente!");
        return;
      }
-     const { data: prizes, error: prizesError } = await supabase.from('mystery_box_prizes').select('*').eq('config_id', box.id);
-     if (prizesError || !prizes || prizes.length === 0) {
-       toast.error("Esta caixa está vazia no momento!");
-       return;
-     }
-     setPotentialPrizes(prizes);
-     setSelectedBox(box);
-     setIsOpening(true);
-   };
+      const { data: prizes, error: prizesError } = await supabase.from('mystery_box_prizes').select('*').eq('config_id', box.id);
+      if (prizesError || !prizes || prizes.length === 0) {
+        toast.error("Esta caixa está vazia no momento!");
+        return;
+      }
+      setPotentialPrizes(prizes);
+      setSelectedBox(box);
+      setIsOpening(true);
+    };
  
    const handleFinalOpen = async () => {
      if (!selectedBox || !user || !potentialPrizes.length) return;
@@ -93,7 +107,8 @@
        random -= Number(p.chance_percent);
      }
      setWinningPrize(prize);
-     setIsRevealing(true);
+      setIsRevealing(true);
+      playSound('open');
      await supabase.from("mystery_box_wins").insert({
        user_id: user.id,
       box_id: selectedBox.id,
@@ -152,23 +167,67 @@
              <button onClick={() => { setIsOpening(false); setIsRevealing(false); setWinningPrize(null); }} className="absolute top-8 right-8 text-white/40 hover:text-white"><X className="h-8 w-8" /></button>
              <div className="w-full max-w-xl text-center space-y-12">
                {!isRevealing ? (
-                 <div className="space-y-8">
-                   <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative inline-block">
-                     <motion.div animate={{ rotate: [0, -5, 5, -5, 5, 0], scale: [1, 1.05, 1] }} transition={{ duration: 0.5, repeat: Infinity }}>
-                       <Box className="h-48 w-48" style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }} />
-                     </motion.div>
-                   </motion.div>
-                   <div className="space-y-4">
-                     <h2 className="text-3xl font-black uppercase italic tracking-tighter">Você está prestes a abrir a <span style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }}>{selectedBox.name}</span></h2>
-                     <p className="text-white/60 text-sm uppercase tracking-widest font-bold">Custo: R$ {Number(selectedBox.cost).toFixed(2)}</p>
-                   </div>
-                   <Button size="lg" onClick={handleFinalOpen} className="h-16 px-12 rounded-2xl font-black uppercase italic tracking-widest text-xl glow-primary">Confirmar Abertura</Button>
-                 </div>
-               ) : (
-                 <OpeningAnimation prize={winningPrize} potentialPrizes={potentialPrizes} rarityColor={RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color} onComplete={() => { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: [RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color, '#ffffff'] }); }} />
-               )}
-             </div>
-           </motion.div>
+                <div className="space-y-8">
+                  <div className="relative inline-block">
+                    <motion.div
+                      animate={{ 
+                        y: [0, -20, 0],
+                        rotate: [0, -5, 5, -5, 5, 0],
+                        scale: [1, 1.1, 1]
+                      }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="relative z-10"
+                    >
+                      <Box className="h-64 w-64" style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }} />
+                    </motion.div>
+                    {/* Neon Smoke Effect */}
+                    <div className="absolute inset-0 -z-10">
+                      <motion.div 
+                        animate={{ scale: [1, 1.5, 1], opacity: [0.3, 0.6, 0.3] }}
+                        transition={{ duration: 3, repeat: Infinity }}
+                        className="absolute inset-0 blur-3xl opacity-30 rounded-full"
+                        style={{ backgroundColor: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }}
+                      />
+                      <div className="absolute inset-0 animate-pulse bg-gradient-to-t from-primary/20 via-transparent to-transparent blur-2xl" />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white">
+                      CAIXA <span style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }}>{selectedBox.rarity.toUpperCase()}</span>
+                    </h2>
+                    <p className="text-white/60 text-sm uppercase tracking-widest font-bold">Confirmar abertura por R$ {Number(selectedBox.cost).toFixed(2)}?</p>
+                  </div>
+
+                  <div className="flex gap-4 justify-center">
+                    <Button 
+                      size="lg" 
+                      onClick={handleFinalOpen} 
+                      className="h-16 px-12 rounded-2xl font-black uppercase italic tracking-widest text-xl glow-primary"
+                    >
+                      ABRIR AGORA
+                    </Button>
+                  </div>
+                </div>
+              ) : (
+                <OpeningAnimation 
+                  prize={winningPrize} 
+                  potentialPrizes={potentialPrizes} 
+                  rarityColor={RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color} 
+                  playSound={playSound}
+                  onComplete={() => { 
+                    playSound('reveal');
+                    confetti({ 
+                      particleCount: 150, 
+                      spread: 70, 
+                      origin: { y: 0.6 }, 
+                      colors: [RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color, '#ffffff'] 
+                    }); 
+                  }} 
+                />
+              )}
+            </div>
+          </motion.div>
          )}
        </AnimatePresence>
      </div>
