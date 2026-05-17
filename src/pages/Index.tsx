@@ -30,7 +30,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
  import RaffleCarousel from "@/components/RaffleCarousel";
 import CampaignCard from "@/components/CampaignCard";
-import WinnerCard from "@/components/WinnerCard";
+ import WinnerCard from "@/components/WinnerCard";
+ import LiveRouletteFeed from "@/components/LiveRouletteFeed";
+ import Roulette from "@/components/Roulette";
 import { useCampaigns, useWinners } from "@/hooks/useData";
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
@@ -100,20 +102,53 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Featured Section */}
-          <section className="container py-10">
-            <SectionHeading 
-              icon={Zap} 
-              title="Sorteios Premium" 
-              subtitle="Os prêmios mais desejados do momento"
-              badge="Em Destaque"
-            />
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {otherCampaigns.slice(0, 3).map((campaign, i) => (
-                <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-              ))}
-            </div>
-          </section>
+           {/* Premium Draws & Live Activity */}
+           <section className="container py-10">
+             <div className="grid gap-12 lg:grid-cols-3">
+               <div className="lg:col-span-2 space-y-8">
+                 <SectionHeading 
+                   icon={Zap} 
+                   title="Sorteios Premium" 
+                   subtitle="Os prêmios mais desejados do momento"
+                   badge="Em Destaque"
+                 />
+                 <div className="grid gap-6 sm:grid-cols-2">
+                   {otherCampaigns.slice(0, 4).map((campaign, i) => (
+                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                   ))}
+                 </div>
+               </div>
+ 
+               <div className="space-y-10">
+                 {/* Live Activity Feed */}
+                 <div className="rounded-3xl border border-white/5 bg-card/40 backdrop-blur-xl p-6 shadow-2xl ring-1 ring-white/10">
+                   <LiveRouletteFeed />
+                 </div>
+ 
+                 {/* Small Featured Roulette */}
+                 {featuredCampaign?.roulette_enabled && (
+                   <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-background p-6 shadow-xl relative overflow-hidden group">
+                     <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
+                     <h3 className="text-sm font-black uppercase tracking-widest italic mb-4 flex items-center gap-2">
+                       <Gamepad2 className="h-4 w-4 text-primary" /> Tente a <span className="text-primary">Sorte</span>
+                     </h3>
+                     <div className="scale-75 -my-10 origin-center">
+                       {/* We need to fetch prizes for this campaign, but for the home page we can use a generic set or the first campaign's prizes */}
+                       <Link to={`/campaign/${featuredCampaign.id}`}>
+                         <Button className="w-full h-32 rounded-3xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-all flex flex-col gap-2 group">
+                           <RotateCw className="h-8 w-8 text-primary group-hover:rotate-180 transition-transform duration-500" />
+                           <span className="text-[10px] font-black uppercase tracking-widest">Ver Roleta da Campanha</span>
+                         </Button>
+                       </Link>
+                     </div>
+                     <p className="text-[9px] text-center text-muted-foreground uppercase font-bold tracking-tighter mt-4">
+                       Prêmios instantâneos em todos os sorteios ativos
+                     </p>
+                   </div>
+                 )}
+               </div>
+             </div>
+           </section>
 
           {/* Ending Soon */}
           <section className="container py-10">
