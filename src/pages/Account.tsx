@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+ import { motion } from "framer-motion";
  import { 
    User, Ticket, LogOut, Trophy, 
    History, Coins, Activity, Wallet, Bell
@@ -8,7 +7,6 @@ import { motion, AnimatePresence } from "framer-motion";
  import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
  import { useUserOrders } from "@/hooks/useData";
-import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
