@@ -1,12 +1,15 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import RouletteComponent from "@/components/Roulette";
-import { useCampaigns } from "@/hooks/useData";
+import { useCampaigns, useRoulettePrizes } from "@/hooks/useData";
 import { Loader2 } from "lucide-react";
 
 export default function Roulette() {
-  const { data: campaigns, isLoading } = useCampaigns();
+  const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const activeCampaign = campaigns?.find(c => c.roulette_enabled && c.status === "active");
+  const { data: prizes, isLoading: loadingPrizes } = useRoulettePrizes(activeCampaign?.id || "");
+
+  const isLoading = loadingCampaigns || (!!activeCampaign && loadingPrizes);
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,8 +29,8 @@ export default function Roulette() {
             <div className="flex justify-center py-20">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
-          ) : activeCampaign ? (
-            <RouletteComponent campaignId={activeCampaign.id} />
+          ) : activeCampaign && prizes ? (
+            <RouletteComponent campaignId={activeCampaign.id} prizes={prizes} />
           ) : (
             <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl">
               <p className="text-muted-foreground uppercase font-bold tracking-widest text-sm">

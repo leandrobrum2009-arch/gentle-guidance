@@ -1,12 +1,15 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MysteryBoxComponent from "@/components/MysteryBox";
-import { useCampaigns } from "@/hooks/useData";
+import { useCampaigns, useMysteryBoxes } from "@/hooks/useData";
 import { Loader2 } from "lucide-react";
 
 export default function MysteryBoxPage() {
-  const { data: campaigns, isLoading } = useCampaigns();
+  const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const activeCampaign = campaigns?.find(c => c.mystery_box_enabled && c.status === "active");
+  const { data: boxes, isLoading: loadingBoxes } = useMysteryBoxes(activeCampaign?.id || "");
+
+  const isLoading = loadingCampaigns || (!!activeCampaign && loadingBoxes);
 
   return (
     <div className="min-h-screen bg-background">
@@ -26,8 +29,8 @@ export default function MysteryBoxPage() {
             <div className="flex justify-center py-20">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
-          ) : activeCampaign ? (
-            <MysteryBoxComponent campaignId={activeCampaign.id} />
+          ) : activeCampaign && boxes ? (
+            <MysteryBoxComponent campaignId={activeCampaign.id} boxes={boxes} />
           ) : (
             <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl">
               <p className="text-muted-foreground uppercase font-bold tracking-widest text-sm">
