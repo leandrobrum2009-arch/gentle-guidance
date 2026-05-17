@@ -219,8 +219,9 @@ export default function Account() {
             </Tabs>
           </main>
         </div>
-      </div>
-      <Footer />
-    </div>
-  );
-}
+         </div>
+       </motion.div>
+       <Footer />
+     </div>
+   );
+ }
