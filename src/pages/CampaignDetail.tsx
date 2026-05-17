@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
  import { useCampaign, useMysteryBoxes, useRoulettePrizes, useWinners, useTickets } from "@/hooks/useData";
+ import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import RaffleGallery from "@/components/RaffleGallery";
  import TicketGrid from "@/components/TicketGrid";
