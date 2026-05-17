@@ -109,26 +109,30 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
            ))}
          </nav>
 
-        <div className="space-y-1 border-t border-border p-3">
-          <Link
-            to="/"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar ao site
-          </Link>
-          <button
-            onClick={signOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            Sair
-          </button>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-6">{children}</main>
-    </div>
-  );
+         <div className="space-y-1 border-t border-white/5 p-4 bg-[#0d0d0f]">
+           <Link
+             to="/"
+             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-100 transition-colors"
+           >
+             <ArrowLeft className="h-4 w-4 text-slate-500" />
+             Voltar ao site
+           </Link>
+           <button
+             onClick={signOut}
+             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-rose-400 transition-colors"
+           >
+             <LogOut className="h-4 w-4" />
+             Sair do Sistema
+           </button>
+         </div>
+       </aside>
+ 
+       {/* Main */}
+       <main className="flex-1 overflow-y-auto bg-[#0a0a0c] p-4 lg:p-8 custom-scrollbar">
+         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+           {children}
+         </div>
+       </main>
+     </div>
+   );
 }
