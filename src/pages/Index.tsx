@@ -4,6 +4,8 @@ import {
   ArrowRight, ShieldCheck, Heart
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
       {/* Gamification Teaser */}
       <section className="container py-6">
         <div className="grid grid-cols-2 gap-3">
