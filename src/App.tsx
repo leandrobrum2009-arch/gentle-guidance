@@ -3,7 +3,7 @@
  import Checkout from "./pages/Checkout";
              <Route path="/checkout/:orderId" element={<Checkout />} />
 import Account from "./pages/Account";
-            <Route path="/conta" element={<Account />} />
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -42,11 +42,17 @@ const App = () => (
              <Route path="/federal" element={<FederalResults />} />
             <Route path="/comunicados" element={<Announcements />} />
             <Route path="/contato" element={<Support />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/admin/campanhas" element={<AdminCampaigns />} />
-            <Route path="/admin/pedidos" element={<AdminOrders />} />
-             <Route path="/admin/ganhadores" element={<AdminWinners />} />
-             <Route path="/admin/federal" element={<AdminFederal />} />
+            
+            {/* Protected Routes */}
+            <Route path="/conta" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
+            <Route path="/admin/campanhas" element={<ProtectedRoute adminOnly><AdminCampaigns /></ProtectedRoute>} />
+            <Route path="/admin/pedidos" element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>} />
+            <Route path="/admin/ganhadores" element={<ProtectedRoute adminOnly><AdminWinners /></ProtectedRoute>} />
+            <Route path="/admin/federal" element={<ProtectedRoute adminOnly><AdminFederal /></ProtectedRoute>} />
+
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
