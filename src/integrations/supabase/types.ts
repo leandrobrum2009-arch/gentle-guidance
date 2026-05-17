@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      affiliate_commissions: {
+        Row: {
+          affiliate_id: string | null
+          amount: number
+          created_at: string | null
+          id: string
+          order_id: string | null
+          status: string | null
+        }
+        Insert: {
+          affiliate_id?: string | null
+          amount: number
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          affiliate_id?: string | null
+          amount?: number
+          created_at?: string | null
+          id?: string
+          order_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "affiliate_commissions_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "affiliate_commissions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       affiliates: {
         Row: {
           commission_rate: number
@@ -70,9 +112,16 @@ export type Database = {
           created_at: string
           description: string | null
           draw_date: string | null
+          featured: boolean | null
           id: string
           image_url: string | null
           ltp_code: string | null
+          max_tickets: number | null
+          min_tickets: number | null
+          mystery_box_enabled: boolean | null
+          price_bundles: Json | null
+          ranking_enabled: boolean | null
+          roulette_enabled: boolean | null
           slug: string
           sold_tickets: number
           status: string
@@ -87,9 +136,16 @@ export type Database = {
           created_at?: string
           description?: string | null
           draw_date?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           ltp_code?: string | null
+          max_tickets?: number | null
+          min_tickets?: number | null
+          mystery_box_enabled?: boolean | null
+          price_bundles?: Json | null
+          ranking_enabled?: boolean | null
+          roulette_enabled?: boolean | null
           slug: string
           sold_tickets?: number
           status?: string
@@ -104,9 +160,16 @@ export type Database = {
           created_at?: string
           description?: string | null
           draw_date?: string | null
+          featured?: boolean | null
           id?: string
           image_url?: string | null
           ltp_code?: string | null
+          max_tickets?: number | null
+          min_tickets?: number | null
+          mystery_box_enabled?: boolean | null
+          price_bundles?: Json | null
+          ranking_enabled?: boolean | null
+          roulette_enabled?: boolean | null
           slug?: string
           sold_tickets?: number
           status?: string
@@ -119,8 +182,80 @@ export type Database = {
         }
         Relationships: []
       }
+      mystery_boxes: {
+        Row: {
+          campaign_id: string | null
+          chance_percent: number | null
+          created_at: string | null
+          description: string | null
+          id: string
+          is_active: boolean | null
+          prize_value: number | null
+          title: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          chance_percent?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          prize_value?: number | null
+          title: string
+        }
+        Update: {
+          campaign_id?: string | null
+          chance_percent?: number | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          is_active?: boolean | null
+          prize_value?: number | null
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_boxes_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_read: boolean | null
+          message: string
+          title: string
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message: string
+          title: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_read?: boolean | null
+          message?: string
+          title?: string
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       orders: {
         Row: {
+          affiliate_id: string | null
           campaign_id: string
           created_at: string
           expires_at: string | null
@@ -133,6 +268,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          affiliate_id?: string | null
           campaign_id: string
           created_at?: string
           expires_at?: string | null
@@ -145,6 +281,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          affiliate_id?: string | null
           campaign_id?: string
           created_at?: string
           expires_at?: string | null
@@ -158,6 +295,13 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "orders_affiliate_id_fkey"
+            columns: ["affiliate_id"]
+            isOneToOne: false
+            referencedRelation: "affiliates"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "orders_campaign_id_fkey"
             columns: ["campaign_id"]
             isOneToOne: false
@@ -169,35 +313,91 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          balance: number | null
+          cashback_balance: number | null
           cpf: string | null
           created_at: string
           id: string
           name: string
           phone: string | null
+          points: number | null
           updated_at: string
           user_id: string
+          vip_level: number | null
+          xp: number | null
         }
         Insert: {
           avatar_url?: string | null
+          balance?: number | null
+          cashback_balance?: number | null
           cpf?: string | null
           created_at?: string
           id?: string
           name: string
           phone?: string | null
+          points?: number | null
           updated_at?: string
           user_id: string
+          vip_level?: number | null
+          xp?: number | null
         }
         Update: {
           avatar_url?: string | null
+          balance?: number | null
+          cashback_balance?: number | null
           cpf?: string | null
           created_at?: string
           id?: string
           name?: string
           phone?: string | null
+          points?: number | null
           updated_at?: string
           user_id?: string
+          vip_level?: number | null
+          xp?: number | null
         }
         Relationships: []
+      }
+      roulette_prizes: {
+        Row: {
+          campaign_id: string | null
+          chance_percent: number | null
+          color: string | null
+          created_at: string | null
+          id: string
+          label: string
+          prize_type: string
+          value: number | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          chance_percent?: number | null
+          color?: string | null
+          created_at?: string | null
+          id?: string
+          label: string
+          prize_type?: string
+          value?: number | null
+        }
+        Update: {
+          campaign_id?: string | null
+          chance_percent?: number | null
+          color?: string | null
+          created_at?: string | null
+          id?: string
+          label?: string
+          prize_type?: string
+          value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roulette_prizes_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       tickets: {
         Row: {
@@ -243,6 +443,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_rewards: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          points_cost: number
+          status: string | null
+          title: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          points_cost: number
+          status?: string | null
+          title: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          points_cost?: number
+          status?: string | null
+          title?: string
+          user_id?: string | null
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {
