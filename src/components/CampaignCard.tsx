@@ -1,5 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import type { Campaign } from "@/hooks/useData";
