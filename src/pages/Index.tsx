@@ -69,6 +69,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <div className="h-16 md:h-20" /> {/* Spacer for fixed header */}
 
       {loadingCampaigns ? (
         <div className="flex h-[90vh] items-center justify-center">
