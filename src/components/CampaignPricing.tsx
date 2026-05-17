@@ -77,9 +77,9 @@ const CampaignPricing = ({ campaign, onBuy }: CampaignPricingProps) => {
               <span className="text-3xl font-black text-primary">
                 R$ {totalPrice.toFixed(2).replace(".", ",")}
               </span>
-              {selectedBundle && (
-                <span className="text-xs text-muted-foreground line-through">
-                  R$ {(bundle.quantity * Number(campaign.ticket_price)).toFixed(2)}
+              {selectedBundle && selectedBundle.price < (selectedBundle.quantity * Number(campaign.ticket_price)) && (
+                <span className="text-sm text-muted-foreground line-through decoration-destructive/50">
+                  R$ {(selectedBundle.quantity * Number(campaign.ticket_price)).toFixed(2).replace(".", ",")}
                 </span>
               )}
             </div>
