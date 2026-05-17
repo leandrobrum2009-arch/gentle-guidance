@@ -1,28 +1,17 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  User, Ticket, Users, Award, Wallet, TrendingUp, 
-  Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
-  ChevronRight, Sparkles, Star, Zap, Bell, CheckCircle, Trash2,
-  CreditCard, ArrowUpRight, ArrowDownLeft, Trophy, Gift, Dices,
-  History, Coins, Activity, Crown, Search, Clock, Package
-} from "lucide-react";
-import { Loader2 } from "lucide-react";
+ import { motion } from "framer-motion";
+ import { 
+   User, Ticket, LogOut, Trophy, 
+   History, Coins, Activity, Wallet, Bell
+ } from "lucide-react";
+ import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin } from "@/hooks/useAdmin";
-import { 
-  useUserNotifications, 
-  useUserOrders, 
-  useUserSpins, 
-  useUserMysteryBoxWins 
-} from "@/hooks/useData";
-import { useQueryClient } from "@tanstack/react-query";
+ import { useUserOrders } from "@/hooks/useData";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -32,13 +21,7 @@ import { ptBR } from "date-fns/locale";
 
 export default function Account() {
   const { user, signOut } = useAuth();
-  const navigate = useNavigate();
-  const { data: isAdmin } = useIsAdmin();
-  const { data: notifications } = useUserNotifications(user?.id || "");
-  const { data: orders } = useUserOrders(user?.id || "");
-  const { data: spins } = useUserSpins(user?.id || "");
-  const { data: boxWins } = useUserMysteryBoxWins(user?.id || "");
-  const queryClient = useQueryClient();
+   const { data: orders } = useUserOrders(user?.id || "");
 
   const [profile, setProfile] = useState<any>(null);
   const [affiliate, setAffiliate] = useState<any>(null);
@@ -57,26 +40,6 @@ export default function Account() {
     }
   }, [user]);
 
-  const markAsRead = async (id: string) => {
-    await supabase.from("notifications").update({ is_read: true }).eq("id", id);
-    queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-  };
-
-  const deleteNotification = async (id: string) => {
-    await supabase.from("notifications").delete().eq("id", id);
-    toast.success("Notificação excluída");
-    queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-  };
-
-  const copyReferral = () => {
-    if (affiliate?.referral_code) {
-      const url = `${window.location.origin}/register?ref=${affiliate.referral_code}`;
-      navigator.clipboard.writeText(url);
-      toast.success("Link de afiliado copiado!");
-    }
-  };
-
-  const xpToNextLevel = 1000 - ((profile?.xp || 0) % 1000);
   const progressPercent = ((profile?.xp || 0) % 1000) / 10;
 
   if (isLoading) {
