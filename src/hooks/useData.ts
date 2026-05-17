@@ -83,6 +83,18 @@ export interface Winner {
   campaigns?: { title: string } | null;
 }
 
+export interface RouletteSpin {
+  id: string;
+  user_id: string;
+  campaign_id: string;
+  prize_label: string;
+  prize_type: string;
+  prize_value: number | null;
+  created_at: string;
+  profiles?: { name: string; avatar_url: string | null } | null;
+  campaigns?: { title: string } | null;
+}
+
 export interface Announcement {
   id: string;
   title: string;
@@ -212,6 +224,20 @@ export const useTickets = (campaignId: string) =>
       return data as Ticket[];
     },
     enabled: !!campaignId,
+  });
+
+export const useRouletteSpins = (limit = 10) =>
+  useQuery({
+    queryKey: ["roulette_spins"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roulette_spins")
+        .select("*, profiles:user_id(name, avatar_url), campaigns(title)")
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return data as RouletteSpin[];
+    },
   });
 
 export const useRanking = (limit = 10) =>
