@@ -60,20 +60,26 @@
                      {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
                    </p>
  
-                   <div className="flex flex-wrap items-center gap-8 py-4">
-                     <div className="flex flex-col gap-1">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmio Estimado</span>
-                       <span className="text-2xl font-black text-white">R$ 50.000,00</span>
-                     </div>
-                     <div className="flex flex-col gap-1">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Participantes</span>
-                       <span className="text-2xl font-black text-white">1.240+</span>
-                     </div>
-                     <div className="flex flex-col gap-1">
-                       <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
-                       <span className="text-2xl font-black text-primary">12 dias</span>
-                     </div>
-                   </div>
+                    <div className="flex flex-wrap items-center gap-8 py-4">
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor do Prêmio</span>
+                        <span className="text-2xl font-black text-white">
+                          R$ {((campaign as any).prize_value || 50000).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Números Disponíveis</span>
+                        <span className="text-2xl font-black text-white">
+                          {(campaign.total_tickets - campaign.sold_tickets).toLocaleString('pt-BR')}
+                        </span>
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
+                        <span className="text-2xl font-black text-primary">
+                          {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : 'Em breve'}
+                        </span>
+                      </div>
+                    </div>
  
                    <div className="flex items-center gap-4 pt-4">
                      <Link to={`/campaign/${campaign.id}`}>
