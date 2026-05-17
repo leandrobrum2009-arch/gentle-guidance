@@ -45,16 +45,29 @@ export interface Campaign {
   created_at: string;
 }
 
-export interface MysteryBox {
-  id: string;
-  campaign_id: string;
-  title: string;
-  description: string | null;
-  prize_value: number | null;
-  chance_percent: number;
-  is_active: boolean;
-  cost_to_open?: number;
-}
+ export type MysteryBoxRarity = 'common' | 'rare' | 'epic' | 'legendary';
+ 
+ export interface MysteryBoxConfig {
+   id: string;
+   campaign_id: string;
+   name: string;
+   rarity: MysteryBoxRarity;
+   cost: number;
+   image_url: string | null;
+   is_active: boolean;
+ }
+ 
+ export interface MysteryBoxPrize {
+   id: string;
+   config_id: string;
+   title: string;
+   description: string | null;
+   prize_type: string;
+   prize_value: number | null;
+   chance_percent: number;
+   image_url: string | null;
+   rarity: MysteryBoxRarity;
+ }
 
 export interface RoulettePrize {
   id: string;
@@ -161,20 +174,35 @@ export const useAnnouncements = () =>
     },
   });
 
-export const useMysteryBoxes = (campaignId: string) =>
-  useQuery({
-    queryKey: ["mystery_boxes", campaignId],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from("mystery_boxes")
-        .select("*")
-        .eq("campaign_id", campaignId)
-        .eq("is_active", true);
-      if (error) throw error;
-      return data as MysteryBox[];
-    },
-    enabled: !!campaignId,
-  });
+ export const useMysteryBoxConfigs = (campaignId: string) =>
+   useQuery({
+     queryKey: ["mystery_box_configs", campaignId],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("mystery_box_configs")
+         .select("*")
+         .eq("campaign_id", campaignId)
+         .eq("is_active", true)
+         .order("cost", { ascending: true });
+       if (error) throw error;
+       return data as MysteryBoxConfig[];
+     },
+     enabled: !!campaignId,
+   });
+ 
+ export const useMysteryBoxPrizes = (configId: string) =>
+   useQuery({
+     queryKey: ["mystery_box_prizes", configId],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("mystery_box_prizes")
+         .select("*")
+         .eq("config_id", configId);
+       if (error) throw error;
+       return data as MysteryBoxPrize[];
+     },
+     enabled: !!configId,
+   });
 
 export const useRoulettePrizes = (campaignId: string) =>
   useQuery({
