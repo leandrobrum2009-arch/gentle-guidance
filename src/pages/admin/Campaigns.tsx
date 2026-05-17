@@ -55,7 +55,7 @@ export default function AdminCampaigns() {
   const [form, setForm] = useState<CampaignForm>(empty);
   const [saving, setSaving] = useState(false);
 
-  const set = (k: keyof CampaignForm, v: string | number) => setForm((p) => ({ ...p, [k]: v }));
+  const set = (k: keyof CampaignForm, v: string | number | boolean) => setForm((p) => ({ ...p, [k]: v }));
 
   const openNew = () => { setEditId(null); setForm(empty); setOpen(true); };
   const openEdit = (c: any) => {
