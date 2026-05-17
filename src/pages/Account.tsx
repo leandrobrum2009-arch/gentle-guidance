@@ -119,7 +119,8 @@ import { cn } from "@/lib/utils";
                 { label: "Painel Geral", id: "overview", icon: Activity },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
-                { label: "Conquistas", id: "achievements", icon: Star },
+                 { label: "Conquistas", id: "achievements", icon: Star },
+                 { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
               ].map((item) => (
                 <Button 
                     key={item.id} 
@@ -165,12 +166,13 @@ import { cn } from "@/lib/utils";
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsContent value="overview" className="space-y-6">
                  <div className="grid lg:grid-cols-2 gap-6">
-                    <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                        <CardHeader className="p-0 mb-6">
-                            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                                <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
-                            </CardTitle>
-                        </CardHeader>
+                     <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                         <CardHeader className="p-0 mb-6">
+                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                 <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
+                             </CardTitle>
+                             <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos 10 lançamentos</CardDescription>
+                         </CardHeader>
                         <div className="h-[200px] w-full">
                             <ResponsiveContainer width="100%" height="100%">
                                 <AreaChart data={chartData}>
@@ -216,12 +218,13 @@ import { cn } from "@/lib/utils";
                      </Card>
                   </div>
 
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                     <CardHeader className="p-0 mb-6">
-                        <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                            <Ticket className="h-4 w-4 text-primary" /> Participações em Rifas
-                        </CardTitle>
-                     </CardHeader>
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <CardHeader className="p-0 mb-6">
+                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                             <Ticket className="h-4 w-4 text-primary" /> Participações em Rifas
+                         </CardTitle>
+                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Acompanhe seus bilhetes</CardDescription>
+                      </CardHeader>
                      <div className="space-y-3">
                         {orders?.length ? orders.slice(0, 5).map((o: any) => (
                             <div key={o.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
