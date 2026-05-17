@@ -5,7 +5,8 @@ import {
    Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
    ChevronRight, Sparkles, Star, Zap, Bell, CheckCircle, Trash2
 } from "lucide-react";
- import { useAuth } from "@/contexts/AuthContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useAdmin";
  import { useUserNotifications, Notification } from "@/hooks/useData";
  import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +21,12 @@ import { toast } from "sonner";
 
 export default function Account() {
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
+              {isAdmin && (
+                <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-sm font-bold text-primary hover:bg-primary/10" onClick={() => navigate("/admin")}>
+                  <ShieldCheck className="h-4 w-4" /> Painel Admin
+                </Button>
+              )}
   const { data: notifications } = useUserNotifications(user?.id || "");
   const queryClient = useQueryClient();
 
