@@ -13,6 +13,7 @@ const navLinks = [
   { label: "Início", href: "/" },
   { label: "Campanhas", href: "/campanhas" },
   { label: "Ganhadores", href: "/ganhadores" },
+  { label: "Federal", href: "/federal" },
   { label: "Comunicados", href: "/comunicados" },
   { label: "Suporte", href: "/contato" },
 ];

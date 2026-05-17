@@ -1,3 +1,4 @@
+ import FederalResults from "./pages/FederalResults";
  import AdminFederal from "./pages/admin/Federal";
  import Checkout from "./pages/Checkout";
              <Route path="/checkout/:orderId" element={<Checkout />} />
@@ -37,7 +38,8 @@ const App = () => (
             <Route path="/campanha/:id" element={<CampaignDetail />} />
             <Route path="/cadastrar" element={<Register />} />
             <Route path="/entrar" element={<Login />} />
-            <Route path="/ganhadores" element={<Winners />} />
+             <Route path="/ganhadores" element={<Winners />} />
+             <Route path="/federal" element={<FederalResults />} />
             <Route path="/comunicados" element={<Announcements />} />
             <Route path="/contato" element={<Support />} />
             <Route path="/admin" element={<AdminDashboard />} />
