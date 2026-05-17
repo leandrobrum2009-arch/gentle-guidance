@@ -3,24 +3,36 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import {
-  LayoutDashboard,
-  Megaphone,
-  ShoppingCart,
-   Trophy, Dices,
-  ArrowLeft,
-  Loader2,
-  ShieldAlert,
-  LogOut,
-} from "lucide-react";
+   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
+   Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings
+ } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const navItems = [
-  { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-  { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-  { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
-   { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
-   { title: "Federal", url: "/admin/federal", icon: Dices },
-];
+ const navItems = [
+   { category: "Dashboard", items: [
+     { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+   ]},
+   { category: "Gestão", items: [
+     { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
+     { title: "Usuários", url: "/admin/usuarios", icon: Users },
+     { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+     { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
+     { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
+   ]},
+   { category: "Jogos", items: [
+     { title: "Roletas", url: "/admin/roletas", icon: Dices },
+     { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
+     { title: "Federal", url: "/admin/federal", icon: Star },
+   ]},
+   { category: "Marketing", items: [
+     { title: "Banners", url: "/admin/banners", icon: ImageIcon },
+     { title: "Cupons", url: "/admin/cupons", icon: Percent },
+     { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
+   ]},
+   { category: "Sistema", items: [
+     { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
+   ]},
+ ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
@@ -54,57 +66,73 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  return (
-    <div className="flex min-h-screen w-full bg-background">
-      {/* Sidebar */}
-      <aside className="sticky top-0 flex h-screen w-60 flex-col border-r border-border bg-sidebar">
-        <div className="flex items-center gap-2 border-b border-border p-4">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary font-display text-sm font-bold text-primary-foreground">
-            A
-          </div>
-          <span className="font-display text-sm font-bold">Admin Panel</span>
-        </div>
+   return (
+     <div className="flex min-h-screen w-full bg-[#0a0a0c] text-slate-100">
+       {/* Sidebar */}
+       <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-white/5 bg-[#0d0d0f] lg:flex">
+         <div className="flex items-center gap-3 border-b border-white/5 p-6">
+           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+             <ShieldAlert className="h-6 w-6 text-white" />
+           </div>
+           <div>
+             <span className="block font-display text-base font-bold tracking-tight text-white">Admin Panel</span>
+             <span className="text-[10px] font-medium uppercase tracking-widest text-primary">Premium</span>
+           </div>
+         </div>
+ 
+         <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
+           {navItems.map((group) => (
+             <div key={group.category} className="space-y-2">
+               <h3 className="px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
+                 {group.category}
+               </h3>
+               <div className="space-y-1">
+                 {group.items.map((item) => {
+                   const active = pathname === item.url;
+                   return (
+                     <Link
+                       key={item.url}
+                       to={item.url}
+                       className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
+                         active
+                           ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                           : "text-slate-400 hover:bg-white/5 hover:text-slate-100"
+                       }`}
+                     >
+                       <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-slate-500 group-hover:text-slate-300"}`} />
+                       <span className="font-medium">{item.title}</span>
+                     </Link>
+                   );
+                 })}
+               </div>
+             </div>
+           ))}
+         </nav>
 
-        <nav className="flex-1 space-y-1 p-3">
-          {navItems.map((item) => {
-            const active = pathname === item.url;
-            return (
-              <Link
-                key={item.url}
-                to={item.url}
-                className={`flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm transition-colors ${
-                  active
-                    ? "bg-primary/10 text-primary font-medium"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                <item.icon className="h-4 w-4" />
-                {item.title}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="space-y-1 border-t border-border p-3">
-          <Link
-            to="/"
-            className="flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar ao site
-          </Link>
-          <button
-            onClick={signOut}
-            className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:bg-muted hover:text-foreground"
-          >
-            <LogOut className="h-4 w-4" />
-            Sair
-          </button>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto p-6">{children}</main>
-    </div>
-  );
+         <div className="space-y-1 border-t border-white/5 p-4 bg-[#0d0d0f]">
+           <Link
+             to="/"
+             className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-100 transition-colors"
+           >
+             <ArrowLeft className="h-4 w-4 text-slate-500" />
+             Voltar ao site
+           </Link>
+           <button
+             onClick={signOut}
+             className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-rose-400 transition-colors"
+           >
+             <LogOut className="h-4 w-4" />
+             Sair do Sistema
+           </button>
+         </div>
+       </aside>
+ 
+       {/* Main */}
+       <main className="flex-1 overflow-y-auto bg-[#0a0a0c] p-4 lg:p-8 custom-scrollbar">
+         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+           {children}
+         </div>
+       </main>
+     </div>
+   );
 }
