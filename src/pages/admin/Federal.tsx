@@ -9,20 +9,41 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
  import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
  import { useToast } from "@/hooks/use-toast";
-import { Loader2, RefreshCw, Trophy, Plus, Trash2 } from "lucide-react";
+import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
  import { format } from "date-fns";
  
  export default function AdminFederal() {
    const queryClient = useQueryClient();
    const { toast } = useToast();
     const [fetching, setFetching] = useState(false);
-    const [open, setOpen] = useState(false);
+     const [open, setOpen] = useState(false);
+     const [editingId, setEditingId] = useState<string | null>(null);
     const [manualResult, setManualResult] = useState({
       concurso: "",
       data_sorteio: "",
       p1: "", p2: "", p3: "", p4: "", p5: ""
     });
-    const addManual = async () => {
+    const handleEdit = (r: any) => {
+      setEditingId(r.id);
+      setManualResult({
+        concurso: r.concurso,
+        data_sorteio: r.data_sorteio.split('T')[0],
+        p1: r.premios.find((p: any) => p.premio === "1")?.numero || "",
+        p2: r.premios.find((p: any) => p.premio === "2")?.numero || "",
+        p3: r.premios.find((p: any) => p.premio === "3")?.numero || "",
+        p4: r.premios.find((p: any) => p.premio === "4")?.numero || "",
+        p5: r.premios.find((p: any) => p.premio === "5")?.numero || "",
+      });
+      setOpen(true);
+    };
+
+    const handleAdd = () => {
+      setEditingId(null);
+      setManualResult({ concurso: "", data_sorteio: "", p1: "", p2: "", p3: "", p4: "", p5: "" });
+      setOpen(true);
+    };
+
+    const saveResult = async () => {
       setFetching(true);
       try {
         const premios = [
@@ -32,19 +53,24 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2 } from "lucide-react";
           { premio: "4", numero: manualResult.p4 },
           { premio: "5", numero: manualResult.p5 },
         ];
-  
-        const { error } = await supabase.from("federal_lottery_results").insert({
+
+        const payload = {
           concurso: manualResult.concurso,
           data_sorteio: manualResult.data_sorteio,
           premios
-        });
-  
+        };
+
+        const { error } = editingId 
+          ? await supabase.from("federal_lottery_results").update(payload).eq("id", editingId)
+          : await supabase.from("federal_lottery_results").insert(payload);
+
         if (error) throw error;
-        toast({ title: "Resultado adicionado manualmente" });
+        toast({ title: editingId ? "Resultado atualizado" : "Resultado adicionado" });
         setOpen(false);
+        setEditingId(null);
         queryClient.invalidateQueries({ queryKey: ["federal-results"] });
       } catch (err: any) {
-        toast({ title: "Erro ao adicionar", description: err.message, variant: "destructive" });
+        toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
       } finally {
         setFetching(false);
       }
@@ -90,12 +116,10 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2 } from "lucide-react";
        <div className="mb-6 flex items-center justify-between">
          <h1 className="font-display text-2xl font-bold">Loteria Federal</h1>
           <div className="flex gap-2">
-            <Dialog open={open} onOpenChange={setOpen}>
-              <DialogTrigger asChild>
-                <Button variant="outline"><Plus className="mr-2 h-4 w-4" /> Adicionar Manual</Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader><DialogTitle>Resultado Manual</DialogTitle></DialogHeader>
+             <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditingId(null); }}>
+               <Button variant="outline" onClick={handleAdd}><Plus className="mr-2 h-4 w-4" /> Adicionar Manual</Button>
+               <DialogContent className="sm:max-w-md">
+                 <DialogHeader><DialogTitle>{editingId ? "Editar Resultado" : "Novo Resultado Manual"}</DialogTitle></DialogHeader>
                 <div className="grid gap-4 py-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -115,7 +139,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2 } from "lucide-react";
                       </div>
                     ))}
                   </div>
-                  <Button onClick={addManual} disabled={fetching || !manualResult.concurso || !manualResult.data_sorteio}>
+                   <Button onClick={saveResult} disabled={fetching || !manualResult.concurso || !manualResult.data_sorteio}>
                     {fetching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Salvar Resultado
                   </Button>
                 </div>
@@ -159,8 +183,11 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2 } from "lucide-react";
                         {p.numero}
                       </TableCell>
                     ))}
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" onClick={() => deleteResult(r.id)}>
+                     <TableCell className="text-right flex justify-end gap-1">
+                       <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
+                         <Pencil className="h-4 w-4 text-primary" />
+                       </Button>
+                       <Button variant="ghost" size="icon" onClick={() => deleteResult(r.id)}>
                         <Trash2 className="h-4 w-4 text-destructive" />
                        </Button>
                     </TableCell>
