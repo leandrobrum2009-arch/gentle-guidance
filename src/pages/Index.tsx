@@ -32,7 +32,7 @@ import Footer from "@/components/Footer";
  import RaffleCarousel from "@/components/RaffleCarousel";
 import CampaignCard from "@/components/CampaignCard";
  import WinnerCard from "@/components/WinnerCard";
- import LiveRouletteFeed from "@/components/LiveRouletteFeed";
+  import LiveActivityFeed from "@/components/LiveActivityFeed";
  import Roulette from "@/components/Roulette";
 import { useCampaigns, useWinners } from "@/hooks/useData";
 
@@ -121,10 +121,10 @@ const Index = () => {
                </div>
  
                <div className="space-y-10">
-                 {/* Live Activity Feed */}
-                 <div className="rounded-3xl border border-white/5 bg-card/40 backdrop-blur-xl p-6 shadow-2xl ring-1 ring-white/10">
-                   <LiveRouletteFeed />
-                 </div>
+                  {/* Live Activity Feed */}
+                  <div className="rounded-3xl border border-white/5 bg-card/40 backdrop-blur-xl p-6 shadow-2xl ring-1 ring-white/10">
+                    <LiveActivityFeed />
+                  </div>
  
                  {/* Small Featured Roulette */}
                  {featuredCampaign?.roulette_enabled && (
