@@ -1,0 +1,115 @@
+import AdminLayout from "@/components/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+export default function AdminSettings() {
+  const [settings, setSettings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    fetchSettings();
+  }, []);
+
+  const fetchSettings = async () => {
+    setLoading(true);
+    const { data, error } = await supabase.from("site_settings").select("*");
+    if (!error) setSettings(data);
+    setLoading(false);
+  };
+
+  const handleUpdate = (key: string, value: string) => {
+    setSettings(prev => prev.map(s => s.key === key ? { ...s, value } : s));
+  };
+
+  const saveSettings = async () => {
+    setSaving(true);
+    for (const s of settings) {
+      await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+    }
+    setSaving(false);
+    toast.success("Configurações salvas com sucesso!");
+  };
+
+  const getIcon = (key: string) => {
+    if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
+    if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
+    if (key.includes('whatsapp') || key.includes('support')) return <MessageSquare className="h-4 w-4" />;
+    return <Settings className="h-4 w-4" />;
+  };
+
+  return (
+    <AdminLayout>
+      <div className="mb-8 flex items-center justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Configurações do Sistema</h1>
+          <p className="text-slate-400 mt-1">Ajuste taxas, limites e informações de contato.</p>
+        </div>
+        <Button 
+          onClick={saveSettings} 
+          disabled={saving}
+          className="bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+        >
+          {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+          Salvar Alterações
+        </Button>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2">
+        {loading ? (
+          <div className="col-span-full flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
+        ) : settings.map((s) => (
+          <Card key={s.id} className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl group hover:border-primary/20 transition-all">
+            <CardHeader className="pb-2">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-white/5 text-slate-400 group-hover:text-primary transition-colors">
+                  {getIcon(s.key)}
+                </div>
+                <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-200">
+                  {s.key.replace(/_/g, ' ')}
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Input 
+                  value={s.value} 
+                  onChange={(e) => handleUpdate(s.key, e.target.value)}
+                  className="border-white/5 bg-black/20 text-white focus:border-primary/50 font-bold"
+                />
+                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+                  {s.description || "Sem descrição disponível."}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      <div className="mt-12 p-8 rounded-3xl border border-white/5 bg-gradient-to-br from-primary/5 to-purple-500/5 backdrop-blur-3xl relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+              <ShieldCheck className="h-6 w-6 text-primary" />
+              Segurança do Sistema
+            </h3>
+            <p className="text-slate-400 mt-1 max-w-md">
+              Todas as alterações realizadas no painel administrativo são registradas para fins de auditoria. 
+              Certifique-se de validar os valores antes de salvar.
+            </p>
+          </div>
+          <Button variant="outline" className="border-white/10 text-slate-300 hover:bg-white/5 h-12 px-8 rounded-xl font-bold">
+            Ver Logs de Auditoria
+          </Button>
+        </div>
+      </div>
+    </AdminLayout>
+  );
+}
