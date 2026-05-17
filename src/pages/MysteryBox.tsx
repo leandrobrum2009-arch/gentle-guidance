@@ -1,13 +1,13 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import MysteryBoxComponent from "@/components/MysteryBox";
-import { useCampaigns, useMysteryBoxes } from "@/hooks/useData";
+ import { useCampaigns, useMysteryBoxConfigs } from "@/hooks/useData";
 import { Loader2 } from "lucide-react";
 
 export default function MysteryBoxPage() {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const activeCampaign = campaigns?.find(c => c.mystery_box_enabled && c.status === "active");
-  const { data: boxes, isLoading: loadingBoxes } = useMysteryBoxes(activeCampaign?.id || "");
+   const { data: boxes, isLoading: loadingBoxes } = useMysteryBoxConfigs(activeCampaign?.id || "");
 
   const isLoading = loadingCampaigns || (!!activeCampaign && loadingBoxes);
 
