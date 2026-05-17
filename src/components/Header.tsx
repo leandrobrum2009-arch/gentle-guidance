@@ -42,11 +42,23 @@ const Header = () => {
       fetchUnread();
 
       // Realtime subscription for notifications
-      const channel = supabase.channel('schema-db-changes')
-        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, () => {
-          setUnreadCount(prev => prev + 1);
-        })
-        .subscribe();
+   const channel = supabase.channel(`notifications-${user.id}`)
+     .on('postgres_changes', { 
+       event: 'INSERT', 
+       schema: 'public', 
+       table: 'notifications', 
+       filter: `user_id=eq.${user.id}` 
+     }, (payload: any) => {
+       setUnreadCount(prev => prev + 1);
+       toast.info(payload.new.title, {
+         description: payload.new.message,
+         action: {
+           label: "Ver",
+           onClick: () => navigate("/conta#notificacoes")
+         }
+       });
+     })
+     .subscribe();
       
       return () => {
         supabase.removeChannel(channel);
