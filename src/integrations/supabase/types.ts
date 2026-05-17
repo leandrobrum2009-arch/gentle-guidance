@@ -130,6 +130,9 @@ export type Database = {
           ranking_enabled: boolean | null
           regulations: string | null
           roulette_enabled: boolean | null
+          roulette_free_tickets: number | null
+          roulette_multiplier_max: number | null
+          roulette_spin_cost: number | null
           sales_goal: number | null
           slug: string
           sold_tickets: number
@@ -164,6 +167,9 @@ export type Database = {
           ranking_enabled?: boolean | null
           regulations?: string | null
           roulette_enabled?: boolean | null
+          roulette_free_tickets?: number | null
+          roulette_multiplier_max?: number | null
+          roulette_spin_cost?: number | null
           sales_goal?: number | null
           slug: string
           sold_tickets?: number
@@ -198,6 +204,9 @@ export type Database = {
           ranking_enabled?: boolean | null
           regulations?: string | null
           roulette_enabled?: boolean | null
+          roulette_free_tickets?: number | null
+          roulette_multiplier_max?: number | null
+          roulette_spin_cost?: number | null
           sales_goal?: number | null
           slug?: string
           sold_tickets?: number
