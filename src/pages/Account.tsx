@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
    User, LogOut, Trophy, History, Coins, Activity, 
    Wallet, Bell, TrendingUp, CreditCard, Star, Gift, 
    Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-   Copy, ExternalLink, ShieldCheck, CheckCircle, Trash2, Search, Clock, Package
+   Package, ShoppingBag
  } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -36,16 +36,12 @@ import { cn } from "@/lib/utils";
 
  export default function Account() {
    const { user, signOut } = useAuth();
-   const { data: isAdmin } = useIsAdmin();
-   const { data: notifications } = useUserNotifications(user?.id || "");
    const { data: orders } = useUserOrders(user?.id || "");
    const { data: spins } = useUserSpins(user?.id || "");
    const { data: boxWins } = useUserMysteryBoxWins(user?.id || "");
    const { data: txs } = useUserWalletTransactions(user?.id || "");
    const { data: achievements } = useUserAchievements(user?.id || "");
-   const { data: rewards } = useUserRewards(user?.id || "");
    const { data: ranking } = useRanking(10);
-   const queryClient = useQueryClient();
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
@@ -65,24 +61,6 @@ import { cn } from "@/lib/utils";
      }
    }, [user]);
  
-   const markAsRead = async (id: string) => {
-     await supabase.from("notifications").update({ is_read: true }).eq("id", id);
-     queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-   };
- 
-   const deleteNotification = async (id: string) => {
-     await supabase.from("notifications").delete().eq("id", id);
-     toast.success("Notificação excluída");
-     queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-   };
- 
-   const copyReferral = () => {
-     if (affiliate?.referral_code) {
-       const url = `${window.location.origin}/register?ref=${affiliate.referral_code}`;
-       navigator.clipboard.writeText(url);
-       toast.success("Link de afiliado copiado!");
-     }
-   };
 
   const progressPercent = ((profile?.xp || 0) % 1000) / 10;
   const chartData = (txs || []).slice(0, 10).reverse().map((t: any) => ({
