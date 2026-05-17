@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -75,7 +75,13 @@ const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="hidden items-center gap-1 xl:flex">
+          {/* Live Indicator */}
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
+            <Activity className="h-3 w-3 text-destructive animate-pulse" />
+            <span className="text-[10px] font-black text-destructive uppercase tracking-tighter">Live: 2,451 online</span>
+          </div>
+
           {navLinks.map((link) => (
             <Link
               key={link.href}
