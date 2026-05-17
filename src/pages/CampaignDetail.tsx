@@ -2,31 +2,48 @@ import { useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Calendar, ArrowLeft, Minus, Plus, ShoppingCart,
-  Shield, Trophy, Users, Share2, Loader2,
+  Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
+  Gift, Award, TrendingUp, Info, Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useCampaign } from "@/hooks/useData";
+import { useCampaign, useMysteryBoxes, useRoulettePrizes, useWinners } from "@/hooks/useData";
+import CampaignPricing from "@/components/CampaignPricing";
+import Roulette from "@/components/Roulette";
+import MysteryBox from "@/components/MysteryBox";
+import UserRanking from "@/components/UserRanking";
+import { toast } from "sonner";
+import { useAuth } from "@/contexts/AuthContext";
 
 const QUICK_QTY = [1, 5, 10, 25, 50, 100];
 
 const CampaignDetail = () => {
   const { id } = useParams<{ id: string }>();
+  const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
-  const [quantity, setQuantity] = useState(1);
+  const { data: mysteryBoxes } = useMysteryBoxes(id || "");
+  const { data: roulettePrizes } = useRoulettePrizes(id || "");
+  const { data: allWinners } = useWinners();
+
+  const campaignWinners = useMemo(() => {
+    return allWinners?.filter(w => w.campaign_id === id) || [];
+  }, [allWinners, id]);
 
   const progress = campaign
     ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
     : 0;
 
-  const total = useMemo(
-    () => (campaign ? quantity * Number(campaign.ticket_price) : 0),
-    [quantity, campaign]
-  );
+  const handleBuy = (quantity: number) => {
+    if (!user) {
+      toast.error("Você precisa estar logado para comprar!");
+      return;
+    }
+    toast.success(`Pedido de ${quantity} bilhetes gerado! Redirecionando para o pagamento...`);
+    // Navigation logic here
+  };
 
   if (isLoading) {
     return (
@@ -119,42 +136,108 @@ const CampaignDetail = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-2">
-            <div className="sticky top-20 space-y-4">
-              <div className="rounded-xl border border-border/50 bg-card p-5 space-y-5 glow-primary">
-                <div className="text-center">
-                  <p className="text-xs text-muted-foreground">Valor por bilhete</p>
-                  <p className="font-display text-3xl font-bold text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-                </div>
-                <Separator />
-                <div>
-                  <p className="mb-2 text-center text-xs font-medium text-muted-foreground">Selecione a quantidade</p>
-                  <div className="grid grid-cols-3 gap-2">
-                    {QUICK_QTY.map((q) => (
-                      <button key={q} onClick={() => setQuantity(q)} className={`rounded-lg border py-2.5 text-sm font-semibold transition-all ${quantity === q ? "border-primary bg-primary/10 text-primary" : "border-border bg-secondary/50 text-foreground hover:border-primary/50"}`}>{q}</button>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-center justify-center gap-4">
-                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-foreground transition-colors hover:border-primary"><Minus className="h-4 w-4" /></button>
-                  <span className="w-16 text-center font-display text-2xl font-bold">{quantity}</span>
-                  <button onClick={() => setQuantity(quantity + 1)} className="flex h-10 w-10 items-center justify-center rounded-lg border border-border bg-secondary text-foreground transition-colors hover:border-primary"><Plus className="h-4 w-4" /></button>
-                </div>
-                <Separator />
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">Total</span>
-                  <span className="font-display text-2xl font-bold text-primary">R$ {total.toFixed(2).replace(".", ",")}</span>
-                </div>
-                <Button size="lg" className="w-full gap-2 text-base font-bold" disabled={!isActive}>
-                  <ShoppingCart className="h-5 w-5" />{isActive ? "Comprar Bilhetes" : "Campanha Encerrada"}
-                </Button>
-                <p className="text-center text-[11px] text-muted-foreground">Pagamento via PIX • Confirmação instantânea</p>
+          <div className="lg:col-span-2 space-y-6">
+            <div className="sticky top-20 space-y-6">
+              <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-xl ring-1 ring-primary/10">
+                <CampaignPricing campaign={campaign} onBuy={handleBuy} />
               </div>
-              <Button variant="outline" className="w-full gap-2 text-sm"><Share2 className="h-4 w-4" />Compartilhar Campanha</Button>
+              
+              {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-lg">
+                  <Roulette prizes={roulettePrizes} />
+                </div>
+              )}
+
+              {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
+                <MysteryBox boxes={mysteryBoxes} />
+              )}
+
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">
+                  <Share2 className="h-4 w-4 text-primary" /> Compartilhar
+                </Button>
+                <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">
+                  <Award className="h-4 w-4 text-primary" /> Afiliar-se
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </motion.div>
+      </motion.div>
+
+      <div className="container pb-20">
+        <div className="grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2 space-y-8">
+            {/* Description & Info */}
+            <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
+              <h2 className="flex items-center gap-2 text-lg font-bold">
+                <Info className="h-5 w-5 text-primary" /> Sobre esta rifa
+              </h2>
+              <div className="prose prose-invert max-w-none text-muted-foreground text-sm leading-relaxed">
+                {campaign.description || "Sem descrição detalhada disponível."}
+              </div>
+            </div>
+
+            {/* Winners section */}
+            {campaignWinners.length > 0 && (
+              <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
+                <h2 className="flex items-center gap-2 text-lg font-bold">
+                  <Trophy className="h-5 w-5 text-primary" /> Ganhadores desta edição
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {campaignWinners.map((winner) => (
+                    <div key={winner.id} className="flex items-center gap-3 p-3 rounded-xl bg-secondary/30 border border-border/50">
+                      <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Trophy className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold">{winner.winner_name}</p>
+                        <p className="text-[10px] text-muted-foreground">Bilhete #{winner.ticket_number}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-6">
+            {campaign.ranking_enabled && (
+              <UserRanking />
+            )}
+
+            {/* Gamification / VIP Box */}
+            <div className="rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/30 p-6 border border-primary/20 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
+                  <TrendingUp className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-sm uppercase">Sistema VIP</h3>
+                  <p className="text-[10px] text-muted-foreground">Quanto mais você participa, mais ganha!</p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between text-[10px] font-bold uppercase">
+                  <span>Próximo Nível</span>
+                  <span className="text-primary">XP: 450/1000</span>
+                </div>
+                <div className="h-2 rounded-full bg-background overflow-hidden border border-border/50">
+                  <div className="h-full w-[45%] bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
+                </div>
+                <p className="text-[10px] text-center text-muted-foreground italic">
+                  "Membros VIP têm 2x mais chances na Caixa Misteriosa!"
+                </p>
+              </div>
+              <Button variant="secondary" size="sm" className="w-full text-[10px] font-bold uppercase tracking-widest">
+                Ver Benefícios
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <Footer />
     </div>
   );
