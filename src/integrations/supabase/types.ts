@@ -855,6 +855,39 @@ export type Database = {
           },
         ]
       }
+      user_achievements: {
+        Row: {
+          achievement_key: string
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          points_reward: number | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achievement_key: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          points_reward?: number | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          achievement_key?: string
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          points_reward?: number | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_rewards: {
         Row: {
           created_at: string | null
@@ -899,6 +932,42 @@ export type Database = {
         Update: {
           id?: string
           role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
+      wallet_transactions: {
+        Row: {
+          amount: number
+          created_at: string
+          description: string | null
+          id: string
+          pix_key: string | null
+          status: string
+          type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          pix_key?: string | null
+          status?: string
+          type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          description?: string | null
+          id?: string
+          pix_key?: string | null
+          status?: string
+          type?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
