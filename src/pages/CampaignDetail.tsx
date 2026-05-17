@@ -164,7 +164,6 @@ const CampaignDetail = () => {
           </div>
         </div>
       </motion.div>
-      </motion.div>
 
       <div className="container pb-20">
         <div className="grid gap-8 lg:grid-cols-3">
