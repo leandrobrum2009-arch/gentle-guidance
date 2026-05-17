@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
-import { Gift, Sparkles, Box, Loader2, Trophy, Clock, Zap } from "lucide-react";
+import { Gift, Sparkles, Box, Loader2, Trophy, Clock, Zap, Coins } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { MysteryBox as MysteryBoxType, useMysteryBoxWins } from "@/hooks/useData";
 import { toast } from "sonner";
@@ -25,6 +25,18 @@ const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
   const queryClient = useQueryClient();
   const { data: recentWins } = useMysteryBoxWins(3);
   const boxControls = useAnimation();
+  const [userProfile, setUserProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      fetchUserProfile();
+    }
+  }, [user]);
+
+  const fetchUserProfile = async () => {
+    const { data } = await supabase.from('profiles').select('*').eq('user_id', user?.id).single();
+    setUserProfile(data);
+  };
 
   const handleOpen = async () => {
     if (boxes.length === 0 || isOpening) return;
@@ -33,7 +45,30 @@ const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
       return;
     }
 
+    const firstBox = boxes[0];
+    const cost = Number(firstBox.cost_to_open || 0);
+    
+    if ((userProfile?.balance || 0) < cost) {
+      toast.error(`Saldo insuficiente! Custa R$ ${cost.toFixed(2)} para abrir.`);
+      return;
+    }
+
     setIsOpening(true);
+
+    // Deduct balance
+    if (cost > 0) {
+      const { error: balanceError } = await supabase
+        .from('profiles')
+        .update({ balance: Number(userProfile.balance) - cost })
+        .eq('user_id', user.id);
+        
+      if (balanceError) {
+        setIsOpening(false);
+        toast.error("Erro ao processar pagamento.");
+        return;
+      }
+      fetchUserProfile();
+    }
     
     // Shake animation
     await boxControls.start({
@@ -56,6 +91,12 @@ const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
       toast.error("Erro ao processar prêmio. Tente novamente.");
       setIsOpening(false);
       return;
+    }
+
+    // If balance prize, update profile
+    if (randomBox.prize_value && randomBox.prize_value > 0) {
+       await supabase.rpc('increment_balance', { amount: randomBox.prize_value, user_uuid: user.id });
+       fetchUserProfile();
     }
 
     setSelectedBox(randomBox);

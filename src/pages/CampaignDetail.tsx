@@ -280,11 +280,11 @@ import { useAuth } from "@/contexts/AuthContext";
                  </div>
                </div>
               
-               {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-                 <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-lg">
-                   <Roulette prizes={roulettePrizes} campaignId={campaign.id} />
-                 </div>
-               )}
+              {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                <div className="rounded-[40px] border border-white/5 bg-black/20 p-2 shadow-2xl backdrop-blur-xl">
+                  <Roulette prizes={roulettePrizes} campaign={campaign} />
+                </div>
+              )}
 
               {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
                 <MysteryBox boxes={mysteryBoxes} />

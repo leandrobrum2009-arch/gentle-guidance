@@ -69,9 +69,9 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="h-16 md:h-20" /> {/* Spacer for fixed header */}
+       <div className="h-20 md:h-24" /> {/* Improved Spacer for fixed header */}
 
-      {loadingCampaigns ? (
+       {loadingCampaigns ? (
         <div className="flex h-[90vh] items-center justify-center">
           <Loader2 className="h-10 w-10 animate-spin text-primary" />
         </div>
@@ -81,24 +81,32 @@ const Index = () => {
              <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active").slice(0, 5)} />
            )}
 
-          {/* Gamification Navigation */}
-          <section className="container relative z-20 py-12 md:py-16">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {/* Gamification Navigation - Improved Spacing and Visuals */}
+          <section className="container relative z-30 -mt-10 md:-mt-16 py-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
               {[
-                { icon: Gamepad2, title: "Roleta VIP", desc: "Gire e Ganhe", color: "from-primary/20", href: "/roleta" },
-                { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/20", href: "/caixa-misteriosa" },
-                { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/20", href: "/ranking" },
-                { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/20", href: "/afiliados" },
+                { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
+                { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa", badge: "NOVO" },
+                { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/40", href: "/ranking" },
+                { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/40", href: "/afiliados" },
               ].map((item, i) => (
                 <Link key={i} to={item.href}>
                   <motion.div
-                    whileHover={{ y: -5, scale: 1.02 }}
-                    className={`group relative overflow-hidden h-full rounded-2xl border border-white/10 bg-card/60 p-6 glass-morphism backdrop-blur-md cursor-pointer`}
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className={`group relative overflow-hidden h-full rounded-3xl border border-white/10 bg-zinc-900/80 p-6 glass-morphism backdrop-blur-xl cursor-pointer shadow-2xl transition-all duration-300`}
                   >
-                    <div className={`absolute -right-4 -top-4 h-24 w-24 bg-gradient-to-br ${item.color} to-transparent blur-2xl transition-opacity group-hover:opacity-100 opacity-50`} />
-                    <item.icon className="relative z-10 h-8 w-8 text-primary mb-4" />
-                    <h3 className="relative z-10 text-xs font-black uppercase tracking-widest">{item.title}</h3>
-                    <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter mt-1">{item.desc}</p>
+                    <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-40`} />
+                    {item.badge && (
+                      <Badge className="absolute top-4 right-4 bg-primary text-[8px] font-black italic animate-bounce px-2 py-0.5">
+                        {item.badge}
+                      </Badge>
+                    )}
+                    <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
+                      <item.icon className="relative z-10 h-6 w-6 text-primary" />
+                    </div>
+                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-white leading-none mb-2">{item.title}</h3>
+                    <p className="relative z-10 text-[10px] text-white/40 uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>
               ))}

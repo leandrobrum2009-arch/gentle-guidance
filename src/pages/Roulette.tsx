@@ -30,7 +30,7 @@ export default function Roulette() {
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
             </div>
           ) : activeCampaign && prizes ? (
-            <RouletteComponent campaignId={activeCampaign.id} prizes={prizes} />
+            <RouletteComponent campaign={activeCampaign} prizes={prizes} />
           ) : (
             <div className="text-center py-20 border border-dashed border-white/10 rounded-3xl">
               <p className="text-muted-foreground uppercase font-bold tracking-widest text-sm">
