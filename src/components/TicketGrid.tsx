@@ -1,7 +1,8 @@
  import { useState, useMemo } from "react";
  import { motion, AnimatePresence } from "framer-motion";
- import { Check, Info, Lock } from "lucide-react";
+ import { Check, Info, Lock, Trophy } from "lucide-react";
  import { cn } from "@/lib/utils";
+ import { Badge } from "@/components/ui/badge";
  import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
  
  interface TicketGridProps {
