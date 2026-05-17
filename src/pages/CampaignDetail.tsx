@@ -1,11 +1,11 @@
  import { useState, useMemo, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-   Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
+ import {
+    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star
+ } from "lucide-react";
  import { cn } from "@/lib/utils";
-} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
