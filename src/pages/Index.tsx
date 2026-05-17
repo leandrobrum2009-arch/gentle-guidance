@@ -1,9 +1,10 @@
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
-  ArrowRight, ShieldCheck, Heart
+   ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
 } from "lucide-react";
 import { motion } from "framer-motion";
+ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
       {/* Gamification Teaser */}
