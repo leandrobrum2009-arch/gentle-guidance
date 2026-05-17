@@ -1,3 +1,4 @@
+ import AdminFederal from "./pages/admin/Federal";
  import Checkout from "./pages/Checkout";
              <Route path="/checkout/:orderId" element={<Checkout />} />
 import Account from "./pages/Account";
@@ -42,7 +43,8 @@ const App = () => (
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/admin/campanhas" element={<AdminCampaigns />} />
             <Route path="/admin/pedidos" element={<AdminOrders />} />
-            <Route path="/admin/ganhadores" element={<AdminWinners />} />
+             <Route path="/admin/ganhadores" element={<AdminWinners />} />
+             <Route path="/admin/federal" element={<AdminFederal />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

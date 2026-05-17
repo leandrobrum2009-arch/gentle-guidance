@@ -212,6 +212,30 @@ export type Database = {
         }
         Relationships: []
       }
+      federal_lottery_results: {
+        Row: {
+          concurso: string
+          created_at: string | null
+          data_sorteio: string
+          id: string
+          premios: Json
+        }
+        Insert: {
+          concurso: string
+          created_at?: string | null
+          data_sorteio: string
+          id?: string
+          premios: Json
+        }
+        Update: {
+          concurso?: string
+          created_at?: string | null
+          data_sorteio?: string
+          id?: string
+          premios?: Json
+        }
+        Relationships: []
+      }
       mystery_box_wins: {
         Row: {
           box_id: string
@@ -340,6 +364,7 @@ export type Database = {
           pix_code: string | null
           pix_qr_code_base64: string | null
           quantity: number
+          stripe_session_id: string | null
           total_amount: number
           user_id: string
         }
@@ -354,6 +379,7 @@ export type Database = {
           pix_code?: string | null
           pix_qr_code_base64?: string | null
           quantity?: number
+          stripe_session_id?: string | null
           total_amount?: number
           user_id: string
         }
@@ -368,6 +394,7 @@ export type Database = {
           pix_code?: string | null
           pix_qr_code_base64?: string | null
           quantity?: number
+          stripe_session_id?: string | null
           total_amount?: number
           user_id?: string
         }
