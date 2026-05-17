@@ -316,7 +316,77 @@ import { cn } from "@/lib/utils";
                   </Card>
                </TabsContent>
 
-               <TabsContent value="ranking" className="space-y-6">
+                <TabsContent value="achievements" className="space-y-6">
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <CardHeader className="p-0 mb-6">
+                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                             <Star className="h-4 w-4 text-amber-400" /> Galeria de Conquistas
+                         </CardTitle>
+                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Seu legado na plataforma</CardDescription>
+                      </CardHeader>
+                      <div className="grid gap-4 sm:grid-cols-2">
+                         {achievements?.length ? achievements.map((a: any) => (
+                             <div key={a.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+                                 <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                                     <Trophy className="h-6 w-6 text-amber-500" />
+                                 </div>
+                                 <div>
+                                     <p className="text-sm font-black uppercase tracking-tight">{a.title}</p>
+                                     <p className="text-xs text-slate-500">{a.description}</p>
+                                 </div>
+                             </div>
+                         )) : (
+                             <div className="col-span-full text-center py-20 opacity-30">
+                                 <p className="text-sm font-black uppercase tracking-widest">Nenhuma conquista ainda</p>
+                             </div>
+                         )}
+                      </div>
+                   </Card>
+                </TabsContent>
+
+                <TabsContent value="games" className="space-y-6">
+                   <div className="grid lg:grid-cols-2 gap-6">
+                      <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                         <CardHeader className="p-0 mb-6">
+                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                 <RotateCw className="h-4 w-4 text-primary" /> Últimos Giros
+                             </CardTitle>
+                         </CardHeader>
+                         <div className="space-y-3">
+                            {spins?.length ? spins.slice(0, 5).map((s: any) => (
+                                <div key={s.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                    <div>
+                                        <p className="text-xs font-black uppercase tracking-tight">{s.prize_label}</p>
+                                        <p className="text-[9px] text-slate-500 font-bold uppercase">{s.campaigns?.title}</p>
+                                    </div>
+                                    <p className="text-xs font-bold text-primary">R$ {Number(s.prize_value).toFixed(2)}</p>
+                                </div>
+                            )) : <p className="text-center py-10 text-[10px] text-slate-600 font-black uppercase italic">Sem giros registrados</p>}
+                         </div>
+                      </Card>
+
+                      <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                         <CardHeader className="p-0 mb-6">
+                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                 <Package className="h-4 w-4 text-orange-400" /> Caixas Abertas
+                             </CardTitle>
+                         </CardHeader>
+                         <div className="space-y-3">
+                            {boxWins?.length ? boxWins.slice(0, 5).map((bw: any) => (
+                                <div key={bw.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                    <div>
+                                        <p className="text-xs font-black uppercase tracking-tight">{bw.prize_title}</p>
+                                        <p className="text-[9px] text-slate-500 font-bold uppercase">{format(new Date(bw.created_at), 'dd/MM HH:mm')}</p>
+                                    </div>
+                                    <p className="text-xs font-bold text-orange-400">R$ {Number(bw.prize_value).toFixed(2)}</p>
+                                </div>
+                            )) : <p className="text-center py-10 text-[10px] text-slate-600 font-black uppercase italic">Sem vitórias em caixas</p>}
+                         </div>
+                      </Card>
+                   </div>
+                </TabsContent>
+
+                <TabsContent value="ranking" className="space-y-6">
                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
                      <div className="absolute top-0 right-0 p-8 opacity-5">
                         <Crown className="h-64 w-64" />
