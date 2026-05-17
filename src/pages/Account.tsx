@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { 
   User, Ticket, Users, Award, Wallet, TrendingUp, 
@@ -21,6 +22,7 @@ import { toast } from "sonner";
 
 export default function Account() {
   const { user, signOut } = useAuth();
+  const navigate = useNavigate();
   const { data: isAdmin } = useIsAdmin();
               {isAdmin && (
                 <Button variant="ghost" className="w-full justify-start gap-3 h-12 rounded-xl text-sm font-bold text-primary hover:bg-primary/10" onClick={() => navigate("/admin")}>
