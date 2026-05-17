@@ -77,17 +77,16 @@ const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
       {/* Ambient background glow */}
       <div className="absolute -left-20 -top-20 h-40 w-40 bg-primary/20 blur-3xl rounded-full" />
       
-      <div className="text-center space-y-2 relative z-10">
-      <div className="text-center space-y-2">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
-          <Sparkles className="h-3 w-3" />
-          Caixa Misteriosa
-        </div>
-        <h2 className="text-2xl font-black italic uppercase tracking-tight">Prêmios Instantâneos</h2>
-        <p className="text-sm text-muted-foreground max-w-xs mx-auto">
-          Ao comprar seus bilhetes, você pode desbloquear caixas com prêmios surpresa!
-        </p>
-      </div>
+       <div className="text-center space-y-2 relative z-10">
+         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-bold uppercase tracking-wider">
+           <Sparkles className="h-3 w-3" />
+           Caixa Misteriosa
+         </div>
+         <h2 className="text-2xl font-black italic uppercase tracking-tight">Prêmios Instantâneos</h2>
+         <p className="text-sm text-muted-foreground max-w-xs mx-auto">
+           Ao comprar seus bilhetes, você pode desbloquear caixas com prêmios surpresa!
+         </p>
+       </div>
 
       <div className="relative h-48 w-full flex items-center justify-center">
         <AnimatePresence mode="wait">
