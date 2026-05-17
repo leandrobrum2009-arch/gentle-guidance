@@ -1,4 +1,24 @@
-import { Zap, Trophy, Loader2 } from "lucide-react";
+import { Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift } from "lucide-react";
+      {/* Gamification Teaser */}
+      <section className="container py-6">
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/30 p-4 border border-primary/20 flex flex-col items-center text-center gap-2">
+            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
+              <Gamepad2 className="h-5 w-5 text-primary" />
+            </div>
+            <h3 className="text-xs font-black uppercase tracking-tighter">Roleta da Sorte</h3>
+            <p className="text-[10px] text-muted-foreground">Gire e ganhe prêmios!</p>
+          </div>
+          <div className="rounded-2xl bg-gradient-to-br from-secondary/30 to-background p-4 border border-border/50 flex flex-col items-center text-center gap-2">
+            <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
+              <Gift className="h-5 w-5 text-primary" />
+            </div>
+            <h3 className="text-xs font-black uppercase tracking-tighter">Caixa Premiada</h3>
+            <p className="text-[10px] text-muted-foreground">Prêmios instantâneos</p>
+          </div>
+        </div>
+      </section>
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroCampaign from "@/components/HeroCampaign";
