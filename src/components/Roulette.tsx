@@ -81,6 +81,12 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
     setIsSpinning(true);
     playSound('spin');
     
+    // Initial vibration effect
+    await controls.start({
+      scale: [1, 1.05, 1],
+      transition: { duration: 0.2 }
+    });
+
     // Deduct balance
     if (cost > 0) {
       const { error: balanceError } = await supabase
