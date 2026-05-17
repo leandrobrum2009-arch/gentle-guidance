@@ -12,11 +12,10 @@ export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
   const [search, setSearch] = useState("");
 
-  const filtered = users?.filter(u => 
-    u.full_name?.toLowerCase().includes(search.toLowerCase()) || 
-    u.email?.toLowerCase().includes(search.toLowerCase()) ||
-    u.phone?.includes(search)
-  );
+   const filtered = users?.filter(u => 
+     u.name?.toLowerCase().includes(search.toLowerCase()) || 
+     u.phone?.includes(search)
+   );
 
   return (
     <AdminLayout>
@@ -45,10 +44,10 @@ export default function AdminUsers() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Usuário</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Email</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Telefone</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Membro desde</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Usuário / ID</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Telefone</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Saldo</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Membro desde</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -58,23 +57,20 @@ export default function AdminUsers() {
                       <div className="flex items-center gap-3">
                         <Avatar className="h-10 w-10 border border-white/10 ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
                           <AvatarImage src={u.avatar_url} />
-                          <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                            {u.full_name?.substring(0, 2).toUpperCase() || "U"}
-                          </AvatarFallback>
+                         <AvatarFallback className="bg-primary/10 text-primary font-bold uppercase">
+                           {u.name?.substring(0, 2) || "U"}
+                         </AvatarFallback>
                         </Avatar>
                         <div>
-                          <p className="font-bold text-white tracking-tight">{u.full_name || "Sem Nome"}</p>
-                          <p className="text-[10px] text-slate-500 font-mono">{u.id.substring(0, 8)}</p>
+                           <p className="font-bold text-white tracking-tight">{u.name || "Sem Nome"}</p>
+                           <p className="text-[10px] text-slate-500 font-mono">{(u.user_id || u.id).substring(0, 8)}</p>
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-300 font-medium">
-                      <div className="flex items-center gap-2">
-                        <Mail className="h-3.5 w-3.5 text-slate-500" />
-                        {u.email}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-slate-300 font-medium">{u.phone || "-"}</TableCell>
+                     <TableCell className="text-slate-300 font-medium">{u.phone || "-"}</TableCell>
+                     <TableCell className="text-emerald-400 font-bold font-mono text-xs">
+                       R$ {Number(u.balance || 0).toFixed(2)}
+                     </TableCell>
                     <TableCell className="text-slate-400 text-sm">
                       {format(new Date(u.created_at), 'dd MMM yyyy')}
                     </TableCell>
