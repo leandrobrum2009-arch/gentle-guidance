@@ -3,7 +3,8 @@
  import { useAdminCampaigns, useAdminOrders, useAdminUsers } from "@/hooks/useAdmin";
  import { 
    Loader2, Megaphone, ShoppingCart, DollarSign, Users, 
-   TrendingUp, TrendingDown, ArrowUpRight, Activity, Zap
+   TrendingUp, TrendingDown, ArrowUpRight, Activity, Zap,
+   CheckCircle2, Plus, Percent, Bell
  } from "lucide-react";
  import { 
    AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
