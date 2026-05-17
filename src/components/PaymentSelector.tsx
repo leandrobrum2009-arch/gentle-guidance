@@ -12,7 +12,7 @@
  }
  
  const METHODS: PaymentMethod[] = [
-   { id: "pix", name: "PIX", icon: QrCode, description: "Confirmação instantânea" },
+    { id: "pix", name: "PIX Real", icon: QrCode, description: "Aprovação imediata via Mercado Pago" },
    { id: "stripe", name: "Cartão de Crédito", icon: CreditCard, description: "Até 12x no cartão" },
    { id: "mercadopago", name: "Mercado Pago", icon: Wallet, description: "Saldo ou Cartão" },
    { id: "card", name: "Débito Online", icon: Landmark, description: "Aprovação rápida" },
