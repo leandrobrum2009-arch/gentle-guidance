@@ -327,14 +327,14 @@
    );
  };
  
- const PrizeIcon = ({ type, className }: { type: string, className?: string }) => {
+ const PrizeIcon = ({ type, className, style }: { type: string, className?: string, style?: any }) => {
    switch (type) {
-     case 'cash': return <CreditCard className={className} />;
-     case 'credits': return <Coins className={className} />;
-     case 'product': return <ShoppingBag className={className} />;
-     case 'tickets': return <Ticket className={className} />;
-     case 'vip': return <Crown className={className} />;
-     default: return <Gift className={className} />;
+    case 'cash': return <CreditCard className={className} style={style} />;
+    case 'credits': return <Coins className={className} style={style} />;
+    case 'product': return <ShoppingBag className={className} style={style} />;
+    case 'tickets': return <Ticket className={className} style={style} />;
+    case 'vip': return <Crown className={className} style={style} />;
+    default: return <Gift className={className} style={style} />;
    }
  };
  
