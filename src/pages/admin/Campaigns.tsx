@@ -272,7 +272,14 @@ export default function AdminCampaigns() {
               <TableBody>
                 {campaigns?.map((c) => (
                   <TableRow key={c.id}>
-                    <TableCell className="font-medium">{c.title}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex flex-col">
+                        <span>{c.title}</span>
+                        {c.federal_lottery_draw && (
+                          <Badge variant="outline" className="w-fit text-[10px] py-0 h-4 border-primary text-primary">Sorteio Federal</Badge>
+                        )}
+                      </div>
+                    </TableCell>
                     <TableCell><Badge variant={statusColor(c.status)}>{c.status}</Badge></TableCell>
                     <TableCell>R$ {Number(c.ticket_price).toFixed(2)}</TableCell>
                     <TableCell>{c.sold_tickets}/{c.total_tickets}</TableCell>
