@@ -1,3 +1,7 @@
+import Roulette from "./pages/Roulette";
+import MysteryBox from "./pages/MysteryBox";
+import Ranking from "./pages/Ranking";
+import Affiliates from "./pages/Affiliates";
  import FederalResults from "./pages/FederalResults";
  import AdminFederal from "./pages/admin/Federal";
 import Checkout from "./pages/Checkout";
@@ -41,6 +45,10 @@ const App = () => (
              <Route path="/federal" element={<FederalResults />} />
             <Route path="/comunicados" element={<Announcements />} />
             <Route path="/contato" element={<Support />} />
+            <Route path="/roleta" element={<Roulette />} />
+            <Route path="/caixa-misteriosa" element={<MysteryBox />} />
+            <Route path="/ranking" element={<Ranking />} />
+            <Route path="/afiliados" element={<Affiliates />} />
             <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             
             {/* Protected Routes */}
