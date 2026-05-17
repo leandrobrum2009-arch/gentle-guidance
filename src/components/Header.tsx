@@ -75,7 +75,7 @@ const Header = () => {
 
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b border-white/5 bg-background/60 backdrop-blur-2xl py-3' : 'bg-transparent py-5'}`}>
-      <div className="container flex items-center justify-between gap-4">
+      <div className="container flex items-center justify-between gap-2 md:gap-4">
         <Link to="/" className="group flex items-center gap-3">
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 5 }}
@@ -88,9 +88,9 @@ const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 xl:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {/* Live Indicator */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
             <Activity className="h-3 w-3 text-destructive animate-pulse" />
             <span className="text-[10px] font-black text-destructive uppercase tracking-tighter">Live: 2,451 online</span>
           </div>
@@ -106,8 +106,8 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="flex flex-1 items-center justify-end gap-3">
-          <div className="hidden lg:flex relative items-center">
+        <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
+          <div className="hidden xl:flex relative items-center">
             <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
             <input 
               type="text" 
