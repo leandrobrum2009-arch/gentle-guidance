@@ -130,6 +130,7 @@ export type Database = {
           ranking_enabled: boolean | null
           regulations: string | null
           roulette_enabled: boolean | null
+          sales_goal: number | null
           slug: string
           sold_tickets: number
           status: string
@@ -163,6 +164,7 @@ export type Database = {
           ranking_enabled?: boolean | null
           regulations?: string | null
           roulette_enabled?: boolean | null
+          sales_goal?: number | null
           slug: string
           sold_tickets?: number
           status?: string
@@ -196,6 +198,7 @@ export type Database = {
           ranking_enabled?: boolean | null
           regulations?: string | null
           roulette_enabled?: boolean | null
+          sales_goal?: number | null
           slug?: string
           sold_tickets?: number
           status?: string
@@ -674,6 +677,16 @@ export type Database = {
           _user_id: string
         }
         Returns: boolean
+      }
+      perform_draw: { Args: { p_campaign_id: string }; Returns: string }
+      reserve_tickets: {
+        Args: {
+          p_campaign_id: string
+          p_numbers?: string[]
+          p_quantity: number
+          p_user_id: string
+        }
+        Returns: string
       }
     }
     Enums: {

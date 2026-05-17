@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Settings2 } from "lucide-react";
+ import { Loader2, Plus, Pencil, Trash2, Settings2, Trophy } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -40,6 +40,7 @@ interface CampaignForm {
   manual_numbers: boolean;
   lucky_numbers_prizes: string;
   federal_lottery_draw: boolean;
+  sales_goal: number;
 }
 
 const empty: CampaignForm = {
@@ -58,6 +59,7 @@ const empty: CampaignForm = {
   manual_numbers: true,
   lucky_numbers_prizes: "[]",
   federal_lottery_draw: false,
+  sales_goal: 0,
 };
 
 export default function AdminCampaigns() {
@@ -92,6 +94,7 @@ export default function AdminCampaigns() {
       manual_numbers: c.manual_numbers ?? false,
       lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
       federal_lottery_draw: c.federal_lottery_draw ?? false,
+      sales_goal: c.sales_goal ?? 0,
     });
     setOpen(true);
   };
@@ -118,6 +121,7 @@ export default function AdminCampaigns() {
       auto_numbers: form.auto_numbers,
       manual_numbers: form.manual_numbers,
       federal_lottery_draw: form.federal_lottery_draw,
+      sales_goal: Number(form.sales_goal),
     };
 
     const { error } = editId
@@ -141,7 +145,18 @@ export default function AdminCampaigns() {
     queryClient.invalidateQueries({ queryKey: ["campaigns"] });
   };
 
-  const statusColor = (s: string) => s === "active" ? "default" : s === "completed" ? "secondary" : "outline";
+   const statusColor = (s: string) => s === "active" ? "default" : s === "completed" ? "secondary" : "outline";
+ 
+   const performDraw = async (id: string) => {
+     if (!confirm("Realizar o sorteio desta campanha agora? Esta ação é irreversível.")) return;
+     setSaving(true);
+     const { data, error } = await supabase.rpc('perform_draw', { p_campaign_id: id });
+     setSaving(false);
+     if (error) { toast({ title: "Erro", description: error.message, variant: "destructive" }); return; }
+     toast({ title: "Sorteio concluído com sucesso!" });
+     queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+     queryClient.invalidateQueries({ queryKey: ["winners"] });
+   };
 
   return (
     <AdminLayout>
@@ -165,6 +180,7 @@ export default function AdminCampaigns() {
               <div className="grid grid-cols-2 gap-4">
                 <Input type="number" placeholder="Preço do bilhete" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} />
                 <Input type="number" placeholder="Total de bilhetes" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} />
+                <Input type="number" placeholder="Meta de vendas (R$)" value={form.sales_goal} onChange={(e) => set("sales_goal", e.target.value)} />
               </div>
               <Select value={form.status} onValueChange={(v) => set("status", v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
@@ -261,6 +277,11 @@ export default function AdminCampaigns() {
                     <TableCell>R$ {Number(c.ticket_price).toFixed(2)}</TableCell>
                     <TableCell>{c.sold_tickets}/{c.total_tickets}</TableCell>
                     <TableCell className="text-right">
+                      {c.status === "active" && (
+                        <Button variant="ghost" size="icon" className="text-amber-500 hover:text-amber-600 hover:bg-amber-50" onClick={() => performDraw(c.id)}>
+                          <Trophy className="h-4 w-4" />
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </TableCell>

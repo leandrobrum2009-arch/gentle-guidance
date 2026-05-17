@@ -38,6 +38,7 @@ export interface Campaign {
   federal_lottery_draw?: boolean;
   draw_number?: string;
   payment_methods?: string[];
+  sales_goal?: number;
   created_at: string;
 }
 

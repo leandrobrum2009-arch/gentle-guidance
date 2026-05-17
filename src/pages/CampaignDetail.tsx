@@ -1,5 +1,5 @@
  import { useState, useMemo, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+  import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
  import {
     Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
@@ -12,6 +12,7 @@ import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
  import { useCampaign, useMysteryBoxes, useRoulettePrizes, useWinners, useTickets } from "@/hooks/useData";
+ import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import RaffleGallery from "@/components/RaffleGallery";
  import TicketGrid from "@/components/TicketGrid";
@@ -24,8 +25,9 @@ import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
- const CampaignDetail = () => {
+   const CampaignDetail = () => {
    const { id } = useParams<{ id: string }>();
+   const navigate = useNavigate();
    const { user } = useAuth();
    const { data: campaign, isLoading } = useCampaign(id || "");
    const { data: mysteryBoxes } = useMysteryBoxes(id || "");
@@ -53,9 +55,14 @@ import { useAuth } from "@/contexts/AuthContext";
      return allWinners?.filter(w => w.campaign_id === id) || [];
    }, [allWinners, id]);
  
-   const progress = campaign
-     ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
-     : 0;
+   const progress = useMemo(() => {
+     if (!campaign) return 0;
+     if (campaign.sales_goal && campaign.sales_goal > 0) {
+       const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
+       return Math.min(100, Math.round((currentSales / campaign.sales_goal) * 100));
+     }
+     return Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
+   }, [campaign]);
  
    const handleToggleTicket = (number: string) => {
      setSelectedTickets(prev => 
@@ -63,19 +70,41 @@ import { useAuth } from "@/contexts/AuthContext";
      );
    };
  
-   const handleBuy = (quantityOrNumbers: number | string[]) => {
-     if (!user) {
-       toast.error("Você precisa estar logado para comprar!");
-       return;
-     }
-     
-     setIsPurchasing(true);
-     // Simulate processing
-     setTimeout(() => {
-       setIsPurchasing(false);
-       setShowSuccess(true);
-     }, 1500);
-   };
+    const handleBuy = async (quantityOrNumbers: number | string[]) => {
+      if (!user) {
+        toast.error("Você precisa estar logado para comprar!");
+        navigate("/entrar");
+        return;
+      }
+      
+      setIsPurchasing(true);
+      
+      try {
+        const quantity = typeof quantityOrNumbers === 'number' ? quantityOrNumbers : quantityOrNumbers.length;
+        const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
+        
+        const { data: orderId, error } = await supabase.rpc('reserve_tickets', {
+          p_campaign_id: id,
+          p_user_id: user.id,
+          p_quantity: quantity,
+          p_numbers: numbers
+        });
+
+        if (error) throw error;
+
+        setIsPurchasing(false);
+        setShowSuccess(true);
+        
+        // Redirect after short delay
+        setTimeout(() => {
+          navigate(`/checkout/${orderId}`);
+        }, 3000);
+
+      } catch (error: any) {
+        setIsPurchasing(false);
+        toast.error(error.message || "Erro ao reservar números. Tente novamente.");
+      }
+    };
 
   if (isLoading) {
     return (
