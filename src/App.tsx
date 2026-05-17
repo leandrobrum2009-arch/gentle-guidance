@@ -1,7 +1,6 @@
  import FederalResults from "./pages/FederalResults";
  import AdminFederal from "./pages/admin/Federal";
- import Checkout from "./pages/Checkout";
-             <Route path="/checkout/:orderId" element={<Checkout />} />
+import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
@@ -42,6 +41,7 @@ const App = () => (
              <Route path="/federal" element={<FederalResults />} />
             <Route path="/comunicados" element={<Announcements />} />
             <Route path="/contato" element={<Support />} />
+            <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
             
             {/* Protected Routes */}
             <Route path="/conta" element={<ProtectedRoute><Account /></ProtectedRoute>} />
