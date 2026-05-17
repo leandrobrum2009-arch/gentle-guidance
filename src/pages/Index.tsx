@@ -34,6 +34,7 @@ import CampaignCard from "@/components/CampaignCard";
  import WinnerCard from "@/components/WinnerCard";
   import LiveActivityFeed from "@/components/LiveActivityFeed";
  import Roulette from "@/components/Roulette";
+import CountdownTimer from "@/components/CountdownTimer";
 import { useCampaigns, useWinners } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
@@ -192,9 +193,15 @@ const Index = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {endingSoon.slice(0, 2).map((campaign, i) => (
                     <div key={i} className="bg-background/40 backdrop-blur-sm border border-white/10 rounded-2xl p-4 flex items-center gap-4">
-                      <img src={campaign.image_url || ""} className="h-16 w-16 rounded-xl object-cover" alt="" />
+                       <div className="relative h-16 w-16 flex-shrink-0">
+                         <img src={campaign.image_url || ""} className="h-full w-full rounded-xl object-cover" alt="" />
+                         <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse" />
+                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
+                         <div className="flex items-center justify-between mb-1">
+                           <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
+                           {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
+                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <div className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }} />
