@@ -107,6 +107,39 @@ export type Database = {
         }
         Relationships: []
       }
+      banners: {
+        Row: {
+          created_at: string | null
+          id: string
+          image_url: string
+          is_active: boolean | null
+          link_url: string | null
+          order_index: number | null
+          subtitle: string | null
+          title: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          image_url: string
+          is_active?: boolean | null
+          link_url?: string | null
+          order_index?: number | null
+          subtitle?: string | null
+          title: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          image_url?: string
+          is_active?: boolean | null
+          link_url?: string | null
+          order_index?: number | null
+          subtitle?: string | null
+          title?: string
+        }
+        Relationships: []
+      }
       campaigns: {
         Row: {
           auto_numbers: boolean | null
@@ -218,6 +251,45 @@ export type Database = {
           updated_at?: string
           urgency_tag?: string | null
           video_url?: string | null
+        }
+        Relationships: []
+      }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string | null
+          current_uses: number | null
+          discount_type: string
+          discount_value: number
+          expires_at: string | null
+          id: string
+          is_active: boolean | null
+          max_uses: number | null
+          min_purchase_amount: number | null
+        }
+        Insert: {
+          code: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_type: string
+          discount_value: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          min_purchase_amount?: number | null
+        }
+        Update: {
+          code?: string
+          created_at?: string | null
+          current_uses?: number | null
+          discount_type?: string
+          discount_value?: number
+          expires_at?: string | null
+          id?: string
+          is_active?: boolean | null
+          max_uses?: number | null
+          min_purchase_amount?: number | null
         }
         Relationships: []
       }
@@ -466,7 +538,9 @@ export type Database = {
         Row: {
           affiliate_id: string | null
           campaign_id: string
+          coupon_id: string | null
           created_at: string
+          discount_amount: number | null
           expires_at: string | null
           id: string
           paid_at: string | null
@@ -481,7 +555,9 @@ export type Database = {
         Insert: {
           affiliate_id?: string | null
           campaign_id: string
+          coupon_id?: string | null
           created_at?: string
+          discount_amount?: number | null
           expires_at?: string | null
           id?: string
           paid_at?: string | null
@@ -496,7 +572,9 @@ export type Database = {
         Update: {
           affiliate_id?: string | null
           campaign_id?: string
+          coupon_id?: string | null
           created_at?: string
+          discount_amount?: number | null
           expires_at?: string | null
           id?: string
           paid_at?: string | null
@@ -521,6 +599,13 @@ export type Database = {
             columns: ["campaign_id"]
             isOneToOne: false
             referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "orders_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
             referencedColumns: ["id"]
           },
         ]
@@ -570,6 +655,42 @@ export type Database = {
           user_id?: string
           vip_level?: number | null
           xp?: number | null
+        }
+        Relationships: []
+      }
+      push_notifications: {
+        Row: {
+          body: string
+          created_at: string | null
+          id: string
+          link_url: string | null
+          sent_at: string | null
+          sent_by: string | null
+          target_type: string | null
+          target_user_id: string | null
+          title: string
+        }
+        Insert: {
+          body: string
+          created_at?: string | null
+          id?: string
+          link_url?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          target_type?: string | null
+          target_user_id?: string | null
+          title: string
+        }
+        Update: {
+          body?: string
+          created_at?: string | null
+          id?: string
+          link_url?: string | null
+          sent_at?: string | null
+          sent_by?: string | null
+          target_type?: string | null
+          target_user_id?: string | null
+          title?: string
         }
         Relationships: []
       }
@@ -658,6 +779,30 @@ export type Database = {
             referencedColumns: ["user_id"]
           },
         ]
+      }
+      site_settings: {
+        Row: {
+          description: string | null
+          id: string
+          key: string
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          value: string
+        }
+        Update: {
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
       }
       tickets: {
         Row: {
