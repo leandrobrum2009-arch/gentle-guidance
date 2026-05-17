@@ -8,6 +8,7 @@
  import { Campaign } from "@/hooks/useData";
  import { Link } from "react-router-dom";
 import CountdownTimer from "./CountdownTimer";
+import { playSound, hapticFeedback } from "@/lib/sounds";
  
  interface RaffleCarouselProps {
    campaigns: Campaign[];
@@ -106,10 +107,15 @@ import CountdownTimer from "./CountdownTimer";
                     </div>
  
                    <div className="flex items-center gap-4 pt-4">
-                     <Link to={`/campaign/${campaign.id}`}>
-                       <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg">
-                         Participar Agora <Zap className="h-5 w-5 fill-current" />
-                       </Button>
+                     <Link to={`/campaign/${campaign.id}`} onClick={() => { playSound('click'); hapticFeedback(); }}>
+                       <motion.div
+                         whileHover={{ scale: 1.05 }}
+                         whileTap={{ scale: 0.95 }}
+                       >
+                         <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
+                           Participar Agora <Zap className="h-5 w-5 fill-current" />
+                         </Button>
+                       </motion.div>
                      </Link>
                      <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-white/10 hover:bg-white/5 font-black uppercase italic tracking-widest text-white backdrop-blur-md">
                        Ver Detalhes
@@ -123,12 +129,12 @@ import CountdownTimer from "./CountdownTimer";
        </div>
  
        {/* Navigation Buttons */}
-       <Button 
-         variant="ghost" 
-         size="icon" 
-         className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-background/20 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
-         onClick={scrollPrev}
-       >
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-background/20 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+          onClick={() => { scrollPrev(); playSound('click'); }}
+        >
          <ChevronLeft className="h-8 w-8 text-white" />
        </Button>
        <Button 
