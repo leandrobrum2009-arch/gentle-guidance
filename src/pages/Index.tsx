@@ -81,24 +81,25 @@ const Index = () => {
            )}
 
           {/* Gamification Navigation */}
-          <section className="container -mt-10 md:-mt-16 relative z-20 pb-16">
+          <section className="container relative z-20 py-12 md:py-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
-                { icon: Gamepad2, title: "Roleta VIP", desc: "Gire e Ganhe", color: "from-primary/20" },
-                { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/20" },
-                { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/20" },
-                { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/20" },
+                { icon: Gamepad2, title: "Roleta VIP", desc: "Gire e Ganhe", color: "from-primary/20", href: "/roleta" },
+                { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/20", href: "/caixa-misteriosa" },
+                { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/20", href: "/ranking" },
+                { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/20", href: "/afiliados" },
               ].map((item, i) => (
-                <motion.div
-                  key={i}
-                  whileHover={{ y: -5, scale: 1.02 }}
-                  className={`group relative overflow-hidden rounded-2xl border border-white/10 bg-card/60 p-6 glass-morphism backdrop-blur-md cursor-pointer`}
-                >
-                  <div className={`absolute -right-4 -top-4 h-24 w-24 bg-gradient-to-br ${item.color} to-transparent blur-2xl transition-opacity group-hover:opacity-100 opacity-50`} />
-                  <item.icon className="relative z-10 h-8 w-8 text-primary mb-4" />
-                  <h3 className="relative z-10 text-xs font-black uppercase tracking-widest">{item.title}</h3>
-                  <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter mt-1">{item.desc}</p>
-                </motion.div>
+                <Link key={i} to={item.href}>
+                  <motion.div
+                    whileHover={{ y: -5, scale: 1.02 }}
+                    className={`group relative overflow-hidden h-full rounded-2xl border border-white/10 bg-card/60 p-6 glass-morphism backdrop-blur-md cursor-pointer`}
+                  >
+                    <div className={`absolute -right-4 -top-4 h-24 w-24 bg-gradient-to-br ${item.color} to-transparent blur-2xl transition-opacity group-hover:opacity-100 opacity-50`} />
+                    <item.icon className="relative z-10 h-8 w-8 text-primary mb-4" />
+                    <h3 className="relative z-10 text-xs font-black uppercase tracking-widest">{item.title}</h3>
+                    <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter mt-1">{item.desc}</p>
+                  </motion.div>
+                </Link>
               ))}
             </div>
           </section>
