@@ -426,6 +426,51 @@ export type Database = {
           },
         ]
       }
+      roulette_spins: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          prize_label: string
+          prize_type: string
+          prize_value: number | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          prize_label: string
+          prize_type: string
+          prize_value?: number | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          prize_label?: string
+          prize_type?: string
+          prize_value?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "roulette_spins_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "roulette_spins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       tickets: {
         Row: {
           campaign_id: string
