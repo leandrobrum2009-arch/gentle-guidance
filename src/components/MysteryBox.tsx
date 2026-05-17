@@ -234,12 +234,18 @@
    );
  };
  
- const OpeningAnimation = ({ prize, potentialPrizes, rarityColor, onComplete }: any) => {
+ const OpeningAnimation = ({ prize, potentialPrizes, rarityColor, onComplete, playSound }: any) => {
    const [stage, setStage] = useState<'shake' | 'roll' | 'reveal'>('shake');
    useEffect(() => {
      const sequence = async () => {
+       playSound('shake');
        await new Promise(r => setTimeout(r, 1500));
        setStage('roll');
+       
+       // Ticks during roll
+       const tickInterval = setInterval(() => playSound('tick'), 200);
+       setTimeout(() => clearInterval(tickInterval), 3800);
+       
        await new Promise(r => setTimeout(r, 4000));
        setStage('reveal');
        onComplete();
@@ -274,17 +280,45 @@
          )}
          {stage === 'reveal' && (
            <motion.div key="reveal" initial={{ scale: 0, rotate: -180, opacity: 0 }} animate={{ scale: 1, rotate: 0, opacity: 1 }} transition={{ type: "spring", damping: 12 }} className="space-y-8">
-             <div className="relative inline-block">
-               <div className="w-64 h-80 rounded-[2.5rem] border-4 border-primary bg-zinc-900 shadow-[0_0_60px_rgba(var(--primary-rgb),0.6)] relative overflow-hidden">
-                 <div className="relative h-full flex flex-col items-center justify-center p-8 gap-6">
-                    <div className="h-24 w-24 rounded-3xl bg-primary/10 border border-primary/20 flex items-center justify-center"><PrizeIcon type={prize?.prize_type} className="h-14 w-14 text-primary" /></div>
-                    <div className="space-y-2">
-                      <Badge className="bg-primary text-[10px] font-black italic">GANHOU!</Badge>
-                      <h2 className="text-2xl font-black uppercase tracking-tighter">{prize?.title}</h2>
-                    </div>
-                 </div>
-               </div>
-             </div>
+            <div className="relative inline-block perspective-1000">
+              <motion.div 
+                initial={{ rotateY: 90, scale: 0.5 }}
+                animate={{ rotateY: 0, scale: 1 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                className="w-72 h-96 rounded-[3rem] border-4 bg-zinc-950 relative overflow-hidden group holographic-card shadow-2xl"
+                style={{ borderColor: rarityColor }}
+              >
+                {/* Premium Reflections */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/10 opacity-30 z-10" />
+                <motion.div 
+                  animate={{ x: [-200, 400] }} 
+                  transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 w-20 bg-white/20 blur-2xl -skew-x-12 z-20"
+                />
+                
+                <div className="relative h-full flex flex-col items-center justify-center p-8 gap-8 z-30">
+                   <div className="h-28 w-28 rounded-[2rem] bg-white/5 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
+                      <PrizeIcon type={prize?.prize_type} className="h-16 w-16" style={{ color: rarityColor }} />
+                   </div>
+                   
+                   <div className="space-y-3">
+                     <Badge className="bg-white/10 text-white border-white/20 text-[10px] font-black italic px-4">ITEM DESBLOQUEADO</Badge>
+                     <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{prize?.title}</h2>
+                     <p className="text-sm text-white/50 font-bold uppercase tracking-widest">{prize?.description || 'Prêmio Instantâneo'}</p>
+                   </div>
+
+                   {prize?.prize_value > 0 && (
+                     <div className="pt-2">
+                       <p className="text-[10px] text-white/40 font-black uppercase tracking-[0.2em] mb-1">Valor do Resgate</p>
+                       <p className="text-3xl font-black italic" style={{ color: rarityColor }}>R$ {Number(prize.prize_value).toFixed(2)}</p>
+                     </div>
+                   )}
+                </div>
+
+                {/* Holographic Overlays */}
+                <div className="absolute inset-0 opacity-10 pointer-events-none mix-blend-overlay bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+              </motion.div>
+            </div>
              <Button onClick={() => window.location.reload()} className="h-14 rounded-2xl font-black uppercase tracking-widest italic text-lg glow-primary">Abrir Outra</Button>
            </motion.div>
          )}
