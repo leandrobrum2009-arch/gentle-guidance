@@ -12,7 +12,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2 } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Settings2 } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 interface CampaignForm {
   title: string;
@@ -26,12 +28,22 @@ interface CampaignForm {
   ltp_code: string;
   urgency_tag: string;
   draw_date: string;
+  mystery_box_enabled: boolean;
+  roulette_enabled: boolean;
+  ranking_enabled: boolean;
+  featured: boolean;
+  price_bundles: string;
 }
 
 const empty: CampaignForm = {
   title: "", slug: "", subtitle: "", description: "", image_url: "",
   ticket_price: 0.99, total_tickets: 100000, status: "active",
   ltp_code: "", urgency_tag: "", draw_date: "",
+  mystery_box_enabled: false,
+  roulette_enabled: false,
+  ranking_enabled: true,
+  featured: false,
+  price_bundles: "[]",
 };
 
 export default function AdminCampaigns() {
@@ -54,6 +66,11 @@ export default function AdminCampaigns() {
       ticket_price: c.ticket_price, total_tickets: c.total_tickets,
       status: c.status, ltp_code: c.ltp_code ?? "",
       urgency_tag: c.urgency_tag ?? "", draw_date: c.draw_date?.slice(0, 16) ?? "",
+      mystery_box_enabled: c.mystery_box_enabled ?? false,
+      roulette_enabled: c.roulette_enabled ?? false,
+      ranking_enabled: c.ranking_enabled ?? true,
+      featured: c.featured ?? false,
+      price_bundles: JSON.stringify(c.price_bundles ?? [], null, 2),
     });
     setOpen(true);
   };
@@ -70,6 +87,11 @@ export default function AdminCampaigns() {
       image_url: form.image_url || null,
       ltp_code: form.ltp_code || null,
       urgency_tag: form.urgency_tag || null,
+      mystery_box_enabled: form.mystery_box_enabled,
+      roulette_enabled: form.roulette_enabled,
+      ranking_enabled: form.ranking_enabled,
+      featured: form.featured,
+      price_bundles: JSON.parse(form.price_bundles || "[]"),
     };
 
     const { error } = editId
@@ -128,6 +150,33 @@ export default function AdminCampaigns() {
               <Input placeholder="Código LTP" value={form.ltp_code} onChange={(e) => set("ltp_code", e.target.value)} />
               <Input placeholder="Tag de urgência" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
               <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
+              <div className="space-y-4 rounded-lg border border-border p-4">
+                <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
+                  <Settings2 className="h-4 w-4" /> Funcionalidades
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="mystery">Caixa Misteriosa</Label>
+                    <Switch id="mystery" checked={form.mystery_box_enabled} onCheckedChange={(v) => set("mystery_box_enabled", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="roulette">Roleta</Label>
+                    <Switch id="roulette" checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="ranking">Ranking</Label>
+                    <Switch id="ranking" checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="featured">Destaque</Label>
+                    <Switch id="featured" checked={form.featured} onCheckedChange={(v) => set("featured", v)} />
+                  </div>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Pacotes de Preços (JSON)</Label>
+                <Textarea placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} rows={4} className="font-mono text-xs" />
+              </div>
               <Button onClick={save} disabled={saving || !form.title || !form.slug}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {editId ? "Salvar" : "Criar"}
