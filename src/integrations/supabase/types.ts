@@ -338,6 +338,7 @@ export type Database = {
           paid_at: string | null
           payment_status: string
           pix_code: string | null
+          pix_qr_code_base64: string | null
           quantity: number
           total_amount: number
           user_id: string
@@ -351,6 +352,7 @@ export type Database = {
           paid_at?: string | null
           payment_status?: string
           pix_code?: string | null
+          pix_qr_code_base64?: string | null
           quantity?: number
           total_amount?: number
           user_id: string
@@ -364,6 +366,7 @@ export type Database = {
           paid_at?: string | null
           payment_status?: string
           pix_code?: string | null
+          pix_qr_code_base64?: string | null
           quantity?: number
           total_amount?: number
           user_id?: string
@@ -671,6 +674,7 @@ export type Database = {
     }
     Functions: {
       cleanup_expired_reservations: { Args: never; Returns: undefined }
+      handle_order_payment: { Args: { p_order_id: string }; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
