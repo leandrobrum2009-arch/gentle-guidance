@@ -87,36 +87,58 @@ export default function Account() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white">
-      <Header />
-      <div className="container py-10 pt-24">
-        <div className="grid gap-8 lg:grid-cols-12">
-          
-          <aside className="lg:col-span-3 space-y-6">
-            <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl">
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4">
-                     <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
-                        <User className="h-10 w-10 text-white" />
+   return (
+     <div className="min-h-screen bg-[#0a0a0c] text-white overflow-hidden relative">
+       {/* Motion Background */}
+       <div className="absolute inset-0 z-0">
+         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
+         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+       </div>
+
+       <Header />
+       <motion.div 
+         initial={{ opacity: 0, y: 20 }}
+         animate={{ opacity: 1, y: 0 }}
+         transition={{ duration: 0.5 }}
+         className="container relative z-10 py-10 pt-24"
+       >
+         <div className="grid gap-8 lg:grid-cols-12">
+           
+           <aside className="lg:col-span-3 space-y-6">
+             <motion.div
+               initial={{ opacity: 0, x: -20 }}
+               animate={{ opacity: 1, x: 0 }}
+               transition={{ delay: 0.2 }}
+             >
+               <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl group hover:border-primary/30 transition-all duration-500">
+                 <CardContent className="pt-6">
+                   <div className="flex flex-col items-center text-center">
+                     <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 group-hover:scale-110 transition-transform duration-500 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
+                        <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
+                           <User className="h-10 w-10 text-white" />
+                        </div>
                      </div>
-                  </div>
-                  <h2 className="text-lg font-bold tracking-tight">{profile?.name || "Usuário"}</h2>
-                  <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
-                  
-                  <div className="w-full space-y-2 mt-4 bg-white/5 p-4 rounded-xl">
-                    <div className="flex justify-between text-[10px] font-bold text-slate-400">
-                      <span>Nível {profile?.vip_level || 1}</span>
-                      <span>{profile?.xp || 0} XP</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
-                      <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                     <h2 className="text-lg font-bold tracking-tight neon-text-white">{profile?.name || "Usuário"}</h2>
+                     <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
+                     
+                     <div className="w-full space-y-2 mt-4 bg-white/5 p-4 rounded-xl border border-white/5">
+                       <div className="flex justify-between text-[10px] font-bold text-slate-400">
+                         <span>Nível {profile?.vip_level || 1}</span>
+                         <span>{profile?.xp || 0} XP</span>
+                       </div>
+                       <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                         <motion.div 
+                           initial={{ width: 0 }}
+                           animate={{ width: `${progressPercent}%` }}
+                           transition={{ duration: 1, delay: 0.5 }}
+                           className="h-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.8)]" 
+                         />
+                       </div>
+                     </div>
+                   </div>
+                 </CardContent>
+               </Card>
+             </motion.div>
 
             <nav className="space-y-2">
               {[
@@ -143,17 +165,24 @@ export default function Account() {
                 { label: "Cashback", val: `R$ ${Number(profile?.cashback_balance || 0).toFixed(2)}`, icon: Coins, color: "text-amber-400" },
                 { label: "Pontos", val: `${profile?.points || 0} PTS`, icon: Trophy, color: "text-primary" },
               ].map((stat, i) => (
-                <Card key={i} className="bg-[#0d0d0f]/50 border-white/5 p-4">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center">
-                      <stat.icon className={`h-5 w-5 ${stat.color}`} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] uppercase font-bold text-slate-500">{stat.label}</p>
-                      <p className="font-bold text-lg">{stat.val}</p>
-                    </div>
-                  </div>
-                </Card>
+               <motion.div
+                 key={i}
+                 initial={{ opacity: 0, y: 20 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 transition={{ delay: 0.3 + (i * 0.1) }}
+               >
+                 <Card className="bg-[#0d0d0f]/50 border-white/5 p-4 group hover:bg-white/5 transition-all duration-300 hover:border-primary/20 cursor-pointer">
+                   <div className="flex items-center gap-3">
+                     <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                       <stat.icon className={`h-5 w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
+                     </div>
+                     <div>
+                       <p className="text-[10px] uppercase font-bold text-slate-500 tracking-widest">{stat.label}</p>
+                       <p className="font-black text-xl tracking-tight">{stat.val}</p>
+                     </div>
+                   </div>
+                 </Card>
+               </motion.div>
               ))}
             </div>
 
@@ -188,10 +217,10 @@ export default function Account() {
                  </Card>
               </TabsContent>
             </Tabs>
-          </main>
-        </div>
-      </div>
-      <Footer />
-    </div>
-  );
-}
+           </main>
+         </div>
+       </motion.div>
+       <Footer />
+     </div>
+   );
+ }

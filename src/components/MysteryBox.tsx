@@ -21,6 +21,7 @@
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
  import { cn } from "@/lib/utils";
  import { Badge } from "@/components/ui/badge";
+import { playSound, hapticFeedback } from "@/lib/sounds";
  
  interface MysteryBoxProps {
    boxes: MysteryBoxConfig[];
@@ -52,11 +53,6 @@
     const { data: recentWins } = useMysteryBoxWins(10);
     const boxControls = useAnimation();
  
-    const playSound = (type: keyof typeof SOUND_URLS) => {
-      const audio = new Audio(SOUND_URLS[type]);
-      audio.volume = 0.4;
-      audio.play().catch(() => {});
-    };
    const [potentialPrizes, setPotentialPrizes] = useState<MysteryBoxPrize[]>([]);
  
    const fetchUserProfile = async () => {
@@ -135,7 +131,7 @@
                key={box.id}
                whileHover={{ y: -5, scale: 1.02 }}
                whileTap={{ scale: 0.98 }}
-               onClick={() => handleStartOpening(box)}
+                onClick={() => { handleStartOpening(box); playSound('click'); hapticFeedback(); }}
                className={cn("group relative overflow-hidden rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
              >
                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
@@ -146,7 +142,7 @@
                  </div>
                  <div className="aspect-square relative flex items-center justify-center py-4">
                     <motion.div animate={{ y: [0, -10, 0], rotate: [0, -2, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                      <Box className="h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)]" style={{ color: config.color }} />
+                       <Box className="h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all duration-500" style={{ color: config.color }} />
                     </motion.div>
                  </div>
                  <div className="text-center space-y-1">

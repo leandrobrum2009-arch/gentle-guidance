@@ -34,7 +34,10 @@ import CampaignCard from "@/components/CampaignCard";
  import WinnerCard from "@/components/WinnerCard";
   import LiveActivityFeed from "@/components/LiveActivityFeed";
  import Roulette from "@/components/Roulette";
+import CountdownTimer from "@/components/CountdownTimer";
 import { useCampaigns, useWinners } from "@/hooks/useData";
+import { playSound, hapticFeedback } from "@/lib/sounds";
+import Particles from "@/components/Particles";
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
   <div className="flex flex-col gap-2 mb-8">
@@ -66,9 +69,14 @@ const Index = () => {
   const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && c.status === 'active') ?? [];
   const endingSoon = campaigns?.filter(c => c.status === 'active' && c.sold_tickets / c.total_tickets > 0.8) ?? [];
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
+   return (
+     <div className="min-h-screen bg-background relative overflow-hidden">
+       {/* Global Background Particles */}
+       <div className="fixed inset-0 z-0">
+         <Particles count={50} />
+       </div>
+
+       <Header />
        <div className="h-20 md:h-24" /> {/* Improved Spacer for fixed header */}
 
        {loadingCampaigns ? (
@@ -84,18 +92,23 @@ const Index = () => {
           {/* Gamification Navigation - Improved Spacing and Visuals */}
           <section className="container relative z-30 -mt-10 md:-mt-16 py-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
-              {[
-                { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
-                { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa", badge: "NOVO" },
-                { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/40", href: "/ranking" },
-                { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/40", href: "/afiliados" },
-              ].map((item, i) => (
-                <Link key={i} to={item.href}>
-                  <motion.div
-                    whileHover={{ y: -8, scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className={`group relative overflow-hidden h-full rounded-3xl border border-white/10 bg-zinc-900/80 p-6 glass-morphism backdrop-blur-xl cursor-pointer shadow-2xl transition-all duration-300`}
-                  >
+                {[
+                  { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
+                  { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa", badge: "NOVO" },
+                  { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/40", href: "/ranking" },
+                  { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/40", href: "/afiliados" },
+                ].map((item, i) => (
+                  <Link key={i} to={item.href} onClick={() => { playSound('click'); hapticFeedback(); }}>
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: i * 0.1 }}
+                      whileHover={{ y: -12, scale: 1.05, boxShadow: "0 20px 40px -10px rgba(var(--primary-rgb), 0.3)" }}
+                      onMouseEnter={() => playSound('hover')}
+                      whileTap={{ scale: 0.95 }}
+                      className={`group relative overflow-hidden h-full rounded-3xl border border-white/10 bg-zinc-900/80 p-6 glass-morphism backdrop-blur-xl cursor-pointer shadow-2xl transition-all duration-500`}
+                    >
                     <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-40`} />
                     {item.badge && (
                       <Badge className="absolute top-4 right-4 bg-primary text-[8px] font-black italic animate-bounce px-2 py-0.5">
@@ -180,9 +193,15 @@ const Index = () => {
                 <div className="grid gap-4 sm:grid-cols-2">
                   {endingSoon.slice(0, 2).map((campaign, i) => (
                     <div key={i} className="bg-background/40 backdrop-blur-sm border border-white/10 rounded-2xl p-4 flex items-center gap-4">
-                      <img src={campaign.image_url || ""} className="h-16 w-16 rounded-xl object-cover" alt="" />
+                       <div className="relative h-16 w-16 flex-shrink-0">
+                         <img src={campaign.image_url || ""} className="h-full w-full rounded-xl object-cover" alt="" />
+                         <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse" />
+                       </div>
                       <div className="min-w-0 flex-1">
-                        <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
+                         <div className="flex items-center justify-between mb-1">
+                           <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
+                           {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
+                         </div>
                         <div className="flex items-center gap-2 mt-1">
                           <div className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }} />
@@ -193,7 +212,11 @@ const Index = () => {
                     </div>
                   ))}
                 </div>
-                <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest glow-primary">
+                 <Button 
+                   size="lg" 
+                   className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest glow-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] animate-pulse"
+                   onClick={() => { playSound('click'); hapticFeedback(); }}
+                 >
                   Ver Tudo <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>
               </div>

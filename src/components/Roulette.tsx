@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { playSound as playGlobalSound, hapticFeedback } from "@/lib/sounds";
 
 interface RouletteProps {
   prizes: RoulettePrize[];
@@ -45,11 +46,6 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
     setUserProfile(data);
   };
 
-  const playSound = (type: keyof typeof SOUND_URLS) => {
-    const audio = new Audio(SOUND_URLS[type]);
-    audio.volume = 0.5;
-    audio.play().catch(() => {}); // Ignore autoplay blocks
-  };
 
   const getWeightedPrize = () => {
     const totalWeight = prizes.reduce((acc, p) => acc + (Number(p.chance_percent) || 0), 0);
@@ -79,8 +75,9 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
     }
 
     setIsSpinning(true);
-    playSound('spin');
-    
+    playGlobalSound('shake'); // using shake for spin start
+    hapticFeedback();
+
     // Initial vibration effect
     await controls.start({
       scale: [1, 1.05, 1],
@@ -119,7 +116,7 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
       }
     });
     
-    playSound('win');
+    playGlobalSound('win');
     setWonPrize(prize);
     setShowWinAnimation(true);
 
