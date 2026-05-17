@@ -28,7 +28,7 @@ import { Button } from "@/components/ui/button";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import HeroCampaign from "@/components/HeroCampaign";
+ import RaffleCarousel from "@/components/RaffleCarousel";
 import CampaignCard from "@/components/CampaignCard";
 import WinnerCard from "@/components/WinnerCard";
 import { useCampaigns, useWinners } from "@/hooks/useData";
@@ -73,7 +73,9 @@ const Index = () => {
         </div>
       ) : (
         <>
-          {featuredCampaign && <HeroCampaign campaign={featuredCampaign} />}
+           {campaigns && campaigns.length > 0 && (
+             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active").slice(0, 5)} />
+           )}
 
           {/* Gamification Navigation */}
           <section className="container -mt-10 relative z-20 pb-16">
