@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 
 interface CampaignPricingProps {
   campaign: Campaign;
-  onBuy: (quantity: number) => void;
+   onBuy: (quantity: number | string[]) => void;
 }
 
 const DEFAULT_BUNDLES: PriceBundle[] = [

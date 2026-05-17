@@ -33,6 +33,13 @@ interface CampaignForm {
   ranking_enabled: boolean;
   featured: boolean;
   price_bundles: string;
+  gallery_urls: string;
+  video_url: string;
+  regulations: string;
+  auto_numbers: boolean;
+  manual_numbers: boolean;
+  lucky_numbers_prizes: string;
+  federal_lottery_draw: boolean;
 }
 
 const empty: CampaignForm = {
@@ -44,6 +51,13 @@ const empty: CampaignForm = {
   ranking_enabled: true,
   featured: false,
   price_bundles: "[]",
+  gallery_urls: "[]",
+  video_url: "",
+  regulations: "",
+  auto_numbers: true,
+  manual_numbers: true,
+  lucky_numbers_prizes: "[]",
+  federal_lottery_draw: false,
 };
 
 export default function AdminCampaigns() {
@@ -71,6 +85,13 @@ export default function AdminCampaigns() {
       ranking_enabled: c.ranking_enabled ?? true,
       featured: c.featured ?? false,
       price_bundles: JSON.stringify(c.price_bundles ?? [], null, 2),
+      gallery_urls: JSON.stringify(c.gallery_urls ?? [], null, 2),
+      video_url: c.video_url ?? "",
+      regulations: c.regulations ?? "",
+      auto_numbers: c.auto_numbers ?? true,
+      manual_numbers: c.manual_numbers ?? false,
+      lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
+      federal_lottery_draw: c.federal_lottery_draw ?? false,
     });
     setOpen(true);
   };
@@ -92,6 +113,11 @@ export default function AdminCampaigns() {
       ranking_enabled: form.ranking_enabled,
       featured: form.featured,
       price_bundles: JSON.parse(form.price_bundles || "[]"),
+      gallery_urls: JSON.parse(form.gallery_urls || "[]"),
+      lucky_numbers_prizes: JSON.parse(form.lucky_numbers_prizes || "[]"),
+      auto_numbers: form.auto_numbers,
+      manual_numbers: form.manual_numbers,
+      federal_lottery_draw: form.federal_lottery_draw,
     };
 
     const { error } = editId
@@ -134,6 +160,7 @@ export default function AdminCampaigns() {
               <Input placeholder="Slug *" value={form.slug} onChange={(e) => set("slug", e.target.value)} />
               <Input placeholder="Subtítulo" value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} />
               <Textarea placeholder="Descrição" value={form.description} onChange={(e) => set("description", e.target.value)} />
+              <Textarea placeholder="Regulamento" value={form.regulations} onChange={(e) => set("regulations", e.target.value)} />
               <Input placeholder="URL da imagem" value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
               <div className="grid grid-cols-2 gap-4">
                 <Input type="number" placeholder="Preço do bilhete" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} />
@@ -150,7 +177,15 @@ export default function AdminCampaigns() {
               <Input placeholder="Código LTP" value={form.ltp_code} onChange={(e) => set("ltp_code", e.target.value)} />
               <Input placeholder="Tag de urgência" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
               <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
-              <div className="space-y-4 rounded-lg border border-border p-4">
+              
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Galeria (URLs JSON)</Label>
+                <Textarea placeholder='["https://...", "https://..."]' value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} rows={2} className="font-mono text-xs" />
+              </div>
+
+              <Input placeholder="URL do Vídeo (Youtube)" value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+
+              <div className="space-y-4 rounded-xl border border-border p-4 bg-secondary/20">
                 <h3 className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-muted-foreground">
                   <Settings2 className="h-4 w-4" /> Funcionalidades
                 </h3>
@@ -171,11 +206,28 @@ export default function AdminCampaigns() {
                     <Label htmlFor="featured">Destaque</Label>
                     <Switch id="featured" checked={form.featured} onCheckedChange={(v) => set("featured", v)} />
                   </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="auto_num">Venda Automática</Label>
+                    <Switch id="auto_num" checked={form.auto_numbers} onCheckedChange={(v) => set("auto_numbers", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="manual_num">Escolha Manual</Label>
+                    <Switch id="manual_num" checked={form.manual_numbers} onCheckedChange={(v) => set("manual_numbers", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="fed_draw">Sorteio Federal</Label>
+                    <Switch id="fed_draw" checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
+                  </div>
                 </div>
               </div>
+
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase">Pacotes de Preços (JSON)</Label>
                 <Textarea placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} rows={4} className="font-mono text-xs" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON)</Label>
+                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15"}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
               </div>
               <Button onClick={save} disabled={saving || !form.title || !form.slug}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

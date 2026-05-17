@@ -1,16 +1,22 @@
-import { useState, useMemo } from "react";
+ import { useState, useMemo, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import {
-  Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
-  Gift, Award, TrendingUp, Info, Zap
-} from "lucide-react";
+ import {
+    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
+    Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star
+ } from "lucide-react";
+ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { useCampaign, useMysteryBoxes, useRoulettePrizes, useWinners } from "@/hooks/useData";
+ import { useCampaign, useMysteryBoxes, useRoulettePrizes, useWinners, useTickets } from "@/hooks/useData";
+ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+ import RaffleGallery from "@/components/RaffleGallery";
+ import TicketGrid from "@/components/TicketGrid";
+ import PaymentSelector from "@/components/PaymentSelector";
+ import PurchaseAnimation from "@/components/PurchaseAnimation";
 import CampaignPricing from "@/components/CampaignPricing";
 import Roulette from "@/components/Roulette";
 import MysteryBox from "@/components/MysteryBox";
@@ -18,32 +24,58 @@ import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
-const QUICK_QTY = [1, 5, 10, 25, 50, 100];
-
-const CampaignDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const { data: campaign, isLoading } = useCampaign(id || "");
-  const { data: mysteryBoxes } = useMysteryBoxes(id || "");
-  const { data: roulettePrizes } = useRoulettePrizes(id || "");
-  const { data: allWinners } = useWinners();
-
-  const campaignWinners = useMemo(() => {
-    return allWinners?.filter(w => w.campaign_id === id) || [];
-  }, [allWinners, id]);
-
-  const progress = campaign
-    ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
-    : 0;
-
-  const handleBuy = (quantity: number) => {
-    if (!user) {
-      toast.error("Você precisa estar logado para comprar!");
-      return;
-    }
-    toast.success(`Pedido de ${quantity} bilhetes gerado! Redirecionando para o pagamento...`);
-    // Navigation logic here
-  };
+ const CampaignDetail = () => {
+   const { id } = useParams<{ id: string }>();
+   const { user } = useAuth();
+   const { data: campaign, isLoading } = useCampaign(id || "");
+   const { data: mysteryBoxes } = useMysteryBoxes(id || "");
+   const { data: roulettePrizes } = useRoulettePrizes(id || "");
+   const { data: allWinners } = useWinners();
+   const { data: tickets } = useTickets(id || "");
+ 
+   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
+   const [isPurchasing, setIsPurchasing] = useState(false);
+   const [showSuccess, setShowSuccess] = useState(false);
+ 
+   const soldTickets = useMemo(() => {
+     return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
+   }, [tickets]);
+ 
+   const luckyNumbers = useMemo(() => {
+     return campaign?.lucky_numbers_prizes || [];
+   }, [campaign]);
+ 
+   const luckyNumbersList = useMemo(() => {
+     return luckyNumbers.map((p: any) => p.number) || [];
+   }, [luckyNumbers]);
+ 
+   const campaignWinners = useMemo(() => {
+     return allWinners?.filter(w => w.campaign_id === id) || [];
+   }, [allWinners, id]);
+ 
+   const progress = campaign
+     ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
+     : 0;
+ 
+   const handleToggleTicket = (number: string) => {
+     setSelectedTickets(prev => 
+       prev.includes(number) ? prev.filter(n => n !== number) : [...prev, number]
+     );
+   };
+ 
+   const handleBuy = (quantityOrNumbers: number | string[]) => {
+     if (!user) {
+       toast.error("Você precisa estar logado para comprar!");
+       return;
+     }
+     
+     setIsPurchasing(true);
+     // Simulate processing
+     setTimeout(() => {
+       setIsPurchasing(false);
+       setShowSuccess(true);
+     }, 1500);
+   };
 
   if (isLoading) {
     return (
@@ -86,14 +118,10 @@ const CampaignDetail = () => {
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="container pb-10">
         <div className="grid gap-6 lg:grid-cols-5">
           <div className="space-y-4 lg:col-span-3">
-            <div className="relative overflow-hidden rounded-2xl border border-border/50">
-              <img src={campaign.image_url || "/placeholder.svg"} alt={campaign.title} className="aspect-video w-full object-cover" />
-              {campaign.urgency_tag && (
-                <div className="absolute left-3 top-3">
-                  <Badge className="animate-pulse-glow bg-primary px-3 py-1 text-xs font-bold text-primary-foreground">{campaign.urgency_tag}</Badge>
-                </div>
-              )}
-            </div>
+             <RaffleGallery 
+               images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
+               videoUrl={campaign.video_url} 
+             />
 
             <div className="rounded-xl border border-border/50 bg-card p-5 space-y-4">
               <div>
@@ -108,7 +136,15 @@ const CampaignDetail = () => {
                 )}
               </div>
               <Separator />
-              <div className="space-y-2">
+               <div className="space-y-3">
+                 <div className="h-4 overflow-hidden rounded-full bg-secondary border border-border/50 shadow-inner">
+                   <motion.div 
+                     initial={{ width: 0 }} 
+                     animate={{ width: `${progress}%` }} 
+                     transition={{ duration: 1.5, ease: "easeOut" }} 
+                     className="h-full rounded-full bg-gradient-to-r from-primary via-[hsl(80,96%,60%)] to-primary shimmer-effect shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
+                   />
+                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Progresso de vendas</span>
                   <span className="font-semibold text-primary">{progress}%</span>
@@ -136,11 +172,84 @@ const CampaignDetail = () => {
             </div>
           </div>
 
-          <div className="lg:col-span-2 space-y-6">
-            <div className="sticky top-20 space-y-6">
-              <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-xl ring-1 ring-primary/10">
-                <CampaignPricing campaign={campaign} onBuy={handleBuy} />
-              </div>
+           <div className="lg:col-span-2">
+             <div className="sticky top-20 space-y-6">
+               <div className="rounded-3xl border border-border/50 bg-card p-1 shadow-xl ring-1 ring-primary/10 overflow-hidden">
+                 <Tabs defaultValue="auto" className="w-full">
+                   <div className="p-4 pb-0">
+                     <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
+                       <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                         <Zap className="h-4 w-4" /> Automático
+                       </TabsTrigger>
+                       <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                         <MousePointer2 className="h-4 w-4" /> Manual
+                       </TabsTrigger>
+                     </TabsList>
+                   </div>
+ 
+                   <TabsContent value="auto" className="p-5 mt-0">
+                     <CampaignPricing campaign={campaign} onBuy={handleBuy} />
+                   </TabsContent>
+ 
+                   <TabsContent value="manual" className="p-5 mt-0 space-y-6">
+                     <div className="space-y-4">
+                       <p className="text-xs text-muted-foreground text-center">
+                         Escolha seus números da sorte abaixo. Clique para selecionar.
+                       </p>
+                        {/* Lucky Numbers Section */}
+                        {luckyNumbers.length > 0 && (
+                          <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
+                            <h2 className="flex items-center gap-2 text-sm font-bold text-amber-500 uppercase tracking-wider">
+                              <Star className="h-4 w-4 fill-current" /> Números Premiados
+                            </h2>
+                            <div className="grid gap-2">
+                              {luckyNumbers.map((p: any, i: number) => (
+                                <div key={i} className="flex items-center justify-between p-2 rounded-lg bg-background/50 border border-amber-500/10">
+                                  <div className="flex items-center gap-2">
+                                    <div className="h-7 w-7 rounded bg-amber-500 text-white flex items-center justify-center font-mono font-bold text-[10px] shadow-lg shadow-amber-500/20">
+                                      {p.number}
+                                    </div>
+                                    <span className="text-[10px] font-bold">{p.prize}</span>
+                                  </div>
+                                  <Badge variant={soldTickets.includes(p.number) ? "secondary" : "default"} className={cn("text-[8px] h-5", !soldTickets.includes(p.number) && "bg-amber-500 text-white")}>
+                                    {soldTickets.includes(p.number) ? "Ganhado" : "Livre"}
+                                  </Badge>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+ 
+                        <TicketGrid 
+                          totalTickets={campaign.total_tickets}
+                          soldTickets={soldTickets}
+                          selectedTickets={selectedTickets}
+                          onSelect={handleToggleTicket}
+                          luckyNumbers={luckyNumbersList}
+                        />
+                       
+                       <Button 
+                         className="w-full h-14 rounded-2xl gap-3 text-lg font-black uppercase tracking-wide glow-primary"
+                         disabled={selectedTickets.length === 0 || isPurchasing}
+                         onClick={() => handleBuy(selectedTickets)}
+                       >
+                         {isPurchasing ? <Loader2 className="h-6 w-6 animate-spin" /> : <Sparkles className="h-6 w-6" />}
+                         Reservar Números
+                       </Button>
+                     </div>
+                   </TabsContent>
+                 </Tabs>
+               </div>
+               
+               {/* Payment Methods Info */}
+               <div className="rounded-2xl border border-border/50 bg-secondary/30 p-4">
+                 <div className="flex items-center justify-center gap-4 grayscale opacity-60">
+                   <img src="https://logopng.com.br/logos/pix-106.png" className="h-4" alt="PIX" />
+                   <img src="https://logodownload.org/wp-content/uploads/2014/10/visa-logo-1.png" className="h-3" alt="Visa" />
+                   <img src="https://logodownload.org/wp-content/uploads/2014/07/mastercard-logo-7.png" className="h-4" alt="Mastercard" />
+                   <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo.png" className="h-4" alt="Mercado Pago" />
+                 </div>
+               </div>
               
               {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                 <div className="rounded-3xl border border-border/50 bg-card p-6 shadow-lg">
@@ -169,14 +278,27 @@ const CampaignDetail = () => {
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2 space-y-8">
             {/* Description & Info */}
-            <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
-              <h2 className="flex items-center gap-2 text-lg font-bold">
-                <Info className="h-5 w-5 text-primary" /> Sobre esta rifa
-              </h2>
-              <div className="prose prose-invert max-w-none text-muted-foreground text-sm leading-relaxed">
-                {campaign.description || "Sem descrição detalhada disponível."}
-              </div>
-            </div>
+            <div className="space-y-6">
+               <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
+                 <h2 className="flex items-center gap-2 text-lg font-bold">
+                   <Info className="h-5 w-5 text-primary" /> Descrição Completa
+                 </h2>
+                 <div className="prose prose-invert max-w-none text-muted-foreground text-sm leading-relaxed">
+                   {campaign.description || "Sem descrição detalhada disponível."}
+                 </div>
+               </div>
+ 
+               {campaign.regulations && (
+                 <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
+                   <h2 className="flex items-center gap-2 text-lg font-bold text-amber-500">
+                     <BookOpen className="h-5 w-5" /> Regulamento & Termos
+                   </h2>
+                   <div className="text-xs text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                     {campaign.regulations}
+                   </div>
+                 </div>
+               )}
+             </div>
 
             {/* Winners section */}
             {campaignWinners.length > 0 && (
@@ -237,6 +359,14 @@ const CampaignDetail = () => {
         </div>
       </div>
 
+       <PurchaseAnimation 
+         isVisible={showSuccess} 
+         onComplete={() => {
+           setShowSuccess(false);
+           toast.success("Redirecionando para o pagamento...");
+         }} 
+       />
+ 
       <Footer />
     </div>
   );

@@ -109,18 +109,26 @@ export type Database = {
       }
       campaigns: {
         Row: {
+          auto_numbers: boolean | null
           created_at: string
           description: string | null
           draw_date: string | null
+          draw_number: string | null
           featured: boolean | null
+          federal_lottery_draw: boolean | null
+          gallery_urls: Json | null
           id: string
           image_url: string | null
           ltp_code: string | null
+          lucky_numbers_prizes: Json | null
+          manual_numbers: boolean | null
           max_tickets: number | null
           min_tickets: number | null
           mystery_box_enabled: boolean | null
+          payment_methods: Json | null
           price_bundles: Json | null
           ranking_enabled: boolean | null
+          regulations: string | null
           roulette_enabled: boolean | null
           slug: string
           sold_tickets: number
@@ -131,20 +139,29 @@ export type Database = {
           total_tickets: number
           updated_at: string
           urgency_tag: string | null
+          video_url: string | null
         }
         Insert: {
+          auto_numbers?: boolean | null
           created_at?: string
           description?: string | null
           draw_date?: string | null
+          draw_number?: string | null
           featured?: boolean | null
+          federal_lottery_draw?: boolean | null
+          gallery_urls?: Json | null
           id?: string
           image_url?: string | null
           ltp_code?: string | null
+          lucky_numbers_prizes?: Json | null
+          manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
           mystery_box_enabled?: boolean | null
+          payment_methods?: Json | null
           price_bundles?: Json | null
           ranking_enabled?: boolean | null
+          regulations?: string | null
           roulette_enabled?: boolean | null
           slug: string
           sold_tickets?: number
@@ -155,20 +172,29 @@ export type Database = {
           total_tickets?: number
           updated_at?: string
           urgency_tag?: string | null
+          video_url?: string | null
         }
         Update: {
+          auto_numbers?: boolean | null
           created_at?: string
           description?: string | null
           draw_date?: string | null
+          draw_number?: string | null
           featured?: boolean | null
+          federal_lottery_draw?: boolean | null
+          gallery_urls?: Json | null
           id?: string
           image_url?: string | null
           ltp_code?: string | null
+          lucky_numbers_prizes?: Json | null
+          manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
           mystery_box_enabled?: boolean | null
+          payment_methods?: Json | null
           price_bundles?: Json | null
           ranking_enabled?: boolean | null
+          regulations?: string | null
           roulette_enabled?: boolean | null
           slug?: string
           sold_tickets?: number
@@ -179,6 +205,7 @@ export type Database = {
           total_tickets?: number
           updated_at?: string
           urgency_tag?: string | null
+          video_url?: string | null
         }
         Relationships: []
       }
@@ -404,8 +431,10 @@ export type Database = {
           campaign_id: string
           created_at: string
           id: string
+          is_lucky: boolean | null
           number: string
           order_id: string
+          reservation_expires_at: string | null
           status: string
           user_id: string
         }
@@ -413,8 +442,10 @@ export type Database = {
           campaign_id: string
           created_at?: string
           id?: string
+          is_lucky?: boolean | null
           number: string
           order_id: string
+          reservation_expires_at?: string | null
           status?: string
           user_id: string
         }
@@ -422,8 +453,10 @@ export type Database = {
           campaign_id?: string
           created_at?: string
           id?: string
+          is_lucky?: boolean | null
           number?: string
           order_id?: string
+          reservation_expires_at?: string | null
           status?: string
           user_id?: string
         }
@@ -544,6 +577,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      cleanup_expired_reservations: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
