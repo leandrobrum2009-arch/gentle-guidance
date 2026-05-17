@@ -23,13 +23,18 @@ import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
-const CampaignDetail = () => {
+ const CampaignDetail = () => {
+   const { id } = useParams<{ id: string }>();
+   const { user } = useAuth();
+   const { data: campaign, isLoading } = useCampaign(id || "");
+   const { data: mysteryBoxes } = useMysteryBoxes(id || "");
+   const { data: roulettePrizes } = useRoulettePrizes(id || "");
+   const { data: allWinners } = useWinners();
    const { data: tickets } = useTickets(id || "");
+ 
    const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
-   const [selectionMode, setSelectionMode] = useState<"auto" | "manual">("auto");
    const [isPurchasing, setIsPurchasing] = useState(false);
    const [showSuccess, setShowSuccess] = useState(false);
-   const [paymentMethod, setPaymentMethod] = useState("pix");
  
    const soldTickets = useMemo(() => {
      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
@@ -38,6 +43,14 @@ const CampaignDetail = () => {
    const luckyNumbers = useMemo(() => {
      return campaign?.lucky_numbers_prizes?.map((p: any) => p.number) || [];
    }, [campaign]);
+ 
+   const campaignWinners = useMemo(() => {
+     return allWinners?.filter(w => w.campaign_id === id) || [];
+   }, [allWinners, id]);
+ 
+   const progress = campaign
+     ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
+     : 0;
  
    const handleToggleTicket = (number: string) => {
      setSelectedTickets(prev => 
@@ -58,30 +71,6 @@ const CampaignDetail = () => {
        setShowSuccess(true);
      }, 1500);
    };
- 
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const { data: campaign, isLoading } = useCampaign(id || "");
-  const { data: mysteryBoxes } = useMysteryBoxes(id || "");
-  const { data: roulettePrizes } = useRoulettePrizes(id || "");
-  const { data: allWinners } = useWinners();
-
-  const campaignWinners = useMemo(() => {
-    return allWinners?.filter(w => w.campaign_id === id) || [];
-  }, [allWinners, id]);
-
-  const progress = campaign
-    ? Math.round((campaign.sold_tickets / campaign.total_tickets) * 100)
-    : 0;
-
-  const handleBuy = (quantity: number) => {
-    if (!user) {
-      toast.error("Você precisa estar logado para comprar!");
-      return;
-    }
-    toast.success(`Pedido de ${quantity} bilhetes gerado! Redirecionando para o pagamento...`);
-    // Navigation logic here
-  };
 
   if (isLoading) {
     return (
