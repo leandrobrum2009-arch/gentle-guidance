@@ -1,5 +1,5 @@
  import { useState, useMemo, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+  import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
  import {
     Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
@@ -24,8 +24,9 @@ import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
- const CampaignDetail = () => {
+   const CampaignDetail = () => {
    const { id } = useParams<{ id: string }>();
+   const navigate = useNavigate();
    const { user } = useAuth();
    const { data: campaign, isLoading } = useCampaign(id || "");
    const { data: mysteryBoxes } = useMysteryBoxes(id || "");
@@ -63,19 +64,41 @@ import { useAuth } from "@/contexts/AuthContext";
      );
    };
  
-   const handleBuy = (quantityOrNumbers: number | string[]) => {
-     if (!user) {
-       toast.error("Você precisa estar logado para comprar!");
-       return;
-     }
-     
-     setIsPurchasing(true);
-     // Simulate processing
-     setTimeout(() => {
-       setIsPurchasing(false);
-       setShowSuccess(true);
-     }, 1500);
-   };
+    const handleBuy = async (quantityOrNumbers: number | string[]) => {
+      if (!user) {
+        toast.error("Você precisa estar logado para comprar!");
+        navigate("/entrar");
+        return;
+      }
+      
+      setIsPurchasing(true);
+      
+      try {
+        const quantity = typeof quantityOrNumbers === 'number' ? quantityOrNumbers : quantityOrNumbers.length;
+        const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
+        
+        const { data: orderId, error } = await supabase.rpc('reserve_tickets', {
+          p_campaign_id: id,
+          p_user_id: user.id,
+          p_quantity: quantity,
+          p_numbers: numbers
+        });
+
+        if (error) throw error;
+
+        setIsPurchasing(false);
+        setShowSuccess(true);
+        
+        // Redirect after short delay
+        setTimeout(() => {
+          navigate(`/checkout/${orderId}`);
+        }, 3000);
+
+      } catch (error: any) {
+        setIsPurchasing(false);
+        toast.error(error.message || "Erro ao reservar números. Tente novamente.");
+      }
+    };
 
   if (isLoading) {
     return (
