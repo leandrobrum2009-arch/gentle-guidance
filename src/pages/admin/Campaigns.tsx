@@ -40,6 +40,7 @@ interface CampaignForm {
   manual_numbers: boolean;
   lucky_numbers_prizes: string;
   federal_lottery_draw: boolean;
+  sales_goal: number;
 }
 
 const empty: CampaignForm = {
@@ -58,6 +59,7 @@ const empty: CampaignForm = {
   manual_numbers: true,
   lucky_numbers_prizes: "[]",
   federal_lottery_draw: false,
+  sales_goal: 0,
 };
 
 export default function AdminCampaigns() {
@@ -92,6 +94,7 @@ export default function AdminCampaigns() {
       manual_numbers: c.manual_numbers ?? false,
       lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
       federal_lottery_draw: c.federal_lottery_draw ?? false,
+      sales_goal: c.sales_goal ?? 0,
     });
     setOpen(true);
   };
@@ -118,6 +121,7 @@ export default function AdminCampaigns() {
       auto_numbers: form.auto_numbers,
       manual_numbers: form.manual_numbers,
       federal_lottery_draw: form.federal_lottery_draw,
+      sales_goal: Number(form.sales_goal),
     };
 
     const { error } = editId
@@ -176,6 +180,7 @@ export default function AdminCampaigns() {
               <div className="grid grid-cols-2 gap-4">
                 <Input type="number" placeholder="Preço do bilhete" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} />
                 <Input type="number" placeholder="Total de bilhetes" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} />
+                <Input type="number" placeholder="Meta de vendas (R$)" value={form.sales_goal} onChange={(e) => set("sales_goal", e.target.value)} />
               </div>
               <Select value={form.status} onValueChange={(v) => set("status", v)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
