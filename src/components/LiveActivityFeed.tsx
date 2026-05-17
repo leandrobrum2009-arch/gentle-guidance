@@ -1,7 +1,7 @@
  import { useEffect, useState } from "react";
  import { motion, AnimatePresence } from "framer-motion";
- import { Trophy, Zap, Clock, Users } from "lucide-react";
- import { useRouletteSpins, RouletteSpin } from "@/hooks/useData";
+ import { Trophy, Zap, Clock, Users, Gift, Gamepad2 } from "lucide-react";
+ import { useRouletteSpins, useMysteryBoxWins, RouletteSpin, MysteryBoxWin } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { useQueryClient } from "@tanstack/react-query";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,25 +9,36 @@
  import { formatDistanceToNow } from "date-fns";
  import { ptBR } from "date-fns/locale";
  
- const LiveRouletteFeed = () => {
-   const { data: initialSpins, isLoading } = useRouletteSpins(6);
-   const [spins, setSpins] = useState<RouletteSpin[]>([]);
+ type Activity = (RouletteSpin | MysteryBoxWin) & { type: 'roulette' | 'box' };
+ 
+ const LiveActivityFeed = () => {
+   const { data: rouletteSpins } = useRouletteSpins(5);
+   const { data: boxWins } = useMysteryBoxWins(5);
+   const [activities, setActivities] = useState<Activity[]>([]);
    const queryClient = useQueryClient();
  
    useEffect(() => {
-     if (initialSpins) setSpins(initialSpins);
-   }, [initialSpins]);
+     const combined: Activity[] = [
+       ...(rouletteSpins?.map(s => ({ ...s, type: 'roulette' as const })) || []),
+       ...(boxWins?.map(w => ({ ...w, type: 'box' as const })) || [])
+     ].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+     .slice(0, 6);
+     
+     setActivities(combined);
+   }, [rouletteSpins, boxWins]);
  
    useEffect(() => {
      const channel = supabase
-       .channel("live-roulette")
+       .channel("live-activity")
        .on(
          "postgres_changes",
          { event: "INSERT", schema: "public", table: "roulette_spins" },
-         (payload) => {
-           // Refresh the full query to get profiles/campaigns info
-           queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
-         }
+         () => queryClient.invalidateQueries({ queryKey: ["roulette_spins"] })
+       )
+       .on(
+         "postgres_changes",
+         { event: "INSERT", schema: "public", table: "mystery_box_wins" },
+         () => queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] })
        )
        .subscribe();
  
@@ -35,10 +46,6 @@
        supabase.removeChannel(channel);
      };
    }, [queryClient]);
- 
-   if (isLoading && spins.length === 0) {
-     return <div className="h-40 flex items-center justify-center text-muted-foreground">Carregando feed...</div>;
-   }
  
    return (
      <div className="space-y-4">
@@ -54,9 +61,9 @@
  
        <div className="grid gap-3">
          <AnimatePresence mode="popLayout">
-           {spins.map((spin, i) => (
+           {activities.map((activity) => (
              <motion.div
-               key={spin.id}
+               key={activity.id}
                layout
                initial={{ opacity: 0, x: -20, scale: 0.95 }}
                animate={{ opacity: 1, x: 0, scale: 1 }}
@@ -67,28 +74,31 @@
                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                
                <Avatar className="h-10 w-10 border-2 border-primary/20">
-                 <AvatarImage src={spin.profiles?.avatar_url || ""} />
+                 <AvatarImage src={activity.profiles?.avatar_url || ""} />
                  <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                   {spin.profiles?.name?.[0] || "?"}
+                   {activity.profiles?.name?.[0] || "?"}
                  </AvatarFallback>
                </Avatar>
  
                <div className="flex-1 min-w-0">
                  <div className="flex items-center justify-between">
                    <p className="text-[11px] font-black uppercase tracking-tight truncate text-foreground">
-                     {spin.profiles?.name || "Usuário"}
+                     {activity.profiles?.name || "Usuário"}
                    </p>
                    <span className="text-[8px] font-bold text-muted-foreground uppercase flex items-center gap-1">
-                     <Clock className="h-2 w-2" /> {formatDistanceToNow(new Date(spin.created_at), { addSuffix: true, locale: ptBR })}
+                     <Clock className="h-2 w-2" /> {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true, locale: ptBR })}
                    </span>
                  </div>
                  <p className="text-[10px] text-muted-foreground truncate italic">
-                   Ganhou <span className="text-primary font-bold not-italic">{spin.prize_label}</span> na roleta
+                   {activity.type === 'roulette' ? 'Ganhou ' : 'Abriu a caixa e ganhou '}
+                   <span className={activity.type === 'roulette' ? "text-primary font-bold not-italic" : "text-amber-500 font-bold not-italic"}>
+                     {activity.type === 'roulette' ? (activity as RouletteSpin).prize_label : (activity as MysteryBoxWin).prize_title}
+                   </span>
                  </p>
                </div>
  
-               <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary/10 text-primary">
-                 <Trophy className="h-4 w-4" />
+               <div className={`flex items-center justify-center h-8 w-8 rounded-full ${activity.type === 'roulette' ? 'bg-primary/10 text-primary' : 'bg-amber-500/10 text-amber-500'}`}>
+                 {activity.type === 'roulette' ? <Gamepad2 className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
                </div>
              </motion.div>
            ))}
@@ -98,4 +108,4 @@
    );
  };
  
- export default LiveRouletteFeed;
+ export default LiveActivityFeed;

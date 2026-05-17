@@ -209,10 +209,53 @@ export type Database = {
         }
         Relationships: []
       }
+      mystery_box_wins: {
+        Row: {
+          box_id: string
+          created_at: string
+          id: string
+          prize_title: string
+          prize_value: number | null
+          user_id: string
+        }
+        Insert: {
+          box_id: string
+          created_at?: string
+          id?: string
+          prize_title: string
+          prize_value?: number | null
+          user_id: string
+        }
+        Update: {
+          box_id?: string
+          created_at?: string
+          id?: string
+          prize_title?: string
+          prize_value?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_box_wins_box_id_fkey"
+            columns: ["box_id"]
+            isOneToOne: false
+            referencedRelation: "mystery_boxes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mystery_box_wins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       mystery_boxes: {
         Row: {
           campaign_id: string | null
           chance_percent: number | null
+          cost_to_open: number | null
           created_at: string | null
           description: string | null
           id: string
@@ -223,6 +266,7 @@ export type Database = {
         Insert: {
           campaign_id?: string | null
           chance_percent?: number | null
+          cost_to_open?: number | null
           created_at?: string | null
           description?: string | null
           id?: string
@@ -233,6 +277,7 @@ export type Database = {
         Update: {
           campaign_id?: string | null
           chance_percent?: number | null
+          cost_to_open?: number | null
           created_at?: string | null
           description?: string | null
           id?: string
