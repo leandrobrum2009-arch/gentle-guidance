@@ -31,7 +31,7 @@
                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
                </div>
  
-               <div className="container relative h-full flex items-center">
+                <div className="container relative h-full flex items-center pt-20 md:pt-0">
                  <motion.div 
                    initial={{ opacity: 0, x: -50 }}
                    whileInView={{ opacity: 1, x: 0 }}
@@ -49,7 +49,7 @@
                      )}
                    </div>
  
-                   <h1 className="text-5xl md:text-8xl font-black uppercase italic italic leading-[0.9] tracking-tighter">
+                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-black uppercase italic leading-[0.9] tracking-tighter">
                      {campaign.title.split(' ')[0]} <br />
                      <span className="text-primary neon-text-primary">
                        {campaign.title.split(' ').slice(1).join(' ')}

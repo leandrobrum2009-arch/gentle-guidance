@@ -81,7 +81,7 @@ const Index = () => {
            )}
 
           {/* Gamification Navigation */}
-          <section className="container -mt-10 relative z-20 pb-16">
+          <section className="container -mt-10 md:-mt-16 relative z-20 pb-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {[
                 { icon: Gamepad2, title: "Roleta VIP", desc: "Gire e Ganhe", color: "from-primary/20" },

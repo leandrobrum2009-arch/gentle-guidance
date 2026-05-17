@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,6 +20,7 @@ const navLinks = [
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { data: isAdmin } = useIsAdmin();
   const [profile, setProfile] = useState<any>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
@@ -75,7 +77,7 @@ const Header = () => {
 
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b border-white/5 bg-background/60 backdrop-blur-2xl py-3' : 'bg-transparent py-5'}`}>
-      <div className="container flex items-center justify-between gap-4">
+      <div className="container flex items-center justify-between gap-2 md:gap-4">
         <Link to="/" className="group flex items-center gap-3">
           <motion.div 
             whileHover={{ scale: 1.1, rotate: 5 }}
@@ -88,9 +90,9 @@ const Header = () => {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 xl:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {/* Live Indicator */}
-          <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
+          <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
             <Activity className="h-3 w-3 text-destructive animate-pulse" />
             <span className="text-[10px] font-black text-destructive uppercase tracking-tighter">Live: 2,451 online</span>
           </div>
@@ -106,8 +108,8 @@ const Header = () => {
           ))}
         </nav>
 
-        <div className="flex flex-1 items-center justify-end gap-3">
-          <div className="hidden lg:flex relative items-center">
+        <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
+          <div className="hidden xl:flex relative items-center">
             <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
             <input 
               type="text" 
@@ -133,12 +135,22 @@ const Header = () => {
                 )}
               </button>
 
-              <Link to="/conta">
-                <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
-                  <User className="h-4 w-4 text-primary" />
-                  <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
-                </Button>
-              </Link>
+              <div className="flex items-center gap-2">
+                {isAdmin && (
+                  <Link to="/admin">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic hidden md:flex">
+                      <Zap className="h-4 w-4 text-primary" />
+                      Admin
+                    </Button>
+                  </Link>
+                )}
+                <Link to="/conta">
+                  <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
+                    <User className="h-4 w-4 text-primary" />
+                    <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
+                  </Button>
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">
