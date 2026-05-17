@@ -18,7 +18,12 @@
      )
  
      const url = new URL(req.url)
-     const body = await req.json().catch(() => ({}))
+      // Use a clones or check content-type for body parsing
+      let body = {}
+      if (req.method === 'POST') {
+        body = await req.json().catch(() => ({}))
+      }
+      
      const path = body.path || url.pathname.split('/').pop()
  
      if (path === 'create' || body.path === 'create') {
@@ -101,15 +106,13 @@
        })
      }
  
-     if (path === 'webhook') {
-       // MP might send data in query params or body
-       const webhookBody = await req.json().catch(() => ({}))
-       const topic = webhookBody.topic || url.searchParams.get('topic')
-       const id = webhookBody.resource?.split('/').pop() || webhookBody.data?.id || url.searchParams.get('id')
- 
-       console.log('Webhook received:', { topic, id, body: webhookBody })
- 
-       if ((topic === 'payment' || webhookBody.type === 'payment') && id) {
+      if (path === 'webhook' || path === 'notification') {
+        const topic = body.topic || url.searchParams.get('topic') || body.type
+        const id = body.resource?.split('/').pop() || body.data?.id || url.searchParams.get('id')
+  
+        console.log('Webhook received:', { topic, id, body })
+  
+        if ((topic === 'payment' || topic === 'payment_intent') && id) {
          const mpAccessToken = Deno.env.get('MERCADO_PAGO_ACCESS_TOKEN')
          
          const response = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
