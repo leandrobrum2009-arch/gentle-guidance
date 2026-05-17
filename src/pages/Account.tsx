@@ -1,24 +1,31 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { 
-  User, LogOut, Trophy, History, Coins, Activity, 
-  Wallet, Bell, TrendingUp, CreditCard, Star, Gift, 
-  Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown
-} from "lucide-react";
+ import { 
+   User, LogOut, Trophy, History, Coins, Activity, 
+   Wallet, Bell, TrendingUp, CreditCard, Star, Gift, 
+   Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
+   Copy, ExternalLink, ShieldCheck, CheckCircle, Trash2, Search, Clock, Package
+ } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { 
-  useUserOrders, 
-  useUserWalletTransactions, 
-  useUserAchievements, 
-  useUserRewards,
-  useRanking
-} from "@/hooks/useData";
+ import { 
+   useUserOrders, 
+   useUserWalletTransactions, 
+   useUserAchievements, 
+   useUserRewards,
+   useRanking,
+   useUserNotifications,
+   useUserSpins,
+   useUserMysteryBoxWins
+ } from "@/hooks/useData";
+ import { useIsAdmin } from "@/hooks/useAdmin";
+ import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+ import { Button } from "@/components/ui/button";
+ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -27,27 +34,55 @@ import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 
-export default function Account() {
-  const { user, signOut } = useAuth();
-  const { data: orders } = useUserOrders(user?.id || "");
-  const { data: txs } = useUserWalletTransactions(user?.id || "");
-  const { data: achievements } = useUserAchievements(user?.id || "");
-  const { data: ranking } = useRanking(10);
-
-  const [profile, setProfile] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("overview");
-
-  useEffect(() => {
-    if (user) {
-      const fetchData = async () => {
-        const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-        setProfile(p);
-        setIsLoading(false);
-      };
-      fetchData();
-    }
-  }, [user]);
+ export default function Account() {
+   const { user, signOut } = useAuth();
+   const { data: isAdmin } = useIsAdmin();
+   const { data: notifications } = useUserNotifications(user?.id || "");
+   const { data: orders } = useUserOrders(user?.id || "");
+   const { data: spins } = useUserSpins(user?.id || "");
+   const { data: boxWins } = useUserMysteryBoxWins(user?.id || "");
+   const { data: txs } = useUserWalletTransactions(user?.id || "");
+   const { data: achievements } = useUserAchievements(user?.id || "");
+   const { data: rewards } = useUserRewards(user?.id || "");
+   const { data: ranking } = useRanking(10);
+   const queryClient = useQueryClient();
+ 
+   const [profile, setProfile] = useState<any>(null);
+   const [affiliate, setAffiliate] = useState<any>(null);
+   const [isLoading, setIsLoading] = useState(true);
+   const [activeTab, setActiveTab] = useState("overview");
+ 
+   useEffect(() => {
+     if (user) {
+       const fetchData = async () => {
+         const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+         setProfile(p);
+         const { data: a } = await supabase.from("affiliates").select("*").eq("user_id", user.id).maybeSingle();
+         setAffiliate(a);
+         setIsLoading(false);
+       };
+       fetchData();
+     }
+   }, [user]);
+ 
+   const markAsRead = async (id: string) => {
+     await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+     queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+   };
+ 
+   const deleteNotification = async (id: string) => {
+     await supabase.from("notifications").delete().eq("id", id);
+     toast.success("Notificação excluída");
+     queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+   };
+ 
+   const copyReferral = () => {
+     if (affiliate?.referral_code) {
+       const url = `${window.location.origin}/register?ref=${affiliate.referral_code}`;
+       navigator.clipboard.writeText(url);
+       toast.success("Link de afiliado copiado!");
+     }
+   };
 
   const progressPercent = ((profile?.xp || 0) % 1000) / 10;
   const chartData = (txs || []).slice(0, 10).reverse().map((t: any) => ({
