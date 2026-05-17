@@ -90,7 +90,7 @@ export const useCampaigns = () =>
         .select("*")
         .order("created_at", { ascending: false });
       if (error) throw error;
-      return data as Campaign[];
+      return (data as any) as Campaign[];
     },
   });
 
@@ -104,7 +104,7 @@ export const useCampaign = (id: string) =>
         .eq("id", id)
         .maybeSingle();
       if (error) throw error;
-      return data as Campaign | null;
+      return (data as any) as Campaign | null;
     },
     enabled: !!id,
   });
