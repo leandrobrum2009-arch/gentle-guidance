@@ -23,7 +23,27 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
       data_sorteio: "",
       p1: "", p2: "", p3: "", p4: "", p5: ""
     });
-     const saveResult = async () => {
+    const handleEdit = (r: any) => {
+      setEditingId(r.id);
+      setManualResult({
+        concurso: r.concurso,
+        data_sorteio: r.data_sorteio.split('T')[0],
+        p1: r.premios.find((p: any) => p.premio === "1")?.numero || "",
+        p2: r.premios.find((p: any) => p.premio === "2")?.numero || "",
+        p3: r.premios.find((p: any) => p.premio === "3")?.numero || "",
+        p4: r.premios.find((p: any) => p.premio === "4")?.numero || "",
+        p5: r.premios.find((p: any) => p.premio === "5")?.numero || "",
+      });
+      setOpen(true);
+    };
+
+    const handleAdd = () => {
+      setEditingId(null);
+      setManualResult({ concurso: "", data_sorteio: "", p1: "", p2: "", p3: "", p4: "", p5: "" });
+      setOpen(true);
+    };
+
+    const saveResult = async () => {
       setFetching(true);
       try {
         const premios = [
@@ -33,45 +53,25 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
           { premio: "4", numero: manualResult.p4 },
           { premio: "5", numero: manualResult.p5 },
         ];
-  
-         const payload = {
-           concurso: manualResult.concurso,
-           data_sorteio: manualResult.data_sorteio,
-           premios
-         };
- 
-         const { error } = editingId 
-           ? await supabase.from("federal_lottery_results").update(payload).eq("id", editingId)
-           : await supabase.from("federal_lottery_results").insert(payload);
-  
+
+        const payload = {
+          concurso: manualResult.concurso,
+          data_sorteio: manualResult.data_sorteio,
+          premios
+        };
+
+        const { error } = editingId 
+          ? await supabase.from("federal_lottery_results").update(payload).eq("id", editingId)
+          : await supabase.from("federal_lottery_results").insert(payload);
+
         if (error) throw error;
-         toast({ title: editingId ? "Resultado atualizado" : "Resultado adicionado" });
+        toast({ title: editingId ? "Resultado atualizado" : "Resultado adicionado" });
         setOpen(false);
+        setEditingId(null);
         queryClient.invalidateQueries({ queryKey: ["federal-results"] });
-       } catch (err: any) {
-         toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
-       } finally {
- 
-     const handleEdit = (r: any) => {
-       setEditingId(r.id);
-       setManualResult({
-         concurso: r.concurso,
-         data_sorteio: r.data_sorteio.split('T')[0],
-         p1: r.premios.find((p: any) => p.premio === "1")?.numero || "",
-         p2: r.premios.find((p: any) => p.premio === "2")?.numero || "",
-         p3: r.premios.find((p: any) => p.premio === "3")?.numero || "",
-         p4: r.premios.find((p: any) => p.premio === "4")?.numero || "",
-         p5: r.premios.find((p: any) => p.premio === "5")?.numero || "",
-       });
-       setOpen(true);
-     };
- 
-     const handleAdd = () => {
-       setEditingId(null);
-       setManualResult({ concurso: "", data_sorteio: "", p1: "", p2: "", p3: "", p4: "", p5: "" });
-       setOpen(true);
-     };
- 
+      } catch (err: any) {
+        toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+      } finally {
         setFetching(false);
       }
     };
