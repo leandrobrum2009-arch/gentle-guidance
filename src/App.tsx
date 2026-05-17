@@ -1,3 +1,5 @@
+import Account from "./pages/Account";
+            <Route path="/conta" element={<Account />} />
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
