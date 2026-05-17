@@ -2,10 +2,28 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { 
   User, Ticket, Users, Award, Wallet, TrendingUp, 
-  Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
-  ChevronRight, Sparkles, Star, Zap
+   Settings, LogOut, Copy, ExternalLink, ShieldCheck, 
+   ChevronRight, Sparkles, Star, Zap, Bell, CheckCircle, Trash2
 } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
+ import { useAuth } from "@/contexts/AuthContext";
+ import { useUserNotifications, Notification } from "@/hooks/useData";
+ import { useQueryClient } from "@tanstack/react-query";
+   const { data: notifications } = useUserNotifications(user?.id || "");
+   const queryClient = useQueryClient();
+ 
+   const markAsRead = async (id: string) => {
+     const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+     if (!error) queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+   };
+ 
+   const deleteNotification = async (id: string) => {
+     const { error } = await supabase.from("notifications").delete().eq("id", id);
+     if (!error) {
+       toast.success("Notificação excluída");
+       queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+     }
+   };
+ 
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -150,7 +168,51 @@ export default function Account() {
 
             <Tabs defaultValue="overview" className="space-y-6">
               <TabsList className="bg-secondary/50 p-1 gap-1 h-12 rounded-2xl w-full sm:w-auto">
-                <TabsTrigger value="overview" className="rounded-xl px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Geral</TabsTrigger>
+                 <TabsTrigger value="overview" className="rounded-xl px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Geral</TabsTrigger>
+                 <TabsTrigger value="notifications" className="rounded-xl px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Notificações</TabsTrigger>
+               <TabsContent value="notifications" className="space-y-6 outline-none">
+                 <Card className="border-border/50">
+                   <CardHeader>
+                     <CardTitle className="text-base flex items-center gap-2 italic uppercase">
+                       <Bell className="h-4 w-4 text-primary" /> Central de Notificações
+                     </CardTitle>
+                   </CardHeader>
+                   <CardContent className="p-0">
+                     {!notifications || notifications.length === 0 ? (
+                       <div className="flex flex-col items-center justify-center py-20 text-center opacity-50">
+                         <Bell className="h-12 w-12 text-muted-foreground/30 mb-2" />
+                         <p className="text-sm font-bold">Nenhuma notificação</p>
+                       </div>
+                     ) : (
+                       <div className="divide-y divide-white/5">
+                         {notifications.map((n) => (
+                           <div key={n.id} className={`flex items-start gap-4 p-5 transition-colors ${!n.is_read ? 'bg-primary/5' : 'hover:bg-white/5'}`}>
+                             <div className={`mt-1 h-2 w-2 flex-shrink-0 rounded-full ${!n.is_read ? 'bg-primary animate-pulse' : 'bg-muted'}`} />
+                             <div className="flex-1 space-y-1">
+                               <p className={`text-sm ${!n.is_read ? 'font-bold' : 'font-medium'}`}>{n.title}</p>
+                               <p className="text-xs text-muted-foreground leading-relaxed">{n.message}</p>
+                               <p className="text-[10px] text-muted-foreground/50 pt-1">
+                                 {new Date(n.created_at).toLocaleString('pt-BR')}
+                               </p>
+                             </div>
+                             <div className="flex items-center gap-2">
+                               {!n.is_read && (
+                                 <Button variant="ghost" size="icon" className="h-8 w-8 text-primary" onClick={() => markAsRead(n.id)}>
+                                   <CheckCircle className="h-4 w-4" />
+                                 </Button>
+                               )}
+                               <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => deleteNotification(n.id)}>
+                                 <Trash2 className="h-4 w-4" />
+                               </Button>
+                             </div>
+                           </div>
+                         ))}
+                       </div>
+                     )}
+                   </CardContent>
+                 </Card>
+               </TabsContent>
+ 
                 <TabsTrigger value="affiliate" className="rounded-xl px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Afiliados</TabsTrigger>
                 <TabsTrigger value="vip" className="rounded-xl px-6 font-bold text-xs uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">Programa VIP</TabsTrigger>
               </TabsList>
