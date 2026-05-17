@@ -322,6 +322,54 @@ export const useRanking = (limit = 10) =>
         .order("points", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return data;
-    },
-  });
+       return data;
+     },
+   });
+ 
+ export const useUserOrders = (userId: string) => {
+   return useQuery({
+     queryKey: ["user-orders", userId],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("orders")
+         .select("*, campaigns(title, image_url)")
+         .eq("user_id", userId)
+         .order("created_at", { ascending: false });
+       if (error) throw error;
+       return data;
+     },
+     enabled: !!userId,
+   });
+ };
+ 
+ export const useUserSpins = (userId: string) => {
+   return useQuery({
+     queryKey: ["user-spins", userId],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("roulette_spins")
+         .select("*, campaigns(title)")
+         .eq("user_id", userId)
+         .order("created_at", { ascending: false });
+       if (error) throw error;
+       return data;
+     },
+     enabled: !!userId,
+   });
+ };
+ 
+ export const useUserMysteryBoxWins = (userId: string) => {
+   return useQuery({
+     queryKey: ["user-mystery-box-wins", userId],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("mystery_box_wins")
+         .select("*")
+         .eq("user_id", userId)
+         .order("created_at", { ascending: false });
+       if (error) throw error;
+       return data;
+     },
+     enabled: !!userId,
+   });
+ };
