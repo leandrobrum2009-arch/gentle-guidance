@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Settings2 } from "lucide-react";
+ import { Loader2, Plus, Pencil, Trash2, Settings2, Trophy } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -141,7 +141,18 @@ export default function AdminCampaigns() {
     queryClient.invalidateQueries({ queryKey: ["campaigns"] });
   };
 
-  const statusColor = (s: string) => s === "active" ? "default" : s === "completed" ? "secondary" : "outline";
+   const statusColor = (s: string) => s === "active" ? "default" : s === "completed" ? "secondary" : "outline";
+ 
+   const performDraw = async (id: string) => {
+     if (!confirm("Realizar o sorteio desta campanha agora? Esta ação é irreversível.")) return;
+     setSaving(true);
+     const { data, error } = await supabase.rpc('perform_draw', { p_campaign_id: id });
+     setSaving(false);
+     if (error) { toast({ title: "Erro", description: error.message, variant: "destructive" }); return; }
+     toast({ title: "Sorteio concluído com sucesso!" });
+     queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+     queryClient.invalidateQueries({ queryKey: ["winners"] });
+   };
 
   return (
     <AdminLayout>
@@ -261,6 +272,11 @@ export default function AdminCampaigns() {
                     <TableCell>R$ {Number(c.ticket_price).toFixed(2)}</TableCell>
                     <TableCell>{c.sold_tickets}/{c.total_tickets}</TableCell>
                     <TableCell className="text-right">
+                      {c.status === "active" && (
+                        <Button variant="ghost" size="icon" className="text-amber-500 hover:text-amber-600 hover:bg-amber-50" onClick={() => performDraw(c.id)}>
+                          <Trophy className="h-4 w-4" />
+                        </Button>
+                      )}
                       <Button variant="ghost" size="icon" onClick={() => openEdit(c)}><Pencil className="h-4 w-4" /></Button>
                       <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                     </TableCell>
