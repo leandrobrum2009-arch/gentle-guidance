@@ -1,9 +1,11 @@
-import { Menu, X, User, Ticket, LogOut } from "lucide-react";
-import { useState } from "react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet } from "lucide-react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 
 const navLinks = [
   { label: "Início", href: "/" },
@@ -16,6 +18,34 @@ const navLinks = [
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const [profile, setProfile] = useState<any>(null);
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (user) {
+      const fetchProfile = async () => {
+        const { data } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+        setProfile(data);
+      };
+      const fetchUnread = async () => {
+        const { count } = await supabase.from("notifications").select("*", { count: 'exact', head: true }).eq("user_id", user.id).eq("is_read", false);
+        setUnreadCount(count || 0);
+      };
+      fetchProfile();
+      fetchUnread();
+
+      // Realtime subscription for notifications
+      const channel = supabase.channel('schema-db-changes')
+        .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, () => {
+          setUnreadCount(prev => prev + 1);
+        })
+        .subscribe();
+      
+      return () => {
+        supabase.removeChannel(channel);
+      };
+    }
+  }, [user]);
   const navigate = useNavigate();
 
   const handleSignOut = async () => {
@@ -55,7 +85,23 @@ const Header = () => {
           )}
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {user && (
+            <div className="hidden items-center gap-3 md:flex">
+              <div className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 border border-border/50">
+                <Wallet className="h-4 w-4 text-primary" />
+                <span className="text-xs font-bold">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
+              </div>
+              <button className="relative p-2 text-muted-foreground hover:text-foreground">
+                <Bell className="h-5 w-5" />
+                {unreadCount > 0 && (
+                  <Badge className="absolute -right-0 -top-0 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-primary p-0 text-[8px] font-bold text-primary-foreground border-2 border-background">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </button>
+            </div>
+          )}
           {user ? (
             <>
               <span className="hidden text-sm text-muted-foreground md:block">
