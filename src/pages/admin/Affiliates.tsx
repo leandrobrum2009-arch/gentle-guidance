@@ -88,8 +88,8 @@ export default function AdminAffiliates() {
                   <TableRow key={a.id} className="border-white/5 hover:bg-white/5 transition-colors group">
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-bold text-white">{(a.profiles as any)?.full_name || "Sem Nome"}</span>
-                        <span className="text-[10px] text-slate-500">{(a.profiles as any)?.email}</span>
+                       <span className="font-bold text-white">{(a.profiles as any)?.name || "Sem Nome"}</span>
+                       <span className="text-[10px] text-slate-500">Afiliado Premium</span>
                       </div>
                     </TableCell>
                     <TableCell>
