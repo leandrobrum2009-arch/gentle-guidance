@@ -17,11 +17,12 @@
        Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
      )
  
-     const url = new URL(req.url)
-     const path = url.pathname.split('/').pop()
- 
-     if (path === 'create') {
-       const { orderId } = await req.json()
+    const url = new URL(req.url)
+    const body = await req.json().catch(() => ({}))
+    const path = body.path || url.pathname.split('/').pop()
+
+    if (path === 'create' || body.path === 'create') {
+      const orderId = body.orderId
  
        // Fetch order
        const { data: order, error: orderError } = await supabaseClient
