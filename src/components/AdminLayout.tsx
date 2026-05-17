@@ -6,7 +6,7 @@ import {
   LayoutDashboard,
   Megaphone,
   ShoppingCart,
-  Trophy,
+   Trophy, Dices,
   ArrowLeft,
   Loader2,
   ShieldAlert,
@@ -18,7 +18,8 @@ const navItems = [
   { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
   { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
   { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
-  { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
+   { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
+   { title: "Federal", url: "/admin/federal", icon: Dices },
 ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
