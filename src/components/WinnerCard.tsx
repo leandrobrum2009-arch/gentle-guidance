@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { Trophy, Play, Phone } from "lucide-react";
+import { Trophy, Play, Phone, Star, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import type { Winner } from "@/hooks/useData";
 
 interface WinnerCardProps {
@@ -13,42 +14,51 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: index * 0.1 }}
-      className="rounded-xl border border-border/50 bg-card p-5 card-hover"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      className="relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 glass-morphism hover:border-primary/50 transition-all group"
     >
-      <div className="mb-3 flex items-start justify-between">
-        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-          <Trophy className="h-5 w-5 text-primary" />
-        </div>
-        {winner.video_url && (
-          <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-            <Play className="h-3 w-3" />
-            Vídeo
-          </Button>
-        )}
-      </div>
+      {/* Background Icon */}
+      <Trophy className="absolute -right-4 -top-4 h-32 w-32 text-primary/5 rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6" />
 
-      <h3 className="font-display text-base font-bold">{winner.winner_name}</h3>
-      <p className="mt-0.5 text-xs text-muted-foreground">{campaignTitle}</p>
-
-      <div className="mt-3 space-y-1.5 text-xs">
-        <p className="text-muted-foreground">
-          Prêmio: <span className="font-medium text-foreground">{winner.prize_description}</span>
-        </p>
-        <div className="flex items-center justify-between">
-          <span className="text-muted-foreground">
-            Nº da sorte: <span className="font-mono font-bold text-primary">{winner.ticket_number}</span>
-          </span>
+      <div className="relative z-10">
+        <div className="mb-4 flex items-start justify-between">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
+            <Trophy className="h-6 w-6 text-primary neon-text-primary" />
+          </div>
+          <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-widest italic">
+            Ganhador Certificado
+          </Badge>
         </div>
-        <div className="flex items-center justify-between text-muted-foreground">
-          <span>Data: {new Date(winner.draw_date).toLocaleDateString("pt-BR")}</span>
-          {winner.phone_masked && (
-            <span className="flex items-center gap-1">
-              <Phone className="h-3 w-3" />
-              {winner.phone_masked}
-            </span>
+
+        <div className="space-y-1">
+          <h3 className="font-display text-lg font-black uppercase italic tracking-tighter italic leading-none group-hover:text-primary transition-colors">
+            {winner.winner_name}
+          </h3>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
+        </div>
+
+        <div className="mt-6 p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+            <span className="text-muted-foreground">Prêmio</span>
+            <span className="text-primary neon-text-primary italic">{winner.prize_description}</span>
+          </div>
+          <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+            <span className="text-muted-foreground">Nº da sorte</span>
+            <span className="font-mono text-xs font-black text-white px-2 py-0.5 rounded bg-white/5 border border-white/10">{winner.ticket_number}</span>
+          </div>
+        </div>
+
+        <div className="mt-6 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Entrega Realizada</span>
+          </div>
+          {winner.video_url && (
+            <Button size="sm" variant="outline" className="h-9 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest">
+              <Play className="h-3 w-3 fill-current" /> Vídeo
+            </Button>
           )}
         </div>
       </div>

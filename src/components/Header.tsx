@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap } from "lucide-react";
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -20,6 +20,13 @@ const Header = () => {
   const { user, signOut } = useAuth();
   const [profile, setProfile] = useState<any>(null);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   useEffect(() => {
     if (user) {
@@ -54,82 +61,84 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
-      <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+    <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b border-white/5 bg-background/60 backdrop-blur-2xl py-3' : 'bg-transparent py-5'}`}>
+      <div className="container flex items-center justify-between gap-4">
+        <Link to="/" className="group flex items-center gap-3">
+          <motion.div 
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] transition-all group-hover:shadow-primary/50"
+          >
             <Ticket className="h-5 w-5 text-primary-foreground" />
-          </div>
-          <span className="font-display text-lg font-bold tracking-tight">
-            Rifas<span className="text-primary">Pro</span>
+          </motion.div>
+          <span className="font-display text-xl font-black uppercase tracking-tighter italic">
+            Rifas<span className="text-primary neon-text-primary">Pro</span>
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 md:flex">
+        <nav className="hidden items-center gap-1 lg:flex">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               to={link.href}
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
+              className="relative px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground transition-all hover:text-primary"
             >
               {link.label}
             </Link>
           ))}
-          {user && (
-            <Link
-              to="/meus-numeros"
-              className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Meus Bilhetes
-            </Link>
-          )}
         </nav>
 
-        <div className="flex items-center gap-3">
-          {user && (
-            <div className="hidden items-center gap-3 md:flex">
-              <div className="flex items-center gap-1.5 rounded-full bg-secondary px-3 py-1.5 border border-border/50">
+        <div className="flex flex-1 items-center justify-end gap-3">
+          <div className="hidden lg:flex relative items-center">
+            <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
+            <input 
+              type="text" 
+              placeholder="Buscar sorteio..." 
+              className="h-10 w-48 rounded-full bg-white/5 border border-white/10 px-10 text-[10px] uppercase font-bold tracking-widest transition-all focus:w-64 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
+            />
+          </div>
+
+          {user ? (
+            <div className="flex items-center gap-3">
+              <motion.div 
+                whileHover={{ scale: 1.02 }}
+                className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex"
+              >
                 <Wallet className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
-              </div>
-              <button className="relative p-2 text-muted-foreground hover:text-foreground">
+                <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
+              </motion.div>
+              
+              <button className="relative rounded-full bg-white/5 p-2.5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-all border border-white/5">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <Badge className="absolute -right-0 -top-0 flex h-4 min-w-[1rem] items-center justify-center rounded-full bg-primary p-0 text-[8px] font-bold text-primary-foreground border-2 border-background">
-                    {unreadCount}
-                  </Badge>
+                  <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
                 )}
               </button>
+
+              <Link to="/conta">
+                <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
+                  <User className="h-4 w-4 text-primary" />
+                  <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
+                </Button>
+              </Link>
             </div>
-          )}
-          {user ? (
-            <>
-              <span className="hidden text-sm text-muted-foreground md:block">
-                {user.user_metadata?.name || user.email}
-              </span>
-              <Button size="sm" variant="ghost" onClick={handleSignOut} className="hidden md:flex">
-                <LogOut className="mr-1.5 h-4 w-4" />
-                Sair
-              </Button>
-            </>
           ) : (
-            <>
+            <div className="flex items-center gap-2">
               <Link to="/entrar">
-                <Button size="sm" variant="ghost" className="hidden md:flex">
-                  <User className="mr-1.5 h-4 w-4" />
+                <Button size="sm" variant="ghost" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6">
                   Entrar
                 </Button>
               </Link>
               <Link to="/cadastrar">
-                <Button size="sm" className="hidden md:flex">
-                  Cadastrar
+                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary">
+                  Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                 </Button>
               </Link>
-            </>
+            </div>
           )}
+
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="rounded-md p-2 text-muted-foreground md:hidden"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-muted-foreground lg:hidden border border-white/5"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
