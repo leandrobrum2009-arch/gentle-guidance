@@ -48,8 +48,10 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
          toast({ title: editingId ? "Resultado atualizado" : "Resultado adicionado" });
         setOpen(false);
         queryClient.invalidateQueries({ queryKey: ["federal-results"] });
-      } catch (err: any) {
+       } catch (err: any) {
          toast({ title: "Erro ao salvar", description: err.message, variant: "destructive" });
+       } finally {
+ 
      const handleEdit = (r: any) => {
        setEditingId(r.id);
        setManualResult({
@@ -70,7 +72,6 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
        setOpen(true);
      };
  
-      } finally {
         setFetching(false);
       }
     };
