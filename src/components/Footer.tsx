@@ -5,6 +5,7 @@ const footerLinks = [
   { label: "Início", href: "/" },
   { label: "Campanhas", href: "/campanhas" },
   { label: "Ganhadores", href: "/ganhadores" },
+  { label: "Federal", href: "/federal" },
   { label: "Comunicados", href: "/comunicados" },
   { label: "Meus Bilhetes", href: "/meus-numeros" },
   { label: "Afiliados", href: "/afiliados" },
