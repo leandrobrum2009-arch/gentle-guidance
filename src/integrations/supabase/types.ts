@@ -245,37 +245,138 @@ export type Database = {
         }
         Relationships: []
       }
+      mystery_box_configs: {
+        Row: {
+          campaign_id: string | null
+          cost: number
+          created_at: string | null
+          id: string
+          image_url: string | null
+          is_active: boolean | null
+          name: string
+          rarity: Database["public"]["Enums"]["mystery_box_rarity"]
+        }
+        Insert: {
+          campaign_id?: string | null
+          cost?: number
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name: string
+          rarity?: Database["public"]["Enums"]["mystery_box_rarity"]
+        }
+        Update: {
+          campaign_id?: string | null
+          cost?: number
+          created_at?: string | null
+          id?: string
+          image_url?: string | null
+          is_active?: boolean | null
+          name?: string
+          rarity?: Database["public"]["Enums"]["mystery_box_rarity"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_box_configs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mystery_box_prizes: {
+        Row: {
+          chance_percent: number
+          config_id: string | null
+          created_at: string | null
+          description: string | null
+          id: string
+          image_url: string | null
+          prize_type: string
+          prize_value: number | null
+          rarity: Database["public"]["Enums"]["mystery_box_rarity"]
+          title: string
+        }
+        Insert: {
+          chance_percent?: number
+          config_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          prize_type?: string
+          prize_value?: number | null
+          rarity?: Database["public"]["Enums"]["mystery_box_rarity"]
+          title: string
+        }
+        Update: {
+          chance_percent?: number
+          config_id?: string | null
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          image_url?: string | null
+          prize_type?: string
+          prize_value?: number | null
+          rarity?: Database["public"]["Enums"]["mystery_box_rarity"]
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mystery_box_prizes_config_id_fkey"
+            columns: ["config_id"]
+            isOneToOne: false
+            referencedRelation: "mystery_box_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mystery_box_wins: {
         Row: {
           box_id: string
+          config_id: string | null
           created_at: string
           id: string
+          prize_id: string | null
           prize_title: string
           prize_value: number | null
           user_id: string
         }
         Insert: {
           box_id: string
+          config_id?: string | null
           created_at?: string
           id?: string
+          prize_id?: string | null
           prize_title: string
           prize_value?: number | null
           user_id: string
         }
         Update: {
           box_id?: string
+          config_id?: string | null
           created_at?: string
           id?: string
+          prize_id?: string | null
           prize_title?: string
           prize_value?: number | null
           user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "mystery_box_wins_box_id_fkey"
-            columns: ["box_id"]
+            foreignKeyName: "mystery_box_wins_config_id_fkey"
+            columns: ["config_id"]
             isOneToOne: false
-            referencedRelation: "mystery_boxes"
+            referencedRelation: "mystery_box_configs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mystery_box_wins_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "mystery_box_prizes"
             referencedColumns: ["id"]
           },
           {
@@ -736,6 +837,7 @@ export type Database = {
     }
     Enums: {
       app_role: "admin" | "moderator" | "user"
+      mystery_box_rarity: "common" | "rare" | "epic" | "legendary"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -864,6 +966,7 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["admin", "moderator", "user"],
+      mystery_box_rarity: ["common", "rare", "epic", "legendary"],
     },
   },
 } as const
