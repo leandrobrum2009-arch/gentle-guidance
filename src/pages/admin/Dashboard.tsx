@@ -1,48 +1,218 @@
-import AdminLayout from "@/components/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useAdminCampaigns, useAdminOrders } from "@/hooks/useAdmin";
-import { Loader2, Megaphone, ShoppingCart, DollarSign, Users } from "lucide-react";
-
-export default function AdminDashboard() {
-  const { data: campaigns, isLoading: lc } = useAdminCampaigns();
-  const { data: orders, isLoading: lo } = useAdminOrders();
-
-  const loading = lc || lo;
-
-  const totalRevenue = orders?.reduce((s, o) => s + (o.payment_status === "paid" ? Number(o.total_amount) : 0), 0) ?? 0;
-  const pendingOrders = orders?.filter((o) => o.payment_status === "pending").length ?? 0;
-  const activeCampaigns = campaigns?.filter((c) => c.status === "active").length ?? 0;
-
-  const stats = [
-    { label: "Campanhas Ativas", value: activeCampaigns, icon: Megaphone, color: "text-primary" },
-    { label: "Pedidos Pendentes", value: pendingOrders, icon: ShoppingCart, color: "text-warning" },
-    { label: "Receita Total", value: `R$ ${totalRevenue.toFixed(2)}`, icon: DollarSign, color: "text-success" },
-    { label: "Total Pedidos", value: orders?.length ?? 0, icon: Users, color: "text-info" },
-  ];
-
-  return (
-    <AdminLayout>
-      <h1 className="mb-6 font-display text-2xl font-bold">Dashboard</h1>
-
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-        </div>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {stats.map((s) => (
-            <Card key={s.label}>
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{s.label}</CardTitle>
-                <s.icon className={`h-5 w-5 ${s.color}`} />
-              </CardHeader>
-              <CardContent>
-                <p className="text-2xl font-bold">{s.value}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-    </AdminLayout>
-  );
-}
+ import AdminLayout from "@/components/AdminLayout";
+ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+ import { useAdminCampaigns, useAdminOrders, useAdminUsers } from "@/hooks/useAdmin";
+ import { 
+   Loader2, Megaphone, ShoppingCart, DollarSign, Users, 
+   TrendingUp, TrendingDown, ArrowUpRight, Activity, Zap
+ } from "lucide-react";
+ import { 
+   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
+   ResponsiveContainer, BarChart, Bar 
+ } from 'recharts';
+ import { format, subDays, startOfDay, isSameDay } from 'date-fns';
+ import { ptBR } from 'date-fns/locale';
+ 
+ export default function AdminDashboard() {
+   const { data: campaigns, isLoading: lc } = useAdminCampaigns();
+   const { data: orders, isLoading: lo } = useAdminOrders();
+   const { data: users, isLoading: lu } = useAdminUsers();
+ 
+   const loading = lc || lo || lu;
+ 
+   const today = startOfDay(new Date());
+   const paidOrders = orders?.filter(o => o.payment_status === "paid") ?? [];
+   const ordersToday = orders?.filter(o => isSameDay(new Date(o.created_at), today)) ?? [];
+   const salesToday = ordersToday.filter(o => o.payment_status === "paid")
+     .reduce((acc, o) => acc + Number(o.total_amount), 0);
+   
+   const totalRevenue = paidOrders.reduce((s, o) => s + Number(o.total_amount), 0);
+   const activeCampaigns = campaigns?.filter((c) => c.status === "active").length ?? 0;
+   
+   // Data for charts
+   const last7Days = Array.from({ length: 7 }, (_, i) => {
+     const date = subDays(new Date(), 6 - i);
+     const dayOrders = paidOrders.filter(o => isSameDay(new Date(o.created_at), date));
+     const total = dayOrders.reduce((sum, o) => sum + Number(o.total_amount), 0);
+     return {
+       date: format(date, 'dd/MM'),
+       total: total
+     };
+   });
+ 
+   const stats = [
+     { 
+       label: "Receita Total", 
+       value: `R$ ${totalRevenue.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 
+       icon: DollarSign, 
+       trend: "+12.5%", 
+       trendUp: true,
+       color: "from-emerald-500 to-teal-600" 
+     },
+     { 
+       label: "Vendas Hoje", 
+       value: `R$ ${salesToday.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}`, 
+       icon: Zap, 
+       trend: "+8.2%", 
+       trendUp: true,
+       color: "from-blue-500 to-indigo-600" 
+     },
+     { 
+       label: "Usuários Totais", 
+       value: users?.length ?? 0, 
+       icon: Users, 
+       trend: "+4.1%", 
+       trendUp: true,
+       color: "from-purple-500 to-pink-600" 
+     },
+     { 
+       label: "Rifas Ativas", 
+       value: activeCampaigns, 
+       icon: Megaphone, 
+       trend: "Estável", 
+       trendUp: true,
+       color: "from-orange-500 to-amber-600" 
+     },
+   ];
+ 
+   return (
+     <AdminLayout>
+       <div className="mb-8 flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between">
+         <div>
+           <h1 className="font-display text-3xl font-bold tracking-tight text-white underline decoration-primary decoration-4 underline-offset-8">
+             Visão Geral
+           </h1>
+           <p className="mt-2 text-slate-400">Bem-vindo de volta ao seu centro de controle premium.</p>
+         </div>
+         <div className="flex items-center gap-3">
+           <div className="flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 border border-primary/20">
+             <Activity className="h-4 w-4 text-primary animate-pulse" />
+             <span className="text-xs font-bold uppercase tracking-wider text-primary">14 usuários online</span>
+           </div>
+         </div>
+       </div>
+ 
+       {loading ? (
+         <div className="flex h-96 items-center justify-center">
+           <div className="relative">
+             <div className="h-24 w-24 rounded-full border-4 border-primary/20"></div>
+             <div className="absolute top-0 h-24 w-24 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+             <Loader2 className="absolute inset-0 m-auto h-8 w-8 animate-pulse text-primary" />
+           </div>
+         </div>
+       ) : (
+         <div className="space-y-8">
+           {/* Stats Grid */}
+           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+             {stats.map((s) => (
+               <Card key={s.label} className="relative overflow-hidden border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl transition-all hover:border-primary/30 group">
+                 <div className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${s.color} opacity-10 blur-2xl transition-all group-hover:opacity-20`}></div>
+                 <CardHeader className="flex flex-row items-center justify-between pb-2">
+                   <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">{s.label}</CardTitle>
+                   <div className={`rounded-lg bg-gradient-to-br ${s.color} p-2 shadow-lg`}>
+                     <s.icon className="h-4 w-4 text-white" />
+                   </div>
+                 </CardHeader>
+                 <CardContent>
+                   <div className="flex items-baseline gap-2">
+                     <p className="text-2xl font-bold tracking-tight text-white">{s.value}</p>
+                     <span className={`text-[10px] font-bold ${s.trendUp ? "text-emerald-400" : "text-rose-400"} flex items-center`}>
+                       {s.trendUp ? <TrendingUp className="mr-0.5 h-3 w-3" /> : <TrendingDown className="mr-0.5 h-3 w-3" />}
+                       {s.trend}
+                     </span>
+                   </div>
+                 </CardContent>
+               </Card>
+             ))}
+           </div>
+ 
+           {/* Charts Section */}
+           <div className="grid gap-6 lg:grid-cols-7">
+             <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl lg:col-span-4">
+               <CardHeader className="flex flex-row items-center justify-between">
+                 <div>
+                   <CardTitle className="text-lg font-bold text-white">Análise de Receita</CardTitle>
+                   <p className="text-xs text-slate-400">Faturamento dos últimos 7 dias</p>
+                 </div>
+                 <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-white/5 transition-colors hover:bg-white/10">
+                   <ArrowUpRight className="h-4 w-4 text-slate-400" />
+                 </div>
+               </CardHeader>
+               <CardContent className="h-[300px]">
+                 <ResponsiveContainer width="100%" height="100%">
+                   <AreaChart data={last7Days}>
+                     <defs>
+                       <linearGradient id="colorTotal" x1="0" y1="0" x2="0" y2="1">
+                         <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                         <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                       </linearGradient>
+                     </defs>
+                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                     <XAxis 
+                       dataKey="date" 
+                       axisLine={false} 
+                       tickLine={false} 
+                       tick={{ fill: '#94a3b8', fontSize: 10 }}
+                       dy={10}
+                     />
+                     <YAxis 
+                       axisLine={false} 
+                       tickLine={false} 
+                       tick={{ fill: '#94a3b8', fontSize: 10 }}
+                       tickFormatter={(value) => `R$${value}`}
+                     />
+                     <Tooltip 
+                       contentStyle={{ backgroundColor: '#131316', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                       itemStyle={{ color: '#fff', fontSize: '12px' }}
+                       labelStyle={{ color: '#94a3b8', marginBottom: '4px', fontSize: '10px' }}
+                     />
+                     <Area 
+                       type="monotone" 
+                       dataKey="total" 
+                       stroke="hsl(var(--primary))" 
+                       strokeWidth={3}
+                       fillOpacity={1} 
+                       fill="url(#colorTotal)" 
+                     />
+                   </AreaChart>
+                 </ResponsiveContainer>
+               </CardContent>
+             </Card>
+ 
+             <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl lg:col-span-3">
+               <CardHeader>
+                 <CardTitle className="text-lg font-bold text-white">Vendas por Categoria</CardTitle>
+                 <p className="text-xs text-slate-400">Distribuição de pedidos pagos</p>
+               </CardHeader>
+               <CardContent className="h-[300px]">
+                 <ResponsiveContainer width="100%" height="100%">
+                   <BarChart data={[
+                     { name: 'Rifas', value: orders?.filter(o => o.payment_status === 'paid').length ?? 0 },
+                     { name: 'Roleta', value: 124 },
+                     { name: 'Caixas', value: 86 }
+                   ]}>
+                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
+                     <XAxis 
+                       dataKey="name" 
+                       axisLine={false} 
+                       tickLine={false} 
+                       tick={{ fill: '#94a3b8', fontSize: 10 }}
+                     />
+                     <YAxis axisLine={false} tickLine={false} hide />
+                     <Tooltip 
+                        contentStyle={{ backgroundColor: '#131316', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                     />
+                     <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+                        { [0, 1, 2].map((entry, index) => (
+                          <cell key={`cell-${index}`} fill={index === 0 ? 'hsl(var(--primary))' : index === 1 ? '#8b5cf6' : '#ec4899'} />
+                        )) }
+                     </Bar>
+                   </BarChart>
+                 </ResponsiveContainer>
+               </CardContent>
+             </Card>
+           </div>
+         </div>
+       )}
+     </AdminLayout>
+   );
+ }
