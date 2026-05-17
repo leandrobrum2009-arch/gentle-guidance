@@ -8,22 +8,6 @@ import {
  import { useAuth } from "@/contexts/AuthContext";
  import { useUserNotifications, Notification } from "@/hooks/useData";
  import { useQueryClient } from "@tanstack/react-query";
-   const { data: notifications } = useUserNotifications(user?.id || "");
-   const queryClient = useQueryClient();
- 
-   const markAsRead = async (id: string) => {
-     const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", id);
-     if (!error) queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-   };
- 
-   const deleteNotification = async (id: string) => {
-     const { error } = await supabase.from("notifications").delete().eq("id", id);
-     if (!error) {
-       toast.success("Notificação excluída");
-       queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
-     }
-   };
- 
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -36,7 +20,23 @@ import { toast } from "sonner";
 
 export default function Account() {
   const { user, signOut } = useAuth();
+  const { data: notifications } = useUserNotifications(user?.id || "");
+  const queryClient = useQueryClient();
+
   const [profile, setProfile] = useState<any>(null);
+  const markAsRead = async (id: string) => {
+    const { error } = await supabase.from("notifications").update({ is_read: true }).eq("id", id);
+    if (!error) queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+  };
+
+  const deleteNotification = async (id: string) => {
+    const { error } = await supabase.from("notifications").delete().eq("id", id);
+    if (!error) {
+      toast.success("Notificação excluída");
+      queryClient.invalidateQueries({ queryKey: ["notifications", user?.id] });
+    }
+  };
+
   const [affiliate, setAffiliate] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
