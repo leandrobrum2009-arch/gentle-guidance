@@ -7,6 +7,7 @@
  import { Badge } from "@/components/ui/badge";
  import { Campaign } from "@/hooks/useData";
  import { Link } from "react-router-dom";
+import CountdownTimer from "./CountdownTimer";
  
  interface RaffleCarouselProps {
    campaigns: Campaign[];
@@ -24,12 +25,24 @@
          <div className="flex">
            {campaigns.map((campaign) => (
              <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[500px] md:h-[650px]">
-               {/* Background with parallax-like effect */}
-               <div className="absolute inset-0">
-                 <img src={campaign.image_url || ""} className="h-full w-full object-cover" alt={campaign.title} />
-                 <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent" />
-                 <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-               </div>
+                {/* Background with scale effect */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <motion.img 
+                    src={campaign.image_url || ""} 
+                    className="h-full w-full object-cover" 
+                    alt={campaign.title}
+                    animate={{ scale: [1, 1.1, 1] }}
+                    transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
+                  
+                  {/* Glow/Particles Layer */}
+                  <div className="absolute inset-0 z-20 pointer-events-none">
+                    <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
+                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+                  </div>
+                </div>
  
                 <div className="container relative h-full flex items-center pt-20 md:pt-0">
                  <motion.div 
@@ -49,12 +62,23 @@
                      )}
                    </div>
  
-                    <h1 className="text-4xl md:text-6xl lg:text-8xl font-black uppercase italic leading-[0.9] tracking-tighter">
-                     {campaign.title.split(' ')[0]} <br />
-                     <span className="text-primary neon-text-primary">
-                       {campaign.title.split(' ').slice(1).join(' ')}
-                     </span>
-                   </h1>
+                     <div className="space-y-4">
+                       {campaign.draw_date && (
+                         <motion.div
+                           initial={{ opacity: 0, y: 10 }}
+                           animate={{ opacity: 1, y: 0 }}
+                           transition={{ delay: 0.3 }}
+                         >
+                           <CountdownTimer targetDate={campaign.draw_date} className="scale-125 origin-left" />
+                         </motion.div>
+                       )}
+                       <h1 className="text-4xl md:text-6xl lg:text-8xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                        {campaign.title.split(' ')[0]} <br />
+                        <span className="text-primary neon-text-primary">
+                          {campaign.title.split(' ').slice(1).join(' ')}
+                        </span>
+                      </h1>
+                    </div>
  
                    <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-lg leading-tight">
                      {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
