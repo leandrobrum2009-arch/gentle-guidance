@@ -92,7 +92,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
             © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
-          </div>
+          </p>
           <div className="flex gap-6">
             <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">Privacidade</a>
             <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">Termos</a>
