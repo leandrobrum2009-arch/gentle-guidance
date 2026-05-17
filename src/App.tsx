@@ -4,6 +4,14 @@ import Ranking from "./pages/Ranking";
 import Affiliates from "./pages/Affiliates";
  import FederalResults from "./pages/FederalResults";
  import AdminFederal from "./pages/admin/Federal";
+ import AdminUsers from "./pages/admin/Users";
+ import AdminAffiliates from "./pages/admin/Affiliates";
+ import AdminRoulette from "./pages/admin/Roulette";
+ import AdminMysteryBoxes from "./pages/admin/MysteryBoxes";
+ import AdminBanners from "./pages/admin/Banners";
+ import AdminCoupons from "./pages/admin/Coupons";
+ import AdminNotifications from "./pages/admin/Notifications";
+ import AdminSettings from "./pages/admin/Settings";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -58,8 +66,16 @@ const App = () => (
             <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/campanhas" element={<ProtectedRoute adminOnly><AdminCampaigns /></ProtectedRoute>} />
             <Route path="/admin/pedidos" element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>} />
-            <Route path="/admin/ganhadores" element={<ProtectedRoute adminOnly><AdminWinners /></ProtectedRoute>} />
-            <Route path="/admin/federal" element={<ProtectedRoute adminOnly><AdminFederal /></ProtectedRoute>} />
+             <Route path="/admin/ganhadores" element={<ProtectedRoute adminOnly><AdminWinners /></ProtectedRoute>} />
+             <Route path="/admin/federal" element={<ProtectedRoute adminOnly><AdminFederal /></ProtectedRoute>} />
+             <Route path="/admin/usuarios" element={<ProtectedRoute adminOnly><AdminUsers /></ProtectedRoute>} />
+             <Route path="/admin/afiliados" element={<ProtectedRoute adminOnly><AdminAffiliates /></ProtectedRoute>} />
+             <Route path="/admin/roletas" element={<ProtectedRoute adminOnly><AdminRoulette /></ProtectedRoute>} />
+             <Route path="/admin/caixas" element={<ProtectedRoute adminOnly><AdminMysteryBoxes /></ProtectedRoute>} />
+             <Route path="/admin/banners" element={<ProtectedRoute adminOnly><AdminBanners /></ProtectedRoute>} />
+             <Route path="/admin/cupons" element={<ProtectedRoute adminOnly><AdminCoupons /></ProtectedRoute>} />
+             <Route path="/admin/notificacoes" element={<ProtectedRoute adminOnly><AdminNotifications /></ProtectedRoute>} />
+             <Route path="/admin/configuracoes" element={<ProtectedRoute adminOnly><AdminSettings /></ProtectedRoute>} />
 
             <Route path="*" element={<NotFound />} />
           </Routes>
