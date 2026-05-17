@@ -72,7 +72,7 @@
                    </CardHeader>
                    <CardContent className="p-6 md:p-10">
                      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                       {result.premios.map((p: any) => (
+                       {(result.premios as any[]).map((p: any) => (
                          <div 
                            key={p.premio} 
                            className={`relative p-6 rounded-2xl border flex flex-col items-center justify-center gap-3 transition-all ${
