@@ -28,6 +28,9 @@ export interface Campaign {
   mystery_box_enabled: boolean;
   roulette_enabled: boolean;
   ranking_enabled: boolean;
+  roulette_spin_cost: number;
+  roulette_free_tickets: number;
+  roulette_multiplier_max: number;
   featured: boolean;
   gallery_urls?: string[];
   video_url?: string;
