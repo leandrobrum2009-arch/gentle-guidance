@@ -399,21 +399,71 @@ import { useAuth } from "@/contexts/AuthContext";
         </div>
       </motion.div>
 
-      <div className="container pb-20 space-y-12">
-        <CampaignPublicInfo campaign={campaign} />
-
-        <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-3">
-            <CampaignPrizes 
-              mainPrizes={campaign.main_prizes} 
-              instantPrizes={campaign.lucky_numbers_prizes}
-              roulettePrizes={roulettePrizes}
-              showInstant={campaign.show_instant_prizes !== false}
-              soldTickets={soldTickets}
-            />
-          </div>
-
-          <div className="lg:col-span-2 space-y-8">
+       <div className="container pb-20 space-y-16">
+         {/* Top sections for stats and history */}
+         <div className="space-y-16">
+           <CampaignPublicInfo campaign={campaign} />
+           
+           {/* Maiores Compradores (Ranking) - Prominent position */}
+           {campaign.ranking_enabled && (
+             <section className="space-y-6">
+               <div className="flex items-center gap-3">
+                 <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                   <TrendingUp className="h-6 w-6 text-primary" />
+                 </div>
+                 <div>
+                   <h2 className="text-xl font-black uppercase italic tracking-tighter">Maiores Compradores</h2>
+                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Os que mais acreditaram na sorte</p>
+                 </div>
+               </div>
+ 
+               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                 {campaignRanking && campaignRanking.length > 0 ? campaignRanking.map((rank: any, i: number) => (
+                   <motion.div 
+                     key={i} 
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     transition={{ delay: i * 0.05 }}
+                     className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/5 transition-all group"
+                   >
+                     <div className="flex items-center gap-4">
+                       <div className={cn(
+                         "w-8 h-8 rounded-full flex items-center justify-center text-xs font-black italic shadow-lg",
+                         i === 0 ? "bg-amber-500 text-white" : i === 1 ? "bg-slate-400 text-white" : i === 2 ? "bg-amber-800 text-white" : "bg-zinc-800 text-slate-400"
+                       )}>
+                         #{i + 1}
+                       </div>
+                       <Avatar className="h-10 w-10 border-2 border-white/5 group-hover:border-primary/30 transition-all">
+                         <AvatarImage src={rank.avatar_url} />
+                         <AvatarFallback className="font-black text-[10px] bg-zinc-800">{rank.name.substring(0, 2)}</AvatarFallback>
+                       </Avatar>
+                       <div>
+                         <p className="text-xs font-black uppercase tracking-tighter text-white truncate max-w-[80px]">{rank.name}</p>
+                         <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{rank.total_tickets} COTAS</p>
+                       </div>
+                     </div>
+                     {i === 0 && <CrownIcon className="h-4 w-4 text-amber-500 opacity-20" />}
+                   </motion.div>
+                 )) : (
+                   <div className="text-center py-10 text-slate-500 italic text-sm col-span-full border border-dashed border-white/10 rounded-[2rem]">Nenhum comprador ainda. Seja o primeiro!</div>
+                 )}
+               </div>
+             </section>
+           )}
+         </div>
+ 
+         <div className="grid gap-8 lg:grid-cols-3">
+           <div className="lg:col-span-3">
+             <CampaignPrizes 
+               mainPrizes={campaign.main_prizes} 
+               instantPrizes={campaign.lucky_numbers_prizes}
+               roulettePrizes={roulettePrizes}
+               showInstant={campaign.show_instant_prizes !== false}
+               soldTickets={soldTickets}
+             />
+           </div>
+ 
+           <div className="lg:col-span-2 space-y-8">
             {/* Description & Info */}
             <div className="space-y-6">
                <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-4">
@@ -460,12 +510,8 @@ import { useAuth } from "@/contexts/AuthContext";
             )}
           </div>
 
-          <div className="space-y-6">
-            {campaign.ranking_enabled && (
-              <UserRanking />
-            )}
-
-            {/* Gamification / VIP Box */}
+           <div className="space-y-6">
+             {/* Gamification / VIP Box */}
             <div className="rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/30 p-6 border border-primary/20 space-y-4">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center">
@@ -494,54 +540,6 @@ import { useAuth } from "@/contexts/AuthContext";
             </div>
           </div>
 
-          {/* Rankings Section */}
-          <div className="lg:col-span-3">
-             {campaign.ranking_enabled && (
-               <div className="space-y-6">
-                 <div className="flex items-center gap-3">
-                   <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-                     <TrendingUp className="h-6 w-6 text-primary" />
-                   </div>
-                   <div>
-                     <h2 className="text-xl font-black uppercase italic tracking-tighter">Maiores Compradores</h2>
-                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Os que mais acreditaram na sorte</p>
-                   </div>
-                 </div>
-
-                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                   {campaignRanking && campaignRanking.length > 0 ? campaignRanking.map((rank: any, i: number) => (
-                     <motion.div 
-                       key={i} 
-                       initial={{ opacity: 0, scale: 0.95 }}
-                       whileInView={{ opacity: 1, scale: 1 }}
-                       transition={{ delay: i * 0.05 }}
-                       className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/5 transition-all"
-                     >
-                       <div className="flex items-center gap-4">
-                         <span className={cn(
-                           "w-6 text-sm font-black italic",
-                           i === 0 ? "text-amber-500" : i === 1 ? "text-slate-400" : i === 2 ? "text-amber-700" : "text-slate-700"
-                         )}>
-                           #{i + 1}
-                         </span>
-                         <Avatar className="h-10 w-10 border-2 border-white/5">
-                           <AvatarImage src={rank.avatar_url} />
-                           <AvatarFallback className="font-black text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
-                         </Avatar>
-                         <div>
-                           <p className="text-sm font-black uppercase tracking-tighter truncate max-w-[100px]">{rank.name}</p>
-                           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{rank.total_tickets} COTAS</p>
-                         </div>
-                       </div>
-                     </motion.div>
-                   )) : (
-                     <div className="text-center py-10 text-slate-500 italic text-sm col-span-full">Nenhum comprador ainda. Seja o primeiro!</div>
-                   )}
-                 </div>
-               </div>
-             )}
-          </div>
-        </div>
       </div>
 
        <PurchaseAnimation 
