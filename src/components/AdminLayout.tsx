@@ -68,21 +68,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-[#0d0d0f]">
-      <div className="flex items-center gap-3 border-b border-white/5 p-6">
+    <div className="flex h-full flex-col bg-white">
+      <div className="flex items-center gap-3 border-b border-slate-100 p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
-          <ShieldAlert className="h-6 w-6 text-white" />
+          <ShieldAlert className="h-6 w-6 text-primary-foreground" />
         </div>
         <div>
-          <span className="block font-display text-base font-bold tracking-tight text-white">Admin Panel</span>
-          <span className="text-[10px] font-medium uppercase tracking-widest text-primary">Premium</span>
+          <span className="block font-display text-base font-bold tracking-tight text-foreground">Admin Panel</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Premium</span>
         </div>
       </div>
 
       <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
         {navItems.map((group) => (
           <div key={group.category} className="space-y-2">
-            <h3 className="px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground/50">
+            <h3 className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
               {group.category}
             </h3>
             <div className="space-y-1">
@@ -95,7 +95,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                       active
                         ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
-                        : "text-slate-400 hover:bg-white/5 hover:text-slate-100"
+                        : "text-slate-500 hover:bg-slate-50 hover:text-primary"
                     }`}
                   >
                     <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-slate-500 group-hover:text-slate-300"}`} />
@@ -108,17 +108,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-white/5 p-4">
+      <div className="space-y-1 border-t border-slate-100 p-4">
         <Link
           to="/"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-slate-100 transition-colors"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4 text-slate-500" />
           Voltar ao site
         </Link>
         <button
           onClick={signOut}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-400 hover:bg-white/5 hover:text-rose-400 transition-colors"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-rose-500 transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Sair do Sistema
@@ -128,9 +128,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen w-full bg-[#0a0a0c] text-slate-100">
+    <div className="flex min-h-screen w-full bg-[#f8fafc] text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-white/5 bg-[#0d0d0f] lg:flex">
+      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-slate-200 bg-white lg:flex shadow-sm">
         <SidebarContent />
       </aside>
 
@@ -142,14 +142,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Menu className="h-6 w-6 text-white" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 border-white/5 bg-[#0d0d0f] p-0">
+          <SheetContent side="left" className="w-72 border-r border-slate-200 bg-white p-0">
             <SidebarContent />
           </SheetContent>
         </Sheet>
       </div>
 
       {/* Main */}
-      <main className="flex-1 overflow-y-auto bg-[#0a0a0c] p-4 lg:p-8 custom-scrollbar">
+      <main className="flex-1 overflow-y-auto bg-[#f8fafc] p-4 lg:p-8 custom-scrollbar">
         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
           {children}
         </div>
