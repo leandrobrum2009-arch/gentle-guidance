@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
  import { 
-   User, LogOut, Trophy, History, Coins, Activity, 
-   Wallet, Bell, TrendingUp, CreditCard, Star, Gift, 
-   Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-   Package, ShoppingBag
+    User, LogOut, Trophy, History, Coins, Activity,
+    Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
+    Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
+    Package, ShoppingBag, Users, CheckCircle2, Lock
  } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils";
    const { data: achievements } = useUserAchievements(user?.id || "");
    const { data: ranking } = useRanking(10);
    const { data: notifications } = useUserNotifications(user?.id || "");
+    const { data: rewards } = useUserRewards(user?.id || "");
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
@@ -85,6 +86,15 @@ import { cn } from "@/lib/utils";
     name: format(new Date(t.created_at), "dd/MM"),
     amount: Number(t.amount)
   }));
+
+  const ALL_ACHIEVEMENTS = [
+    { key: 'first_deposit', title: 'Primeiro Passo', description: 'Realize seu primeiro depósito na plataforma', icon: Wallet, points: 100, category: 'Financeiro' },
+    { key: 'referral_1', title: 'Embaixador', description: 'Convide 1 amigo que realize um depósito', icon: Users, points: 500, category: 'Social' },
+    { key: 'spin_10', title: 'Mestre da Roleta', description: 'Realize 10 giros na roleta', icon: RotateCw, points: 200, category: 'Jogos' },
+    { key: 'box_5', title: 'Caçador de Tesouros', description: 'Abra 5 caixas misteriosas', icon: Package, points: 300, category: 'Jogos' },
+    { key: 'lucky_win', title: 'Pé Quente', description: 'Ganhe seu primeiro prêmio em uma rifa', icon: Trophy, points: 1000, category: 'Rifas' },
+    { key: 'vip_silver', title: 'Membro Prata', description: 'Alcance o nível 5 VIP', icon: Star, points: 2000, category: 'Nível' },
+  ];
 
   const handleMarkAllRead = async () => {
     if (!user) return;
