@@ -38,9 +38,15 @@ interface CampaignForm {
   regulations: string;
   auto_numbers: boolean;
   manual_numbers: boolean;
+  ticket_generation_type: 'manual' | 'auto';
   lucky_numbers_prizes: string;
+  main_prizes: string;
   federal_lottery_draw: boolean;
   sales_goal: number;
+  roulette_free_tickets: number;
+  roulette_payout_rate: number;
+  show_instant_prizes: boolean;
+  show_roulette_status: boolean;
 }
 
 const empty: CampaignForm = {
@@ -57,9 +63,15 @@ const empty: CampaignForm = {
   regulations: "",
   auto_numbers: true,
   manual_numbers: true,
+  ticket_generation_type: 'auto',
   lucky_numbers_prizes: "[]",
+  main_prizes: "[]",
   federal_lottery_draw: false,
   sales_goal: 0,
+  roulette_free_tickets: 10,
+  roulette_payout_rate: 0,
+  show_instant_prizes: true,
+  show_roulette_status: true,
 };
 
 export default function AdminCampaigns() {
@@ -92,9 +104,15 @@ export default function AdminCampaigns() {
       regulations: c.regulations ?? "",
       auto_numbers: c.auto_numbers ?? true,
       manual_numbers: c.manual_numbers ?? false,
+      ticket_generation_type: c.ticket_generation_type ?? 'auto',
       lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
+      main_prizes: JSON.stringify(c.main_prizes ?? [], null, 2),
       federal_lottery_draw: c.federal_lottery_draw ?? false,
       sales_goal: c.sales_goal ?? 0,
+      roulette_free_tickets: c.roulette_free_tickets ?? 10,
+      roulette_payout_rate: c.roulette_payout_rate ?? 0,
+      show_instant_prizes: c.show_instant_prizes ?? true,
+      show_roulette_status: c.show_roulette_status ?? true,
     });
     setOpen(true);
   };
@@ -120,8 +138,14 @@ export default function AdminCampaigns() {
       lucky_numbers_prizes: JSON.parse(form.lucky_numbers_prizes || "[]"),
       auto_numbers: form.auto_numbers,
       manual_numbers: form.manual_numbers,
+      ticket_generation_type: form.ticket_generation_type,
+      main_prizes: JSON.parse(form.main_prizes || "[]"),
       federal_lottery_draw: form.federal_lottery_draw,
       sales_goal: Number(form.sales_goal),
+      roulette_free_tickets: Number(form.roulette_free_tickets),
+      roulette_payout_rate: Number(form.roulette_payout_rate),
+      show_instant_prizes: form.show_instant_prizes,
+      show_roulette_status: form.show_roulette_status,
     };
 
     const { error } = editId
