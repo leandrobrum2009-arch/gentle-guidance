@@ -40,7 +40,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
   const progress = Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
 
   return (
-    <section className="relative min-h-[95vh] w-full flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[70vh] w-full flex items-center justify-center overflow-hidden">
       {/* Background with cinematic effects */}
       <div className="absolute inset-0 z-0">
         <motion.img
@@ -49,9 +49,9 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
           transition={{ duration: 10, repeat: Infinity, repeatType: "reverse" }}
           src={campaign.image_url || "/placeholder.svg"}
           alt=""
-          className="h-full w-full object-cover blur-[2px] opacity-40"
+          className="h-full w-full object-cover blur-[1px] opacity-30"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-background/20 via-background/60 to-background" />
+        <div className="absolute inset-0 bg-gradient-to-b from-background/40 via-background/80 to-background" />
         <div className="absolute inset-0 cinematic-vignette" />
         <Particles count={40} />
       </div>
@@ -61,13 +61,13 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          className="space-y-8 max-w-4xl"
+          className="space-y-6 max-w-4xl"
         >
           <div className="flex flex-col items-center gap-4">
             <Badge className="bg-primary px-4 py-1 text-[10px] font-black uppercase tracking-[0.3em] glow-primary animate-pulse italic">
               Sorteio Premium
             </Badge>
-            <h1 className="font-display text-5xl md:text-7xl lg:text-8xl font-black uppercase italic tracking-tighter leading-none">
+            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none text-foreground">
               {campaign.title.split(' ')[0]} <span className="text-primary neon-text-primary">{campaign.title.split(' ').slice(1).join(' ')}</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-2xl">
@@ -84,8 +84,8 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
               { label: "Segundos", value: timeLeft.seconds },
             ].map((item) => (
               <div key={item.label} className="flex flex-col items-center">
-                <div className="relative h-20 w-16 md:h-28 md:w-24 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden glass-morphism shadow-2xl">
-                  <span className="font-display text-3xl md:text-5xl font-black text-primary italic neon-text-primary">
+                <div className="relative h-16 w-14 md:h-24 md:w-20 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shadow-xl">
+                  <span className="font-display text-2xl md:text-4xl font-black text-primary italic neon-text-primary">
                     {String(item.value).padStart(2, '0')}
                   </span>
                   <div className="absolute inset-0 animate-shimmer pointer-events-none" />
@@ -103,7 +103,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
                 <span className="text-muted-foreground">Progresso de Vendas</span>
                 <span className="text-primary">{progress}% Vendido</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-white/5 overflow-hidden border border-white/10 p-[1px]">
+              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden border border-slate-200 p-[1px]">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
@@ -120,7 +120,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
                   Participar Agora
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-white/10 bg-white/5 hover:bg-white/10 font-bold uppercase tracking-widest text-xs">
+              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-slate-200 bg-white/50 hover:bg-white font-bold uppercase tracking-widest text-xs">
                 Ver Prêmios <Star className="ml-2 h-4 w-4 text-primary" />
               </Button>
             </div>
@@ -129,23 +129,23 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute bottom-10 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl glass-morphism">
+      <div className="absolute bottom-6 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-100 shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Trophy className="h-6 w-6 text-primary" />
         </div>
         <div>
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Último Ganhador</p>
-          <p className="text-sm font-bold">João Silva - R$ 50.000,00</p>
+          <p className="text-xs font-bold text-foreground">João Silva - R$ 50.000,00</p>
         </div>
       </div>
 
-      <div className="absolute bottom-10 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl glass-morphism">
+      <div className="absolute bottom-6 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-100 shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Clock className="h-6 w-6 text-primary" />
         </div>
         <div>
           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Tempo Restante</p>
-          <p className="text-sm font-bold">Edição Limitada</p>
+          <p className="text-xs font-bold text-foreground">Edição Limitada</p>
         </div>
       </div>
     </section>

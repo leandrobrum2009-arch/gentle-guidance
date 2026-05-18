@@ -17,7 +17,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative overflow-hidden rounded-2xl border border-white/5 bg-white/[0.03] p-6 glass-morphism hover:border-primary/50 transition-all group"
+      className="relative overflow-hidden rounded-2xl border border-slate-100 bg-white p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group"
     >
       {/* Background Icon */}
       <Trophy className="absolute -right-4 -top-4 h-32 w-32 text-primary/5 rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6" />
@@ -39,14 +39,14 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
         </div>
 
-        <div className="mt-6 p-4 rounded-xl bg-black/40 border border-white/5 space-y-3">
+        <div className="mt-6 p-4 rounded-xl bg-slate-50 border border-slate-100 space-y-3">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Prêmio</span>
             <span className="text-primary neon-text-primary italic">{winner.prize_description}</span>
           </div>
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Nº da sorte</span>
-            <span className="font-mono text-xs font-black text-white px-2 py-0.5 rounded bg-white/5 border border-white/10">{winner.ticket_number}</span>
+            <span className="font-mono text-xs font-black text-foreground px-2 py-0.5 rounded bg-white border border-slate-200">{winner.ticket_number}</span>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
             <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Entrega Realizada</span>
           </div>
           {winner.video_url && (
-            <Button size="sm" variant="outline" className="h-9 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 text-[10px] font-black uppercase tracking-widest">
+            <Button size="sm" variant="outline" className="h-9 rounded-full gap-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-[10px] font-black uppercase tracking-widest text-slate-600">
               <Play className="h-3 w-3 fill-current" /> Vídeo
             </Button>
           )}

@@ -100,11 +100,11 @@ export default function AdminDashboard() {
             <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="font-display text-4xl font-bold tracking-tight text-white">
+            <h1 className="font-display text-4xl font-bold tracking-tight text-foreground">
               Dashboard
             </h1>
           </div>
-          <p className="text-slate-400 text-sm font-medium pl-1">Monitoramento em tempo real do seu ecossistema de rifas.</p>
+          <p className="text-slate-500 text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de rifas.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-2.5 border border-emerald-500/20">
@@ -135,12 +135,12 @@ export default function AdminDashboard() {
               <button
                 key={i}
                 onClick={() => window.location.href = action.url}
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-white/5 bg-[#0d0d0f]/50 p-6 backdrop-blur-xl transition-all hover:scale-[1.02] hover:border-primary/50 hover:bg-primary/5 active:scale-[0.98]"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-slate-100 bg-white p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98]"
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${action.color} text-white shadow-lg transition-transform group-hover:scale-110`}>
                   <action.icon className="h-6 w-6" />
                 </div>
-                <span className="text-sm font-bold text-slate-200 group-hover:text-primary transition-colors">{action.title}</span>
+                <span className="text-sm font-bold text-slate-600 group-hover:text-primary transition-colors">{action.title}</span>
                 <div className="absolute right-3 top-3 opacity-0 group-hover:opacity-100 transition-opacity">
                   <ArrowUpRight className="h-4 w-4 text-primary" />
                 </div>
@@ -151,17 +151,17 @@ export default function AdminDashboard() {
           {/* Stats Grid */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (
-              <Card key={s.label} className="relative overflow-hidden border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl transition-all hover:border-primary/30 group cursor-default">
+              <Card key={s.label} className="relative overflow-hidden border-slate-100 bg-white shadow-sm transition-all hover:border-primary/30 group cursor-default">
                 <div className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${s.color} opacity-10 blur-2xl transition-all group-hover:opacity-20`}></div>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-400">{s.label}</CardTitle>
+                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-500">{s.label}</CardTitle>
                   <div className={`rounded-lg bg-gradient-to-br ${s.color} p-2 shadow-lg transition-transform group-hover:scale-110`}>
                     <s.icon className="h-4 w-4 text-white" />
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="flex items-baseline gap-2">
-                    <p className="text-2xl font-bold tracking-tight text-white">{s.value}</p>
+                    <p className="text-2xl font-bold tracking-tight text-foreground">{s.value}</p>
                     <span className={`text-[10px] font-bold ${s.trendUp ? "text-emerald-400" : "text-rose-400"} flex items-center`}>
                       {s.trendUp ? <TrendingUp className="mr-0.5 h-3 w-3" /> : <TrendingDown className="mr-0.5 h-3 w-3" />}
                       {s.trend}
@@ -174,11 +174,11 @@ export default function AdminDashboard() {
 
           {/* Charts Section */}
           <div className="grid gap-6 lg:grid-cols-7">
-            <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl lg:col-span-4 overflow-hidden group">
+            <Card className="border-slate-100 bg-white shadow-sm lg:col-span-4 overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-bold text-white tracking-tight">Análise de Receita</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground tracking-tight">Análise de Receita</CardTitle>
                   <p className="text-xs text-slate-500 font-medium">Performance financeira dos últimos 7 dias</p>
                 </div>
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 transition-all hover:bg-white/10 hover:scale-110 group-hover:text-primary">
@@ -210,13 +210,13 @@ export default function AdminDashboard() {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#0d0d0f', 
-                        border: '1px solid rgba(255,255,255,0.1)', 
+                        backgroundColor: '#ffffff', 
+                        border: '1px solid #e2e8f0', 
                         borderRadius: '16px',
                         boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
                         padding: '12px'
                       }}
-                      itemStyle={{ color: '#fff', fontSize: '14px', fontWeight: 800 }}
+                      itemStyle={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 800 }}
                       labelStyle={{ color: '#94a3b8', marginBottom: '8px', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
                       cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
                     />
@@ -234,10 +234,10 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl lg:col-span-3 overflow-hidden group">
+            <Card className="border-slate-100 bg-white shadow-sm lg:col-span-3 overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <CardHeader>
-                <CardTitle className="text-lg font-bold text-white tracking-tight">Distribuição de Vendas</CardTitle>
+                <CardTitle className="text-lg font-bold text-foreground tracking-tight">Distribuição de Vendas</CardTitle>
                 <p className="text-xs text-slate-500 font-medium">Divisão de pedidos por tipo de jogo</p>
               </CardHeader>
               <CardContent className="h-[350px] pt-4">
@@ -256,7 +256,7 @@ export default function AdminDashboard() {
                     />
                     <YAxis axisLine={false} tickLine={false} hide />
                     <Tooltip 
-                       contentStyle={{ backgroundColor: '#0d0d0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px' }}
+                       contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px' }}
                     />
                      <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
                         { [0, 1, 2].map((_, index) => (
@@ -271,10 +271,10 @@ export default function AdminDashboard() {
 
           {/* Bottom Section */}
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl group overflow-hidden">
+            <Card className="border-slate-100 bg-white shadow-sm group overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-bold text-white tracking-tight">Campanhas em Alta</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground tracking-tight">Campanhas em Alta</CardTitle>
                   <CardDescription className="text-xs text-slate-500">Rifas com melhor conversão</CardDescription>
                 </div>
                 <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-widest text-primary hover:bg-primary/10" onClick={() => window.location.href='/admin/campanhas'}>
@@ -286,15 +286,15 @@ export default function AdminDashboard() {
                   {campaigns?.slice(0, 4).map((c) => {
                     const progress = Math.min(Math.round((c.sold_tickets / (c.total_tickets || 1)) * 100), 100);
                     return (
-                      <div key={c.id} className="group/item flex items-center justify-between p-4 rounded-2xl bg-white/[0.02] border border-white/[0.02] hover:border-primary/30 hover:bg-white/5 transition-all">
+                      <div key={c.id} className="group/item flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/30 hover:bg-white transition-all shadow-sm">
                         <div className="flex items-center gap-4">
-                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-white/5 flex items-center justify-center text-primary font-bold shadow-inner group-hover/item:scale-105 transition-transform">
+                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-slate-100 flex items-center justify-center text-primary font-bold shadow-inner group-hover/item:scale-105 transition-transform">
                             {c.image_url ? <img src={c.image_url} className="h-full w-full object-cover rounded-xl" /> : c.title.substring(0, 1)}
                           </div>
                           <div className="space-y-1">
-                            <p className="text-sm font-bold text-white tracking-tight group-hover/item:text-primary transition-colors">{c.title}</p>
+                            <p className="text-sm font-bold text-foreground tracking-tight group-hover/item:text-primary transition-colors">{c.title}</p>
                             <div className="flex items-center gap-2">
-                              <div className="h-1 w-24 rounded-full bg-white/5 overflow-hidden">
+                              <div className="h-1 w-24 rounded-full bg-slate-200 overflow-hidden">
                                 <div className="h-full bg-primary" style={{ width: `${progress}%` }}></div>
                               </div>
                               <span className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{progress}%</span>
@@ -312,10 +312,10 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl overflow-hidden">
+            <Card className="border-slate-100 bg-white shadow-sm overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-bold text-white tracking-tight">Live Activity</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground tracking-tight">Live Activity</CardTitle>
                   <CardDescription className="text-xs text-slate-500">Últimas interações do sistema</CardDescription>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
