@@ -115,6 +115,27 @@ import { cn } from "@/lib/utils";
     }
   };
 
+  const handleShareReferral = async () => {
+    if (!affiliate?.referral_code) return;
+    const link = `${window.location.origin}/?ref=${affiliate.referral_code}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'RifasPro - Indique e Ganhe!',
+          text: 'Participe dos melhores sorteios com prêmios incríveis!',
+          url: link,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      copyReferral();
+    }
+  };
+
   const handleMarkAllRead = async () => {
     if (!user) return;
     try {
