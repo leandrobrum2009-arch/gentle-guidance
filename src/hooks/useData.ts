@@ -315,6 +315,50 @@ export const useMysteryBoxWins = (limit = 5) =>
     },
   });
 
+export const useCampaignMysteryBoxWins = (campaignId: string, limit = 10) =>
+  useQuery({
+    queryKey: ["campaign-mystery-box-wins", campaignId, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("mystery_box_wins")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          )
+        `)
+        .eq("campaign_id", campaignId) // Assuming mystery_box_wins has campaign_id
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as MysteryBoxWin[];
+    },
+    enabled: !!campaignId,
+  });
+
+export const useCampaignRouletteSpins = (campaignId: string, limit = 10) =>
+  useQuery({
+    queryKey: ["campaign-roulette-spins", campaignId, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roulette_spins")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          )
+        `)
+        .eq("campaign_id", campaignId)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as RouletteSpin[];
+    },
+    enabled: !!campaignId,
+  });
+
 export const useUserNotifications = (userId: string) =>
   useQuery({
     queryKey: ["notifications", userId],
