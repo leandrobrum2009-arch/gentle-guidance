@@ -129,7 +129,10 @@ const Header = () => {
                 <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
               </motion.div>
               
-              <button className="relative rounded-full bg-white/5 p-2.5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-all border border-white/5">
+              <button 
+                onClick={() => navigate("/conta#notifications")}
+                className="relative rounded-full bg-white/5 p-2.5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-all border border-white/5"
+              >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
