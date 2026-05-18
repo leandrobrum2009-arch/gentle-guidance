@@ -20,15 +20,17 @@
  import { ptBR } from "date-fns/locale";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
  import { cn } from "@/lib/utils";
- import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { playSound, hapticFeedback } from "@/lib/sounds";
  
- interface MysteryBoxProps {
-   boxes: MysteryBoxConfig[];
-   campaignId?: string;
- }
- 
- const RARITY_CONFIG = {
+interface MysteryBoxProps {
+  boxes: MysteryBoxConfig[];
+  campaignId?: string;
+  isCompact?: boolean;
+}
+
+const RARITY_CONFIG = {
    common: { color: "#94a3b8", glow: "shadow-[0_0_20px_rgba(148,163,184,0.3)]", bg: "from-slate-500/20 to-slate-900/40", border: "border-slate-500/30", icon: Package, label: "Comum" },
    rare: { color: "#3b82f6", glow: "shadow-[0_0_30px_rgba(59,130,246,0.4)]", bg: "from-blue-600/20 to-blue-950/40", border: "border-blue-500/30", icon: Star, label: "Raro" },
    epic: { color: "#a855f7", glow: "shadow-[0_0_40px_rgba(168,85,247,0.5)]", bg: "from-purple-600/20 to-purple-950/40", border: "border-purple-500/30", icon: Zap, label: "Épico" },
@@ -42,8 +44,8 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
    open: "https://assets.mixkit.co/active_storage/sfx/1103/1103-preview.mp3"
  };
  
- const MysteryBox = ({ boxes, campaignId }: MysteryBoxProps) => {
-   const [selectedBox, setSelectedBox] = useState<MysteryBoxConfig | null>(null);
+const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
+  const [selectedBox, setSelectedBox] = useState<MysteryBoxConfig | null>(null);
    const [isOpening, setIsOpening] = useState(false);
    const [isRevealing, setIsRevealing] = useState(false);
    const [winningPrize, setWinningPrize] = useState<MysteryBoxPrize | null>(null);
@@ -129,43 +131,79 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
      queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] });
    };
  
-   return (
-     <div className="space-y-8">
-       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-         {boxes.map((box) => {
-           const config = RARITY_CONFIG[box.rarity as keyof typeof RARITY_CONFIG];
-           const Icon = config.icon;
-           return (
-             <motion.div
-               key={box.id}
-               whileHover={{ y: -5, scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-                onClick={() => { handleStartOpening(box); playSound('click'); hapticFeedback(); }}
-               className={cn("group relative overflow-hidden rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
-             >
-               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
-               <div className="relative z-10 space-y-4">
-                 <div className="flex items-center justify-between">
-                   <Badge className="bg-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-widest">{config.label}</Badge>
-                   <Icon className="h-5 w-5 opacity-50" style={{ color: config.color }} />
-                 </div>
-                 <div className="aspect-square relative flex items-center justify-center py-4">
-                    <motion.div animate={{ y: [0, -10, 0], rotate: [0, -2, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                       <Box className="h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all duration-500" style={{ color: config.color }} />
-                    </motion.div>
-                 </div>
-                 <div className="text-center space-y-1">
-                   <h3 className="font-black uppercase tracking-tighter text-lg">{box.name}</h3>
-                   <div className="flex items-center justify-center gap-1 text-primary">
-                     <Coins className="h-4 w-4" />
-                     <span className="font-bold text-xl">R$ {Number(box.cost).toFixed(2)}</span>
-                   </div>
-                 </div>
-               </div>
-             </motion.div>
-           );
-         })}
-       </div>
+  const renderBoxes = () => (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      {boxes.map((box) => {
+        const config = RARITY_CONFIG[box.rarity as keyof typeof RARITY_CONFIG];
+        const Icon = config.icon;
+        return (
+          <motion.div
+            key={box.id}
+            whileHover={{ y: -5, scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+             onClick={() => { handleStartOpening(box); playSound('click'); hapticFeedback(); }}
+            className={cn("group relative overflow-hidden rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
+          >
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
+            <div className="relative z-10 space-y-4">
+              <div className="flex items-center justify-between">
+                <Badge className="bg-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-widest">{config.label}</Badge>
+                <Icon className="h-5 w-5 opacity-50" style={{ color: config.color }} />
+              </div>
+              <div className="aspect-square relative flex items-center justify-center py-4">
+                 <motion.div animate={{ y: [0, -10, 0], rotate: [0, -2, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
+                    <Box className="h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all duration-500" style={{ color: config.color }} />
+                 </motion.div>
+              </div>
+              <div className="text-center space-y-1">
+                <h3 className="font-black uppercase tracking-tighter text-lg">{box.name}</h3>
+                <div className="flex items-center justify-center gap-1 text-primary">
+                  <Coins className="h-4 w-4" />
+                  <span className="font-bold text-xl">R$ {Number(box.cost).toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <div className="space-y-8">
+      {isCompact ? (
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-orange-500/50 hover:bg-white transition-all group">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                  <Gift className="h-5 w-5" />
+                </div>
+                <div className="text-left">
+                  <p className="text-xs font-black uppercase tracking-tight text-slate-900">Caixas Misteriosas</p>
+                  <p className="text-[10px] font-medium text-slate-500">Ganhe prêmios abrindo caixas</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge className="bg-orange-500/10 text-orange-500 border-none text-[9px] font-black">{boxes.length} Opções</Badge>
+                <ChevronRight className="h-4 w-4 text-slate-300" />
+              </div>
+            </button>
+          </DialogTrigger>
+          <DialogContent className="max-w-5xl bg-zinc-950/95 border-white/10 backdrop-blur-xl">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
+                <Gift className="h-5 w-5 text-orange-500" /> Caixas <span className="text-orange-500">Misteriosas</span>
+              </DialogTitle>
+            </DialogHeader>
+            <div className="py-6 overflow-y-auto max-h-[70vh] no-scrollbar">
+              {renderBoxes()}
+            </div>
+          </DialogContent>
+        </Dialog>
+      ) : (
+        renderBoxes()
+      )}
        <AnimatePresence>
          {isOpening && selectedBox && (
            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">

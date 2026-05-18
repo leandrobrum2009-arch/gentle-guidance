@@ -24,8 +24,8 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
      <section className="relative overflow-hidden group">
        <div className="overflow-hidden" ref={emblaRef}>
          <div className="flex">
-           {campaigns.map((campaign) => (
-             <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[500px] md:h-[650px]">
+            {campaigns.map((campaign, index) => (
+              <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[400px] md:h-[500px] lg:h-[450px]">
                 {/* Background with scale effect */}
                 <div className="absolute inset-0 overflow-hidden">
                   <motion.img 
@@ -35,45 +35,45 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
+                  <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent z-10" />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
                   
-                  {/* Glow/Particles Layer */}
+                  {/* Glow/Particles Layer - Reduced opacity for light theme compatibility */}
                   <div className="absolute inset-0 z-20 pointer-events-none">
                     <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
                   </div>
                 </div>
  
-                <div className="container relative h-full flex items-center pt-20 md:pt-0">
+                <div className="container relative h-full flex items-center pt-10 md:pt-0">
                  <motion.div 
                    initial={{ opacity: 0, x: -50 }}
                    whileInView={{ opacity: 1, x: 0 }}
                    transition={{ duration: 0.8 }}
-                   className="max-w-2xl space-y-6"
+                   className="max-w-2xl space-y-4"
                  >
-                   <div className="flex items-center gap-2">
-                     <Badge className="bg-primary text-primary-foreground font-black italic px-3 py-1">
-                       🔥 DESTAQUE DA SEMANA
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-primary text-primary-foreground font-black italic px-2 py-0.5 text-[10px]">
+                        🔥 DESTAQUE
                      </Badge>
                      {campaign.urgency_tag && (
-                       <Badge variant="outline" className="border-primary/50 text-primary uppercase font-bold text-[10px]">
+                        <Badge variant="outline" className="border-primary/50 text-primary uppercase font-bold text-[9px] bg-white/50 backdrop-blur-sm">
                          {campaign.urgency_tag}
                        </Badge>
                      )}
                    </div>
  
-                     <div className="space-y-4">
+                      <div className="space-y-2">
                        {campaign.draw_date && (
                          <motion.div
                            initial={{ opacity: 0, y: 10 }}
                            animate={{ opacity: 1, y: 0 }}
                            transition={{ delay: 0.3 }}
                          >
-                           <CountdownTimer targetDate={campaign.draw_date} className="scale-125 origin-left" />
+                            <CountdownTimer targetDate={campaign.draw_date} className="scale-100 origin-left" />
                          </motion.div>
                        )}
-                       <h1 className="text-4xl md:text-6xl lg:text-8xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+                        <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_10px_rgba(0,0,0,0.3)] text-foreground">
                         {campaign.title.split(' ')[0]} <br />
                         <span className="text-primary neon-text-primary">
                           {campaign.title.split(' ').slice(1).join(' ')}
@@ -81,43 +81,43 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                       </h1>
                     </div>
  
-                   <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-lg leading-tight">
+                    <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-tight">
                      {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
                    </p>
  
-                    <div className="flex flex-wrap items-center gap-8 py-4">
+                     <div className="flex flex-wrap items-center gap-6 py-2">
                       <div className="flex flex-col gap-1">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor do Prêmio</span>
-                        <span className="text-2xl font-black text-white">
+                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Valor do Prêmio</span>
+                         <span className="text-xl font-black text-foreground">
                           R$ {((campaign as any).prize_value || 50000).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Números Disponíveis</span>
-                        <span className="text-2xl font-black text-white">
+                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Números Disponíveis</span>
+                         <span className="text-xl font-black text-foreground">
                           {(campaign.total_tickets - campaign.sold_tickets).toLocaleString('pt-BR')}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
-                        <span className="text-2xl font-black text-primary">
+                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
+                         <span className="text-xl font-black text-primary">
                           {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : 'Em breve'}
                         </span>
                       </div>
                     </div>
  
-                   <div className="flex items-center gap-4 pt-4">
+                    <div className="flex items-center gap-4 pt-2">
                      <Link to={`/campaign/${campaign.id}`} onClick={() => { playSound('click'); hapticFeedback(); }}>
                        <motion.div
                          whileHover={{ scale: 1.05 }}
                          whileTap={{ scale: 0.95 }}
                        >
-                         <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
+                          <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
                            Participar Agora <Zap className="h-5 w-5 fill-current" />
                          </Button>
                        </motion.div>
                      </Link>
-                     <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-white/10 hover:bg-white/5 font-black uppercase italic tracking-widest text-white backdrop-blur-md">
+                      <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-slate-200 hover:bg-slate-50 font-black uppercase italic tracking-widest text-foreground backdrop-blur-md">
                        Ver Detalhes
                      </Button>
                    </div>

@@ -1,9 +1,9 @@
  import { useState, useMemo, useEffect } from "react";
   import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
- import {
-    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
-     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket
+import {
+    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
+     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity
  } from "lucide-react";
  import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,7 +18,8 @@ import Footer from "@/components/Footer";
     useUserCampaignSpins
   } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
- import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
  import RaffleGallery from "@/components/RaffleGallery";
  import TicketGrid from "@/components/TicketGrid";
  import PaymentSelector from "@/components/PaymentSelector";
@@ -355,19 +356,47 @@ import { useAuth } from "@/contexts/AuthContext";
              )}
            </div>
  
-            <div className="space-y-6">
-               {/* Interactive Games */}
-               {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-                 <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm overflow-hidden">
-                    <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
+             <div className="space-y-6">
+               {/* Compact Games Section */}
+               {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
+                 <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                     <Gamepad2 className="h-4 w-4 text-primary" /> Jogos Instantâneos
+                   </h3>
+                   <div className="space-y-3">
+                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                       <Dialog>
+                         <DialogTrigger asChild>
+                           <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/50 hover:bg-white transition-all group">
+                             <div className="flex items-center gap-3">
+                               <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-180 transition-transform duration-500">
+                                 <RotateCw className="h-5 w-5" />
+                               </div>
+                               <div className="text-left">
+                                 <p className="text-xs font-black uppercase tracking-tight text-slate-900">Roleta Premiada</p>
+                                 <p className="text-[10px] font-medium text-slate-500">Gire e ganhe prêmios agora</p>
+                               </div>
+                             </div>
+                             <div className="flex items-center gap-2">
+                               <Badge className="bg-primary/10 text-primary border-none text-[9px] font-black">{userSpinsAvailable} Giros</Badge>
+                               <ArrowLeft className="h-4 w-4 text-slate-300 rotate-180" />
+                             </div>
+                           </button>
+                         </DialogTrigger>
+                         <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
+                            <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
+                         </DialogContent>
+                       </Dialog>
+                     )}
+
+                     {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
+                       <MysteryBox boxes={mysteryBoxes} isCompact />
+                     )}
+                   </div>
                  </div>
                )}
- 
-               {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
-                 <MysteryBox boxes={mysteryBoxes} />
-               )}
- 
-              {/* Sidebar Content */}
+
+               {/* Sidebar Content */}
               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
                <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900">Como participar</h3>
                <div className="space-y-4">
@@ -389,29 +418,82 @@ import { useAuth } from "@/contexts/AuthContext";
                </div>
              </div>
  
-             {campaign.ranking_enabled && (
-               <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-                 <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center justify-between">
-                   <span>Ranking</span>
-                   <Crown className="h-4 w-4 text-amber-500" />
-                 </h3>
-                 <div className="space-y-3">
-                   {campaignRanking?.slice(0, 5).map((rank: any, i: number) => (
-                     <div key={i} className="flex items-center justify-between gap-3">
-                       <div className="flex items-center gap-3">
-                         <div className="h-6 w-6 rounded-full bg-slate-100 flex items-center justify-center text-[10px] font-black text-slate-400">#{i+1}</div>
-                         <span className="text-xs font-bold text-slate-700 truncate max-w-[100px]">{rank.name}</span>
-                       </div>
-                       <Badge variant="secondary" className="bg-slate-50 text-[9px] font-black">{rank.total_tickets} cotas</Badge>
-                     </div>
-                   ))}
-                 </div>
-                 <Link to="/ranking" className="block text-center text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Ver ranking completo</Link>
-               </div>
-             )}
-           </div>
-         </div>
-       </motion.div>
+            </div>
+          </div>
+
+          {/* New Bottom Statistics Section */}
+          <div className="space-y-8 pt-10 border-t border-slate-100">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h2 className="text-xl font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-primary" /> Estatísticas <span className="text-primary">em Tempo Real</span>
+                </h2>
+                <p className="text-xs text-slate-500 font-medium uppercase tracking-widest">Acompanhe quem está ganhando agora</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
+                <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">248 pessoas visualizando</span>
+              </div>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Ranking Line */}
+              {campaign.ranking_enabled && (
+                <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                      <Crown className="h-4 w-4 text-amber-500" /> Top Compradores
+                    </h3>
+                    <Link to="/ranking" className="text-[10px] font-black uppercase tracking-widest text-primary hover:underline">Ver ranking completo</Link>
+                  </div>
+                  <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                    {campaignRanking?.slice(0, 6).map((rank: any, i: number) => (
+                      <div key={i} className="flex-shrink-0 flex items-center gap-3 bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 min-w-[180px]">
+                        <div className={`h-8 w-8 rounded-full flex items-center justify-center text-[12px] font-black ${i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-slate-200 text-slate-500'}`}>
+                          {i + 1}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-black text-slate-900 truncate">{rank.name}</p>
+                          <p className="text-[10px] font-bold text-slate-500 uppercase">{rank.total_tickets} Cotas</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Recent Activity Line */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                    <Zap className="h-4 w-4 text-primary" /> Atividade Recente
+                  </h3>
+                </div>
+                <div className="flex gap-4 overflow-x-auto no-scrollbar pb-2">
+                  {[...(instantWinners || []), ...(rouletteWinners || [])]
+                    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+                    .slice(0, 6)
+                    .map((activity, i) => (
+                      <div key={i} className="flex-shrink-0 flex items-center gap-3 bg-slate-50 px-4 py-3 rounded-2xl border border-slate-100 min-w-[220px]">
+                        <Avatar className="h-8 w-8 border border-white">
+                          <AvatarImage src={activity.profiles?.avatar_url || ""} />
+                          <AvatarFallback className="bg-primary/10 text-primary text-[10px] font-black">
+                            {activity.profiles?.name?.[0] || "?"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="min-w-0">
+                          <p className="text-xs font-black text-slate-900 truncate">{activity.profiles?.name || "Usuário"}</p>
+                          <p className="text-[10px] text-slate-500 truncate">
+                            Ganhou <span className="text-primary font-black uppercase italic">{ (activity as any).prize_label || (activity as any).prize_title }</span>
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </motion.div>
  
        <PurchaseAnimation 
          isVisible={showSuccess} 
