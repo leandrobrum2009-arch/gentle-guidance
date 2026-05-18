@@ -601,162 +601,104 @@ export default function AdminCampaignEdit() {
               </div>
             </TabsContent>
 
-            {/* Imagens e Mídia */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ImageIcon className="h-5 w-5 text-primary" /> Imagens e Mídia
-                </CardTitle>
-                <CardDescription>Atraia visualmente seus participantes.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                 <div className="space-y-2">
-                   <Label htmlFor="image_url">Foto Principal (Capa) <FieldInfo text="Esta é a foto que aparece nos cards do site. Use o botão de upload ou cole um link direto de imagem." /></Label>
-                   <div className="flex gap-2">
-                     <Input id="image_url" placeholder="URL da imagem ou faça upload" value={form.image_url} onChange={(e) => set("image_url", e.target.value)} className="flex-1" />
-                     <div className="relative">
+             <TabsContent value="media" className="space-y-6">
+               <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                 <CardHeader className="bg-slate-50/50">
+                   <CardTitle className="text-lg font-bold flex items-center gap-2"><ImageIcon className="h-5 w-5 text-primary" /> Mídia da Campanha</CardTitle>
+                 </CardHeader>
+                 <CardContent className="p-6 space-y-6">
+                   <div className="space-y-2">
+                     <Label>Foto de Capa (URL)</Label>
+                     <div className="flex gap-2">
+                       <Input value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
+                       <Button variant="outline" size="icon" onClick={() => document.getElementById('main-image-upload')?.click()}><Upload className="h-4 w-4" /></Button>
                        <input type="file" className="hidden" id="main-image-upload" accept="image/*" onChange={(e) => handleImageUpload(e, 'image_url')} />
-                       <Button type="button" variant="outline" size="icon" onClick={() => document.getElementById('main-image-upload')?.click()}>
-                         <Upload className="h-4 w-4" />
-                       </Button>
                      </div>
                    </div>
-                   {form.image_url && (
-                     <div className="mt-2 relative group w-full max-w-[200px] h-32 rounded-lg overflow-hidden border">
-                       <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
-                     </div>
-                   )}
-                 </div>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                     <Label>Fotos da Galeria <FieldInfo text="Fotos extras que os usuários podem ver deslizando na página do produto. Quanto mais fotos, mais confiança você passa!" /></Label>
-                    <Button type="button" variant="outline" size="sm" onClick={() => set("gallery_urls", [...form.gallery_urls, ""])}>
-                      <Plus className="h-3 w-3 mr-1" /> Add Foto
-                    </Button>
-                  </div>
-                  <div className="space-y-2">
-                     {form.gallery_urls.map((url, i) => (
-                       <div key={i} className="space-y-2">
-                         <div className="flex gap-2">
-                           <Input 
-                             placeholder="https://sua-imagem.com/foto.jpg"
-                             value={url}
-                             onChange={(e) => {
-                               const newList = [...form.gallery_urls];
-                               newList[i] = e.target.value;
-                               set("gallery_urls", newList);
-                             }}
-                             className="flex-1"
-                           />
-                           <div className="relative">
-                             <input type="file" className="hidden" id={`gallery-upload-${i}`} accept="image/*" onChange={(e) => handleImageUpload(e, 'gallery_urls', i)} />
-                             <Button type="button" variant="outline" size="icon" onClick={() => document.getElementById(`gallery-upload-${i}`)?.click()}>
-                               <Upload className="h-4 w-4" />
-                             </Button>
-                           </div>
-                           <Button variant="ghost" size="icon" onClick={() => {
-                             const newList = [...form.gallery_urls];
-                             newList.splice(i, 1);
-                             set("gallery_urls", newList);
-                           }}>
-                             <Trash2 className="h-4 w-4 text-destructive" />
-                           </Button>
+                   <div className="space-y-2">
+                     <Label>Vídeo do YouTube (URL)</Label>
+                     <Input placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+                   </div>
+                 </CardContent>
+               </Card>
+             </TabsContent>
+ 
+             <TabsContent value="interactive" className="space-y-6">
+               <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                 <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between">
+                   <div>
+                     <CardTitle className="text-lg font-bold">Cotas Premiadas</CardTitle>
+                     <CardDescription>Números que dão prêmios instantâneos.</CardDescription>
+                   </div>
+                   <Button type="button" size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, { number: "", prize: "", protected: false }])}>
+                     <Plus className="h-4 w-4 mr-1" /> Add Cota
+                   </Button>
+                 </CardHeader>
+                 <CardContent className="p-6">
+                   <div className="space-y-4">
+                     {form.lucky_numbers_prizes.map((p, i) => (
+                       <div key={i} className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100 items-end">
+                         <div className="md:col-span-1">
+                           <Label className="text-[10px] uppercase font-bold text-slate-400">Número</Label>
+                           <Input placeholder="Ex: 777" value={p.number} onChange={(e) => {
+                             const newList = [...form.lucky_numbers_prizes];
+                             newList[i].number = e.target.value;
+                             set("lucky_numbers_prizes", newList);
+                           }} />
                          </div>
-                         {url && (
-                           <div className="relative w-24 h-24 rounded border overflow-hidden">
-                             <img src={url} alt={`Galeria ${i+1}`} className="w-full h-full object-cover" />
-                           </div>
-                         )}
+                         <div className="md:col-span-2">
+                           <Label className="text-[10px] uppercase font-bold text-slate-400">Prêmio</Label>
+                           <Input placeholder="Ex: Pix R$ 100" value={p.prize} onChange={(e) => {
+                             const newList = [...form.lucky_numbers_prizes];
+                             newList[i].prize = e.target.value;
+                             set("lucky_numbers_prizes", newList);
+                           }} />
+                         </div>
+                         <div className="flex items-center gap-2">
+                           <Button variant="ghost" size="icon" onClick={() => {
+                             const newList = [...form.lucky_numbers_prizes];
+                             newList.splice(i, 1);
+                             set("lucky_numbers_prizes", newList);
+                           }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                         </div>
                        </div>
                      ))}
-                    {form.gallery_urls.length === 0 && (
-                      <p className="text-xs text-center py-2 text-muted-foreground border-2 border-dashed rounded italic">
-                        Nenhuma foto adicional cadastrada.
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="video_url">Vídeo do YouTube <FieldInfo text="Link do vídeo de apresentação (YouTube)." /></Label>
-                  <Input id="video_url" placeholder="https://youtube.com/watch?v=..." value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Cotas e Prêmios Instantâneos */}
-            <Card>
-              <CardHeader>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="flex items-center gap-2">
-                      <Trophy className="h-5 w-5 text-primary" /> Cotas Premiadas
-                    </CardTitle>
-                    <CardDescription>Números da sorte que ganham prêmios na hora.</CardDescription>
-                  </div>
-                  <Button type="button" variant="outline" size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, { number: "", prize: "", protected: false }])}>
-                    <Plus className="mr-2 h-4 w-4" /> Adicionar Cota
-                  </Button>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {form.lucky_numbers_prizes.map((p, i) => (
-                  <div key={i} className="flex gap-4 items-end border-b pb-4">
-                    <div className="flex-1 space-y-2">
-                      <Label>Número da Cota</Label>
-                      <Input 
-                        placeholder="Ex: 001234" 
-                        value={p.number} 
-                        onChange={(e) => {
-                          const newList = [...form.lucky_numbers_prizes];
-                          newList[i].number = e.target.value;
-                          set("lucky_numbers_prizes", newList);
-                        }}
-                      />
-                    </div>
-                    <div className="flex-[2] space-y-2">
-                      <Label>Prêmio</Label>
-                      <Input 
-                        placeholder="Ex: Pix de R$ 500,00" 
-                        value={p.prize} 
-                        onChange={(e) => {
-                          const newList = [...form.lucky_numbers_prizes];
-                          newList[i].prize = e.target.value;
-                          set("lucky_numbers_prizes", newList);
-                        }}
-                      />
-                    </div>
-                    <div className="space-y-2 flex flex-col items-center">
-                      <Label>Oculto?</Label>
-                      <Switch 
-                        checked={p.protected} 
-                        onCheckedChange={(v) => {
-                          const newList = [...form.lucky_numbers_prizes];
-                          newList[i].protected = v;
-                          set("lucky_numbers_prizes", newList);
-                        }}
-                      />
-                    </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-destructive"
-                      onClick={() => {
-                        const newList = [...form.lucky_numbers_prizes];
-                        newList.splice(i, 1);
-                        set("lucky_numbers_prizes", newList);
-                      }}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
-                ))}
-                {form.lucky_numbers_prizes.length === 0 && (
-                  <div className="text-center py-8 border-2 border-dashed rounded-lg text-muted-foreground">
-                    Nenhuma cota premiada cadastrada.
-                  </div>
-                )}
-              </CardContent>
-            </Card>
+                   </div>
+                 </CardContent>
+               </Card>
+             </TabsContent>
+ 
+             <TabsContent value="advanced" className="space-y-6">
+               <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                 <CardHeader className="bg-slate-50/50">
+                   <CardTitle className="text-lg font-bold">Funcionalidades Adicionais</CardTitle>
+                 </CardHeader>
+                 <CardContent className="p-6 space-y-4">
+                   <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border">
+                     <div className="space-y-0.5">
+                       <Label>Caixa Misteriosa</Label>
+                       <p className="text-[10px] text-slate-500">Habilita prêmios aleatórios na compra.</p>
+                     </div>
+                     <Switch checked={form.mystery_box_enabled} onCheckedChange={(v) => set("mystery_box_enabled", v)} />
+                   </div>
+                   <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border">
+                     <div className="space-y-0.5">
+                       <Label>Roleta Premiada</Label>
+                       <p className="text-[10px] text-slate-500">Giro da sorte após a compra.</p>
+                     </div>
+                     <Switch checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
+                   </div>
+                   <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border">
+                     <div className="space-y-0.5">
+                       <Label>Ranking de Compradores</Label>
+                       <p className="text-[10px] text-slate-500">Exibe os maiores compradores.</p>
+                     </div>
+                     <Switch checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
+                   </div>
+                 </CardContent>
+               </Card>
+             </TabsContent>
+           </Tabs>
           </div>
 
           <div className="space-y-8">
