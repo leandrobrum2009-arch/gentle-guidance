@@ -61,7 +61,7 @@ export default function AdminCampaignEdit() {
   const fetchCampaign = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("campaigns").select("*").eq("id", id).single();
-    if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "" });
+    if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "", price_bundles: (data.price_bundles as any[]) ?? [], gallery_urls: (data.gallery_urls as any[]) ?? [], lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], main_prizes: (data.main_prizes as any[]) ?? [] } as CampaignForm);
     setLoading(false);
   };
 
