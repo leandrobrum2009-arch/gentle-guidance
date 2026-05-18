@@ -325,6 +325,14 @@ import { cn } from "@/lib/utils";
                             >
                               <Copy className="h-3 w-3" /> Copiar
                             </Button>
+                            <Button 
+                              onClick={handleShareReferral}
+                              size="sm" 
+                              variant="outline"
+                              className="border-white/10 hover:bg-white/5 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl"
+                            >
+                              <Share2 className="h-3 w-3" /> Compartilhar
+                            </Button>
                           </div>
                         </div>
 
