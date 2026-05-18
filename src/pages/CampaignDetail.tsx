@@ -338,7 +338,7 @@ import { useAuth } from "@/contexts/AuthContext";
               
               {campaign.roulette_enabled && campaign.show_roulette_status !== false && roulettePrizes && roulettePrizes.length > 0 && (
                 <div className="rounded-[40px] border border-white/5 bg-black/20 p-2 shadow-2xl backdrop-blur-xl">
-                  <Roulette prizes={roulettePrizes} campaign={campaign} />
+                  <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
                 </div>
               )}
 
