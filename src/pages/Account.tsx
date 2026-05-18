@@ -48,7 +48,23 @@ import { cn } from "@/lib/utils";
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
    const [isLoading, setIsLoading] = useState(true);
-   const [activeTab, setActiveTab] = useState("overview");
+   const [activeTab, setActiveTab] = useState(() => {
+     const hash = window.location.hash.replace('#', '');
+     const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+     return validTabs.includes(hash) ? hash : "overview";
+   });
+ 
+   useEffect(() => {
+     const handleHashChange = () => {
+       const hash = window.location.hash.replace('#', '');
+       const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+       if (validTabs.includes(hash)) {
+         setActiveTab(hash);
+       }
+     };
+     window.addEventListener('hashchange', handleHashChange);
+     return () => window.removeEventListener('hashchange', handleHashChange);
+   }, []);
  
    useEffect(() => {
      if (user) {
