@@ -2,7 +2,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserRanking from "@/components/UserRanking";
 import { motion } from "framer-motion";
-import { Trophy, Star, Zap, Crown } from "lucide-react";
+import { Trophy, Star, Zap, Crown, Users } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Ranking() {
   return (
