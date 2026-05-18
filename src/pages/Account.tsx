@@ -17,7 +17,8 @@ import { useAuth } from "@/contexts/AuthContext";
     useUserNotifications,
     useUserSpins,
     useUserMysteryBoxWins,
-    markNotificationsAsRead
+    markNotificationsAsRead,
+    useUserReferrals
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -46,6 +47,7 @@ import { cn } from "@/lib/utils";
    const { data: ranking } = useRanking(10);
    const { data: notifications } = useUserNotifications(user?.id || "");
     const { data: rewards } = useUserRewards(user?.id || "");
+    const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
    
    const [spinsPage, setSpinsPage] = useState(1);
    const [boxesPage, setBoxesPage] = useState(1);
