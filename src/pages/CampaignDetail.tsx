@@ -494,33 +494,8 @@ import { useAuth } from "@/contexts/AuthContext";
             </div>
           </div>
 
-          {/* Stats & Availability Bar */}
-          <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
-               <Users className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Participantes</p>
-               <p className="text-lg font-black italic">{campaignRanking?.length || 0}</p>
-             </div>
-             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
-               <Gift className="h-5 w-5 text-amber-500 opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Cotas Premiadas</p>
-               <p className="text-lg font-black italic">{availableInstantPrizes} / {luckyNumbers.length}</p>
-             </div>
-             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
-               <Zap className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Seus Giros</p>
-               <p className="text-lg font-black italic">{user ? userSpinsAvailable : '-'}</p>
-             </div>
-             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
-               <Trophy className="h-5 w-5 text-yellow-500 opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Ganhadores</p>
-               <p className="text-lg font-black italic">{(campaignWinners?.length || 0) + (instantWinners?.length || 0) + (rouletteWinners?.length || 0)}</p>
-             </div>
-          </div>
-
-          {/* Rankings & Winners Section */}
-          <div className="lg:col-span-3 grid gap-8 lg:grid-cols-2">
-             {/* Buyers Ranking */}
+          {/* Rankings Section */}
+          <div className="lg:col-span-3">
              {campaign.ranking_enabled && (
                <div className="space-y-6">
                  <div className="flex items-center gap-3">
@@ -533,12 +508,12 @@ import { useAuth } from "@/contexts/AuthContext";
                    </div>
                  </div>
 
-                 <div className="grid gap-3">
+                 <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                    {campaignRanking && campaignRanking.length > 0 ? campaignRanking.map((rank: any, i: number) => (
                      <motion.div 
                        key={i} 
-                       initial={{ opacity: 0, x: -20 }}
-                       whileInView={{ opacity: 1, x: 0 }}
+                       initial={{ opacity: 0, scale: 0.95 }}
+                       whileInView={{ opacity: 1, scale: 1 }}
                        transition={{ delay: i * 0.05 }}
                        className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/5 transition-all"
                      >
@@ -554,89 +529,17 @@ import { useAuth } from "@/contexts/AuthContext";
                            <AvatarFallback className="font-black text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
                          </Avatar>
                          <div>
-                           <p className="text-sm font-black uppercase tracking-tighter">{rank.name}</p>
+                           <p className="text-sm font-black uppercase tracking-tighter truncate max-w-[100px]">{rank.name}</p>
                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{rank.total_tickets} COTAS</p>
                          </div>
                        </div>
-                       <Badge className="bg-primary/20 text-primary border-none font-black italic">
-                         TOP {i + 1}
-                       </Badge>
                      </motion.div>
                    )) : (
-                     <div className="text-center py-10 text-slate-500 italic text-sm">Nenhum comprador ainda. Seja o primeiro!</div>
+                     <div className="text-center py-10 text-slate-500 italic text-sm col-span-full">Nenhum comprador ainda. Seja o primeiro!</div>
                    )}
                  </div>
                </div>
              )}
-
-             {/* Recent Winners (Combined) */}
-             <div className="space-y-6">
-               <div className="flex items-center gap-3">
-                 <div className="h-10 w-10 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
-                   <Trophy className="h-6 w-6 text-amber-500" />
-                 </div>
-                 <div>
-                   <h2 className="text-xl font-black uppercase italic tracking-tighter">Últimos Ganhadores</h2>
-                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">A sorte sorriu para estes jogadores</p>
-                 </div>
-               </div>
-
-               <div className="grid gap-4">
-                 {/* Campaign Winners */}
-                 {campaignWinners.map((winner, i) => (
-                   <div key={winner.id} className="flex items-center justify-between p-4 bg-amber-500/5 border border-amber-500/10 rounded-3xl">
-                     <div className="flex items-center gap-4">
-                       <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white">
-                         <Trophy className="h-5 w-5" />
-                       </div>
-                       <div>
-                         <p className="text-sm font-black uppercase tracking-tighter text-white">{winner.winner_name}</p>
-                         <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Bilhete #{winner.ticket_number}</p>
-                       </div>
-                     </div>
-                     <Badge className="bg-amber-500 text-white border-none font-black italic">PRÊMIO FINAL</Badge>
-                   </div>
-                 ))}
-
-                 {/* Instant Wins */}
-                 {instantWinners?.map((win, i) => (
-                   <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl">
-                     <div className="flex items-center gap-4">
-                       <Avatar className="h-10 w-10 border-2 border-white/5">
-                         <AvatarImage src={win.profiles?.avatar_url} />
-                         <AvatarFallback className="font-black text-[10px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
-                       </Avatar>
-                       <div>
-                         <p className="text-sm font-black uppercase tracking-tighter">{win.profiles?.name}</p>
-                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{win.prize_title}</p>
-                       </div>
-                     </div>
-                     <Badge variant="outline" className="border-white/10 text-slate-500 uppercase font-black text-[8px] tracking-widest">INSTANTÂNEO</Badge>
-                   </div>
-                 ))}
-
-                 {/* Roulette Wins */}
-                 {rouletteWinners?.map((win, i) => (
-                   <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl">
-                     <div className="flex items-center gap-4">
-                       <Avatar className="h-10 w-10 border-2 border-white/5">
-                         <AvatarImage src={win.profiles?.avatar_url} />
-                         <AvatarFallback className="font-black text-[10px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
-                       </Avatar>
-                       <div>
-                         <p className="text-sm font-black uppercase tracking-tighter">{win.profiles?.name}</p>
-                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{win.prize_label}</p>
-                       </div>
-                     </div>
-                     <Badge variant="outline" className="border-primary/20 text-primary uppercase font-black text-[8px] tracking-widest">ROLETA</Badge>
-                   </div>
-                 ))}
-
-                 {campaignWinners.length === 0 && (!instantWinners || instantWinners.length === 0) && (!rouletteWinners || rouletteWinners.length === 0) && (
-                   <div className="text-center py-10 text-slate-500 italic text-sm">Nenhum ganhador nesta campanha ainda.</div>
-                 )}
-               </div>
-             </div>
           </div>
         </div>
       </div>
