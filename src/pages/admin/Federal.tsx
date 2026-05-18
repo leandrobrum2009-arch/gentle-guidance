@@ -221,45 +221,6 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                   ))}
                 </TableBody>
               </Table>
-            )}
-          </CardContent>
-        </Card>
-                 <TableRow>
-                   <TableHead>Concurso</TableHead>
-                   <TableHead>Data</TableHead>
-                   <TableHead>1º Prêmio</TableHead>
-                   <TableHead>2º Prêmio</TableHead>
-                   <TableHead>3º Prêmio</TableHead>
-                   <TableHead>4º Prêmio</TableHead>
-                    <TableHead>5º Prêmio</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                 </TableRow>
-               </TableHeader>
-               <TableBody>
-                 {results?.map((r: any) => (
-                   <TableRow key={r.id}>
-                     <TableCell className="font-bold">{r.concurso}</TableCell>
-                     <TableCell>{format(new Date(r.data_sorteio), "dd/MM/yyyy")}</TableCell>
-                     {r.premios.map((p: any) => (
-                       <TableCell key={p.premio} className={p.premio === "1" ? "font-black text-primary" : ""}>
-                        {p.numero}
-                      </TableCell>
-                    ))}
-                     <TableCell className="text-right flex justify-end gap-1">
-                       <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
-                         <Pencil className="h-4 w-4 text-primary" />
-                       </Button>
-                       <Button variant="ghost" size="icon" onClick={() => deleteResult(r.id)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                       </Button>
-                    </TableCell>
-                   </TableRow>
-                 ))}
-               </TableBody>
-             </Table>
-           )}
-         </CardContent>
-       </Card>
      </AdminLayout>
    );
  }
