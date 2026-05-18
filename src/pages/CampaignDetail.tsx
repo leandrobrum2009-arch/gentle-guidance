@@ -538,10 +538,10 @@ import { useAuth } from "@/contexts/AuthContext";
                 Ver Benefícios
               </Button>
             </div>
-          </div>
-
-      </div>
-
+           </div>
+         </div>
+       </div>
+ 
        <PurchaseAnimation 
          isVisible={showSuccess} 
          onComplete={() => {
