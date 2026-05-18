@@ -70,7 +70,13 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
     }
     
     const cost = Number(campaign.roulette_spin_cost || 0) * multiplier;
-    if ((userProfile?.balance || 0) < cost) {
+
+    if (cost === 0 && availableSpins < multiplier) {
+      toast.error(`Você não possui giros suficientes! Compre mais cotas para ganhar giros.`);
+      return;
+    }
+
+    if (cost > 0 && (userProfile?.balance || 0) < cost) {
       toast.error(`Saldo insuficiente! O giro custa R$ ${cost.toFixed(2)}`);
       return;
     }
