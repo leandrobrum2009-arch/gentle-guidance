@@ -256,7 +256,7 @@ import { useAuth } from "@/contexts/AuthContext";
                          Escolha seus números da sorte abaixo. Clique para selecionar.
                        </p>
                         {/* Lucky Numbers Section */}
-                        {luckyNumbers.length > 0 && (
+                        {campaign.show_instant_prizes !== false && luckyNumbers.length > 0 && (
                           <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
                             <h2 className="flex items-center gap-2 text-sm font-bold text-amber-500 uppercase tracking-wider">
                               <Star className="h-4 w-4 fill-current" /> Números Premiados
@@ -310,7 +310,7 @@ import { useAuth } from "@/contexts/AuthContext";
                  </div>
                </div>
               
-              {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+              {campaign.roulette_enabled && campaign.show_roulette_status !== false && roulettePrizes && roulettePrizes.length > 0 && (
                 <div className="rounded-[40px] border border-white/5 bg-black/20 p-2 shadow-2xl backdrop-blur-xl">
                   <Roulette prizes={roulettePrizes} campaign={campaign} />
                 </div>
