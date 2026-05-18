@@ -97,11 +97,9 @@ import { useAuth } from "@/contexts/AuthContext";
     const userSpinsAvailable = useMemo(() => {
       if (!campaign?.roulette_free_tickets || campaign.roulette_free_tickets <= 0) return 0;
       const totalEarnedSpins = Math.floor(userTicketsCount / campaign.roulette_free_tickets);
-      // We would need a way to track used spins per user/campaign.
-      // For now, let's assume we show the potential spins.
-      // TODO: Subtract used spins from a roulette_spins table count.
-      return totalEarnedSpins;
-    }, [userTicketsCount, campaign]);
+      const usedSpins = userSpins?.length || 0;
+      return Math.max(0, totalEarnedSpins - usedSpins);
+    }, [userTicketsCount, campaign, userSpins]);
 
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
