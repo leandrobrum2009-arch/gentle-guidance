@@ -277,6 +277,49 @@ import { cn } from "@/lib/utils";
                      </Card>
                   </div>
 
+                   <Card className="bg-gradient-to-r from-primary/10 to-transparent border-primary/20 p-6 backdrop-blur-xl relative overflow-hidden group">
+                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
+                         <Share2 className="h-32 w-32" />
+                      </div>
+                      <CardHeader className="p-0 mb-6">
+                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-primary">
+                             <Users className="h-4 w-4" /> Programa de Afiliados
+                         </CardTitle>
+                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Convide amigos e ganhe comissões sobre cada depósito</CardDescription>
+                      </CardHeader>
+                      
+                      <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
+                        <div className="flex-1 w-full space-y-4">
+                          <div className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl border border-white/10">
+                            <div className="flex-1">
+                              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Seu Link de Indicação</p>
+                              <p className="text-xs font-bold text-white truncate max-w-[200px] md:max-w-md">
+                                {affiliate?.referral_code ? `${window.location.origin}/?ref=${affiliate.referral_code}` : 'Carregando...'}
+                              </p>
+                            </div>
+                            <Button 
+                              onClick={copyReferral}
+                              size="sm" 
+                              className="bg-primary hover:bg-primary/90 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl glow-primary"
+                            >
+                              <Copy className="h-3 w-3" /> Copiar
+                            </Button>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Ganhos Totais</p>
+                            <p className="text-lg font-black italic text-emerald-400">R$ {Number(affiliate?.total_earned || 0).toFixed(2)}</p>
+                          </div>
+                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Comissão</p>
+                            <p className="text-lg font-black italic text-primary">{Number(affiliate?.commission_rate || 5)}%</p>
+                          </div>
+                        </div>
+                      </div>
+                   </Card>
+
                    <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
                       <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                          <div>
