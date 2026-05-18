@@ -85,6 +85,10 @@ import { useAuth } from "@/contexts/AuthContext";
       return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
     }, [allLuckyNumbers]);
  
+    const availableInstantPrizes = useMemo(() => {
+      return luckyNumbers.filter(p => !soldTickets.includes(p.number)).length;
+    }, [luckyNumbers, soldTickets]);
+
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
    }, [luckyNumbers]);
@@ -446,8 +450,8 @@ import { useAuth } from "@/contexts/AuthContext";
              </div>
              <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
                <Gift className="h-5 w-5 text-amber-500 opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Caixas Ativas</p>
-               <p className="text-lg font-black italic">{mysteryBoxes?.length || 0}</p>
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Cotas Premiadas</p>
+               <p className="text-lg font-black italic">{availableInstantPrizes} / {luckyNumbers.length}</p>
              </div>
              <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
                <Zap className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
