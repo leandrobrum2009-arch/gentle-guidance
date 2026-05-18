@@ -239,7 +239,7 @@ export default function AdminCampaignEdit() {
           <AlertTitle className="text-sm font-bold uppercase tracking-wider text-primary">Dica do Administrador</AlertTitle>
           <AlertDescription className="text-xs text-muted-foreground">
             Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline" /> para entender como cada campo funciona e como preenchê-lo corretamente.
-            Campos em JSON devem seguir o formato de exemplo para evitar erros no site.
+            Todos os campos foram simplificados para facilitar o seu cadastro.
           </AlertDescription>
         </Alert>
 
