@@ -425,9 +425,31 @@ import { cn } from "@/lib/utils";
                              <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Fique por dentro de tudo</CardDescription>
                          </div>
                          {notifications && notifications.some(n => !n.is_read) && (
-                             <Button variant="ghost" size="sm" onClick={handleMarkAllRead} className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80">
-                                 Marcar todas como lidas
-                             </Button>
+                             <div className="flex gap-2">
+                                 <Button 
+                                     variant="outline" 
+                                     size="sm" 
+                                     onClick={() => {
+                                         if ('Notification' in window) {
+                                             Notification.requestPermission().then(permission => {
+                                                 if (permission === 'granted') {
+                                                     toast.success("Notificações do navegador ativadas!");
+                                                 } else {
+                                                     toast.error("Permissão negada para notificações");
+                                                 }
+                                             });
+                                         } else {
+                                           toast.error("Seu navegador não suporta notificações");
+                                         }
+                                     }}
+                                     className="text-[10px] font-black uppercase tracking-widest border-white/10 hover:bg-white/5"
+                                 >
+                                     Ativar Push
+                                 </Button>
+                                 <Button variant="ghost" size="sm" onClick={handleMarkAllRead} className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80">
+                                     Marcar todas como lidas
+                                 </Button>
+                             </div>
                          )}
                       </CardHeader>
                       <div className="space-y-3">
