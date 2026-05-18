@@ -170,6 +170,36 @@ export const useCampaigns = () =>
     },
   });
 
+export const useCampaignRanking = (campaignId: string, limit = 10) =>
+  useQuery({
+    queryKey: ["campaign-ranking", campaignId, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('orders')
+        .select('user_id, quantity, profiles(name, avatar_url)')
+        .eq('campaign_id', campaignId)
+        .eq('payment_status', 'paid');
+      
+      if (error) throw error;
+
+      const grouped = data.reduce((acc: any, curr: any) => {
+        const userId = curr.user_id;
+        if (!acc[userId]) {
+          acc[userId] = {
+            name: curr.profiles?.name || 'Usuário',
+            avatar_url: curr.profiles?.avatar_url,
+            total_tickets: 0
+          };
+        }
+        acc[userId].total_tickets += curr.quantity;
+        return acc;
+      }, {});
+
+      return Object.values(grouped).sort((a: any, b: any) => b.total_tickets - a.total_tickets).slice(0, limit);
+    },
+    enabled: !!campaignId
+  });
+
 export const useCampaign = (id: string) =>
   useQuery({
     queryKey: ["campaign", id],
