@@ -355,9 +355,20 @@ import { useAuth } from "@/contexts/AuthContext";
              )}
            </div>
  
-           <div className="space-y-6">
-             {/* Sidebar Content */}
-             <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+            <div className="space-y-6">
+               {/* Interactive Games */}
+               {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                 <div className="bg-white rounded-3xl p-4 border border-slate-100 shadow-sm overflow-hidden">
+                    <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
+                 </div>
+               )}
+ 
+               {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
+                 <MysteryBox boxes={mysteryBoxes} />
+               )}
+ 
+              {/* Sidebar Content */}
+              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
                <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900">Como participar</h3>
                <div className="space-y-4">
                  {[
