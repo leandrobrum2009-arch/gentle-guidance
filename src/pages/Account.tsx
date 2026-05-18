@@ -242,6 +242,27 @@ import { cn } from "@/lib/utils";
                       <p className="font-bold text-lg">{stat.val}</p>
                     </div>
                   </div>
+
+                      {referrals && referrals.length > 0 && (
+                        <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                            <Users className="h-3 w-3" /> Seus Convidados ({referrals.length})
+                          </h4>
+                          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                            {referrals.map((ref: any, i: number) => (
+                              <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
+                                <div className="h-8 w-8 rounded-lg overflow-hidden bg-zinc-800">
+                                  <img src={ref.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${ref.name}`} className="h-full w-full object-cover" />
+                                </div>
+                                <div className="min-w-0">
+                                  <p className="text-[10px] font-bold text-white truncate">{ref.name}</p>
+                                  <p className="text-[8px] text-slate-500 uppercase font-black">{format(new Date(ref.created_at), "dd/MM/yy")}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                 </Card>
               ))}
             </div>
