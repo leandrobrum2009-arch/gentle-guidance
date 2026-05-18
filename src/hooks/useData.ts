@@ -456,9 +456,9 @@ export interface Ticket {
   created_at: string;
 }
 
-export const useTickets = (campaignId: string) =>
+export const useTickets = (campaignId: string, enabled = true) =>
   useQuery({
-    queryKey: ["tickets", campaignId],
+    queryKey: ["tickets", campaignId, enabled],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("tickets")
@@ -467,7 +467,7 @@ export const useTickets = (campaignId: string) =>
       if (error) throw error;
       return data as Ticket[];
     },
-    enabled: !!campaignId,
+    enabled: !!campaignId && enabled,
   });
 
 export const useRouletteSpins = (limit = 10) =>

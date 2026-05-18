@@ -39,7 +39,56 @@ import { useAuth } from "@/contexts/AuthContext";
     const { data: mysteryBoxes } = useMysteryBoxConfigs(id || "");
    const { data: roulettePrizes } = useRoulettePrizes(id || "");
    const { data: allWinners } = useWinners();
-   const { data: tickets } = useTickets(id || "");
+    const allLuckyNumbers = useMemo(() => {
+      return campaign?.lucky_numbers_prizes || [];
+    }, [campaign]);
+
+    const luckyNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => !p.protected);
+    }, [allLuckyNumbers]);
+
+    const protectedNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
+    }, [allLuckyNumbers]);
+
+    const luckyNumbersList = useMemo(() => {
+      return luckyNumbers.map((p: any) => p.number) || [];
+    }, [luckyNumbers]);
+
+    const canManualSelect = useMemo(() => {
+      return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
+    }, [campaign]);
+
+    const { data: tickets } = useTickets(id || "", canManualSelect);
+
+    const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+      if (!id || !luckyNumbersList.length) return;
+      
+      const fetchLuckyStatus = async () => {
+        const { data } = await supabase
+          .from('tickets')
+          .select('number, status')
+          .eq('campaign_id', id)
+          .in('number', luckyNumbersList);
+          
+        if (data) {
+          const statusMap: Record<string, boolean> = {};
+          data.forEach(t => {
+            if (t.status === 'paid' || t.status === 'reserved') {
+              statusMap[t.number] = true;
+            }
+          });
+          setLuckyNumbersStatus(statusMap);
+        }
+      };
+      
+      fetchLuckyStatus();
+      const interval = setInterval(fetchLuckyStatus, 30000);
+      return () => clearInterval(interval);
+    }, [id, luckyNumbersList]);
+
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
@@ -71,25 +120,13 @@ import { useAuth } from "@/contexts/AuthContext";
    const [isPurchasing, setIsPurchasing] = useState(false);
    const [showSuccess, setShowSuccess] = useState(false);
  
-   const soldTickets = useMemo(() => {
-     return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
-   }, [tickets]);
- 
-    const allLuckyNumbers = useMemo(() => {
-      return campaign?.lucky_numbers_prizes || [];
-    }, [campaign]);
+    const soldTickets = useMemo(() => {
+      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
+    }, [tickets]);
 
-    const luckyNumbers = useMemo(() => {
-      return allLuckyNumbers.filter((p: any) => !p.protected);
-    }, [allLuckyNumbers]);
-
-    const protectedNumbers = useMemo(() => {
-      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
-    }, [allLuckyNumbers]);
- 
     const availableInstantPrizes = useMemo(() => {
-      return luckyNumbers.filter(p => !soldTickets.includes(p.number)).length;
-    }, [luckyNumbers, soldTickets]);
+      return luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length;
+    }, [luckyNumbers, luckyNumbersStatus]);
 
     const userTicketsCount = useMemo(() => {
       if (!user || !tickets) return 0;
@@ -102,10 +139,6 @@ import { useAuth } from "@/contexts/AuthContext";
       const usedSpins = userSpins?.length || 0;
       return Math.max(0, totalEarnedSpins - usedSpins);
     }, [userTicketsCount, campaign, userSpins]);
-
-   const luckyNumbersList = useMemo(() => {
-     return luckyNumbers.map((p: any) => p.number) || [];
-   }, [luckyNumbers]);
  
    const campaignWinners = useMemo(() => {
      return allWinners?.filter(w => w.campaign_id === id) || [];
@@ -261,16 +294,18 @@ import { useAuth } from "@/contexts/AuthContext";
              <div className="sticky top-20 space-y-6">
                <div className="rounded-3xl border border-border/50 bg-card p-1 shadow-xl ring-1 ring-primary/10 overflow-hidden">
                  <Tabs defaultValue="auto" className="w-full">
-                   <div className="p-4 pb-0">
-                     <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
-                       <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                         <Zap className="h-4 w-4" /> Automático
-                       </TabsTrigger>
-                       <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                         <MousePointer2 className="h-4 w-4" /> Manual
-                       </TabsTrigger>
-                     </TabsList>
-                   </div>
+                    {canManualSelect && (
+                      <div className="p-4 pb-0">
+                        <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
+                          <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                            <Zap className="h-4 w-4" /> Automático
+                          </TabsTrigger>
+                          <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                            <MousePointer2 className="h-4 w-4" /> Manual
+                          </TabsTrigger>
+                        </TabsList>
+                      </div>
+                    )}
  
                    <TabsContent value="auto" className="p-5 mt-0">
                      <CampaignPricing campaign={campaign} onBuy={handleBuy} />
@@ -296,8 +331,8 @@ import { useAuth } from "@/contexts/AuthContext";
                                     </div>
                                     <span className="text-[10px] font-bold">{p.prize}</span>
                                   </div>
-                                  <Badge variant={soldTickets.includes(p.number) ? "secondary" : "default"} className={cn("text-[8px] h-5", !soldTickets.includes(p.number) && "bg-amber-500 text-white")}>
-                                    {soldTickets.includes(p.number) ? "Ganhado" : "Livre"}
+                                  <Badge variant={luckyNumbersStatus[p.number] ? "secondary" : "default"} className={cn("text-[8px] h-5", !luckyNumbersStatus[p.number] && "bg-amber-500 text-white")}>
+                                    {luckyNumbersStatus[p.number] ? "Ganhado" : "Livre"}
                                   </Badge>
                                 </div>
                               ))}

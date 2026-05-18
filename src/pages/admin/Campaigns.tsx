@@ -39,7 +39,7 @@ interface CampaignForm {
   auto_numbers: boolean;
   manual_numbers: boolean;
   ticket_generation_type: 'manual' | 'auto';
-  lucky_numbers_prizes: string;
+  lucky_numbers_prizes: { number: string; prize: string; protected?: boolean }[];
   main_prizes: string;
   federal_lottery_draw: boolean;
   sales_goal: number;
@@ -64,7 +64,7 @@ const empty: CampaignForm = {
   auto_numbers: true,
   manual_numbers: true,
   ticket_generation_type: 'auto',
-  lucky_numbers_prizes: "[]",
+  lucky_numbers_prizes: [],
   main_prizes: "[]",
   federal_lottery_draw: false,
   sales_goal: 0,
@@ -83,7 +83,7 @@ export default function AdminCampaigns() {
   const [form, setForm] = useState<CampaignForm>(empty);
   const [saving, setSaving] = useState(false);
 
-  const set = (k: keyof CampaignForm, v: string | number | boolean) => setForm((p) => ({ ...p, [k]: v }));
+  const set = (k: keyof CampaignForm, v: any) => setForm((p) => ({ ...p, [k]: v }));
 
   const openNew = () => { setEditId(null); setForm(empty); setOpen(true); };
   const openEdit = (c: any) => {
@@ -105,7 +105,7 @@ export default function AdminCampaigns() {
       auto_numbers: c.auto_numbers ?? true,
       manual_numbers: c.manual_numbers ?? false,
       ticket_generation_type: c.ticket_generation_type ?? 'auto',
-      lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
+      lucky_numbers_prizes: c.lucky_numbers_prizes ?? [],
       main_prizes: JSON.stringify(c.main_prizes ?? [], null, 2),
       federal_lottery_draw: c.federal_lottery_draw ?? false,
       sales_goal: c.sales_goal ?? 0,
@@ -135,7 +135,7 @@ export default function AdminCampaigns() {
       featured: form.featured,
       price_bundles: JSON.parse(form.price_bundles || "[]"),
       gallery_urls: JSON.parse(form.gallery_urls || "[]"),
-      lucky_numbers_prizes: JSON.parse(form.lucky_numbers_prizes || "[]"),
+      lucky_numbers_prizes: form.lucky_numbers_prizes,
       auto_numbers: form.auto_numbers,
       manual_numbers: form.manual_numbers,
       ticket_generation_type: form.ticket_generation_type,
@@ -181,6 +181,22 @@ export default function AdminCampaigns() {
      queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
      queryClient.invalidateQueries({ queryKey: ["winners"] });
    };
+
+  const addLuckyNumber = () => {
+    set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, { number: "", prize: "", protected: false }]);
+  };
+
+  const removeLuckyNumber = (index: number) => {
+    const newList = [...form.lucky_numbers_prizes];
+    newList.splice(index, 1);
+    set("lucky_numbers_prizes", newList);
+  };
+
+  const updateLuckyNumber = (index: number, key: string, value: any) => {
+    const newList = [...form.lucky_numbers_prizes];
+    newList[index] = { ...newList[index], [key]: value };
+    set("lucky_numbers_prizes", newList);
+  };
 
   return (
     <AdminLayout>
@@ -297,9 +313,52 @@ export default function AdminCampaigns() {
                 <Label className="text-xs font-bold uppercase">Pacotes de Preços (JSON)</Label>
                 <Textarea placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} rows={4} className="font-mono text-xs" />
               </div>
-              <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON) - Use "protected": true para ocultar</Label>
-                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15", "protected": false}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
+              <div className="space-y-4 rounded-xl border border-border p-4 bg-secondary/10">
+                <div className="flex items-center justify-between">
+                  <Label className="text-xs font-bold uppercase">Cotas Premiadas (Achou, Ganhou)</Label>
+                  <Button type="button" variant="outline" size="sm" onClick={addLuckyNumber} className="h-7 text-[10px] uppercase font-bold">
+                    <Plus className="h-3 w-3 mr-1" /> Add Número
+                  </Button>
+                </div>
+                <div className="space-y-3">
+                  {form.lucky_numbers_prizes.map((p, i) => (
+                    <div key={i} className="grid grid-cols-12 gap-2 items-end border-b border-border/50 pb-3">
+                      <div className="col-span-3 space-y-1">
+                        <Label className="text-[10px] uppercase opacity-50">Número</Label>
+                        <Input 
+                          placeholder="000123" 
+                          value={p.number} 
+                          onChange={(e) => updateLuckyNumber(i, 'number', e.target.value)}
+                          className="h-8 text-xs font-mono"
+                        />
+                      </div>
+                      <div className="col-span-5 space-y-1">
+                        <Label className="text-[10px] uppercase opacity-50">Prêmio</Label>
+                        <Input 
+                          placeholder="iPhone 15" 
+                          value={p.prize} 
+                          onChange={(e) => updateLuckyNumber(i, 'prize', e.target.value)}
+                          className="h-8 text-xs"
+                        />
+                      </div>
+                      <div className="col-span-3 flex flex-col items-center gap-1">
+                        <Label className="text-[10px] uppercase opacity-50">Protegido</Label>
+                        <Switch 
+                          checked={p.protected} 
+                          onCheckedChange={(v) => updateLuckyNumber(i, 'protected', v)}
+                        />
+                      </div>
+                      <div className="col-span-1 flex justify-end">
+                        <Button type="button" variant="ghost" size="icon" onClick={() => removeLuckyNumber(i)} className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {form.lucky_numbers_prizes.length === 0 && (
+                    <p className="text-[10px] text-muted-foreground text-center italic py-2">Nenhum número premiado configurado.</p>
+                  )}
+                </div>
               </div>
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase">Premiação Principal (1º ao 5º) (JSON)</Label>
