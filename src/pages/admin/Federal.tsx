@@ -221,6 +221,9 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                   ))}
                 </TableBody>
               </Table>
-     </AdminLayout>
-   );
- }
+            )}
+          </CardContent>
+        </Card>
+      </AdminLayout>
+    );
+  }
