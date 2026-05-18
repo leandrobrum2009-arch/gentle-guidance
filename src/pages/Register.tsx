@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -30,6 +31,18 @@ const Register = () => {
     }
     setIsLoading(true);
     const { error } = await signUp(email, password, name, cpf, phone);
+    
+    if (!error) {
+      const referredBy = localStorage.getItem('referred_by');
+      if (referredBy) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("profiles").update({ referred_by_code: referredBy }).eq("user_id", user.id);
+          localStorage.removeItem('referred_by');
+        }
+      }
+    }
+
     setIsLoading(false);
     if (error) {
       toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });

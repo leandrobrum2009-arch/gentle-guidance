@@ -621,6 +621,7 @@ export type Database = {
           name: string
           phone: string | null
           points: number | null
+          referred_by_code: string | null
           updated_at: string
           user_id: string
           vip_level: number | null
@@ -636,6 +637,7 @@ export type Database = {
           name: string
           phone?: string | null
           points?: number | null
+          referred_by_code?: string | null
           updated_at?: string
           user_id: string
           vip_level?: number | null
@@ -651,6 +653,7 @@ export type Database = {
           name?: string
           phone?: string | null
           points?: number | null
+          referred_by_code?: string | null
           updated_at?: string
           user_id?: string
           vip_level?: number | null
