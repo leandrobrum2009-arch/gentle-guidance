@@ -14,7 +14,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
   import { 
     useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
-    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins
+    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
+    useUserCampaignSpins
   } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,6 +43,7 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
+   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
@@ -97,11 +99,9 @@ import { useAuth } from "@/contexts/AuthContext";
     const userSpinsAvailable = useMemo(() => {
       if (!campaign?.roulette_free_tickets || campaign.roulette_free_tickets <= 0) return 0;
       const totalEarnedSpins = Math.floor(userTicketsCount / campaign.roulette_free_tickets);
-      // We would need a way to track used spins per user/campaign.
-      // For now, let's assume we show the potential spins.
-      // TODO: Subtract used spins from a roulette_spins table count.
-      return totalEarnedSpins;
-    }, [userTicketsCount, campaign]);
+      const usedSpins = userSpins?.length || 0;
+      return Math.max(0, totalEarnedSpins - usedSpins);
+    }, [userTicketsCount, campaign, userSpins]);
 
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
@@ -338,7 +338,7 @@ import { useAuth } from "@/contexts/AuthContext";
               
               {campaign.roulette_enabled && campaign.show_roulette_status !== false && roulettePrizes && roulettePrizes.length > 0 && (
                 <div className="rounded-[40px] border border-white/5 bg-black/20 p-2 shadow-2xl backdrop-blur-xl">
-                  <Roulette prizes={roulettePrizes} campaign={campaign} />
+                  <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
                 </div>
               )}
 
@@ -369,6 +369,7 @@ import { useAuth } from "@/contexts/AuthContext";
             <CampaignPrizes 
               mainPrizes={campaign.main_prizes} 
               instantPrizes={campaign.lucky_numbers_prizes}
+              roulettePrizes={roulettePrizes}
               showInstant={campaign.show_instant_prizes !== false}
               soldTickets={soldTickets}
             />

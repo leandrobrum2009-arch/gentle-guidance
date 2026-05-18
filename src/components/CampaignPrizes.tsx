@@ -1,4 +1,4 @@
-import { Trophy, Star, Gift, Sparkles, Medal } from "lucide-react";
+import { Trophy, Star, Gift, Sparkles, Medal, RotateCw, Coins, Ticket, CreditCard, ShoppingBag, Crown as CrownIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 
@@ -14,14 +14,23 @@ interface InstantPrize {
   is_won?: boolean;
 }
 
+interface RoulettePrize {
+  id: string;
+  label: string;
+  prize_type: string;
+  value: number | null;
+  color: string | null;
+}
+
 interface CampaignPrizesProps {
   mainPrizes?: MainPrize[];
   instantPrizes?: InstantPrize[];
+  roulettePrizes?: RoulettePrize[];
   showInstant?: boolean;
   soldTickets?: string[];
 }
 
-const CampaignPrizes = ({ mainPrizes, instantPrizes, showInstant = true, soldTickets = [] }: CampaignPrizesProps) => {
+const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant = true, soldTickets = [] }: CampaignPrizesProps) => {
   const luckyNumbers = instantPrizes?.filter(p => !p.protected) || [];
 
   return (
@@ -123,8 +132,50 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, showInstant = true, soldTic
           </div>
         </div>
       )}
+
+      {/* Roulette Prizes */}
+      {roulettePrizes && roulettePrizes.length > 0 && (
+        <div className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-2xl bg-purple-500/10 flex items-center justify-center border border-purple-500/20">
+              <RotateCw className="h-6 w-6 text-purple-500" />
+            </div>
+            <h2 className="text-xl font-black uppercase italic tracking-tighter">Prêmios da Roleta</h2>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {roulettePrizes.map((p, i) => (
+              <div 
+                key={i} 
+                className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-[#0d0d0f]/50 hover:border-purple-500/50 hover:bg-white/5 transition-all duration-300"
+              >
+                <div 
+                  className="h-10 w-10 rounded-xl flex items-center justify-center shadow-inner"
+                  style={{ backgroundColor: p.color || '#1a1a1a' }}
+                >
+                  <RoulettePrizeIcon type={p.prize_type} className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Roleta da Sorte</p>
+                  <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.label}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
+};
+
+const RoulettePrizeIcon = ({ type, className }: { type: string, className?: string }) => {
+  switch (type) {
+    case 'balance': return <CreditCard className={className} />;
+    case 'points': return <Coins className={className} />;
+    case 'ticket': return <Ticket className={className} />;
+    case 'physical': return <ShoppingBag className={className} />;
+    default: return <Gift className={className} />;
+  }
 };
 
 const Crown = ({ className }: { className?: string }) => (

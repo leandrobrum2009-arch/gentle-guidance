@@ -16,6 +16,7 @@ interface RouletteProps {
   prizes: RoulettePrize[];
   onSpinComplete?: (prize: RoulettePrize) => void;
   campaign: Campaign;
+  availableSpins?: number;
 }
 
 const SOUND_URLS = {
@@ -24,7 +25,7 @@ const SOUND_URLS = {
   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
 };
 
-const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
+const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: RouletteProps) => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
@@ -69,7 +70,13 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
     }
     
     const cost = Number(campaign.roulette_spin_cost || 0) * multiplier;
-    if ((userProfile?.balance || 0) < cost) {
+
+    if (cost === 0 && availableSpins < multiplier) {
+      toast.error(`Você não possui giros suficientes! Compre mais cotas para ganhar giros.`);
+      return;
+    }
+
+    if (cost > 0 && (userProfile?.balance || 0) < cost) {
       toast.error(`Saldo insuficiente! O giro custa R$ ${cost.toFixed(2)}`);
       return;
     }
@@ -199,10 +206,15 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
             <span className="text-[10px] font-bold text-white/40 uppercase tracking-tighter">Giros Grátis</span>
             <span className="text-lg font-black text-primary flex items-center gap-2">
               <Gift className="h-4 w-4" />
-              {campaign.roulette_free_tickets || 0}
+              {availableSpins}
             </span>
           </div>
         </div>
+        {campaign.roulette_free_tickets > 0 && (
+          <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest bg-white/5 px-4 py-1 rounded-full border border-white/5">
+            Ganhe 1 giro a cada <span className="text-primary">{campaign.roulette_free_tickets}</span> cotas compradas
+          </p>
+        )}
       </div>
 
       <div className="relative group">

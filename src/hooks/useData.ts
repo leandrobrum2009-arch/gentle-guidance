@@ -362,6 +362,21 @@ export const useCampaignRouletteSpins = (campaignId: string, limit = 10) =>
     enabled: !!campaignId,
   });
 
+export const useUserCampaignSpins = (userId: string, campaignId: string) =>
+  useQuery({
+    queryKey: ["user-campaign-spins", userId, campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roulette_spins")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("campaign_id", campaignId);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId && !!campaignId,
+  });
+
 export const useUserNotifications = (userId: string) =>
   useQuery({
     queryKey: ["notifications", userId],
