@@ -200,6 +200,29 @@ export const useCampaignRanking = (campaignId: string, limit = 10) =>
     enabled: !!campaignId
   });
 
+export const useCampaignLuckyWinners = (campaignId: string) =>
+  useQuery({
+    queryKey: ["campaign-lucky-winners", campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("tickets")
+        .select(`
+          number,
+          user_id,
+          profiles!user_id (
+            name
+          )
+        `)
+        .eq("campaign_id", campaignId)
+        .eq("is_lucky", true)
+        .eq("status", "paid");
+      
+      if (error) throw error;
+      return data as any[];
+    },
+    enabled: !!campaignId,
+  });
+
 export const useCampaign = (id: string) =>
   useQuery({
     queryKey: ["campaign", id],
