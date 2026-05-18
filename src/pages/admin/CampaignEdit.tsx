@@ -699,6 +699,11 @@ export default function AdminCampaignEdit() {
                </Card>
              </TabsContent>
            </Tabs>
+         </div>
+       </div>
+     </AdminLayout>
+   );
+ }
           </div>
 
           <div className="space-y-8">
