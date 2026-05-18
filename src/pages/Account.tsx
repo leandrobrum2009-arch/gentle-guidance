@@ -24,7 +24,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
- import { Button } from "@/components/ui/button";
+import UserRanking from "@/components/UserRanking";
+import { Button } from "@/components/ui/button";
  import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
  import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -705,69 +706,11 @@ import { cn } from "@/lib/utils";
                    </Card>
                 </TabsContent>
 
-                 <TabsContent value="ranking" className="space-y-6">
-                   {/* User Current Rank Summary */}
-                   <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20 p-6 flex items-center justify-between">
-                      <div className="flex items-center gap-4">
-                         <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
-                            <Trophy className="h-6 w-6 text-primary" />
-                         </div>
-                         <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Sua Posição Atual</p>
-                            <p className="text-xl font-black italic text-white">#{(ranking?.findIndex((r: any) => r.name === profile?.name) ?? -1) + 1 || '--'} no Ranking Global</p>
-                         </div>
-                      </div>
-                      <div className="text-right">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total de Pontos</p>
-                         <p className="text-xl font-black italic text-primary">{profile?.points || 0} PTS</p>
-                      </div>
-                   </Card>
-
-                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
-                     <div className="absolute top-0 right-0 p-8 opacity-5">
-                        <Crown className="h-64 w-64" />
-                     </div>
-                     <div className="relative z-10 flex flex-col items-center text-center space-y-6 mb-12">
-                        <Trophy className="h-16 w-16 text-primary drop-shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]" />
-                        <div className="space-y-2">
-                            <h2 className="text-4xl font-black uppercase italic tracking-tighter">Ranking Global</h2>
-                            <p className="text-sm text-slate-400 font-medium max-w-md uppercase tracking-widest leading-relaxed italic">Os maiores competidores da plataforma.</p>
-                        </div>
-                     </div>
-
-                     <div className="space-y-3">
-                        {ranking?.map((r: any, i: number) => (
-                            <motion.div 
-                                key={i}
-                                initial={{ opacity: 0, x: -20 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                transition={{ delay: i * 0.1 }}
-                                className={cn(
-                                    "flex items-center justify-between p-4 rounded-3xl border transition-all",
-                                    i === 0 ? "bg-primary/20 border-primary/40" : "bg-white/5 border-white/5"
-                                )}
-                            >
-                                <div className="flex items-center gap-4">
-                                    <span className={cn(
-                                        "text-xl font-black italic",
-                                        i === 0 ? "text-primary" : "text-white/20"
-                                    )}>#{i + 1}</span>
-                                    <div className="h-10 w-10 rounded-xl bg-zinc-800 border border-white/10 overflow-hidden">
-                                        <img src={r.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${r.name}`} className="h-full w-full object-cover" />
-                                    </div>
-                                    <div>
-                                        <p className="text-sm font-black uppercase tracking-tighter">{r.name}</p>
-                                        <Badge variant="outline" className="text-[8px] border-white/10 uppercase tracking-widest">{r.xp} XP</Badge>
-                                    </div>
-                                </div>
-                                <div className="text-right">
-                                    <p className="text-lg font-black italic text-primary">{r.points} PTS</p>
-                                </div>
-                            </motion.div>
-                        ))}
-                     </div>
-                  </Card>
-               </TabsContent>
+                <TabsContent value="ranking" className="space-y-6">
+                   <div className="bg-[#0d0d0f]/50 border border-white/5 rounded-[40px] p-6 md:p-10 backdrop-blur-2xl">
+                     <UserRanking />
+                   </div>
+                </TabsContent>
              </Tabs>
            </main>
          </div>
