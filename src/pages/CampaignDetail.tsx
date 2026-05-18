@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
  import {
     Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, 
-    Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star
+     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown
  } from "lucide-react";
  import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -442,7 +442,7 @@ import { useAuth } from "@/contexts/AuthContext";
                          <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">{rank.total_tickets} COTAS</p>
                        </div>
                      </div>
-                     {i === 0 && <CrownIcon className="h-4 w-4 text-amber-500 opacity-20" />}
+                      {i === 0 && <Crown className="h-4 w-4 text-amber-500 opacity-20" />}
                    </motion.div>
                  )) : (
                    <div className="text-center py-10 text-slate-500 italic text-sm col-span-full border border-dashed border-white/10 rounded-[2rem]">Nenhum comprador ainda. Seja o primeiro!</div>
