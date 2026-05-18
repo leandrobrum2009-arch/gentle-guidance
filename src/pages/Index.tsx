@@ -107,19 +107,19 @@ const Index = () => {
                       whileHover={{ y: -12, scale: 1.05, boxShadow: "0 20px 40px -10px rgba(var(--primary-rgb), 0.3)" }}
                       onMouseEnter={() => playSound('hover')}
                       whileTap={{ scale: 0.95 }}
-                      className={`group relative overflow-hidden h-full rounded-3xl border border-white/10 bg-zinc-900/80 p-6 glass-morphism backdrop-blur-xl cursor-pointer shadow-2xl transition-all duration-500`}
+                       className={`group relative overflow-hidden h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50`}
                     >
-                    <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-40`} />
+                    <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-20`} />
                     {item.badge && (
                       <Badge className="absolute top-4 right-4 bg-primary text-[8px] font-black italic animate-bounce px-2 py-0.5">
                         {item.badge}
                       </Badge>
                     )}
-                    <div className="h-12 w-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
+                    <div className="h-12 w-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-white leading-none mb-2">{item.title}</h3>
-                    <p className="relative z-10 text-[10px] text-white/40 uppercase font-bold tracking-tighter">{item.desc}</p>
+                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
+                    <p className="relative z-10 text-[10px] text-slate-400 uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>
               ))}
@@ -143,15 +143,15 @@ const Index = () => {
                  </div>
                </div>
  
-               <div className="space-y-10">
+                <div className="space-y-6">
                   {/* Live Activity Feed */}
-                  <div className="rounded-3xl border border-white/5 bg-card/40 backdrop-blur-xl p-6 shadow-2xl ring-1 ring-white/10">
+                  <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
                     <LiveActivityFeed />
                   </div>
  
                  {/* Small Featured Roulette */}
                  {featuredCampaign?.roulette_enabled && (
-                   <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-primary/10 to-background p-6 shadow-xl relative overflow-hidden group">
+                    <div className="rounded-3xl border border-primary/20 bg-white p-6 shadow-xl relative overflow-hidden group">
                      <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
                      <h3 className="text-sm font-black uppercase tracking-widest italic mb-4 flex items-center gap-2">
                        <Gamepad2 className="h-4 w-4 text-primary" /> Tente a <span className="text-primary">Sorte</span>
@@ -237,39 +237,14 @@ const Index = () => {
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
                 {winners?.slice(0, 4).map((winner, i) => (
-                  <motion.div
-                    key={winner.id}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: i * 0.1 }}
-                    className="group relative overflow-hidden rounded-2xl border border-white/5 bg-white/5 p-4 hover:border-primary/50 transition-all cursor-pointer"
-                  >
-                    <div className="relative aspect-square w-full overflow-hidden rounded-xl mb-4">
-                      <img src={winner.video_url || "/placeholder.svg"} className="h-full w-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt="" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent opacity-60" />
-                      <div className="absolute bottom-3 left-3 flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full border-2 border-primary bg-background flex items-center justify-center font-black italic text-[10px] text-primary">
-                          {winner.winner_name[0]}
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black uppercase italic tracking-tighter text-white leading-none">{winner.winner_name}</p>
-                          <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador(a)</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-[8px] font-black text-primary uppercase tracking-[0.2em]">{winner.prize_description}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground">Sorteio: {winner.campaigns?.title}</p>
-                    </div>
-                  </motion.div>
+                  <WinnerCard key={winner.id} winner={winner} index={i} />
                 ))}
               </div>
             )}
           </section>
 
           {/* Social Proof / Security */}
-          <section className="border-y border-white/5 bg-white/[0.02] py-16">
+          <section className="border-y border-slate-100 bg-slate-50 py-16">
             <div className="container">
               <div className="grid gap-12 lg:grid-cols-3">
                 {[
@@ -282,8 +257,8 @@ const Index = () => {
                       <item.icon className="h-6 w-6 text-primary" />
                     </div>
                     <div className="space-y-1">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-white">{item.title}</h4>
-                      <p className="text-[11px] font-medium leading-relaxed text-muted-foreground uppercase tracking-widest">{item.desc}</p>
+                      <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{item.title}</h4>
+                      <p className="text-[11px] font-medium leading-relaxed text-slate-500 uppercase tracking-widest">{item.desc}</p>
                     </div>
                   </div>
                 ))}
