@@ -67,33 +67,25 @@
 
 @layer base {
   :root {
-    --background: 220 30% 8%;
-    --foreground: 210 40% 96%;
-
-    --card: 220 28% 11%;
-    --card-foreground: 210 40% 96%;
-
-    --popover: 220 28% 11%;
-    --popover-foreground: 210 40% 96%;
-
-    --primary: 68 96% 53%;
-    --primary-foreground: 220 30% 8%;
-
-    --secondary: 220 25% 16%;
-    --secondary-foreground: 210 40% 96%;
-
-    --muted: 220 20% 14%;
-    --muted-foreground: 215 15% 55%;
-
-    --accent: 68 96% 53%;
-    --accent-foreground: 220 30% 8%;
-
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 220 20% 18%;
-    --input: 220 20% 18%;
-    --ring: 68 96% 53%;
+     --background: 0 0% 98%;
+     --foreground: 240 10% 3.9%;
+     --card: 0 0% 100%;
+     --card-foreground: 240 10% 3.9%;
+     --popover: 0 0% 100%;
+     --popover-foreground: 240 10% 3.9%;
+     --primary: 142.1 76.2% 36.3%;
+     --primary-foreground: 355.7 100% 97.3%;
+     --secondary: 240 4.8% 95.9%;
+     --secondary-foreground: 240 5.9% 10%;
+     --muted: 240 4.8% 95.9%;
+     --muted-foreground: 240 3.8% 46.1%;
+     --accent: 240 4.8% 95.9%;
+     --accent-foreground: 240 5.9% 10%;
+     --destructive: 0 84.2% 60.2%;
+     --destructive-foreground: 0 0% 98%;
+     --border: 240 5.9% 90%;
+     --input: 240 5.9% 90%;
+     --ring: 142.1 76.2% 36.3%;
 
     --radius: 0.75rem;
 
@@ -120,19 +112,6 @@
   body {
     @apply bg-background text-foreground font-sans antialiased overflow-x-hidden;
     font-family: 'Inter', system-ui, sans-serif;
-  }
-
-  body::before {
-    content: "";
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    opacity: 0.05;
-    pointer-events: none;
-    z-index: 9999;
   }
 
   h1, h2, h3, h4, h5, h6 {

@@ -148,35 +148,27 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Mystery Box Tab */}
            <TabsContent value="mystery" className="space-y-3 outline-none">
              {mysteryBoxWins && mysteryBoxWins.length > 0 ? (
-               <div className="grid gap-3">
-                 {mysteryBoxWins.map((win) => (
-                   <motion.div 
-                     key={win.id} 
-                     initial={{ opacity: 0, x: -10 }} 
-                     animate={{ opacity: 1, x: 0 }}
-                     className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/5 transition-all"
-                   >
-                     <div className="flex items-center gap-4">
-                       <Avatar className="h-12 w-12 border-2 border-white/5">
-                         <AvatarImage src={win.profiles?.avatar_url || ""} />
-                         <AvatarFallback className="text-xs font-black bg-zinc-800">{win.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-                       </Avatar>
-                       <div>
-                         <p className="text-xs font-black uppercase tracking-tighter text-white">{win.profiles?.name || "Ganhador"}</p>
-                         <div className="flex items-center gap-2 mt-1">
-                           <Badge variant="secondary" className="bg-purple-500/10 text-purple-400 border-none font-bold text-[8px] uppercase px-2 h-4">
-                             {win.prize_title}
-                           </Badge>
-                           <span className="text-[10px] font-bold text-slate-500">{format(new Date(win.created_at), "HH:mm", { locale: ptBR })}</span>
-                         </div>
+               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+                 <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Ganhador</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prêmio</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Horário</span>
+                 </div>
+                 <div className="divide-y divide-slate-50">
+                   {mysteryBoxWins.map((win) => (
+                     <div key={win.id} className="grid grid-cols-3 p-4 items-center hover:bg-slate-50/50 transition-colors">
+                       <div className="flex items-center gap-3">
+                         <Avatar className="h-8 w-8 border">
+                           <AvatarImage src={win.profiles?.avatar_url || ""} />
+                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{win.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                         </Avatar>
+                         <span className="text-xs font-bold text-slate-900 truncate">{win.profiles?.name || "Participante"}</span>
                        </div>
+                       <span className="text-xs font-black text-purple-600 uppercase">{win.prize_title}</span>
+                       <span className="text-[10px] font-medium text-slate-400 text-right">{format(new Date(win.created_at), "HH:mm")}</span>
                      </div>
-                     <div className="text-right">
-                       <Gift className="h-5 w-5 text-purple-500 opacity-20 ml-auto mb-1" />
-                       <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Caixa Misteriosa</p>
-                     </div>
-                   </motion.div>
-                 ))}
+                   ))}
+                 </div>
                </div>
              ) : (
                <EmptyHistory icon={Gift} message="Nenhum prêmio de caixa ainda." />
@@ -186,35 +178,27 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Roulette Tab */}
            <TabsContent value="roulette" className="space-y-3 outline-none">
              {rouletteSpins && rouletteSpins.length > 0 ? (
-               <div className="grid gap-3">
-                 {rouletteSpins.map((spin) => (
-                   <motion.div 
-                     key={spin.id} 
-                     initial={{ opacity: 0, x: -10 }} 
-                     animate={{ opacity: 1, x: 0 }}
-                     className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/5 transition-all"
-                   >
-                     <div className="flex items-center gap-4">
-                       <Avatar className="h-12 w-12 border-2 border-white/5">
-                         <AvatarImage src={spin.profiles?.avatar_url || ""} />
-                         <AvatarFallback className="text-xs font-black bg-zinc-800">{spin.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
-                       </Avatar>
-                       <div>
-                         <p className="text-xs font-black uppercase tracking-tighter text-white">{spin.profiles?.name || "Ganhador"}</p>
-                         <div className="flex items-center gap-2 mt-1">
-                           <Badge variant="secondary" className="bg-blue-500/10 text-blue-400 border-none font-bold text-[8px] uppercase px-2 h-4">
-                             {spin.prize_label}
-                           </Badge>
-                           <span className="text-[10px] font-bold text-slate-500">{format(new Date(spin.created_at), "HH:mm", { locale: ptBR })}</span>
-                         </div>
+               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+                 <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Participante</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prêmio</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Horário</span>
+                 </div>
+                 <div className="divide-y divide-slate-50">
+                   {rouletteSpins.map((spin) => (
+                     <div key={spin.id} className="grid grid-cols-3 p-4 items-center hover:bg-slate-50/50 transition-colors">
+                       <div className="flex items-center gap-3">
+                         <Avatar className="h-8 w-8 border">
+                           <AvatarImage src={spin.profiles?.avatar_url || ""} />
+                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{spin.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                         </Avatar>
+                         <span className="text-xs font-bold text-slate-900 truncate">{spin.profiles?.name || "Participante"}</span>
                        </div>
+                       <span className="text-xs font-black text-blue-600 uppercase">{spin.prize_label}</span>
+                       <span className="text-[10px] font-medium text-slate-400 text-right">{format(new Date(spin.created_at), "HH:mm")}</span>
                      </div>
-                     <div className="text-right">
-                       <Gamepad2 className="h-5 w-5 text-blue-500 opacity-20 ml-auto mb-1" />
-                       <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Giro da Roleta</p>
-                     </div>
-                   </motion.div>
-                 ))}
+                   ))}
+                 </div>
                </div>
              ) : (
                <EmptyHistory icon={Gamepad2} message="Nenhum giro registrado." />
@@ -224,34 +208,27 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Lucky Quotas Tab */}
            <TabsContent value="lucky" className="space-y-3 outline-none">
              {luckyWinners && luckyWinners.length > 0 ? (
-               <div className="grid gap-3">
-                 {luckyWinners.map((winner, i) => (
-                   <motion.div 
-                     key={i} 
-                     initial={{ opacity: 0, x: -10 }} 
-                     animate={{ opacity: 1, x: 0 }}
-                     className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-[2rem] hover:bg-white/5 transition-all"
-                   >
-                     <div className="flex items-center gap-4">
-                       <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/20 shadow-lg shadow-primary/10">
-                         <span className="font-black italic text-primary text-sm">{winner.number}</span>
+               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
+                 <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Ganhador</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Número</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Prêmio</span>
+                 </div>
+                 <div className="divide-y divide-slate-50">
+                   {luckyWinners.map((winner, i) => (
+                     <div key={i} className="grid grid-cols-3 p-4 items-center hover:bg-slate-50/50 transition-colors">
+                       <div className="flex items-center gap-3">
+                         <Avatar className="h-8 w-8 border">
+                           <AvatarImage src={winner.profiles?.avatar_url || ""} />
+                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{winner.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                         </Avatar>
+                         <span className="text-xs font-bold text-slate-900 truncate">{winner.profiles?.name || "Ganhador"}</span>
                        </div>
-                       <div>
-                         <p className="text-xs font-black uppercase tracking-tighter text-white">{winner.profiles?.name || "Ganhador"}</p>
-                         <div className="flex items-center gap-2 mt-1">
-                           <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-400 border-none font-bold text-[8px] uppercase px-2 h-4">
-                             {luckyPrizesMap[winner.number] || "Cota Premiada"}
-                           </Badge>
-                           <span className="text-[10px] font-bold text-slate-500">Número Sorteado</span>
-                         </div>
-                       </div>
+                       <Badge variant="outline" className="w-fit font-black text-primary border-primary/20">{winner.number}</Badge>
+                       <span className="text-xs font-black text-emerald-600 uppercase text-right">{luckyPrizesMap[winner.number] || "Cota Premiada"}</span>
                      </div>
-                     <div className="text-right">
-                       <Hash className="h-5 w-5 text-emerald-500 opacity-20 ml-auto mb-1" />
-                       <p className="text-[8px] font-black text-slate-600 uppercase tracking-widest">Achou Ganhou</p>
-                     </div>
-                   </motion.div>
-                 ))}
+                   ))}
+                 </div>
                </div>
              ) : (
                <EmptyHistory icon={Hash} message="Nenhuma cota premiada encontrada." />
