@@ -326,9 +326,12 @@ export const useCampaignMysteryBoxWins = (campaignId: string, limit = 10) =>
           profiles!user_id (
             name,
             avatar_url
+          ),
+          mystery_box_configs!config_id (
+            campaign_id
           )
         `)
-        .eq("campaign_id", campaignId) // Assuming mystery_box_wins has campaign_id
+        .eq("mystery_box_configs.campaign_id", campaignId)
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
