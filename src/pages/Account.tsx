@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
     User, LogOut, Trophy, History, Coins, Activity,
     Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
     Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-    Package, ShoppingBag, Users, CheckCircle2, Lock
+    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft
  } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -45,6 +45,10 @@ import { cn } from "@/lib/utils";
    const { data: ranking } = useRanking(10);
    const { data: notifications } = useUserNotifications(user?.id || "");
     const { data: rewards } = useUserRewards(user?.id || "");
+   
+   const [spinsPage, setSpinsPage] = useState(1);
+   const [boxesPage, setBoxesPage] = useState(1);
+   const ITEMS_PER_PAGE = 5;
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
