@@ -59,7 +59,14 @@ serve(async (req) => {
     })
 
     const data = await response.json()
-    const campaignData = JSON.parse(data.choices[0].message.content)
+    let content = data.choices[0].message.content
+    // Remove markdown code blocks if present
+    // Extract JSON if it's wrapped in other text or code blocks
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('Não foi possível encontrar o JSON na resposta da IA');
+    }
+    const campaignData = JSON.parse(jsonMatch[0]);
 
     return new Response(JSON.stringify(campaignData), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

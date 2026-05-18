@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark } from "lucide-react";
+ import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -98,6 +98,39 @@ export default function AdminCampaignEdit() {
   const [saving, setSaving] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      if (field === 'image_url') {
+        set('image_url', publicUrl);
+      } else if (field === 'gallery_urls' && index !== undefined) {
+        const newList = [...form.gallery_urls];
+        newList[index] = publicUrl;
+        set('gallery_urls', newList);
+      }
+
+      toast({ title: "Upload concluído!", description: "A imagem foi carregada com sucesso." });
+    } catch (error: any) {
+      toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
+    }
+  };
 
   const generateWithAI = async () => {
     const prompt = window.prompt("O que você quer sortear? (Ex: Um iPhone 15 Pro Max de 256GB azul)");
@@ -259,47 +292,56 @@ export default function AdminCampaignEdit() {
     </TooltipProvider>
   );
 
-  return (
-    <AdminLayout>
-      <div className="mx-auto max-w-5xl space-y-8 pb-12">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button variant="outline" size="icon" onClick={() => navigate("/admin/campanhas")}>
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-            <div className="space-y-1">
-              <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
-                {id ? "Editar Campanha" : "Nova Campanha"}
-              </h1>
-              <p className="text-muted-foreground">Gestão completa e detalhada das configurações da sua rifa.</p>
-            </div>
-        <Alert className="bg-primary/5 border-primary/20">
-          <AlertCircle className="h-4 w-4 text-primary" />
-          <AlertTitle className="text-sm font-bold uppercase tracking-wider text-primary">Dica do Administrador</AlertTitle>
-          <AlertDescription className="text-xs text-muted-foreground">
-            Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline" /> para entender como cada campo funciona e como preenchê-lo corretamente.
-            Todos os campos foram simplificados para facilitar o seu cadastro.
-          </AlertDescription>
-        </Alert>
-
-          </div>
-          <div className="flex gap-3">
-            <Button 
-              variant="outline" 
-              onClick={generateWithAI} 
-              disabled={aiGenerating} 
-              className="border-primary/50 text-primary hover:bg-primary/5 shadow-lg shadow-primary/10"
-            >
-              {aiGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-              Gerar com IA
-            </Button>
-            <Button onClick={save} disabled={saving} size="lg">
-              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Salvar Campanha
-            </Button>
-          </div>
-        {/* Seção de Ajuda e Tutoriais */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+   return (
+     <AdminLayout>
+       <div className="mx-auto max-w-5xl space-y-8 pb-12">
+         {/* Top Section */}
+         <div className="space-y-6">
+           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+             <div className="flex items-center gap-4">
+               <Button variant="outline" size="icon" onClick={() => navigate("/admin/campanhas")}>
+                 <ArrowLeft className="h-4 w-4" />
+               </Button>
+               <div className="space-y-1">
+                 <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+                   {id ? "Editar Campanha" : "Nova Campanha"}
+                 </h1>
+                 <p className="text-sm text-muted-foreground">Gestão completa e detalhada das configurações da sua rifa.</p>
+               </div>
+             </div>
+             
+             <div className="flex items-center gap-3">
+               <Button 
+                 variant="outline" 
+                 onClick={generateWithAI} 
+                 disabled={aiGenerating} 
+                 className="border-primary/50 text-primary hover:bg-primary hover:text-white transition-all shadow-lg shadow-primary/10"
+               >
+                 {aiGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                 Gerar com IA
+               </Button>
+               <Button onClick={save} disabled={saving} size="lg" className="shadow-lg hover:scale-105 transition-transform">
+                 {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                 Salvar Campanha
+               </Button>
+             </div>
+           </div>
+ 
+           <div className="bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-2xl p-4 flex items-start gap-4 shadow-sm">
+             <div className="bg-primary/20 p-2 rounded-xl">
+               <Sparkles className="h-5 w-5 text-primary" />
+             </div>
+             <div>
+               <h3 className="text-sm font-bold text-primary uppercase tracking-tight">Dica de Especialista</h3>
+               <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                 Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline text-primary/60" /> para ajuda instantânea em cada campo. 
+                 Use o botão <strong>Gerar com IA</strong> para criar uma campanha completa em segundos!
+               </p>
+             </div>
+           </div>
+         </div>
+         {/* Seção de Guias Rápidos */}
+         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="border-primary/10 bg-primary/5 hover:bg-primary/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-lg text-primary"><Box className="h-5 w-5" /></div>
@@ -372,11 +414,9 @@ export default function AdminCampaignEdit() {
               </div>
             </CardContent>
           </Card>
-        )}
-
-        </div>
-
-        <div className="grid gap-8 lg:grid-cols-3">
+         )}
+ 
+         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             {/* Informações Básicas */}
             <Card>
@@ -445,10 +485,23 @@ export default function AdminCampaignEdit() {
                 <CardDescription>Atraia visualmente seus participantes.</CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="image_url">Capa da Campanha <FieldInfo text="URL da imagem principal (formato JPG/PNG)." /></Label>
-                  <Input id="image_url" placeholder="https://..." value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
-                </div>
+                 <div className="space-y-2">
+                   <Label htmlFor="image_url">Capa da Campanha <FieldInfo text="Imagem principal da rifa. Recomendado: 800x600px." /></Label>
+                   <div className="flex gap-2">
+                     <Input id="image_url" placeholder="URL da imagem ou faça upload" value={form.image_url} onChange={(e) => set("image_url", e.target.value)} className="flex-1" />
+                     <div className="relative">
+                       <input type="file" className="hidden" id="main-image-upload" accept="image/*" onChange={(e) => handleImageUpload(e, 'image_url')} />
+                       <Button type="button" variant="outline" size="icon" onClick={() => document.getElementById('main-image-upload')?.click()}>
+                         <Upload className="h-4 w-4" />
+                       </Button>
+                     </div>
+                   </div>
+                   {form.image_url && (
+                     <div className="mt-2 relative group w-full max-w-[200px] h-32 rounded-lg overflow-hidden border">
+                       <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
+                     </div>
+                   )}
+                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <Label>Galeria de Imagens <FieldInfo text="Adicione fotos extras do produto que aparecerão em um slide no site." /></Label>
@@ -457,26 +510,40 @@ export default function AdminCampaignEdit() {
                     </Button>
                   </div>
                   <div className="space-y-2">
-                    {form.gallery_urls.map((url, i) => (
-                      <div key={i} className="flex gap-2">
-                        <Input 
-                          placeholder="https://sua-imagem.com/foto.jpg"
-                          value={url}
-                          onChange={(e) => {
-                            const newList = [...form.gallery_urls];
-                            newList[i] = e.target.value;
-                            set("gallery_urls", newList);
-                          }}
-                        />
-                        <Button variant="ghost" size="icon" onClick={() => {
-                          const newList = [...form.gallery_urls];
-                          newList.splice(i, 1);
-                          set("gallery_urls", newList);
-                        }}>
-                          <Trash2 className="h-4 w-4 text-destructive" />
-                        </Button>
-                      </div>
-                    ))}
+                     {form.gallery_urls.map((url, i) => (
+                       <div key={i} className="space-y-2">
+                         <div className="flex gap-2">
+                           <Input 
+                             placeholder="https://sua-imagem.com/foto.jpg"
+                             value={url}
+                             onChange={(e) => {
+                               const newList = [...form.gallery_urls];
+                               newList[i] = e.target.value;
+                               set("gallery_urls", newList);
+                             }}
+                             className="flex-1"
+                           />
+                           <div className="relative">
+                             <input type="file" className="hidden" id={`gallery-upload-${i}`} accept="image/*" onChange={(e) => handleImageUpload(e, 'gallery_urls', i)} />
+                             <Button type="button" variant="outline" size="icon" onClick={() => document.getElementById(`gallery-upload-${i}`)?.click()}>
+                               <Upload className="h-4 w-4" />
+                             </Button>
+                           </div>
+                           <Button variant="ghost" size="icon" onClick={() => {
+                             const newList = [...form.gallery_urls];
+                             newList.splice(i, 1);
+                             set("gallery_urls", newList);
+                           }}>
+                             <Trash2 className="h-4 w-4 text-destructive" />
+                           </Button>
+                         </div>
+                         {url && (
+                           <div className="relative w-24 h-24 rounded border overflow-hidden">
+                             <img src={url} alt={`Galeria ${i+1}`} className="w-full h-full object-cover" />
+                           </div>
+                         )}
+                       </div>
+                     ))}
                     {form.gallery_urls.length === 0 && (
                       <p className="text-xs text-center py-2 text-muted-foreground border-2 border-dashed rounded italic">
                         Nenhuma foto adicional cadastrada.
