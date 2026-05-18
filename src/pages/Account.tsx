@@ -482,6 +482,24 @@ import { cn } from "@/lib/utils";
                 </TabsContent>
 
                 <TabsContent value="games" className="space-y-6">
+                   <div className="grid gap-4 sm:grid-cols-3">
+                      <Card className="bg-white/5 border-white/10 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Giros Totais</p>
+                         <p className="text-2xl font-black italic">{spins?.length || 0}</p>
+                      </Card>
+                      <Card className="bg-white/5 border-white/10 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Caixas Abertas</p>
+                         <p className="text-2xl font-black italic">{boxWins?.length || 0}</p>
+                      </Card>
+                      <Card className="bg-primary/5 border-primary/20 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Total Ganho (Jogos)</p>
+                         <p className="text-2xl font-black italic">R$ {(
+                            (spins?.reduce((acc: number, s: any) => acc + (Number(s.prize_value) || 0), 0) || 0) +
+                            (boxWins?.reduce((acc: number, bw: any) => acc + (Number(bw.prize_value) || 0), 0) || 0)
+                         ).toFixed(2)}</p>
+                      </Card>
+                   </div>
+
                    <div className="grid lg:grid-cols-2 gap-6">
                       <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
                          <CardHeader className="p-0 mb-6">
