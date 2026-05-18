@@ -16,6 +16,7 @@ interface RouletteProps {
   prizes: RoulettePrize[];
   onSpinComplete?: (prize: RoulettePrize) => void;
   campaign: Campaign;
+  availableSpins?: number;
 }
 
 const SOUND_URLS = {
