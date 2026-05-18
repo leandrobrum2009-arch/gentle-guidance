@@ -218,6 +218,30 @@ export default function AdminCampaigns() {
               <Input placeholder="Tag de urgência" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
               <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
               
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Tipo de Geração</Label>
+                  <Select value={form.ticket_generation_type} onValueChange={(v: any) => set("ticket_generation_type", v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">Automática (Até 10M)</SelectItem>
+                      <SelectItem value="manual">Manual (Até 5k)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Giro Grátis a cada X cotas</Label>
+                  <Input type="number" value={form.roulette_free_tickets} onChange={(e) => set("roulette_free_tickets", e.target.value)} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">% de Premiação Roleta</Label>
+                  <Input type="number" placeholder="Ex: 10" value={form.roulette_payout_rate} onChange={(e) => set("roulette_payout_rate", e.target.value)} />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase">Galeria (URLs JSON)</Label>
                 <Textarea placeholder='["https://...", "https://..."]' value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} rows={2} className="font-mono text-xs" />
@@ -258,6 +282,14 @@ export default function AdminCampaigns() {
                     <Label htmlFor="fed_draw">Sorteio Federal</Label>
                     <Switch id="fed_draw" checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
                   </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="show_instant">Mostrar Prêmios Instantâneos</Label>
+                    <Switch id="show_instant" checked={form.show_instant_prizes} onCheckedChange={(v) => set("show_instant_prizes", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="show_roulette">Status da Roleta</Label>
+                    <Switch id="show_roulette" checked={form.show_roulette_status} onCheckedChange={(v) => set("show_roulette_status", v)} />
+                  </div>
                 </div>
               </div>
 
@@ -266,8 +298,12 @@ export default function AdminCampaigns() {
                 <Textarea placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} rows={4} className="font-mono text-xs" />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON)</Label>
-                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15"}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
+                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON) - Use "protected": true para ocultar</Label>
+                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15", "protected": false}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Premiação Principal (1º ao 5º) (JSON)</Label>
+                <Textarea placeholder='[{"position": 1, "prize": "Carro"}, {"position": 2, "prize": "Moto"}]' value={form.main_prizes} onChange={(e) => set("main_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
               </div>
               <Button onClick={save} disabled={saving || !form.title || !form.slug}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
