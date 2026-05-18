@@ -267,14 +267,37 @@ import { cn } from "@/lib/utils";
                   </div>
 
                    <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                      <CardHeader className="p-0 mb-6">
+                      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
+                         <div>
                          <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                              <Ticket className="h-4 w-4 text-primary" /> Participações em Rifas
                          </CardTitle>
                          <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Acompanhe seus bilhetes</CardDescription>
+                         </div>
+                         <div className="flex items-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6" 
+                              disabled={ordersPage === 1}
+                              onClick={() => setOrdersPage(p => p - 1)}
+                            >
+                              <ChevronLeft className="h-3 w-3" />
+                            </Button>
+                            <span className="text-[10px] font-bold text-slate-500">{ordersPage}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6" 
+                              disabled={!orders || orders.length <= ordersPage * ITEMS_PER_PAGE}
+                              onClick={() => setOrdersPage(p => p + 1)}
+                            >
+                              <ChevronRight className="h-3 w-3" />
+                            </Button>
+                         </div>
                       </CardHeader>
                      <div className="space-y-3">
-                        {orders?.length ? orders.slice(0, 5).map((o: any) => (
+                        {orders?.length ? orders.slice((ordersPage - 1) * ITEMS_PER_PAGE, ordersPage * ITEMS_PER_PAGE).map((o: any) => (
                             <div key={o.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
                                 <div className="flex items-center gap-4">
                                     <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
@@ -325,13 +348,34 @@ import { cn } from "@/lib/utils";
                   </div>
 
                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                     <CardHeader className="p-0 mb-6">
+                     <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                             <History className="h-4 w-4 text-primary" /> Extrato Detalhado
                         </CardTitle>
+                        <div className="flex items-center gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6" 
+                              disabled={txsPage === 1}
+                              onClick={() => setTxsPage(p => p - 1)}
+                            >
+                              <ChevronLeft className="h-3 w-3" />
+                            </Button>
+                            <span className="text-[10px] font-bold text-slate-500">{txsPage}</span>
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              className="h-6 w-6" 
+                              disabled={!txs || txs.length <= txsPage * ITEMS_PER_PAGE}
+                              onClick={() => setTxsPage(p => p + 1)}
+                            >
+                              <ChevronRight className="h-3 w-3" />
+                            </Button>
+                         </div>
                      </CardHeader>
                      <div className="space-y-2">
-                        {txs?.length ? txs.map((t: any) => (
+                        {txs?.length ? txs.slice((txsPage - 1) * ITEMS_PER_PAGE, txsPage * ITEMS_PER_PAGE).map((t: any) => (
                             <div key={t.id} className="flex items-center justify-between p-4 bg-white/[0.02] hover:bg-white/5 rounded-2xl border border-white/5 transition-all">
                                 <div className="flex items-center gap-4">
                                     <div className={cn(
