@@ -354,19 +354,19 @@ export const useRouletteSpins = (limit = 10) =>
     },
   });
 
-export const useRanking = (limit = 10) =>
+export const useRanking = (limit = 10, category: 'points' | 'xp' = 'points') =>
   useQuery({
-    queryKey: ["ranking"],
+    queryKey: ["ranking", category, limit],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("profiles")
-        .select("name, avatar_url, points, xp")
-        .order("points", { ascending: false })
+        .select("name, avatar_url, points, xp, vip_level")
+        .order(category, { ascending: false })
         .limit(limit);
       if (error) throw error;
-       return data;
-     },
-   });
+      return data;
+    },
+  });
  
  export const useUserOrders = (userId: string) => {
    return useQuery({
