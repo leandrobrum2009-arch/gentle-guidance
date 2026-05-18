@@ -150,7 +150,7 @@ export const useAdminOrders = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("*, campaigns(title)")
+        .select("*, campaigns!campaign_id(title), profiles!user_id(name, email)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return data;
@@ -205,7 +205,7 @@ export const useAdminWinners = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("winners")
-        .select("*, campaigns(title)")
+        .select("*, campaigns!campaign_id(title, image_url)")
         .order("draw_date", { ascending: false });
       if (error) throw error;
       return data;

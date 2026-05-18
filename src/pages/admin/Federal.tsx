@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
  import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
  import { useToast } from "@/hooks/use-toast";
-import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
+import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Target, Save } from "lucide-react";
  import { format } from "date-fns";
  
  export default function AdminFederal() {
@@ -113,91 +113,117 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil } from "lucide-react";
  
    return (
      <AdminLayout>
-       <div className="mb-6 flex items-center justify-between">
-         <h1 className="font-display text-2xl font-bold">Loteria Federal</h1>
+       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+         <div>
+           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Loteria Federal</h1>
+           <p className="text-slate-400 mt-1">Sincronize ou registre resultados oficiais para as rifas.</p>
+         </div>
           <div className="flex gap-2">
              <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditingId(null); }}>
                <Button variant="outline" onClick={handleAdd}><Plus className="mr-2 h-4 w-4" /> Adicionar Manual</Button>
                <DialogContent className="sm:max-w-md">
-                 <DialogHeader><DialogTitle>{editingId ? "Editar Resultado" : "Novo Resultado Manual"}</DialogTitle></DialogHeader>
-                <div className="grid gap-4 py-4">
+                 <DialogHeader className="p-6 pb-0"><DialogTitle className="text-xl font-bold">{editingId ? "Editar Resultado" : "Novo Resultado Manual"}</DialogTitle></DialogHeader>
+                <div className="grid gap-6 p-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Concurso</Label>
-                      <Input value={manualResult.concurso} onChange={e => setManualResult(p => ({ ...p, concurso: e.target.value }))} />
+                       <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Concurso</Label>
+                       <Input placeholder="0000" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.concurso} onChange={e => setManualResult(p => ({ ...p, concurso: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
-                      <Label>Data</Label>
-                      <Input type="date" value={manualResult.data_sorteio} onChange={e => setManualResult(p => ({ ...p, data_sorteio: e.target.value }))} />
+                       <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Data do Sorteio</Label>
+                       <Input type="date" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.data_sorteio} onChange={e => setManualResult(p => ({ ...p, data_sorteio: e.target.value }))} />
                     </div>
                   </div>
-                  <div className="grid grid-cols-5 gap-2">
-                    {[1, 2, 3, 4, 5].map(n => (
+                   <div className="grid grid-cols-1 gap-3">
+                     {[1, 2, 3, 4, 5].map(n => (
                       <div key={n} className="space-y-1">
-                        <Label className="text-[10px] uppercase">{n}º Prêmio</Label>
-                        <Input className="h-8 px-2" value={(manualResult as any)[`p${n}`]} onChange={e => setManualResult(p => ({ ...p, [`p${n}`]: e.target.value }))} />
+                         <div className="flex items-center gap-3">
+                           <Label className="text-[10px] uppercase font-bold text-slate-400 min-w-[70px]">{n}º Prêmio</Label>
+                           <Input placeholder="000000" className="bg-white/5 border-white/10 h-10 rounded-lg flex-1 font-mono font-bold tracking-widest" value={(manualResult as any)[`p${n}`]} onChange={e => setManualResult(p => ({ ...p, [`p${n}`]: e.target.value }))} />
+                         </div>
                       </div>
                     ))}
                   </div>
-                   <Button onClick={saveResult} disabled={fetching || !manualResult.concurso || !manualResult.data_sorteio}>
-                    {fetching && <Loader2 className="mr-2 h-4 w-4 animate-spin" />} Salvar Resultado
+                    <Button onClick={saveResult} disabled={fetching || !manualResult.concurso || !manualResult.data_sorteio} className="h-12 bg-primary hover:bg-primary/90 rounded-xl font-bold">
+                     {fetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />} Salvar Resultado
                   </Button>
                 </div>
               </DialogContent>
             </Dialog>
-            <Button onClick={fetchLatest} disabled={fetching}>
-              {fetching ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+             <Button onClick={fetchLatest} disabled={fetching} variant="outline" className="border-primary/20 bg-primary/10 text-primary hover:bg-primary/20 h-12 px-6 rounded-xl font-bold">
+               {fetching ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <RefreshCw className="mr-2 h-5 w-5" />}
               Sincronizar API
             </Button>
           </div>
        </div>
  
-       <Card>
-         <CardHeader>
-           <CardTitle>Resultados Recentes</CardTitle>
-         </CardHeader>
-         <CardContent>
-           {isLoading ? (
-             <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
-           ) : (
-             <Table>
-               <TableHeader>
-                 <TableRow>
-                   <TableHead>Concurso</TableHead>
-                   <TableHead>Data</TableHead>
-                   <TableHead>1º Prêmio</TableHead>
-                   <TableHead>2º Prêmio</TableHead>
-                   <TableHead>3º Prêmio</TableHead>
-                   <TableHead>4º Prêmio</TableHead>
-                    <TableHead>5º Prêmio</TableHead>
-                    <TableHead className="text-right">Ações</TableHead>
-                 </TableRow>
-               </TableHeader>
-               <TableBody>
-                 {results?.map((r: any) => (
-                   <TableRow key={r.id}>
-                     <TableCell className="font-bold">{r.concurso}</TableCell>
-                     <TableCell>{format(new Date(r.data_sorteio), "dd/MM/yyyy")}</TableCell>
-                     {r.premios.map((p: any) => (
-                       <TableCell key={p.premio} className={p.premio === "1" ? "font-black text-primary" : ""}>
-                        {p.numero}
+        <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl overflow-hidden shadow-2xl">
+          <CardContent className="p-0">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-32 gap-4">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="text-slate-500 text-sm font-medium animate-pulse uppercase tracking-widest">Acessando servidores da CEF...</p>
+              </div>
+            ) : (
+              <Table>
+                <TableHeader className="bg-white/[0.02]">
+                  <TableRow className="border-white/5 hover:bg-transparent">
+                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Concurso</TableHead>
+                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
+                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Premiados (1º ao 5º)</TableHead>
+                    <TableHead className="text-right text-slate-400 font-bold uppercase text-[9px] tracking-widest pr-8 py-5">Ações</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {results?.map((r: any) => (
+                    <TableRow key={r.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                      <TableCell className="pl-8 py-4">
+                        <div className="flex items-center gap-2">
+                          <Hash className="h-3.5 w-3.5 text-primary" />
+                          <span className="text-sm font-bold text-white tracking-widest">{r.concurso}</span>
+                        </div>
                       </TableCell>
-                    ))}
-                     <TableCell className="text-right flex justify-end gap-1">
-                       <Button variant="ghost" size="icon" onClick={() => handleEdit(r)}>
-                         <Pencil className="h-4 w-4 text-primary" />
-                       </Button>
-                       <Button variant="ghost" size="icon" onClick={() => deleteResult(r.id)}>
-                        <Trash2 className="h-4 w-4 text-destructive" />
-                       </Button>
-                    </TableCell>
-                   </TableRow>
-                 ))}
-               </TableBody>
-             </Table>
-           )}
-         </CardContent>
-       </Card>
-     </AdminLayout>
-   );
- }
+                      <TableCell>
+                        <div className="flex items-center gap-2 text-slate-400">
+                          <Calendar className="h-3.5 w-3.5" />
+                          <span className="text-[10px] font-bold uppercase tracking-widest">{format(new Date(r.data_sorteio), "dd MMM, yyyy")}</span>
+                        </div>
+                      </TableCell>
+                      <TableCell className="py-4">
+                        <div className="flex items-center gap-2">
+                          {r.premios.map((p: any) => (
+                            <div 
+                              key={p.premio} 
+                              className={`flex flex-col items-center px-3 py-1.5 rounded-lg border ${
+                                p.premio === "1" 
+                                  ? "bg-primary/20 border-primary/40 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
+                                  : "bg-white/5 border-white/5"
+                              }`}
+                              title={`${p.premio}º Prêmio`}
+                            >
+                              <span className={`text-[8px] font-bold uppercase tracking-tighter ${p.premio === "1" ? "text-primary" : "text-slate-500"}`}>{p.premio}º</span>
+                              <span className={`font-mono text-xs font-bold ${p.premio === "1" ? "text-white" : "text-slate-300"}`}>{p.numero}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-right pr-8">
+                        <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-xl" onClick={() => handleEdit(r)}>
+                            <Pencil className="h-4.5 w-4.5" />
+                          </Button>
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl" onClick={() => deleteResult(r.id)}>
+                            <Trash2 className="h-4.5 w-4.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
+      </AdminLayout>
+    );
+  }

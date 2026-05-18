@@ -244,7 +244,7 @@ export const useWinners = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("winners")
-        .select("*, campaigns(title)")
+        .select("*, campaigns!campaign_id(title)")
         .order("draw_date", { ascending: false });
       if (error) throw error;
       return data as Winner[];
@@ -481,7 +481,7 @@ export const useAffiliateCommissions = (affiliateId: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("affiliate_commissions")
-        .select("*, orders(campaigns(title))")
+        .select("*, orders!order_id(campaigns!campaign_id(title))")
         .eq("affiliate_id", affiliateId)
         .order("created_at", { ascending: false });
       if (error) throw error;

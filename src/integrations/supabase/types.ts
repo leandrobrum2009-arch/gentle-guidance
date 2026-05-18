@@ -603,6 +603,20 @@ export type Database = {
         }
         Relationships: [
           {
+            foreignKeyName: "fk_orders_campaigns"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_orders_profiles"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+          {
             foreignKeyName: "orders_affiliate_id_fkey"
             columns: ["affiliate_id"]
             isOneToOne: false
@@ -632,6 +646,7 @@ export type Database = {
           cashback_balance: number | null
           cpf: string | null
           created_at: string
+          email: string | null
           id: string
           name: string
           phone: string | null
@@ -648,6 +663,7 @@ export type Database = {
           cashback_balance?: number | null
           cpf?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           name: string
           phone?: string | null
@@ -664,6 +680,7 @@ export type Database = {
           cashback_balance?: number | null
           cpf?: string | null
           created_at?: string
+          email?: string | null
           id?: string
           name?: string
           phone?: string | null
@@ -1031,6 +1048,13 @@ export type Database = {
           winner_name?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_winners_campaigns"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "winners_campaign_id_fkey"
             columns: ["campaign_id"]
