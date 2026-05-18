@@ -89,6 +89,20 @@ import { useAuth } from "@/contexts/AuthContext";
       return luckyNumbers.filter(p => !soldTickets.includes(p.number)).length;
     }, [luckyNumbers, soldTickets]);
 
+    const userTicketsCount = useMemo(() => {
+      if (!user || !tickets) return 0;
+      return tickets.filter(t => t.user_id === user.id && t.status === 'paid').length;
+    }, [user, tickets]);
+
+    const userSpinsAvailable = useMemo(() => {
+      if (!campaign?.roulette_free_tickets || campaign.roulette_free_tickets <= 0) return 0;
+      const totalEarnedSpins = Math.floor(userTicketsCount / campaign.roulette_free_tickets);
+      // We would need a way to track used spins per user/campaign.
+      // For now, let's assume we show the potential spins.
+      // TODO: Subtract used spins from a roulette_spins table count.
+      return totalEarnedSpins;
+    }, [userTicketsCount, campaign]);
+
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
    }, [luckyNumbers]);
@@ -455,8 +469,8 @@ import { useAuth } from "@/contexts/AuthContext";
              </div>
              <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
                <Zap className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
-               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Roleta Disponível</p>
-               <p className="text-lg font-black italic">{campaign.roulette_enabled ? 'SIM' : 'NÃO'}</p>
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Seus Giros</p>
+               <p className="text-lg font-black italic">{user ? userSpinsAvailable : '-'}</p>
              </div>
              <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
                <Trophy className="h-5 w-5 text-yellow-500 opacity-50 group-hover:opacity-100" />
