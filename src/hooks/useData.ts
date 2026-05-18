@@ -295,6 +295,16 @@ export const useUserNotifications = (userId: string) =>
     enabled: !!userId,
   });
 
+export const markNotificationsAsRead = async (userId: string) => {
+  const { error } = await supabase
+    .from("notifications")
+    .update({ is_read: true })
+    .eq("user_id", userId)
+    .eq("is_read", false);
+  if (error) throw error;
+  return true;
+};
+
 export interface Ticket {
   id: string;
   order_id: string;
