@@ -96,11 +96,14 @@ import { cn } from "@/lib/utils";
     { key: 'vip_silver', title: 'Membro Prata', description: 'Alcance o nível 5 VIP', icon: Star, points: 2000, category: 'Nível' },
   ];
 
+  const queryClient = useQueryClient();
+
   const handleMarkAllRead = async () => {
     if (!user) return;
     try {
       await markNotificationsAsRead(user.id);
       toast.success("Notificações marcadas como lidas");
+      queryClient.invalidateQueries({ queryKey: ["notifications", user.id] });
     } catch (error) {
       toast.error("Erro ao marcar notificações como lidas");
     }
