@@ -31,6 +31,7 @@ import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminCampaigns from "./pages/admin/Campaigns";
+import AdminCampaignEdit from "./pages/admin/CampaignEdit";
 import AdminOrders from "./pages/admin/Orders";
 import AdminWinners from "./pages/admin/Winners";
 
@@ -65,6 +66,8 @@ const App = () => (
             {/* Admin Routes */}
             <Route path="/admin" element={<ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>} />
             <Route path="/admin/campanhas" element={<ProtectedRoute adminOnly><AdminCampaigns /></ProtectedRoute>} />
+            <Route path="/admin/campanhas/nova" element={<ProtectedRoute adminOnly><AdminCampaignEdit /></ProtectedRoute>} />
+            <Route path="/admin/campanhas/editar/:id" element={<ProtectedRoute adminOnly><AdminCampaignEdit /></ProtectedRoute>} />
             <Route path="/admin/pedidos" element={<ProtectedRoute adminOnly><AdminOrders /></ProtectedRoute>} />
              <Route path="/admin/ganhadores" element={<ProtectedRoute adminOnly><AdminWinners /></ProtectedRoute>} />
              <Route path="/admin/federal" element={<ProtectedRoute adminOnly><AdminFederal /></ProtectedRoute>} />
