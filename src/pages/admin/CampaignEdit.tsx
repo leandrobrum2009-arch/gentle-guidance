@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -102,6 +102,8 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="pricing" className="rounded-xl px-6">Valores</TabsTrigger>
             <TabsTrigger value="media" className="rounded-xl px-6">Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6">Prêmios</TabsTrigger>
+            <TabsTrigger value="engagement" className="rounded-xl px-6">Engajamento</TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-xl px-6">Avançado</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="mt-6 space-y-6">
@@ -221,6 +223,108 @@ export default function AdminCampaignEdit() {
                   ))}
                 </div>
              </Card>
+          </TabsContent>
+
+          <TabsContent value="engagement" className="mt-6 space-y-6">
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                   <Dices className="h-5 w-5" />
+                 </div>
+                 <h3 className="text-lg font-bold">Roleta Premiada</h3>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Habilitar Roleta</Label>
+                      <p className="text-[11px] text-slate-500">Permitir que compradores girem a roleta</p>
+                    </div>
+                    <Switch checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
+                  </div>
+                  {form.roulette_enabled && (
+                    <>
+                      <div className="space-y-2">
+                        <Label>Giro Grátis a cada X números</Label>
+                        <Input type="number" value={form.roulette_free_tickets} onChange={(e) => set("roulette_free_tickets", Number(e.target.value))} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Custo do Giro Individual (R$)</Label>
+                        <Input type="number" step="0.01" value={form.roulette_spin_cost} onChange={(e) => set("roulette_spin_cost", Number(e.target.value))} />
+                      </div>
+                    </>
+                  )}
+               </div>
+            </Card>
+
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
+                   <Target className="h-5 w-5" />
+                 </div>
+                 <h3 className="text-lg font-bold">Metas e Urgência</h3>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label>Meta de Vendas (%)</Label>
+                    <Input type="number" value={form.sales_goal} onChange={(e) => set("sales_goal", Number(e.target.value))} />
+                    <p className="text-[10px] text-slate-400">Exibida como barra de progresso</p>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Tag de Urgência</Label>
+                    <Input placeholder="Ex: ÚLTIMAS COTAS" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Em Destaque</Label>
+                      <p className="text-[11px] text-slate-500">Aparece no topo da página inicial</p>
+                    </div>
+                    <Switch checked={form.featured} onCheckedChange={(v) => set("featured", v)} />
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Exibir Ranking</Label>
+                      <p className="text-[11px] text-slate-500">Mostrar maiores compradores</p>
+                    </div>
+                    <Switch checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
+                  </div>
+               </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="settings" className="mt-6 space-y-6">
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                   <Settings2 className="h-5 w-5" />
+                 </div>
+                 <h3 className="text-lg font-bold">Configurações Avançadas</h3>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label>Slug da URL (Personalizado)</Label>
+                    <Input value={form.slug} onChange={(e) => set("slug", e.target.value)} placeholder="iphone-15-pro-max" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Data do Sorteio</Label>
+                    <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
+                  </div>
+                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Extração pela Federal</Label>
+                      <p className="text-[11px] text-slate-500">Usa os números da Loteria Federal</p>
+                    </div>
+                    <Switch checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Mínimo de Cotas por Pedido</Label>
+                    <Input type="number" value={form.min_tickets} onChange={(e) => set("min_tickets", Number(e.target.value))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Máximo de Cotas por Pedido</Label>
+                    <Input type="number" value={form.max_tickets} onChange={(e) => set("max_tickets", Number(e.target.value))} />
+                  </div>
+               </div>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

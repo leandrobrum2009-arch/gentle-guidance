@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import AdminLayout from "@/components/AdminLayout";
@@ -6,12 +6,13 @@ import { useAdminCampaigns } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Trophy } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function AdminCampaigns() {
   const navigate = useNavigate();
@@ -19,6 +20,8 @@ export default function AdminCampaigns() {
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const [saving, setSaving] = useState(false);
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState("all");
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esta campanha?")) return;
@@ -29,8 +32,29 @@ export default function AdminCampaigns() {
     queryClient.invalidateQueries({ queryKey: ["campaigns"] });
   };
 
-   const statusColor = (s: string) => s === "active" ? "default" : s === "completed" ? "secondary" : "outline";
- 
+  const duplicate = async (campaign: any) => {
+    const { id, created_at, updated_at, sold_tickets, ...rest } = campaign;
+    const { error } = await supabase.from("campaigns").insert({
+      ...rest,
+      title: `${rest.title} (Cópia)`,
+      slug: `${rest.slug}-copia-${Math.floor(Math.random() * 1000)}`,
+      sold_tickets: 0,
+      status: "draft"
+    });
+    if (error) { toast({ title: "Erro", description: error.message, variant: "destructive" }); return; }
+    toast({ title: "Campanha duplicada com sucesso" });
+    queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+  };
+
+  const statusInfo = (s: string) => {
+    switch(s) {
+      case "active": return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
+      case "completed": return { label: "Finalizada", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" };
+      case "draft": return { label: "Rascunho", color: "bg-slate-500/10 text-slate-500 border-slate-500/20" };
+      default: return { label: s, color: "bg-slate-500/10 text-slate-500 border-slate-500/20" };
+    }
+  };
+
   const performDraw = async (id: string) => {
     if (!confirm("Realizar o sorteio desta campanha agora? Esta ação é irreversível.")) return;
     setSaving(true);
@@ -42,53 +66,187 @@ export default function AdminCampaigns() {
     queryClient.invalidateQueries({ queryKey: ["winners"] });
   };
 
+  const filteredCampaigns = useMemo(() => {
+    if (!campaigns) return [];
+    return campaigns.filter(c => {
+      const matchesSearch = c.title.toLowerCase().includes(search.toLowerCase()) || 
+                           c.slug.toLowerCase().includes(search.toLowerCase());
+      const matchesFilter = filter === "all" || c.status === filter;
+      return matchesSearch && matchesFilter;
+    });
+  }, [campaigns, search, filter]);
+
   return (
     <AdminLayout>
-      <div className="mb-6 flex items-center justify-between">
-        <h1 className="font-display text-2xl font-bold">Campanhas</h1>
-        <Button onClick={() => navigate("/admin/campanhas/nova")}><Plus className="mr-2 h-4 w-4" /> Nova Campanha</Button>
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Campanhas</h1>
+          <p className="text-slate-400 mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
+        </div>
+        <Button 
+          onClick={() => navigate("/admin/campanhas/nova")}
+          className="bg-primary hover:bg-primary/90 text-white font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+        >
+          <Plus className="mr-2 h-5 w-5" /> Nova Campanha
+        </Button>
       </div>
 
-      <Card>
-        <CardContent className="p-0">
+      <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl overflow-hidden">
+        <CardHeader className="border-b border-white/5 bg-white/5 pb-4">
+          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Input 
+                placeholder="Buscar por título ou slug..." 
+                className="pl-10 border-white/5 bg-black/20 text-white focus:border-primary/50"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center gap-2">
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-primary/20 border-primary/50 text-primary" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                onClick={() => setFilter("all")}
+              >
+                Todos
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "active" ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-500" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                onClick={() => setFilter("active")}
+              >
+                Ativos
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "completed" ? "bg-blue-500/20 border-blue-500/50 text-blue-500" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                onClick={() => setFilter("completed")}
+              >
+                Finalizados
+              </Badge>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
-            <div className="flex justify-center py-10"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+             <div className="flex flex-col items-center justify-center py-20 gap-4">
+               <Loader2 className="h-10 w-10 animate-spin text-primary" />
+               <p className="text-slate-500 text-sm font-medium animate-pulse">Carregando campanhas...</p>
+             </div>
           ) : (
             <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Título</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Preço</TableHead>
-                  <TableHead>Vendidos</TableHead>
-                  <TableHead className="text-right">Ações</TableHead>
+               <TableHeader className="bg-white/[0.02]">
+                 <TableRow className="hover:bg-transparent border-white/5">
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
+                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {campaigns?.map((c) => (
-                  <TableRow key={c.id}>
-                    <TableCell className="font-medium">
-                      <div className="flex flex-col">
-                        <span>{c.title}</span>
+                 {filteredCampaigns.map((c) => {
+                   const info = statusInfo(c.status);
+                   const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
+                   return (
+                   <TableRow key={c.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                     <TableCell className="pl-6 py-4">
+                       <div className="flex items-center gap-4">
+                         <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
+                           {c.image_url ? <img src={c.image_url} className="h-full w-full object-cover" /> : c.title.substring(0, 1)}
+                         </div>
+                         <div className="flex flex-col">
+                           <span className="text-sm font-bold text-white group-hover:text-primary transition-colors">{c.title}</span>
+                           <span className="text-[10px] text-slate-500 font-medium font-mono">/{c.slug}</span>
                         {c.federal_lottery_draw && (
-                          <Badge variant="outline" className="w-fit text-[10px] py-0 h-4 border-primary text-primary">Sorteio Federal</Badge>
+                             <Badge variant="outline" className="mt-1 w-fit text-[9px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Loteria Federal</Badge>
                         )}
+                         </div>
                       </div>
                     </TableCell>
-                    <TableCell><Badge variant={statusColor(c.status)}>{c.status}</Badge></TableCell>
-                    <TableCell>R$ {Number(c.ticket_price).toFixed(2)}</TableCell>
-                    <TableCell>{c.sold_tickets}/{c.total_tickets}</TableCell>
-                    <TableCell className="text-right">
-                      {c.status === "active" && (
-                        <Button variant="ghost" size="icon" className="text-amber-500 hover:text-amber-600 hover:bg-amber-50" onClick={() => performDraw(c.id)}>
-                          <Trophy className="h-4 w-4" />
-                        </Button>
-                      )}
-                      <Button variant="ghost" size="icon" onClick={() => navigate(`/admin/campanhas/editar/${c.id}`)}><Pencil className="h-4 w-4" /></Button>
-                      <Button variant="ghost" size="icon" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                     <TableCell className="text-center py-4">
+                       <Badge className={`rounded-full px-3 font-bold text-[10px] uppercase tracking-wider ${info.color}`}>
+                         {info.label}
+                       </Badge>
+                     </TableCell>
+                     <TableCell className="py-4">
+                       <div className="flex flex-col">
+                         <span className="text-sm font-bold text-white">R$ {Number(c.ticket_price).toFixed(2)}</span>
+                         <span className="text-[10px] text-slate-500 font-medium">Preço Unitário</span>
+                       </div>
+                     </TableCell>
+                     <TableCell className="py-4 min-w-[150px]">
+                       <div className="flex flex-col gap-1.5">
+                         <div className="flex justify-between items-center text-[10px] font-bold">
+                           <span className="text-slate-400 uppercase tracking-tighter">{c.sold_tickets.toLocaleString()} VENDIDOS</span>
+                           <span className="text-primary">{progress}%</span>
+                         </div>
+                         <Progress value={progress} className="h-1.5 bg-white/5" />
+                       </div>
+                     </TableCell>
+                     <TableCell className="text-right pr-6 py-4">
+                       <div className="flex items-center justify-end gap-1">
+                         {c.status === "active" && (
+                           <Button 
+                             variant="ghost" 
+                             size="icon" 
+                             className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg" 
+                             onClick={() => performDraw(c.id)}
+                             title="Realizar Sorteio"
+                           >
+                             <Trophy className="h-4.5 w-4.5" />
+                           </Button>
+                         )}
+                         <Button 
+                           variant="ghost" 
+                           size="icon" 
+                           className="text-slate-400 hover:text-white hover:bg-white/5 rounded-lg"
+                           onClick={() => navigate(`/admin/campanhas/editar/${c.id}`)}
+                           title="Editar"
+                         >
+                           <Pencil className="h-4.5 w-4.5" />
+                         </Button>
+                         
+                         <DropdownMenu>
+                           <DropdownMenuTrigger asChild>
+                             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/5 rounded-lg">
+                               <MoreHorizontal className="h-4.5 w-4.5" />
+                             </Button>
+                           </DropdownMenuTrigger>
+                           <DropdownMenuContent align="end" className="w-56 border-white/10 bg-[#131316] text-slate-200">
+                             <DropdownMenuLabel>Ações Avançadas</DropdownMenuLabel>
+                             <DropdownMenuSeparator className="bg-white/5" />
+                             <DropdownMenuItem onClick={() => window.open(`/campanha/${c.id}`, '_blank')} className="gap-2 cursor-pointer">
+                               <ExternalLink className="h-4 w-4 text-slate-400" /> Ver no Site
+                             </DropdownMenuItem>
+                             <DropdownMenuItem onClick={() => duplicate(c)} className="gap-2 cursor-pointer">
+                               <Copy className="h-4 w-4 text-slate-400" /> Duplicar Rifas
+                             </DropdownMenuItem>
+                             <DropdownMenuSeparator className="bg-white/5" />
+                             <DropdownMenuItem onClick={() => remove(c.id)} className="gap-2 cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
+                               <Trash2 className="h-4 w-4" /> Excluir Definitivamente
+                             </DropdownMenuItem>
+                           </DropdownMenuContent>
+                         </DropdownMenu>
+                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                   );
+                 })}
+                 {filteredCampaigns.length === 0 && (
+                   <TableRow>
+                     <TableCell colSpan={5} className="py-20 text-center">
+                        <div className="flex flex-col items-center gap-3">
+                          <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center text-slate-600">
+                            <Search className="h-8 w-8" />
+                          </div>
+                          <p className="text-slate-400 font-medium">Nenhuma campanha encontrada com os filtros atuais.</p>
+                          <Button variant="outline" onClick={() => { setSearch(""); setFilter("all"); }} className="border-white/10 text-slate-400">Limpar Filtros</Button>
+                        </div>
+                     </TableCell>
+                   </TableRow>
+                 )}
               </TableBody>
             </Table>
           )}
