@@ -486,7 +486,7 @@ export default function AdminCampaignEdit() {
               </CardHeader>
               <CardContent className="space-y-4">
                  <div className="space-y-2">
-                   <Label htmlFor="image_url">Capa da Campanha <FieldInfo text="Imagem principal da rifa. Recomendado: 800x600px." /></Label>
+                   <Label htmlFor="image_url">Foto Principal (Capa) <FieldInfo text="Esta é a foto que aparece nos cards do site. Use o botão de upload ou cole um link direto de imagem." /></Label>
                    <div className="flex gap-2">
                      <Input id="image_url" placeholder="URL da imagem ou faça upload" value={form.image_url} onChange={(e) => set("image_url", e.target.value)} className="flex-1" />
                      <div className="relative">
@@ -504,7 +504,7 @@ export default function AdminCampaignEdit() {
                  </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label>Galeria de Imagens <FieldInfo text="Adicione fotos extras do produto que aparecerão em um slide no site." /></Label>
+                     <Label>Fotos da Galeria <FieldInfo text="Fotos extras que os usuários podem ver deslizando na página do produto. Quanto mais fotos, mais confiança você passa!" /></Label>
                     <Button type="button" variant="outline" size="sm" onClick={() => set("gallery_urls", [...form.gallery_urls, ""])}>
                       <Plus className="h-3 w-3 mr-1" /> Add Foto
                     </Button>
@@ -703,7 +703,7 @@ export default function AdminCampaignEdit() {
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
-                    <Label>Pacotes de Desconto <FieldInfo text="Crie promoções por quantidade. Ex: Compre 10 cotas e pague apenas R$ 9,00." /></Label>
+                     <Label>Promoções (Combos) <FieldInfo text="Crie descontos para quem compra mais. Ex: Se 1 cota custa R$ 1,00, você pode fazer 10 cotas por R$ 8,00. Isso incentiva compras maiores." /></Label>
                     <Button type="button" variant="outline" size="sm" onClick={() => set("price_bundles", [...form.price_bundles, { quantity: 10, price: 9.00 }])}>
                       <Plus className="h-3 w-3 mr-1" /> Add Pacote
                     </Button>
@@ -712,7 +712,7 @@ export default function AdminCampaignEdit() {
                     {form.price_bundles.map((bundle, i) => (
                       <div key={i} className="flex gap-2 items-end border p-3 rounded-lg bg-secondary/10">
                         <div className="flex-1 space-y-1">
-                          <Label className="text-[10px] uppercase">Qtd de Cotas</Label>
+                           <Label className="text-[10px] uppercase font-bold">Quantidade de Números</Label>
                           <Input 
                             type="number"
                             value={bundle.quantity}
@@ -724,7 +724,7 @@ export default function AdminCampaignEdit() {
                           />
                         </div>
                         <div className="flex-1 space-y-1">
-                          <Label className="text-[10px] uppercase">Preço Total (R$)</Label>
+                           <Label className="text-[10px] uppercase font-bold">Preço Promocional (Total)</Label>
                           <Input 
                             type="number"
                             step="0.01"
