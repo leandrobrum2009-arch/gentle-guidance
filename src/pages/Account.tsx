@@ -14,9 +14,10 @@ import { useAuth } from "@/contexts/AuthContext";
    useUserAchievements, 
    useUserRewards,
    useRanking,
-   useUserNotifications,
-   useUserSpins,
-   useUserMysteryBoxWins
+    useUserNotifications,
+    useUserSpins,
+    useUserMysteryBoxWins,
+    markNotificationsAsRead
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -42,6 +43,7 @@ import { cn } from "@/lib/utils";
    const { data: txs } = useUserWalletTransactions(user?.id || "");
    const { data: achievements } = useUserAchievements(user?.id || "");
    const { data: ranking } = useRanking(10);
+   const { data: notifications } = useUserNotifications(user?.id || "");
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
