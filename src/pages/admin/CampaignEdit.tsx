@@ -32,15 +32,15 @@ interface CampaignForm {
   roulette_enabled: boolean;
   ranking_enabled: boolean;
   featured: boolean;
-  price_bundles: string;
-  gallery_urls: string;
+  price_bundles: { quantity: number; price: number }[];
+  gallery_urls: string[];
   video_url: string;
   regulations: string;
   auto_numbers: boolean;
   manual_numbers: boolean;
   ticket_generation_type: 'manual' | 'auto';
   lucky_numbers_prizes: { number: string; prize: string; protected?: boolean }[];
-  main_prizes: string;
+  main_prizes: { position: number; prize: string }[];
   federal_lottery_draw: boolean;
   sales_goal: number;
   roulette_free_tickets: number;
@@ -61,15 +61,21 @@ const empty: CampaignForm = {
   roulette_enabled: false,
   ranking_enabled: true,
   featured: false,
-  price_bundles: "[]",
-  gallery_urls: "[]",
+  price_bundles: [],
+  gallery_urls: [],
   video_url: "",
   regulations: "",
   auto_numbers: true,
   manual_numbers: false,
   ticket_generation_type: 'auto',
   lucky_numbers_prizes: [],
-  main_prizes: "[]",
+  main_prizes: [
+    { position: 1, prize: "" },
+    { position: 2, prize: "" },
+    { position: 3, prize: "" },
+    { position: 4, prize: "" },
+    { position: 5, prize: "" },
+  ],
   federal_lottery_draw: false,
   sales_goal: 0,
   roulette_free_tickets: 10,
@@ -120,15 +126,23 @@ export default function AdminCampaignEdit() {
         roulette_enabled: data.roulette_enabled ?? false,
         ranking_enabled: data.ranking_enabled ?? true,
         featured: data.featured ?? false,
-        price_bundles: JSON.stringify(data.price_bundles ?? [], null, 2),
-        gallery_urls: JSON.stringify(data.gallery_urls ?? [], null, 2),
+        price_bundles: (data.price_bundles as any[]) ?? [],
+        gallery_urls: (data.gallery_urls as string[]) ?? [],
         video_url: data.video_url ?? "",
         regulations: data.regulations ?? "",
         auto_numbers: data.auto_numbers ?? true,
         manual_numbers: data.manual_numbers ?? false,
         ticket_generation_type: (data.ticket_generation_type as 'auto' | 'manual') ?? 'auto',
         lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [],
-        main_prizes: JSON.stringify(data.main_prizes ?? [], null, 2),
+        main_prizes: (data.main_prizes as any[])?.length > 0 
+          ? (data.main_prizes as any[]) 
+          : [
+              { position: 1, prize: "" },
+              { position: 2, prize: "" },
+              { position: 3, prize: "" },
+              { position: 4, prize: "" },
+              { position: 5, prize: "" },
+            ],
         federal_lottery_draw: data.federal_lottery_draw ?? false,
         sales_goal: data.sales_goal ?? 0,
         roulette_free_tickets: data.roulette_free_tickets ?? 10,
@@ -156,9 +170,9 @@ export default function AdminCampaignEdit() {
         min_tickets: Number(form.min_tickets),
         max_tickets: Number(form.max_tickets),
         draw_date: form.draw_date || null,
-        price_bundles: JSON.parse(form.price_bundles || "[]"),
-        gallery_urls: JSON.parse(form.gallery_urls || "[]"),
-        main_prizes: JSON.parse(form.main_prizes || "[]"),
+        price_bundles: form.price_bundles,
+        gallery_urls: form.gallery_urls,
+        main_prizes: form.main_prizes,
         sales_goal: Number(form.sales_goal),
         roulette_free_tickets: Number(form.roulette_free_tickets),
         roulette_payout_rate: Number(form.roulette_payout_rate),
@@ -225,7 +239,7 @@ export default function AdminCampaignEdit() {
           <AlertTitle className="text-sm font-bold uppercase tracking-wider text-primary">Dica do Administrador</AlertTitle>
           <AlertDescription className="text-xs text-muted-foreground">
             Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline" /> para entender como cada campo funciona e como preenchê-lo corretamente.
-            Campos em JSON devem seguir o formato de exemplo para evitar erros no site.
+            Todos os campos foram simplificados para facilitar o seu cadastro.
           </AlertDescription>
         </Alert>
 
@@ -265,9 +279,33 @@ export default function AdminCampaignEdit() {
                   <Label htmlFor="description">Descrição Longa <FieldInfo text="Explique todos os detalhes do prêmio e da campanha." /></Label>
                   <Textarea id="description" placeholder="Descreva sua campanha aqui..." value={form.description} onChange={(e) => set("description", e.target.value)} rows={4} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="regulations">Regulamento <FieldInfo text="Regras específicas da sua campanha." /></Label>
-                  <Textarea id="regulations" placeholder="Regras da campanha..." value={form.regulations} onChange={(e) => set("regulations", e.target.value)} rows={3} />
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="regulations">Regulamento <FieldInfo text="Regras específicas da sua campanha." /></Label>
+                    <Textarea id="regulations" placeholder="Regras da campanha..." value={form.regulations} onChange={(e) => set("regulations", e.target.value)} rows={3} />
+                  </div>
+                  <div className="space-y-4">
+                    <Label className="flex items-center gap-2">
+                      Premiação Principal <FieldInfo text="Defina os prêmios do 1º ao 5º lugar que aparecerão no site." />
+                    </Label>
+                    <div className="space-y-2">
+                      {form.main_prizes.map((p, i) => (
+                        <div key={i} className="flex items-center gap-2">
+                          <span className="text-xs font-bold text-muted-foreground w-16">{p.position}º Lugar:</span>
+                          <Input 
+                            placeholder={`Prêmio do ${p.position}º lugar`}
+                            value={p.prize}
+                            onChange={(e) => {
+                              const newList = [...form.main_prizes];
+                              newList[i].prize = e.target.value;
+                              set("main_prizes", newList);
+                            }}
+                            className="h-8 text-xs"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -285,9 +323,40 @@ export default function AdminCampaignEdit() {
                   <Label htmlFor="image_url">Capa da Campanha <FieldInfo text="URL da imagem principal (formato JPG/PNG)." /></Label>
                   <Input id="image_url" placeholder="https://..." value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="gallery">Galeria de Imagens (JSON) <FieldInfo text='Lista de links das fotos adicionais. Ex: ["link1", "link2"]' /></Label>
-                  <Textarea id="gallery" placeholder='["https://...", "https://..."]' value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} className="font-mono text-xs" />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label>Galeria de Imagens <FieldInfo text="Adicione fotos extras do produto que aparecerão em um slide no site." /></Label>
+                    <Button type="button" variant="outline" size="sm" onClick={() => set("gallery_urls", [...form.gallery_urls, ""])}>
+                      <Plus className="h-3 w-3 mr-1" /> Add Foto
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {form.gallery_urls.map((url, i) => (
+                      <div key={i} className="flex gap-2">
+                        <Input 
+                          placeholder="https://sua-imagem.com/foto.jpg"
+                          value={url}
+                          onChange={(e) => {
+                            const newList = [...form.gallery_urls];
+                            newList[i] = e.target.value;
+                            set("gallery_urls", newList);
+                          }}
+                        />
+                        <Button variant="ghost" size="icon" onClick={() => {
+                          const newList = [...form.gallery_urls];
+                          newList.splice(i, 1);
+                          set("gallery_urls", newList);
+                        }}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                    {form.gallery_urls.length === 0 && (
+                      <p className="text-xs text-center py-2 text-muted-foreground border-2 border-dashed rounded italic">
+                        Nenhuma foto adicional cadastrada.
+                      </p>
+                    )}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="video_url">Vídeo do YouTube <FieldInfo text="Link do vídeo de apresentação (YouTube)." /></Label>
@@ -439,9 +508,56 @@ export default function AdminCampaignEdit() {
                     <Input id="max_tickets" type="number" value={form.max_tickets} onChange={(e) => set("max_tickets", e.target.value)} />
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bundles">Pacotes de Promoção (JSON) <FieldInfo text='Ex: [{"quantity": 10, "price": 9.00}] - 10 cotas por R$ 9,00' /></Label>
-                  <Textarea id="bundles" placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} className="font-mono text-xs" />
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <Label>Pacotes de Desconto <FieldInfo text="Crie promoções por quantidade. Ex: Compre 10 cotas e pague apenas R$ 9,00." /></Label>
+                    <Button type="button" variant="outline" size="sm" onClick={() => set("price_bundles", [...form.price_bundles, { quantity: 10, price: 9.00 }])}>
+                      <Plus className="h-3 w-3 mr-1" /> Add Pacote
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    {form.price_bundles.map((bundle, i) => (
+                      <div key={i} className="flex gap-2 items-end border p-3 rounded-lg bg-secondary/10">
+                        <div className="flex-1 space-y-1">
+                          <Label className="text-[10px] uppercase">Qtd de Cotas</Label>
+                          <Input 
+                            type="number"
+                            value={bundle.quantity}
+                            onChange={(e) => {
+                              const newList = [...form.price_bundles];
+                              newList[i].quantity = Number(e.target.value);
+                              set("price_bundles", newList);
+                            }}
+                          />
+                        </div>
+                        <div className="flex-1 space-y-1">
+                          <Label className="text-[10px] uppercase">Preço Total (R$)</Label>
+                          <Input 
+                            type="number"
+                            step="0.01"
+                            value={bundle.price}
+                            onChange={(e) => {
+                              const newList = [...form.price_bundles];
+                              newList[i].price = Number(e.target.value);
+                              set("price_bundles", newList);
+                            }}
+                          />
+                        </div>
+                        <Button variant="ghost" size="icon" onClick={() => {
+                          const newList = [...form.price_bundles];
+                          newList.splice(i, 1);
+                          set("price_bundles", newList);
+                        }}>
+                          <Trash2 className="h-4 w-4 text-destructive" />
+                        </Button>
+                      </div>
+                    ))}
+                    {form.price_bundles.length === 0 && (
+                      <p className="text-xs text-center py-2 text-muted-foreground border-2 border-dashed rounded italic">
+                        Nenhum pacote de desconto cadastrado.
+                      </p>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
