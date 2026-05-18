@@ -94,24 +94,24 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
       transition: { duration: 0.2 }
     });
 
-    // Deduct balance if not using free spins
-    if (totalCost > 0) {
-      const { error: balanceError } = await supabase
-        .from('profiles')
-        .update({ balance: Number(userProfile.balance) - totalCost })
-        .eq('user_id', user.id);
-        
-      if (balanceError) {
-        setIsSpinning(false);
-        toast.error("Erro ao processar pagamento.");
-        return;
-      }
-      fetchUserProfile();
+    // Call secure server-side RPC to process the spin
+    const { data: result, error: spinError } = await supabase.rpc('process_roulette_spin', {
+      p_campaign_id: campaign.id,
+      p_multiplier: multiplier
+    });
+
+    if (spinError) {
+      setIsSpinning(false);
+      toast.error(spinError.message || "Erro ao processar o giro.");
+      return;
     }
+
+    const { prize, final_value, is_free, new_balance } = result;
     
-    const { prize, index: randomIndex } = getWeightedPrize();
+    // Find the index of the won prize to animate correctly
+    const randomIndex = prizes.findIndex(p => p.id === prize.id);
     
-    const segmentAngle = 360 / prizes.length;
+    const segmentAngle = 360 / (prizes.length || 1);
     const extraSpins = 8; // More spins for dramatic effect
     const baseRotation = extraSpins * 360;
     // Calculate target angle to land in the middle of the segment
@@ -130,33 +130,18 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
     setWonPrize(prize);
     setShowWinAnimation(true);
 
-    // Save spin result to database
-    const finalValue = (Number(prize.value) || 0) * multiplier;
-    const { error } = await supabase.from("roulette_spins").insert({
+    // Update local state with new data from server
+    queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
+    queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
+    setUserProfile(prev => ({ ...prev, balance: new_balance }));
+
+    // Add notification (this could also be moved to a DB trigger for better security, but leaving here for now as it's less critical)
+    await supabase.from("notifications").insert({
       user_id: user.id,
-      campaign_id: campaign.id,
-      prize_label: prize.label,
-      prize_type: prize.prize_type,
-      prize_value: finalValue
+      title: "Você ganhou na roleta!",
+      message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
+      type: "win"
     });
-    
-    if (!error) {
-      queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
-
-      // Add notification for roulette win
-      await supabase.from("notifications").insert({
-        user_id: user.id,
-        title: "Você ganhou na roleta!",
-        message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
-        type: "win"
-      });
-
-      // If balance prize, update profile
-      if (prize.prize_type === 'balance') {
-        await supabase.rpc('increment_balance', { amount: finalValue, user_uuid: user.id });
-        fetchUserProfile();
-      }
-    }
 
     setIsSpinning(false);
     
