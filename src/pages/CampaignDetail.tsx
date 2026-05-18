@@ -39,8 +39,28 @@ import { useAuth } from "@/contexts/AuthContext";
     const { data: mysteryBoxes } = useMysteryBoxConfigs(id || "");
    const { data: roulettePrizes } = useRoulettePrizes(id || "");
    const { data: allWinners } = useWinners();
-   const { data: tickets } = useTickets(id || "", canManualSelect);
-    // Get status of lucky numbers separately to avoid fetching all tickets for high-volume campaigns
+    const allLuckyNumbers = useMemo(() => {
+      return campaign?.lucky_numbers_prizes || [];
+    }, [campaign]);
+
+    const luckyNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => !p.protected);
+    }, [allLuckyNumbers]);
+
+    const protectedNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
+    }, [allLuckyNumbers]);
+
+    const luckyNumbersList = useMemo(() => {
+      return luckyNumbers.map((p: any) => p.number) || [];
+    }, [luckyNumbers]);
+
+    const canManualSelect = useMemo(() => {
+      return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
+    }, [campaign]);
+
+    const { data: tickets } = useTickets(id || "", canManualSelect);
+
     const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
 
     useEffect(() => {
@@ -65,7 +85,6 @@ import { useAuth } from "@/contexts/AuthContext";
       };
       
       fetchLuckyStatus();
-      // Refresh every 30 seconds
       const interval = setInterval(fetchLuckyStatus, 30000);
       return () => clearInterval(interval);
     }, [id, luckyNumbersList]);
