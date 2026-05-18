@@ -30,6 +30,18 @@ const Register = () => {
     }
     setIsLoading(true);
     const { error } = await signUp(email, password, name, cpf, phone);
+    
+    if (!error) {
+      const referredBy = localStorage.getItem('referred_by');
+      if (referredBy) {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("profiles").update({ referred_by_code: referredBy }).eq("user_id", user.id);
+          localStorage.removeItem('referred_by');
+        }
+      }
+    }
+
     setIsLoading(false);
     if (error) {
       toast({ title: "Erro ao cadastrar", description: error.message, variant: "destructive" });
