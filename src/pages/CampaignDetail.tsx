@@ -120,25 +120,13 @@ import { useAuth } from "@/contexts/AuthContext";
    const [isPurchasing, setIsPurchasing] = useState(false);
    const [showSuccess, setShowSuccess] = useState(false);
  
-   const soldTickets = useMemo(() => {
-     return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
-   }, [tickets]);
- 
-    const allLuckyNumbers = useMemo(() => {
-      return campaign?.lucky_numbers_prizes || [];
-    }, [campaign]);
+    const soldTickets = useMemo(() => {
+      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
+    }, [tickets]);
 
-    const luckyNumbers = useMemo(() => {
-      return allLuckyNumbers.filter((p: any) => !p.protected);
-    }, [allLuckyNumbers]);
-
-    const protectedNumbers = useMemo(() => {
-      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
-    }, [allLuckyNumbers]);
- 
     const availableInstantPrizes = useMemo(() => {
-      return luckyNumbers.filter(p => !soldTickets.includes(p.number)).length;
-    }, [luckyNumbers, soldTickets]);
+      return luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length;
+    }, [luckyNumbers, luckyNumbersStatus]);
 
     const userTicketsCount = useMemo(() => {
       if (!user || !tickets) return 0;
@@ -151,10 +139,6 @@ import { useAuth } from "@/contexts/AuthContext";
       const usedSpins = userSpins?.length || 0;
       return Math.max(0, totalEarnedSpins - usedSpins);
     }, [userTicketsCount, campaign, userSpins]);
-
-   const luckyNumbersList = useMemo(() => {
-     return luckyNumbers.map((p: any) => p.number) || [];
-   }, [luckyNumbers]);
  
    const campaignWinners = useMemo(() => {
      return allWinners?.filter(w => w.campaign_id === id) || [];
