@@ -305,6 +305,21 @@ export const markNotificationsAsRead = async (userId: string) => {
   return true;
 };
 
+export const useUserReferrals = (referralCode: string) =>
+  useQuery({
+    queryKey: ["referrals", referralCode],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("name, created_at, avatar_url")
+        .eq("referred_by_code", referralCode)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!referralCode,
+  });
+
 export interface Ticket {
   id: string;
   order_id: string;
