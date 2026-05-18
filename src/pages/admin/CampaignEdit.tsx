@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -96,6 +96,45 @@ export default function AdminCampaignEdit() {
   const [form, setForm] = useState<CampaignForm>(empty);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [aiGenerating, setAiGenerating] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+
+  const generateWithAI = async () => {
+    const prompt = window.prompt("O que você quer sortear? (Ex: Um iPhone 15 Pro Max de 256GB azul)");
+    if (!prompt) return;
+
+    setAiGenerating(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('generate-campaign', {
+        body: { prompt }
+      });
+
+      if (error) throw error;
+
+      setForm(prev => ({
+        ...prev,
+        title: data.title || prev.title,
+        slug: data.slug || prev.slug,
+        subtitle: data.subtitle || prev.subtitle,
+        description: data.description || prev.description,
+        image_url: data.image_url || prev.image_url,
+        ticket_price: data.ticket_price || prev.ticket_price,
+        total_tickets: data.total_tickets || prev.total_tickets,
+        urgency_tag: data.urgency_tag || prev.urgency_tag,
+        price_bundles: data.price_bundles || prev.price_bundles,
+        gallery_urls: data.gallery_urls || prev.gallery_urls,
+        regulations: data.regulations || prev.regulations,
+        lucky_numbers_prizes: data.lucky_numbers_prizes || prev.lucky_numbers_prizes,
+        main_prizes: data.main_prizes || prev.main_prizes,
+      }));
+
+      toast({ title: "Campanha Gerada!", description: "Os campos foram preenchidos pela IA. Revise antes de salvar." });
+    } catch (error: any) {
+      toast({ title: "Erro na IA", description: error.message, variant: "destructive" });
+    } finally {
+      setAiGenerating(false);
+    }
+  };
 
   useEffect(() => {
     if (id) {
@@ -244,10 +283,97 @@ export default function AdminCampaignEdit() {
         </Alert>
 
           </div>
-          <Button onClick={save} disabled={saving} size="lg">
-            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-            Salvar Campanha
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              variant="outline" 
+              onClick={generateWithAI} 
+              disabled={aiGenerating} 
+              className="border-primary/50 text-primary hover:bg-primary/5 shadow-lg shadow-primary/10"
+            >
+              {aiGenerating ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+              Gerar com IA
+            </Button>
+            <Button onClick={save} disabled={saving} size="lg">
+              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+              Salvar Campanha
+            </Button>
+          </div>
+        {/* Seção de Ajuda e Tutoriais */}
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Card className="border-primary/10 bg-primary/5 hover:bg-primary/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 bg-primary/20 rounded-lg text-primary"><Box className="h-5 w-5" /></div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider">Caixa Misteriosa</p>
+                <p className="text-[10px] text-muted-foreground">O que é e como funciona?</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-amber-500/10 bg-amber-500/5 hover:bg-amber-500/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 bg-amber-500/20 rounded-lg text-amber-500"><Crown className="h-5 w-5" /></div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider">Ranking</p>
+                <p className="text-[10px] text-muted-foreground">Aumente suas vendas com competição.</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-blue-500/10 bg-blue-500/5 hover:bg-blue-500/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 bg-blue-500/20 rounded-lg text-blue-500"><Landmark className="h-5 w-5" /></div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider">Sorteio Federal</p>
+                <p className="text-[10px] text-muted-foreground">Como integrar com a loteria?</p>
+              </div>
+            </CardContent>
+          </Card>
+          <Card className="border-emerald-500/10 bg-emerald-500/5 hover:bg-emerald-500/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
+            <CardContent className="p-4 flex items-center gap-3">
+              <div className="p-2 bg-emerald-500/20 rounded-lg text-emerald-500"><Trophy className="h-5 w-5" /></div>
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider">Cotas Premiadas</p>
+                <p className="text-[10px] text-muted-foreground">Ganhou, achou! Entenda a lógica.</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {showHelp && (
+          <Card className="border-primary/20 bg-primary/5 animate-in fade-in slide-in-from-top-4">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <BookOpen className="h-5 w-5" /> Guia Completo da Plataforma
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid gap-6 md:grid-cols-2 text-sm">
+              <div className="space-y-2">
+                <h4 className="font-bold text-primary flex items-center gap-1"><Box className="h-4 w-4" /> Caixa Misteriosa</h4>
+                <p className="text-muted-foreground">
+                  Funciona como um prêmio surpresa. Ao habilitar, você pode configurar prêmios específicos que os usuários ganham aleatoriamente ou descontos progressivos. Isso aumenta a curiosidade e o engajamento na página da campanha.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-bold text-amber-500 flex items-center gap-1"><Crown className="h-4 w-4" /> Ranking de Compradores</h4>
+                <p className="text-muted-foreground">
+                  O ranking exibe publicamente quem são os maiores compradores daquela rifa. Isso cria um "gatilho de competição", onde os usuários compram mais cotas apenas para aparecer no topo e, opcionalmente, você pode dar um prêmio extra para o "Top 1" do ranking ao final.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-bold text-blue-500 flex items-center gap-1"><Landmark className="h-4 w-4" /> Sorteio Loteria Federal</h4>
+                <p className="text-muted-foreground">
+                  Ao ativar esta opção, o site informará aos usuários que o resultado será baseado no sorteio oficial da Caixa Econômica. A lógica comum é usar os últimos dígitos do 1º prêmio sorteado para definir o ganhador da sua rifa, garantindo total transparência.
+                </p>
+              </div>
+              <div className="space-y-2">
+                <h4 className="font-bold text-emerald-500 flex items-center gap-1"><Trophy className="h-4 w-4" /> Cotas Premiadas (Achou, Ganhou)</h4>
+                <p className="text-muted-foreground">
+                  São números específicos (ex: 777, 1234) que você define como ganhadores. No momento em que um usuário compra e o sistema gera esses números para ele, o site exibe um alerta de "Você Ganhou!" instantaneamente. Você pode ocultar esses números (Protegido) para que ninguém saiba quais são até que sejam encontrados.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         </div>
 
         <div className="grid gap-8 lg:grid-cols-3">
