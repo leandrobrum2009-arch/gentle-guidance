@@ -70,15 +70,17 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
       return;
     }
     
-    const cost = Number(campaign.roulette_spin_cost || 0) * multiplier;
+    const spinCost = Number(campaign.roulette_spin_cost || 0);
+    const isUsingFreeSpins = availableSpins >= multiplier;
+    const totalCost = isUsingFreeSpins ? 0 : spinCost * multiplier;
 
-    if (cost === 0 && availableSpins < multiplier) {
+    if (!isUsingFreeSpins && spinCost === 0 && availableSpins < multiplier) {
       toast.error(`Você não possui giros suficientes! Compre mais cotas para ganhar giros.`);
       return;
     }
 
-    if (cost > 0 && (userProfile?.balance || 0) < cost) {
-      toast.error(`Saldo insuficiente! O giro custa R$ ${cost.toFixed(2)}`);
+    if (totalCost > 0 && (userProfile?.balance || 0) < totalCost) {
+      toast.error(`Saldo insuficiente! O giro custa R$ ${totalCost.toFixed(2)}`);
       return;
     }
 
@@ -92,11 +94,11 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
       transition: { duration: 0.2 }
     });
 
-    // Deduct balance
-    if (cost > 0) {
+    // Deduct balance if not using free spins
+    if (totalCost > 0) {
       const { error: balanceError } = await supabase
         .from('profiles')
-        .update({ balance: Number(userProfile.balance) - cost })
+        .update({ balance: Number(userProfile.balance) - totalCost })
         .eq('user_id', user.id);
         
       if (balanceError) {
