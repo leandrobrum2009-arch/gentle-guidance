@@ -16,6 +16,8 @@ import { Input } from "@/components/ui/input";
  } from "@/components/ui/dropdown-menu";
  
  export default function AdminOrders() {
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
    const { data: orders, isLoading } = useAdminOrders();
    const { mutate: updateStatus, isPending: isUpdating } = useUpdateOrderStatus();
  
@@ -44,23 +46,82 @@ import { Input } from "@/components/ui/input";
      }
    };
  
+  const filteredOrders = useMemo(() => {
+    if (!orders) return [];
+    return orders.filter(o => {
+      const searchLower = search.toLowerCase();
+      const matchesSearch = 
+        o.id.toLowerCase().includes(searchLower) ||
+        (o.profiles?.display_name || "").toLowerCase().includes(searchLower) ||
+        (o.profiles?.email || "").toLowerCase().includes(searchLower);
+      const matchesStatus = statusFilter === "all" || o.payment_status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [orders, search, statusFilter]);
+
+  const stats = useMemo(() => {
+    if (!orders) return { total: 0, pending: 0, paid: 0 };
+    return {
+      total: orders.length,
+      pending: orders.filter(o => o.payment_status === "pending").length,
+      paid: orders.filter(o => o.payment_status === "paid").length,
+    };
+  }, [orders]);
+
    return (
      <AdminLayout>
-       <div className="mb-8 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-         <div>
-           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Gestão de Pedidos</h1>
-           <p className="text-slate-400 mt-1">Monitore e aprove pagamentos em tempo real.</p>
-         </div>
-         <div className="flex items-center gap-3">
-           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
-             <ShoppingBag className="h-6 w-6" />
-           </div>
-           <div>
-             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Pedidos</p>
-             <p className="text-xl font-bold text-white leading-none">{orders?.length || 0}</p>
-           </div>
-         </div>
-       </div>
+      <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Gestão de Pedidos</h1>
+          <p className="text-slate-400 mt-1">Monitore e aprove pagamentos em tempo real.</p>
+        </div>
+        <div className="flex items-center gap-3">
+          {[
+            { label: "Pendentes", value: stats.pending, color: "text-amber-400", bg: "bg-amber-500/10" },
+            { label: "Pagos", value: stats.paid, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+            { label: "Total", value: stats.total, color: "text-primary", bg: "bg-primary/10" },
+          ].map((s, i) => (
+            <div key={i} className="flex flex-col items-end">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{s.label}</p>
+              <div className="flex items-center gap-2">
+                <span className={`h-1.5 w-1.5 rounded-full ${s.color.replace('text', 'bg')} animate-pulse`} />
+                <p className="text-xl font-bold text-white leading-none">{s.value}</p>
+              </div>
+            </div>
+          ))}
+          <Button variant="outline" size="icon" className="h-10 w-10 border-white/10 bg-white/5 text-slate-400 hover:text-white">
+            <Download className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-4">
+        <div className="relative md:col-span-2">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Input 
+            placeholder="Buscar por ID, nome ou e-mail..." 
+            className="pl-10 border-white/5 bg-[#0d0d0f]/50 text-white focus:border-primary/50 h-12 rounded-xl"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        <div className="flex gap-2 md:col-span-2">
+          {["all", "pending", "paid", "cancelled"].map((s) => (
+            <Button
+              key={s}
+              variant="ghost"
+              className={`flex-1 h-12 rounded-xl text-[10px] uppercase font-bold tracking-widest border transition-all ${
+                statusFilter === s 
+                  ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" 
+                  : "border-white/5 bg-white/5 text-slate-500 hover:text-slate-300"
+              }`}
+              onClick={() => setStatusFilter(s)}
+            >
+              {s === "all" ? "Todos" : statusLabel[s] || s}
+            </Button>
+          ))}
+        </div>
+      </div>
  
        <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
          <CardContent className="p-0">
