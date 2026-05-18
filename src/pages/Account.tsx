@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
  import { 
-   User, LogOut, Trophy, History, Coins, Activity, 
-   Wallet, Bell, TrendingUp, CreditCard, Star, Gift, 
-   Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-   Package, ShoppingBag
+    User, LogOut, Trophy, History, Coins, Activity,
+    Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
+    Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
+    Package, ShoppingBag, Users, CheckCircle2, Lock
  } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -44,6 +44,7 @@ import { cn } from "@/lib/utils";
    const { data: achievements } = useUserAchievements(user?.id || "");
    const { data: ranking } = useRanking(10);
    const { data: notifications } = useUserNotifications(user?.id || "");
+    const { data: rewards } = useUserRewards(user?.id || "");
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
@@ -86,11 +87,23 @@ import { cn } from "@/lib/utils";
     amount: Number(t.amount)
   }));
 
+  const ALL_ACHIEVEMENTS = [
+    { key: 'first_deposit', title: 'Primeiro Passo', description: 'Realize seu primeiro depósito na plataforma', icon: Wallet, points: 100, category: 'Financeiro' },
+    { key: 'referral_1', title: 'Embaixador', description: 'Convide 1 amigo que realize um depósito', icon: Users, points: 500, category: 'Social' },
+    { key: 'spin_10', title: 'Mestre da Roleta', description: 'Realize 10 giros na roleta', icon: RotateCw, points: 200, category: 'Jogos' },
+    { key: 'box_5', title: 'Caçador de Tesouros', description: 'Abra 5 caixas misteriosas', icon: Package, points: 300, category: 'Jogos' },
+    { key: 'lucky_win', title: 'Pé Quente', description: 'Ganhe seu primeiro prêmio em uma rifa', icon: Trophy, points: 1000, category: 'Rifas' },
+    { key: 'vip_silver', title: 'Membro Prata', description: 'Alcance o nível 5 VIP', icon: Star, points: 2000, category: 'Nível' },
+  ];
+
+  const queryClient = useQueryClient();
+
   const handleMarkAllRead = async () => {
     if (!user) return;
     try {
       await markNotificationsAsRead(user.id);
       toast.success("Notificações marcadas como lidas");
+      queryClient.invalidateQueries({ queryKey: ["notifications", user.id] });
     } catch (error) {
       toast.error("Erro ao marcar notificações como lidas");
     }
@@ -346,34 +359,147 @@ import { cn } from "@/lib/utils";
                </TabsContent>
 
                 <TabsContent value="achievements" className="space-y-6">
+                   <div className="grid gap-4 md:grid-cols-3">
+                     <Card className="bg-primary/5 border-primary/20 p-4">
+                       <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Total de Pontos</p>
+                       <p className="text-2xl font-black italic">{profile?.points || 0} PTS</p>
+                     </Card>
+                     <Card className="bg-white/5 border-white/10 p-4">
+                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Conquistas Desbloqueadas</p>
+                       <p className="text-2xl font-black italic">{achievements?.length || 0} / {ALL_ACHIEVEMENTS.length}</p>
+                     </Card>
+                     <Card className="bg-white/5 border-white/10 p-4">
+                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Nível de Prestígio</p>
+                       <p className="text-2xl font-black italic">{profile?.vip_level || 1} VIP</p>
+                     </Card>
+                   </div>
+
                    <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                      <CardHeader className="p-0 mb-6">
+                      <CardHeader className="p-0 mb-8">
                          <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                              <Star className="h-4 w-4 text-amber-400" /> Galeria de Conquistas
                          </CardTitle>
-                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Seu legado na plataforma</CardDescription>
+                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Acompanhe seu progresso e ganhe recompensas exclusivas</CardDescription>
                       </CardHeader>
-                      <div className="grid gap-4 sm:grid-cols-2">
-                         {achievements?.length ? achievements.map((a: any) => (
-                             <div key={a.id} className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5">
-                                 <div className="h-12 w-12 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                                     <Trophy className="h-6 w-6 text-amber-500" />
-                                 </div>
-                                 <div>
-                                     <p className="text-sm font-black uppercase tracking-tight">{a.title}</p>
-                                     <p className="text-xs text-slate-500">{a.description}</p>
-                                 </div>
-                             </div>
-                         )) : (
-                             <div className="col-span-full text-center py-20 opacity-30">
-                                 <p className="text-sm font-black uppercase tracking-widest">Nenhuma conquista ainda</p>
-                             </div>
-                         )}
+                      
+                      <div className="space-y-8">
+                        {['Jogos', 'Financeiro', 'Social', 'Rifas', 'Nível'].map((cat) => {
+                          const catAchievements = ALL_ACHIEVEMENTS.filter(a => a.category === cat);
+                          if (catAchievements.length === 0) return null;
+                          
+                          return (
+                            <div key={cat} className="space-y-4">
+                              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 flex items-center gap-2">
+                                <div className="h-px w-8 bg-white/10" /> {cat}
+                              </h3>
+                              <div className="grid gap-4 sm:grid-cols-2">
+                                {catAchievements.map((achievement) => {
+                                  const isUnlocked = achievements?.some(a => a.achievement_key === achievement.key);
+                                  const unlockedData = achievements?.find(a => a.achievement_key === achievement.key);
+                                  const Icon = achievement.icon;
+                                  
+                                  return (
+                                    <div 
+                                      key={achievement.key} 
+                                      className={cn(
+                                        "relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 group",
+                                        isUnlocked 
+                                          ? "bg-primary/5 border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" 
+                                          : "bg-white/[0.02] border-white/5 opacity-60 grayscale"
+                                      )}
+                                    >
+                                      {isUnlocked && (
+                                        <div className="absolute top-0 right-0 p-2">
+                                          <CheckCircle2 className="h-4 w-4 text-primary" />
+                                        </div>
+                                      )}
+                                      <div className={cn(
+                                        "h-14 w-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110",
+                                        isUnlocked ? "bg-primary/10 text-primary" : "bg-white/5 text-slate-600"
+                                      )}>
+                                        <Icon className="h-7 w-7" />
+                                      </div>
+                                      <div className="flex-1">
+                                        <div className="flex items-center gap-2">
+                                          <p className="text-sm font-black uppercase tracking-tight">{achievement.title}</p>
+                                          {!isUnlocked && <Lock className="h-3 w-3 text-slate-600" />}
+                                        </div>
+                                        <p className="text-[10px] text-slate-500 font-medium leading-tight mb-2">{achievement.description}</p>
+                                        <div className="flex items-center justify-between">
+                                          <Badge variant="outline" className={cn(
+                                            "text-[8px] font-black px-2 py-0 h-4 uppercase",
+                                            isUnlocked ? "border-primary/50 text-primary" : "border-white/10 text-slate-600"
+                                          )}>
+                                            +{achievement.points} PTS
+                                          </Badge>
+                                          {isUnlocked && unlockedData && (
+                                            <span className="text-[8px] text-slate-600 font-bold uppercase">
+                                              {format(new Date(unlockedData.created_at), "dd/MM/yy")}
+                                            </span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                   </Card>
+
+                   {/* Rewards Section */}
+                   <Card className="bg-gradient-to-br from-purple-500/10 to-transparent border-white/5 p-6 backdrop-blur-xl">
+                      <CardHeader className="p-0 mb-6">
+                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                             <Gift className="h-4 w-4 text-primary" /> Loja de Recompensas
+                         </CardTitle>
+                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Troque seus pontos por vantagens reais</CardDescription>
+                      </CardHeader>
+                      
+                      <div className="grid gap-4 sm:grid-cols-3">
+                        {[
+                          { title: 'Bônus de R$ 10', cost: 1000, icon: Coins, color: 'text-emerald-400' },
+                          { title: 'Giro de Elite', cost: 500, icon: RotateCw, color: 'text-primary' },
+                          { title: 'Sorte em Dobro', cost: 2000, icon: Zap, color: 'text-amber-400' },
+                        ].map((reward, i) => (
+                          <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4 hover:border-primary/30 transition-all group">
+                            <div className="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                              <reward.icon className={cn("h-6 w-6", reward.color)} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-black uppercase tracking-tight">{reward.title}</p>
+                              <p className="text-[10px] text-primary font-black">{reward.cost} PONTOS</p>
+                            </div>
+                            <Button size="sm" className="w-full h-8 text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 text-white border-white/10" disabled={(profile?.points || 0) < reward.cost}>
+                              Resgatar
+                            </Button>
+                          </div>
+                        ))}
                       </div>
                    </Card>
                 </TabsContent>
 
                 <TabsContent value="games" className="space-y-6">
+                   <div className="grid gap-4 sm:grid-cols-3">
+                      <Card className="bg-white/5 border-white/10 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Giros Totais</p>
+                         <p className="text-2xl font-black italic">{spins?.length || 0}</p>
+                      </Card>
+                      <Card className="bg-white/5 border-white/10 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Caixas Abertas</p>
+                         <p className="text-2xl font-black italic">{boxWins?.length || 0}</p>
+                      </Card>
+                      <Card className="bg-primary/5 border-primary/20 p-4">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Total Ganho (Jogos)</p>
+                         <p className="text-2xl font-black italic">R$ {(
+                            (spins?.reduce((acc: number, s: any) => acc + (Number(s.prize_value) || 0), 0) || 0) +
+                            (boxWins?.reduce((acc: number, bw: any) => acc + (Number(bw.prize_value) || 0), 0) || 0)
+                         ).toFixed(2)}</p>
+                      </Card>
+                   </div>
+
                    <div className="grid lg:grid-cols-2 gap-6">
                       <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
                          <CardHeader className="p-0 mb-6">
@@ -487,8 +613,25 @@ import { cn } from "@/lib/utils";
                    </Card>
                 </TabsContent>
 
-                <TabsContent value="ranking" className="space-y-6">
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
+                 <TabsContent value="ranking" className="space-y-6">
+                   {/* User Current Rank Summary */}
+                   <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20 p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                         <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                            <Trophy className="h-6 w-6 text-primary" />
+                         </div>
+                         <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Sua Posição Atual</p>
+                            <p className="text-xl font-black italic text-white">#{(ranking?.findIndex((r: any) => r.name === profile?.name) ?? -1) + 1 || '--'} no Ranking Global</p>
+                         </div>
+                      </div>
+                      <div className="text-right">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total de Pontos</p>
+                         <p className="text-xl font-black italic text-primary">{profile?.points || 0} PTS</p>
+                      </div>
+                   </Card>
+
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
                      <div className="absolute top-0 right-0 p-8 opacity-5">
                         <Crown className="h-64 w-64" />
                      </div>
