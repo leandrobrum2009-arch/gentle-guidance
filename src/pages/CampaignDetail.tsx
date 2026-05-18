@@ -206,10 +206,12 @@ import { useAuth } from "@/contexts/AuthContext";
        {/* Sticky Mobile Purchase Bar */}
        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t border-border lg:hidden animate-in fade-in slide-in-from-bottom-4">
          <div className="flex items-center gap-4">
-           <div className="flex-1">
-             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor por cota</p>
-             <p className="text-lg font-black text-primary italic">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-           </div>
+           {campaign && (
+             <div className="flex-1">
+               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor por cota</p>
+               <p className="text-lg font-black text-primary italic">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
+             </div>
+           )}
            <Button 
              className="flex-[2] h-12 rounded-2xl font-black uppercase tracking-wide glow-primary"
              onClick={() => {
