@@ -113,6 +113,15 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
        prize_title: prize.title,
        prize_value: prize.prize_value
      });
+
+      // Add notification for mystery box win
+      await supabase.from("notifications").insert({
+        user_id: user.id,
+        title: "Item desbloqueado!",
+        message: `Parabéns! Você abriu uma caixa ${selectedBox.name} e ganhou: ${prize.title}.`,
+        type: "win"
+      });
+
      if (prize.prize_type === 'cash' && prize.prize_value) {
         await supabase.rpc('increment_balance', { amount: prize.prize_value, user_uuid: user.id });
         fetchUserProfile();
