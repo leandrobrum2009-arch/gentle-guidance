@@ -1,3 +1,5 @@
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -212,10 +214,21 @@ export default function AdminCampaignEdit() {
             <Button variant="outline" size="icon" onClick={() => navigate("/admin/campanhas")}>
               <ArrowLeft className="h-4 w-4" />
             </Button>
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">{id ? "Editar Campanha" : "Nova Campanha"}</h1>
-              <p className="text-muted-foreground">Configure todos os detalhes da sua campanha de rifa.</p>
+            <div className="space-y-1">
+              <h1 className="text-3xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
+                {id ? "Editar Campanha" : "Nova Campanha"}
+              </h1>
+              <p className="text-muted-foreground">Gestão completa e detalhada das configurações da sua rifa.</p>
             </div>
+        <Alert className="bg-primary/5 border-primary/20">
+          <AlertCircle className="h-4 w-4 text-primary" />
+          <AlertTitle className="text-sm font-bold uppercase tracking-wider text-primary">Dica do Administrador</AlertTitle>
+          <AlertDescription className="text-xs text-muted-foreground">
+            Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline" /> para entender como cada campo funciona e como preenchê-lo corretamente.
+            Campos em JSON devem seguir o formato de exemplo para evitar erros no site.
+          </AlertDescription>
+        </Alert>
+
           </div>
           <Button onClick={save} disabled={saving} size="lg">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
