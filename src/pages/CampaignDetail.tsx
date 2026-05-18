@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import {
     Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
-     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw
+     Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity
  } from "lucide-react";
  import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

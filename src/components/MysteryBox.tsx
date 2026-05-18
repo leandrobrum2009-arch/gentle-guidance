@@ -20,7 +20,8 @@
  import { ptBR } from "date-fns/locale";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
  import { cn } from "@/lib/utils";
- import { Badge } from "@/components/ui/badge";
+import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { playSound, hapticFeedback } from "@/lib/sounds";
  
 interface MysteryBoxProps {
