@@ -266,6 +266,53 @@ import { cn } from "@/lib/utils";
                           </div>
                         </div>
                       )}
+
+                      {commissions && commissions.length > 0 && (
+                        <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+                          <div className="flex items-center justify-between">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                              <TrendingUp className="h-3 w-3" /> Histórico de Comissões
+                            </h4>
+                            <div className="flex items-center gap-2">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={commissionsPage === 1}
+                                  onClick={() => setCommissionsPage(p => p - 1)}
+                                >
+                                  <ChevronLeft className="h-3 w-3" />
+                                </Button>
+                                <span className="text-[10px] font-bold text-slate-500">{commissionsPage}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={!commissions || commissions.length <= commissionsPage * ITEMS_PER_PAGE}
+                                  onClick={() => setCommissionsPage(p => p + 1)}
+                                >
+                                  <ChevronRight className="h-3 w-3" />
+                                </Button>
+                             </div>
+                          </div>
+                          <div className="space-y-2">
+                            {commissions.slice((commissionsPage - 1) * ITEMS_PER_PAGE, commissionsPage * ITEMS_PER_PAGE).map((comm, i) => (
+                              <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                <div className="flex items-center gap-3">
+                                  <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                                    <ArrowUpRight className="h-4 w-4 text-emerald-400" />
+                                  </div>
+                                  <div className="min-w-0">
+                                    <p className="text-[10px] font-bold text-white truncate">{comm.orders?.campaigns?.title || 'Venda Direta'}</p>
+                                    <p className="text-[8px] text-slate-500 uppercase font-black">{format(new Date(comm.created_at), "dd/MM HH:mm")}</p>
+                                  </div>
+                                </div>
+                                <p className="text-sm font-black italic text-emerald-400">+ R$ {Number(comm.amount).toFixed(2)}</p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                 </Card>
               ))}
             </div>
