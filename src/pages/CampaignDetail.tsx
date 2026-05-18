@@ -35,6 +35,28 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: allWinners } = useWinners();
    const { data: tickets } = useTickets(id || "");
  
+   const handleShareCampaign = async () => {
+     if (!campaign) return;
+     const url = window.location.href;
+     
+     if (navigator.share) {
+       try {
+         await navigator.share({
+           title: campaign.title,
+           text: campaign.subtitle || 'Confira este sorteio incrível!',
+           url: url,
+         });
+       } catch (err) {
+         if ((err as Error).name !== 'AbortError') {
+           console.error('Error sharing:', err);
+         }
+       }
+     } else {
+       navigator.clipboard.writeText(url);
+       toast.success("Link da campanha copiado!");
+     }
+   };
+
    const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
    const [isPurchasing, setIsPurchasing] = useState(false);
    const [showSuccess, setShowSuccess] = useState(false);
@@ -291,7 +313,11 @@ import { useAuth } from "@/contexts/AuthContext";
               )}
 
               <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">
+                <Button 
+                  variant="outline" 
+                  className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5"
+                  onClick={handleShareCampaign}
+                >
                   <Share2 className="h-4 w-4 text-primary" /> Compartilhar
                 </Button>
                 <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">

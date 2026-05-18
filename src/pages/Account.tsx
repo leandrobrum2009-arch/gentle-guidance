@@ -115,6 +115,27 @@ import { cn } from "@/lib/utils";
     }
   };
 
+  const handleShareReferral = async () => {
+    if (!affiliate?.referral_code) return;
+    const link = `${window.location.origin}/?ref=${affiliate.referral_code}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'RifasPro - Indique e Ganhe!',
+          text: 'Participe dos melhores sorteios com prêmios incríveis!',
+          url: link,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.error('Error sharing:', err);
+        }
+      }
+    } else {
+      copyReferral();
+    }
+  };
+
   const handleMarkAllRead = async () => {
     if (!user) return;
     try {
@@ -303,6 +324,14 @@ import { cn } from "@/lib/utils";
                               className="bg-primary hover:bg-primary/90 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl glow-primary"
                             >
                               <Copy className="h-3 w-3" /> Copiar
+                            </Button>
+                            <Button 
+                              onClick={handleShareReferral}
+                              size="sm" 
+                              variant="outline"
+                              className="border-white/10 hover:bg-white/5 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl"
+                            >
+                              <Share2 className="h-3 w-3" /> Compartilhar
                             </Button>
                           </div>
                         </div>
