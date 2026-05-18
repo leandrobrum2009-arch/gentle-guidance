@@ -12,39 +12,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
  import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload } from "lucide-react";
-   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
-     const file = e.target.files?.[0];
-     if (!file) return;
- 
-     try {
-       const fileExt = file.name.split('.').pop();
-       const fileName = `${Math.random()}.${fileExt}`;
-       const filePath = `${fileName}`;
- 
-       const { error: uploadError, data } = await supabase.storage
-         .from('campaigns')
-         .upload(filePath, file);
- 
-       if (uploadError) throw uploadError;
- 
-       const { data: { publicUrl } } = supabase.storage
-         .from('campaigns')
-         .getPublicUrl(filePath);
- 
-       if (field === 'image_url') {
-         set('image_url', publicUrl);
-       } else if (field === 'gallery_urls' && index !== undefined) {
-         const newList = [...form.gallery_urls];
-         newList[index] = publicUrl;
-         set('gallery_urls', newList);
-       }
- 
-       toast({ title: "Upload concluído!", description: "A imagem foi carregada com sucesso." });
-     } catch (error: any) {
-       toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
-     }
-   };
- 
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -131,6 +98,39 @@ export default function AdminCampaignEdit() {
   const [saving, setSaving] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, field: string, index?: number) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      if (field === 'image_url') {
+        set('image_url', publicUrl);
+      } else if (field === 'gallery_urls' && index !== undefined) {
+        const newList = [...form.gallery_urls];
+        newList[index] = publicUrl;
+        set('gallery_urls', newList);
+      }
+
+      toast({ title: "Upload concluído!", description: "A imagem foi carregada com sucesso." });
+    } catch (error: any) {
+      toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
+    }
+  };
 
   const generateWithAI = async () => {
     const prompt = window.prompt("O que você quer sortear? (Ex: Um iPhone 15 Pro Max de 256GB azul)");
