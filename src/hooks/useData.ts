@@ -42,6 +42,11 @@ export interface Campaign {
   draw_number?: string;
   payment_methods?: string[];
   sales_goal?: number;
+  ticket_generation_type?: 'manual' | 'auto';
+  roulette_payout_rate?: number;
+  show_instant_prizes?: boolean;
+  show_roulette_status?: boolean;
+  main_prizes?: { position: number, prize: string }[];
   created_at: string;
 }
 
