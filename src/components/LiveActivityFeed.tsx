@@ -59,51 +59,53 @@
          </Badge>
        </div>
  
-       <div className="grid gap-3">
-         <AnimatePresence mode="popLayout">
-           {activities.map((activity) => (
-             <motion.div
-               key={activity.id}
-               layout
-               initial={{ opacity: 0, x: -20, scale: 0.95 }}
-               animate={{ opacity: 1, x: 0, scale: 1 }}
-               exit={{ opacity: 0, scale: 0.95 }}
-               transition={{ duration: 0.3 }}
-                className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/30 transition-all"
-             >
-               <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-               
-               <Avatar className="h-10 w-10 border-2 border-primary/20">
-                 <AvatarImage src={activity.profiles?.avatar_url || ""} />
-                 <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                   {activity.profiles?.name?.[0] || "?"}
-                 </AvatarFallback>
-               </Avatar>
- 
-               <div className="flex-1 min-w-0">
-                 <div className="flex items-center justify-between">
-                   <p className="text-[11px] font-black uppercase tracking-tight truncate text-foreground">
-                     {activity.profiles?.name || "Usuário"}
-                   </p>
-                   <span className="text-[8px] font-bold text-muted-foreground uppercase flex items-center gap-1">
-                     <Clock className="h-2 w-2" /> {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true, locale: ptBR })}
-                   </span>
-                 </div>
-                 <p className="text-[10px] text-muted-foreground truncate italic">
-                   {activity.type === 'roulette' ? 'Ganhou ' : 'Abriu a caixa e ganhou '}
-                   <span className={activity.type === 'roulette' ? "text-primary font-bold not-italic" : "text-amber-500 font-bold not-italic"}>
-                     {activity.type === 'roulette' ? (activity as RouletteSpin).prize_label : (activity as MysteryBoxWin).prize_title}
-                   </span>
-                 </p>
-               </div>
- 
-               <div className={`flex items-center justify-center h-8 w-8 rounded-full ${activity.type === 'roulette' ? 'bg-primary/10 text-primary' : 'bg-amber-500/10 text-amber-500'}`}>
-                 {activity.type === 'roulette' ? <Gamepad2 className="h-4 w-4" /> : <Gift className="h-4 w-4" />}
-               </div>
-             </motion.div>
-           ))}
-         </AnimatePresence>
-       </div>
+      <div className="flex flex-col md:grid gap-3 overflow-x-auto md:overflow-visible no-scrollbar -mx-2 px-2 md:mx-0 md:px-0 scroll-smooth">
+        <div className="flex md:flex-col gap-3 min-w-max md:min-w-0">
+          <AnimatePresence mode="popLayout">
+            {activities.map((activity) => (
+              <motion.div
+                key={activity.id}
+                layout
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3 }}
+                 className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/30 transition-all w-[240px] md:w-full"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                
+                <Avatar className="h-8 w-8 md:h-10 md:w-10 border-2 border-primary/20 shrink-0">
+                  <AvatarImage src={activity.profiles?.avatar_url || ""} />
+                  <AvatarFallback className="bg-primary/10 text-primary font-bold text-[10px] md:text-sm">
+                    {activity.profiles?.name?.[0] || "?"}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-[10px] md:text-[11px] font-black uppercase tracking-tight truncate text-foreground">
+                      {activity.profiles?.name || "Usuário"}
+                    </p>
+                    <span className="text-[7px] md:text-[8px] font-bold text-muted-foreground uppercase flex items-center gap-1 shrink-0">
+                      <Clock className="h-2 w-2" /> {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true, locale: ptBR })}
+                    </span>
+                  </div>
+                  <p className="text-[9px] md:text-[10px] text-muted-foreground truncate italic">
+                    {activity.type === 'roulette' ? 'Ganhou ' : 'Abriu a caixa e ganhou '}
+                    <span className={activity.type === 'roulette' ? "text-primary font-bold not-italic" : "text-amber-500 font-bold not-italic"}>
+                      {activity.type === 'roulette' ? (activity as RouletteSpin).prize_label : (activity as MysteryBoxWin).prize_title}
+                    </span>
+                  </p>
+                </div>
+
+                <div className={`flex items-center justify-center h-7 w-7 md:h-8 md:w-8 rounded-full shrink-0 ${activity.type === 'roulette' ? 'bg-primary/10 text-primary' : 'bg-amber-500/10 text-amber-500'}`}>
+                  {activity.type === 'roulette' ? <Gamepad2 className="h-3 w-3 md:h-4 md:w-4" /> : <Gift className="h-3 w-3 md:h-4 md:w-4" />}
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
      </div>
    );
  };

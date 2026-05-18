@@ -85,14 +85,14 @@ const Header = () => {
   };
 
   return (
-     <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-background/80 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
+      <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-white/90 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
        <div className="container flex items-center justify-between">
          <div className="flex items-center gap-8">
            <Link to="/" className="flex items-center gap-2">
              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
                <Ticket className="h-5 w-5 text-primary-foreground" />
              </div>
-             <span className="font-display text-lg font-black uppercase tracking-tighter">
+              <span className={`font-display text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'}`}>
                Rifas<span className="text-primary">Pro</span>
              </span>
            </Link>
@@ -102,7 +102,7 @@ const Header = () => {
                <Link
                  key={link.href}
                  to={link.href}
-                 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:text-primary"
+                  className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-slate-500' : 'text-slate-600'}`}
                >
                  {link.label}
                </Link>
@@ -128,8 +128,8 @@ const Header = () => {
               </motion.div>
               
                <button
-                 onClick={() => navigate("/conta#notifications")}
-                 className="relative rounded-full bg-slate-50 p-2.5 text-muted-foreground hover:bg-slate-100 hover:text-foreground transition-all border border-slate-100"
+                  onClick={() => navigate("/conta")}
+                  className="relative rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-slate-100 hover:text-primary transition-all border border-slate-100 shadow-sm"
                >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
@@ -140,14 +140,14 @@ const Header = () => {
               <div className="flex items-center gap-2">
                 {isAdmin && (
                   <Link to="/admin">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic hidden md:flex">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic hidden lg:flex">
                       <Zap className="h-4 w-4 text-primary" />
                       Admin
                     </Button>
                   </Link>
                 )}
                  <Link to="/conta">
-                   <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-slate-200 bg-white hover:bg-slate-50 font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground">
+                   <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-slate-100 bg-white hover:bg-slate-50 font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
                      <User className="h-4 w-4 text-primary" />
                      <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
                    </Button>
@@ -162,7 +162,7 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to="/cadastrar">
-                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary">
+                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20">
                   Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                 </Button>
               </Link>
@@ -171,7 +171,7 @@ const Header = () => {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 text-muted-foreground lg:hidden border border-slate-100"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 text-slate-500 lg:hidden border border-slate-100 shadow-sm"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -184,7 +184,7 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border/50 md:hidden"
+            className="overflow-hidden border-t border-slate-100 bg-white shadow-xl md:hidden"
           >
             <nav className="container flex flex-col gap-1 py-4">
               {navLinks.map((link) => (
@@ -206,7 +206,7 @@ const Header = () => {
                   Meus Bilhetes
                 </Link>
               )}
-              <div className="mt-2 flex gap-2 border-t border-border/50 pt-3">
+              <div className="mt-2 flex gap-2 border-t border-slate-100 pt-3">
                 {user ? (
                   <Button size="sm" variant="ghost" className="flex-1" onClick={handleSignOut}>
                     <LogOut className="mr-1.5 h-4 w-4" /> Sair

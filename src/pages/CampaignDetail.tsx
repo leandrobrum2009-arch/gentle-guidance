@@ -363,7 +363,7 @@ import { useAuth } from "@/contexts/AuthContext";
                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
                      <Gamepad2 className="h-4 w-4 text-primary" /> Jogos Instantâneos
                    </h3>
-                   <div className="space-y-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                        <Dialog>
                          <DialogTrigger asChild>
