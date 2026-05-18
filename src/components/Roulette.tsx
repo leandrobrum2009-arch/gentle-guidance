@@ -1,9 +1,10 @@
 import confetti from 'canvas-confetti';
 import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
-import { RotateCw, Star, Trophy, Users, Zap, ShoppingCart, Sparkles, Coins, Gift, Info } from "lucide-react";
+ import { RotateCw, Star, Trophy, Users, Zap, ShoppingCart, Sparkles, Coins, Gift, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { RoulettePrize, Campaign } from "@/hooks/useData";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -94,24 +95,25 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
       transition: { duration: 0.2 }
     });
 
-    // Deduct balance if not using free spins
-    if (totalCost > 0) {
-      const { error: balanceError } = await supabase
-        .from('profiles')
-        .update({ balance: Number(userProfile.balance) - totalCost })
-        .eq('user_id', user.id);
-        
-      if (balanceError) {
-        setIsSpinning(false);
-        toast.error("Erro ao processar pagamento.");
-        return;
-      }
-      fetchUserProfile();
+    // Call secure server-side RPC to process the spin
+    const { data: result, error: spinError } = await supabase.rpc('process_roulette_spin', {
+      p_campaign_id: campaign.id,
+      p_multiplier: multiplier
+    });
+
+    if (spinError) {
+      setIsSpinning(false);
+      toast.error(spinError.message || "Erro ao processar o giro.");
+      return;
     }
+
+    const { prize: wonPrizeData, final_value, is_free, new_balance } = result as any;
+    const prize = wonPrizeData as RoulettePrize;
     
-    const { prize, index: randomIndex } = getWeightedPrize();
+    // Find the index of the won prize to animate correctly
+    const randomIndex = prizes.findIndex(p => p.id === prize.id);
     
-    const segmentAngle = 360 / prizes.length;
+    const segmentAngle = 360 / (prizes.length || 1);
     const extraSpins = 8; // More spins for dramatic effect
     const baseRotation = extraSpins * 360;
     // Calculate target angle to land in the middle of the segment
@@ -130,33 +132,18 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
     setWonPrize(prize);
     setShowWinAnimation(true);
 
-    // Save spin result to database
-    const finalValue = (Number(prize.value) || 0) * multiplier;
-    const { error } = await supabase.from("roulette_spins").insert({
+    // Update local state with new data from server
+    queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
+    queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
+    setUserProfile(prev => ({ ...prev, balance: new_balance }));
+
+    // Add notification (this could also be moved to a DB trigger for better security, but leaving here for now as it's less critical)
+    await supabase.from("notifications").insert({
       user_id: user.id,
-      campaign_id: campaign.id,
-      prize_label: prize.label,
-      prize_type: prize.prize_type,
-      prize_value: finalValue
+      title: "Você ganhou na roleta!",
+      message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
+      type: "win"
     });
-    
-    if (!error) {
-      queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
-
-      // Add notification for roulette win
-      await supabase.from("notifications").insert({
-        user_id: user.id,
-        title: "Você ganhou na roleta!",
-        message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
-        type: "win"
-      });
-
-      // If balance prize, update profile
-      if (prize.prize_type === 'balance') {
-        await supabase.rpc('increment_balance', { amount: finalValue, user_uuid: user.id });
-        fetchUserProfile();
-      }
-    }
 
     setIsSpinning(false);
     
@@ -187,10 +174,66 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
       </div>
 
       <div className="flex flex-col items-center gap-4 z-10">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full justify-center">
           <Badge className="bg-destructive/90 hover:bg-destructive text-white animate-pulse flex items-center gap-2 text-xs font-black px-3 py-1 border-none shadow-[0_0_15px_rgba(239,68,68,0.5)] uppercase italic">
             <span className="h-1.5 w-1.5 rounded-full bg-white animate-ping" /> AO VIVO
           </Badge>
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="flex items-center gap-2 text-xs font-bold text-white/60 hover:text-white uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md transition-colors">
+                <FileText className="h-3.5 w-3.5 text-primary" /> 
+                Regras
+              </button>
+            </DialogTrigger>
+            <DialogContent className="bg-zinc-950 border-white/10 text-white max-w-md">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-black italic uppercase italic tracking-tighter flex items-center gap-2">
+                  <Info className="h-5 w-5 text-primary" />
+                  Regras da Roleta
+                </DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6 py-4">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Giros Grátis</h4>
+                  <p className="text-sm text-white/70 leading-relaxed">
+                    Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente a cada <span className="text-white font-bold">{campaign.roulette_free_tickets} cotas pagas</span> nesta campanha.
+                    Os giros grátis são consumidos prioritariamente antes do seu saldo.
+                  </p>
+                </div>
+                
+                <div className="space-y-3">
+                  <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Multiplicadores</h4>
+                  <p className="text-sm text-white/70 leading-relaxed">
+                    Ao selecionar um multiplicador (ex: 2x, 5x, 10x), você aumenta o <span className="text-white font-bold">valor do prêmio</span> proporcionalmente, mas o custo do giro também aumenta na mesma proporção.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Tipos de Prêmios</h4>
+                  <ul className="text-sm text-white/70 space-y-2">
+                    <li className="flex items-center gap-2">
+                      <Coins className="h-4 w-4 text-yellow-400" />
+                      <span className="font-bold text-white">Saldo:</span> Adicionado instantaneamente à sua carteira.
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Star className="h-4 w-4 text-primary" />
+                      <span className="font-bold text-white">Cotas:</span> Números da sorte para a campanha atual.
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-purple-400" />
+                      <span className="font-bold text-white">Prêmios Físicos:</span> Nossa equipe entrará em contato para entrega.
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                  <p className="text-[10px] text-white/40 uppercase font-bold text-center tracking-widest">
+                    Boa sorte! O sistema garante aleatoriedade total baseada nas chances de cada item.
+                  </p>
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
           <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
             <Users className="h-3.5 w-3.5 text-primary" /> 
             <span className="text-white">{(Math.random() * 200 + 50).toFixed(0)}</span> online

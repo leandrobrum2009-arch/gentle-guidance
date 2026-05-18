@@ -758,6 +758,7 @@ export type Database = {
           campaign_id: string
           created_at: string
           id: string
+          is_free: boolean | null
           prize_label: string
           prize_type: string
           prize_value: number | null
@@ -767,6 +768,7 @@ export type Database = {
           campaign_id: string
           created_at?: string
           id?: string
+          is_free?: boolean | null
           prize_label: string
           prize_type: string
           prize_value?: number | null
@@ -776,6 +778,7 @@ export type Database = {
           campaign_id?: string
           created_at?: string
           id?: string
+          is_free?: boolean | null
           prize_label?: string
           prize_type?: string
           prize_value?: number | null
@@ -1056,6 +1059,10 @@ export type Database = {
         Returns: undefined
       }
       perform_draw: { Args: { p_campaign_id: string }; Returns: string }
+      process_roulette_spin: {
+        Args: { p_campaign_id: string; p_multiplier: number }
+        Returns: Json
+      }
       reserve_tickets: {
         Args: {
           p_campaign_id: string
