@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
     User, LogOut, Trophy, History, Coins, Activity,
     Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
     Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft
+    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
  } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -104,6 +104,16 @@ import { cn } from "@/lib/utils";
   ];
 
   const queryClient = useQueryClient();
+
+  const copyReferral = () => {
+    if (affiliate?.referral_code) {
+      const link = `${window.location.origin}/?ref=${affiliate.referral_code}`;
+      navigator.clipboard.writeText(link);
+      toast.success("Link de indicação copiado!");
+    } else {
+      toast.error("Você ainda não possui um código de indicação.");
+    }
+  };
 
   const handleMarkAllRead = async () => {
     if (!user) return;
