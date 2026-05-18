@@ -169,8 +169,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
                           <span className="text-[10px] font-bold text-slate-400 sm:text-right uppercase tracking-wider">{format(new Date(win.created_at), "HH:mm")}</span>
                         </div>
                       </div>
-                     </div>
-                   ))}
+                    ))}
                  </div>
                </div>
              ) : (
@@ -202,8 +201,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
                           <span className="text-[10px] font-bold text-slate-400 sm:text-right uppercase tracking-wider">{format(new Date(spin.created_at), "HH:mm")}</span>
                         </div>
                       </div>
-                     </div>
-                   ))}
+                    ))}
                  </div>
                </div>
              ) : (
