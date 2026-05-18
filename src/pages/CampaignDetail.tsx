@@ -65,9 +65,17 @@ import { useAuth } from "@/contexts/AuthContext";
      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
    }, [tickets]);
  
-   const luckyNumbers = useMemo(() => {
-     return campaign?.lucky_numbers_prizes || [];
-   }, [campaign]);
+    const allLuckyNumbers = useMemo(() => {
+      return campaign?.lucky_numbers_prizes || [];
+    }, [campaign]);
+
+    const luckyNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => !p.protected);
+    }, [allLuckyNumbers]);
+
+    const protectedNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
+    }, [allLuckyNumbers]);
  
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
@@ -273,7 +281,7 @@ import { useAuth } from "@/contexts/AuthContext";
  
                         <TicketGrid 
                           totalTickets={campaign.total_tickets}
-                          soldTickets={soldTickets}
+                          soldTickets={[...soldTickets, ...protectedNumbers]}
                           selectedTickets={selectedTickets}
                           onSelect={handleToggleTicket}
                           luckyNumbers={luckyNumbersList}
@@ -331,6 +339,31 @@ import { useAuth } from "@/contexts/AuthContext";
 
       <div className="container pb-20">
         <div className="grid gap-8 lg:grid-cols-3">
+          {campaign.main_prizes && campaign.main_prizes.length > 0 && (
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-6">
+                <h2 className="flex items-center gap-2 text-lg font-bold">
+                  <Trophy className="h-5 w-5 text-primary" /> Premiação Principal
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-5">
+                  {campaign.main_prizes.map((p: any, i: number) => (
+                    <div key={i} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-secondary/30 border border-border/50 text-center">
+                      <div className={cn(
+                        "h-12 w-12 rounded-full flex items-center justify-center font-bold text-xl",
+                        i === 0 ? "bg-amber-500 text-white" : i === 1 ? "bg-slate-300 text-slate-800" : i === 2 ? "bg-amber-700 text-white" : "bg-primary/20 text-primary"
+                      )}>
+                        {i + 1}º
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter">{i === 0 ? "Ganhador" : `${i + 1}º Lugar`}</p>
+                        <p className="text-sm font-black">{p.prize}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
           <div className="lg:col-span-2 space-y-8">
             {/* Description & Info */}
             <div className="space-y-6">
