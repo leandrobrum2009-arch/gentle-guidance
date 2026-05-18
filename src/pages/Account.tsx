@@ -18,7 +18,8 @@ import { useAuth } from "@/contexts/AuthContext";
     useUserSpins,
     useUserMysteryBoxWins,
     markNotificationsAsRead,
-    useUserReferrals
+    useUserReferrals,
+    useAffiliateCommissions
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -52,11 +53,13 @@ import { cn } from "@/lib/utils";
    const [boxesPage, setBoxesPage] = useState(1);
    const [ordersPage, setOrdersPage] = useState(1);
    const [txsPage, setTxsPage] = useState(1);
+   const [commissionsPage, setCommissionsPage] = useState(1);
    const ITEMS_PER_PAGE = 5;
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
    const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
+   const { data: commissions } = useAffiliateCommissions(affiliate?.id || "");
 
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
