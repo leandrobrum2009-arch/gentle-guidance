@@ -327,17 +327,21 @@ export default function AdminCampaignEdit() {
              </div>
            </div>
  
-           <Alert className="bg-primary/5 border-primary/20">
-             <AlertCircle className="h-4 w-4 text-primary" />
-             <AlertTitle className="text-sm font-bold uppercase tracking-wider text-primary">Dica do Administrador</AlertTitle>
-             <AlertDescription className="text-xs text-muted-foreground">
-               Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline" /> para entender como cada campo funciona e como preenchê-lo corretamente.
-               Todos os campos foram simplificados para facilitar o seu cadastro.
-             </AlertDescription>
-           </Alert>
+           <div className="bg-gradient-to-r from-primary/10 to-purple-500/10 border border-primary/20 rounded-2xl p-4 flex items-start gap-4 shadow-sm">
+             <div className="bg-primary/20 p-2 rounded-xl">
+               <Sparkles className="h-5 w-5 text-primary" />
+             </div>
+             <div>
+               <h3 className="text-sm font-bold text-primary uppercase tracking-tight">Dica de Especialista</h3>
+               <p className="text-xs text-muted-foreground leading-relaxed mt-1">
+                 Passe o mouse nos ícones de interrogação <HelpCircle className="h-3 w-3 inline text-primary/60" /> para ajuda instantânea em cada campo. 
+                 Use o botão <strong>Gerar com IA</strong> para criar uma campanha completa em segundos!
+               </p>
+             </div>
+           </div>
          </div>
-        {/* Seção de Ajuda e Tutoriais */}
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+         {/* Seção de Guias Rápidos */}
+         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           <Card className="border-primary/10 bg-primary/5 hover:bg-primary/10 transition-colors cursor-help" onClick={() => setShowHelp(!showHelp)}>
             <CardContent className="p-4 flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-lg text-primary"><Box className="h-5 w-5" /></div>
