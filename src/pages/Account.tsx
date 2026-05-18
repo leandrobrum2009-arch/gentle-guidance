@@ -399,6 +399,56 @@ import { cn } from "@/lib/utils";
                    </div>
                 </TabsContent>
 
+                <TabsContent value="notifications" className="space-y-6">
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
+                         <div>
+                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                 <Bell className="h-4 w-4 text-primary" /> Central de Notificações
+                             </CardTitle>
+                             <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Fique por dentro de tudo</CardDescription>
+                         </div>
+                         {notifications && notifications.some(n => !n.is_read) && (
+                             <Button variant="ghost" size="sm" onClick={handleMarkAllRead} className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80">
+                                 Marcar todas como lidas
+                             </Button>
+                         )}
+                      </CardHeader>
+                      <div className="space-y-3">
+                         {notifications?.length ? notifications.map((n: any) => (
+                             <div key={n.id} className={cn(
+                                 "flex items-center justify-between p-4 rounded-2xl border transition-all",
+                                 n.is_read ? "bg-white/[0.02] border-white/5" : "bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                             )}>
+                                 <div className="flex items-center gap-4">
+                                     <div className={cn(
+                                         "h-10 w-10 rounded-xl flex items-center justify-center",
+                                         n.type === 'win' ? "bg-emerald-500/10 text-emerald-500" : 
+                                         n.type === 'bonus' ? "bg-amber-500/10 text-amber-500" :
+                                         "bg-primary/10 text-primary"
+                                     )}>
+                                         {n.type === 'win' ? <Trophy className="h-5 w-5" /> : 
+                                          n.type === 'bonus' ? <Gift className="h-5 w-5" /> : 
+                                          <Bell className="h-5 w-5" />}
+                                     </div>
+                                     <div>
+                                         <p className="text-xs font-black uppercase tracking-tight">{n.title}</p>
+                                         <p className="text-[10px] text-slate-400 font-medium">{n.message}</p>
+                                         <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest mt-1">{format(new Date(n.created_at), "dd/MM HH:mm")}</p>
+                                     </div>
+                                 </div>
+                                 {!n.is_read && <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />}
+                             </div>
+                         )) : (
+                             <div className="text-center py-20 opacity-30">
+                                 <Bell className="h-12 w-12 mx-auto mb-4 text-slate-500" />
+                                 <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma notificação</p>
+                             </div>
+                         )}
+                      </div>
+                   </Card>
+                </TabsContent>
+
                 <TabsContent value="ranking" className="space-y-6">
                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
                      <div className="absolute top-0 right-0 p-8 opacity-5">
