@@ -127,10 +127,10 @@ const Header = () => {
                 <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
               </motion.div>
               
-              <button 
-                onClick={() => navigate("/conta#notifications")}
-                className="relative rounded-full bg-white/5 p-2.5 text-muted-foreground hover:bg-white/10 hover:text-foreground transition-all border border-white/5"
-              >
+               <button
+                 onClick={() => navigate("/conta#notifications")}
+                 className="relative rounded-full bg-slate-50 p-2.5 text-muted-foreground hover:bg-slate-100 hover:text-foreground transition-all border border-slate-100"
+               >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
@@ -146,12 +146,12 @@ const Header = () => {
                     </Button>
                   </Link>
                 )}
-                <Link to="/conta">
-                  <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-white/10 bg-white/5 hover:bg-white/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
-                    <User className="h-4 w-4 text-primary" />
-                    <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
-                  </Button>
-                </Link>
+                 <Link to="/conta">
+                   <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-slate-200 bg-white hover:bg-slate-50 font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground">
+                     <User className="h-4 w-4 text-primary" />
+                     <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
+                   </Button>
+                 </Link>
               </div>
             </div>
           ) : (
@@ -171,7 +171,7 @@ const Header = () => {
 
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-muted-foreground lg:hidden border border-white/5"
+            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 text-muted-foreground lg:hidden border border-slate-100"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

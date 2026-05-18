@@ -16,7 +16,7 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative border-t border-white/5 bg-background pt-20 pb-10 overflow-hidden">
+    <footer className="relative border-t border-slate-100 bg-background pt-20 pb-10 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 h-64 w-[80%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
@@ -49,7 +49,7 @@ const Footer = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Navegação</h3>
             <div className="grid grid-cols-2 gap-4">
               {footerLinks.slice(0, 6).map((link) => (
-                <a key={link.href} href={link.href} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">{link.label}</a>
+                <a key={link.href} href={link.href} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
               ))}
             </div>
           </div>
@@ -95,9 +95,9 @@ const Footer = () => {
             © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">Privacidade</a>
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">Termos</a>
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-white transition-colors">Cookies</a>
+            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Privacidade</a>
+            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Termos</a>
+            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Cookies</a>
           </div>
         </div>
       </div>
