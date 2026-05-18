@@ -85,48 +85,38 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b border-white/5 bg-background/60 backdrop-blur-2xl py-3' : 'bg-transparent py-5'}`}>
-      <div className="container flex items-center justify-between gap-2 md:gap-4">
-        <Link to="/" className="group flex items-center gap-3">
-          <motion.div 
-            whileHover={{ scale: 1.1, rotate: 5 }}
-            className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] transition-all group-hover:shadow-primary/50"
-          >
-            <Ticket className="h-5 w-5 text-primary-foreground" />
-          </motion.div>
-          <span className="font-display text-xl font-black uppercase tracking-tighter italic">
-            Rifas<span className="text-primary neon-text-primary">Pro</span>
-          </span>
-        </Link>
+     <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-background/80 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
+       <div className="container flex items-center justify-between">
+         <div className="flex items-center gap-8">
+           <Link to="/" className="flex items-center gap-2">
+             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+               <Ticket className="h-5 w-5 text-primary-foreground" />
+             </div>
+             <span className="font-display text-lg font-black uppercase tracking-tighter">
+               Rifas<span className="text-primary">Pro</span>
+             </span>
+           </Link>
+ 
+           <nav className="hidden items-center gap-6 lg:flex">
+             {navLinks.map((link) => (
+               <Link
+                 key={link.href}
+                 to={link.href}
+                 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground transition-all hover:text-primary"
+               >
+                 {link.label}
+               </Link>
+             ))}
+           </nav>
+         </div>
 
-        <nav className="hidden items-center gap-1 lg:flex">
-          {/* Live Indicator */}
-          <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-full bg-destructive/10 border border-destructive/20 ml-2">
-            <Activity className="h-3 w-3 text-destructive animate-pulse" />
-            <span className="text-[10px] font-black text-destructive uppercase tracking-tighter">Live: 2,451 online</span>
-          </div>
-
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="relative px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground transition-all hover:text-primary"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        <div className="flex flex-1 items-center justify-end gap-2 md:gap-3">
-          <div className="hidden xl:flex relative items-center">
-            <Search className="absolute left-3 h-4 w-4 text-muted-foreground" />
-            <input 
-              type="text" 
-              placeholder="Buscar sorteio..." 
-              className="h-10 w-48 rounded-full bg-white/5 border border-white/10 px-10 text-[10px] uppercase font-bold tracking-widest transition-all focus:w-64 focus:border-primary/50 focus:outline-none focus:ring-1 focus:ring-primary/50"
-            />
-          </div>
-
+         <div className="flex items-center gap-4">
+           <Link to="/contato" className="hidden sm:block">
+             <Button variant="ghost" size="sm" className="gap-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+               <Activity className="h-4 w-4 text-primary" />
+               Suporte
+             </Button>
+           </Link>
           {user ? (
             <div className="flex items-center gap-3">
               <motion.div 
