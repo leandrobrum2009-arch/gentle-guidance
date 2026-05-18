@@ -320,6 +320,33 @@ export const useUserReferrals = (referralCode: string) =>
     enabled: !!referralCode,
   });
 
+export interface AffiliateCommission {
+  id: string;
+  affiliate_id: string;
+  order_id: string;
+  amount: number;
+  status: string;
+  created_at: string;
+  orders?: { 
+    campaigns: { title: string }
+  };
+}
+
+export const useAffiliateCommissions = (affiliateId: string) =>
+  useQuery({
+    queryKey: ["affiliate-commissions", affiliateId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("affiliate_commissions")
+        .select("*, orders(campaigns(title))")
+        .eq("affiliate_id", affiliateId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data as AffiliateCommission[];
+    },
+    enabled: !!affiliateId,
+  });
+
 export interface Ticket {
   id: string;
   order_id: string;
