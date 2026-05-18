@@ -203,28 +203,7 @@ import { useAuth } from "@/contexts/AuthContext";
         <div className="container flex justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
-       {/* Sticky Mobile Purchase Bar */}
-       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t border-border lg:hidden animate-in fade-in slide-in-from-bottom-4">
-         <div className="flex items-center gap-4">
-           {campaign && (
-             <div className="flex-1">
-               <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor por cota</p>
-               <p className="text-lg font-black text-primary italic">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-             </div>
-           )}
-           <Button 
-             className="flex-[2] h-12 rounded-2xl font-black uppercase tracking-wide glow-primary"
-             onClick={() => {
-               const element = document.getElementById('purchase-section');
-               element?.scrollIntoView({ behavior: 'smooth' });
-             }}
-           >
-             <Sparkles className="mr-2 h-4 w-4" /> Comprar Agora
-           </Button>
-         </div>
-       </div>
- 
-       <Footer />
+        <Footer />
       </div>
     );
   }
@@ -237,7 +216,26 @@ import { useAuth } from "@/contexts/AuthContext";
           <h1 className="font-display text-2xl font-bold">Campanha não encontrada</h1>
           <Link to="/"><Button variant="outline" className="mt-4 gap-2"><ArrowLeft className="h-4 w-4" /> Voltar</Button></Link>
         </div>
-        <Footer />
+       {/* Sticky Mobile Purchase Bar */}
+       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t border-border lg:hidden animate-in fade-in slide-in-from-bottom-4">
+         <div className="flex items-center gap-4">
+           <div className="flex-1">
+             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor por cota</p>
+             <p className="text-lg font-black text-primary italic">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
+           </div>
+           <Button 
+             className="flex-[2] h-12 rounded-2xl font-black uppercase tracking-wide glow-primary"
+             onClick={() => {
+               const element = document.getElementById('purchase-tabs');
+               element?.scrollIntoView({ behavior: 'smooth' });
+             }}
+           >
+             <Sparkles className="mr-2 h-4 w-4" /> Comprar Agora
+           </Button>
+         </div>
+       </div>
+ 
+       <Footer />
       </div>
     );
   }
