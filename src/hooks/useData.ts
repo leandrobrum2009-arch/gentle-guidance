@@ -215,7 +215,7 @@ export const useCampaignLuckyWinners = (campaignId: string) =>
         `)
         .eq("campaign_id", campaignId)
         .eq("is_lucky", true)
-        .eq("status", "paid");
+        .eq("status", "confirmed");
       
       if (error) throw error;
       return data as any[];
