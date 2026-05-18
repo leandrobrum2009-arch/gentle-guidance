@@ -50,10 +50,10 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
       className="group relative h-full perspective-1000"
     >
       <Link to={`/campanha/${campaign.id}`} className="block h-full">
-        <div className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-card/40 p-4 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-[0_0_30px_rgba(var(--primary-rgb),0.2)] glass-morphism backdrop-blur-sm">
+        <div className="relative h-full overflow-hidden rounded-2xl border border-slate-100 bg-white p-4 transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.05)] shadow-sm">
           
           {/* Reflection Effect */}
-          <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
           <div className="relative aspect-video w-full overflow-hidden rounded-xl">
             <img
@@ -98,7 +98,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               <h3 className="font-display text-base font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
               </h3>
-              <p className="text-[10px] font-medium text-muted-foreground line-clamp-1 mt-0.5">
+              <p className="text-[10px] font-bold text-slate-400 line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
             </div>
@@ -110,7 +110,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 </span>
                 <span className="text-primary">{progress}%</span>
               </div>
-              <div className="h-1.5 w-full rounded-full bg-white/5 overflow-hidden border border-white/5">
+              <div className="h-1.5 w-full rounded-full bg-slate-100 overflow-hidden border border-slate-100">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
@@ -121,7 +121,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
 
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2">
-                <div className="h-6 w-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center">
+                <div className="h-6 w-6 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center">
                   <ShieldCheck className="h-3 w-3 text-muted-foreground" />
                 </div>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Garantido</span>
