@@ -1,5 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
  import { useAdminRoulette, useAdminRouletteStats } from "@/hooks/useAdmin";
+ import { useGlobalRouletteSpins } from "@/hooks/useData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Dices, Plus, Pencil, Trash2 } from "lucide-react";
@@ -9,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
  export default function AdminRoulette() {
    const { data: prizes, isLoading } = useAdminRoulette();
    const { data: stats, isLoading: isLoadingStats } = useAdminRouletteStats();
+   const { data: recentSpins } = useGlobalRouletteSpins(10);
  
    return (
      <AdminLayout>
@@ -53,8 +55,9 @@ import { Badge } from "@/components/ui/badge";
          </Card>
        </div>
  
-       <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
-        <CardContent className="p-0">
+       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+         <Card className="lg:col-span-2 border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+           <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
           ) : (
@@ -120,8 +123,64 @@ import { Badge } from "@/components/ui/badge";
               </TableBody>
             </Table>
           )}
-        </CardContent>
-      </Card>
+           </CardContent>
+         </Card>
+
+         <div className="space-y-6">
+           <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+             <CardContent className="p-6">
+               <h3 className="text-sm font-black uppercase text-white tracking-widest mb-4 flex items-center gap-2">
+                 <Dices className="h-4 w-4 text-primary" />
+                 Atividade Recente
+               </h3>
+               <div className="space-y-4">
+                 {recentSpins?.map((spin, i) => (
+                   <div key={i} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                     <div>
+                       <p className="text-xs font-bold text-white">{spin.profiles?.name}</p>
+                       <p className="text-[10px] text-slate-500 uppercase tracking-tighter">{spin.campaigns?.title}</p>
+                     </div>
+                     <div className="text-right">
+                       <p className="text-xs font-black text-primary uppercase italic">{spin.prize_label}</p>
+                       <p className="text-[10px] text-slate-500">{new Date(spin.created_at).toLocaleTimeString()}</p>
+                     </div>
+                   </div>
+                 ))}
+                 {(!recentSpins || recentSpins.length === 0) && (
+                   <p className="text-xs text-slate-500 italic text-center py-4">Nenhuma atividade recente.</p>
+                 )}
+               </div>
+             </CardContent>
+           </Card>
+
+           <Card className="border-white/5 bg-primary/5 backdrop-blur-xl border-primary/20">
+             <CardContent className="p-6">
+               <h3 className="text-sm font-black uppercase text-primary tracking-widest mb-2">Saúde do Payout</h3>
+               <div className="space-y-4">
+                 <div>
+                   <div className="flex justify-between text-[10px] uppercase font-bold mb-1">
+                     <span className="text-slate-400">Taxa de Premiação</span>
+                     <span className="text-white">
+                       {stats?.estimatedRevenue 
+                         ? ((stats.totalPrizesValue / stats.estimatedRevenue) * 100).toFixed(1) 
+                         : "0.0"}%
+                     </span>
+                   </div>
+                   <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                     <div 
+                       className="h-full bg-primary" 
+                       style={{ width: `${Math.min(100, (stats?.estimatedRevenue ? (stats.totalPrizesValue / stats.estimatedRevenue) * 100 : 0))}%` }}
+                     />
+                   </div>
+                 </div>
+                 <p className="text-[10px] text-slate-500 italic">
+                   A taxa de premiação ideal deve ser monitorada para garantir a sustentabilidade da roleta.
+                 </p>
+               </div>
+             </CardContent>
+           </Card>
+         </div>
+       </div>
     </AdminLayout>
   );
 }
