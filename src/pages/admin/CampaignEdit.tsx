@@ -410,11 +410,9 @@ export default function AdminCampaignEdit() {
               </div>
             </CardContent>
           </Card>
-        )}
-
-        </div>
-
-        <div className="grid gap-8 lg:grid-cols-3">
+         )}
+ 
+         <div className="grid gap-8 lg:grid-cols-3">
           <div className="space-y-8 lg:col-span-2">
             {/* Informações Básicas */}
             <Card>
