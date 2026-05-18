@@ -132,6 +132,15 @@ const Roulette = ({ prizes, onSpinComplete, campaign }: RouletteProps) => {
     
     if (!error) {
       queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
+
+      // Add notification for roulette win
+      await supabase.from("notifications").insert({
+        user_id: user.id,
+        title: "Você ganhou na roleta!",
+        message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
+        type: "win"
+      });
+
       // If balance prize, update profile
       if (prize.prize_type === 'balance') {
         await supabase.rpc('increment_balance', { amount: finalValue, user_uuid: user.id });

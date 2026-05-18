@@ -14,9 +14,10 @@ import { useAuth } from "@/contexts/AuthContext";
    useUserAchievements, 
    useUserRewards,
    useRanking,
-   useUserNotifications,
-   useUserSpins,
-   useUserMysteryBoxWins
+    useUserNotifications,
+    useUserSpins,
+    useUserMysteryBoxWins,
+    markNotificationsAsRead
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -42,11 +43,28 @@ import { cn } from "@/lib/utils";
    const { data: txs } = useUserWalletTransactions(user?.id || "");
    const { data: achievements } = useUserAchievements(user?.id || "");
    const { data: ranking } = useRanking(10);
+   const { data: notifications } = useUserNotifications(user?.id || "");
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
    const [isLoading, setIsLoading] = useState(true);
-   const [activeTab, setActiveTab] = useState("overview");
+   const [activeTab, setActiveTab] = useState(() => {
+     const hash = window.location.hash.replace('#', '');
+     const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+     return validTabs.includes(hash) ? hash : "overview";
+   });
+ 
+   useEffect(() => {
+     const handleHashChange = () => {
+       const hash = window.location.hash.replace('#', '');
+       const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+       if (validTabs.includes(hash)) {
+         setActiveTab(hash);
+       }
+     };
+     window.addEventListener('hashchange', handleHashChange);
+     return () => window.removeEventListener('hashchange', handleHashChange);
+   }, []);
  
    useEffect(() => {
      if (user) {
@@ -67,6 +85,16 @@ import { cn } from "@/lib/utils";
     name: format(new Date(t.created_at), "dd/MM"),
     amount: Number(t.amount)
   }));
+
+  const handleMarkAllRead = async () => {
+    if (!user) return;
+    try {
+      await markNotificationsAsRead(user.id);
+      toast.success("Notificações marcadas como lidas");
+    } catch (error) {
+      toast.error("Erro ao marcar notificações como lidas");
+    }
+  };
 
   if (isLoading) {
     return (
@@ -117,6 +145,7 @@ import { cn } from "@/lib/utils";
             <nav className="space-y-2">
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
+                { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
                  { label: "Conquistas", id: "achievements", icon: Star },
@@ -384,6 +413,78 @@ import { cn } from "@/lib/utils";
                          </div>
                       </Card>
                    </div>
+                </TabsContent>
+
+                <TabsContent value="notifications" className="space-y-6">
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
+                         <div>
+                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                                 <Bell className="h-4 w-4 text-primary" /> Central de Notificações
+                             </CardTitle>
+                             <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Fique por dentro de tudo</CardDescription>
+                         </div>
+                         {notifications && notifications.some(n => !n.is_read) && (
+                             <div className="flex gap-2">
+                                 <Button 
+                                     variant="outline" 
+                                     size="sm" 
+                                     onClick={() => {
+                                         if ('Notification' in window) {
+                                             Notification.requestPermission().then(permission => {
+                                                 if (permission === 'granted') {
+                                                     toast.success("Notificações do navegador ativadas!");
+                                                 } else {
+                                                     toast.error("Permissão negada para notificações");
+                                                 }
+                                             });
+                                         } else {
+                                           toast.error("Seu navegador não suporta notificações");
+                                         }
+                                     }}
+                                     className="text-[10px] font-black uppercase tracking-widest border-white/10 hover:bg-white/5"
+                                 >
+                                     Ativar Push
+                                 </Button>
+                                 <Button variant="ghost" size="sm" onClick={handleMarkAllRead} className="text-[10px] font-black uppercase tracking-widest text-primary hover:text-primary/80">
+                                     Marcar todas como lidas
+                                 </Button>
+                             </div>
+                         )}
+                      </CardHeader>
+                      <div className="space-y-3">
+                         {notifications?.length ? notifications.map((n: any) => (
+                             <div key={n.id} className={cn(
+                                 "flex items-center justify-between p-4 rounded-2xl border transition-all",
+                                 n.is_read ? "bg-white/[0.02] border-white/5" : "bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                             )}>
+                                 <div className="flex items-center gap-4">
+                                     <div className={cn(
+                                         "h-10 w-10 rounded-xl flex items-center justify-center",
+                                         n.type === 'win' ? "bg-emerald-500/10 text-emerald-500" : 
+                                         n.type === 'bonus' ? "bg-amber-500/10 text-amber-500" :
+                                         "bg-primary/10 text-primary"
+                                     )}>
+                                         {n.type === 'win' ? <Trophy className="h-5 w-5" /> : 
+                                          n.type === 'bonus' ? <Gift className="h-5 w-5" /> : 
+                                          <Bell className="h-5 w-5" />}
+                                     </div>
+                                     <div>
+                                         <p className="text-xs font-black uppercase tracking-tight">{n.title}</p>
+                                         <p className="text-[10px] text-slate-400 font-medium">{n.message}</p>
+                                         <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest mt-1">{format(new Date(n.created_at), "dd/MM HH:mm")}</p>
+                                     </div>
+                                 </div>
+                                 {!n.is_read && <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />}
+                             </div>
+                         )) : (
+                             <div className="text-center py-20 opacity-30">
+                                 <Bell className="h-12 w-12 mx-auto mb-4 text-slate-500" />
+                                 <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma notificação</p>
+                             </div>
+                         )}
+                      </div>
+                   </Card>
                 </TabsContent>
 
                 <TabsContent value="ranking" className="space-y-6">
