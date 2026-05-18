@@ -77,7 +77,7 @@ import { useAuth } from "@/contexts/AuthContext";
         if (data) {
           const statusMap: Record<string, boolean> = {};
           data.forEach(t => {
-            if (t.status === 'paid' || t.status === 'reserved') {
+            if (t.status === 'confirmed' || t.status === 'paid' || t.status === 'reserved') {
               statusMap[t.number] = true;
             }
           });
@@ -122,7 +122,7 @@ import { useAuth } from "@/contexts/AuthContext";
    const [showSuccess, setShowSuccess] = useState(false);
  
     const soldTickets = useMemo(() => {
-      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
+      return tickets?.filter(t => t.status === "confirmed" || t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
     }, [tickets]);
 
     const availableInstantPrizes = useMemo(() => {
@@ -131,7 +131,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
     const userTicketsCount = useMemo(() => {
       if (!user || !tickets) return 0;
-      return tickets.filter(t => t.user_id === user.id && t.status === 'paid').length;
+      return tickets.filter(t => t.user_id === user.id && (t.status === 'confirmed' || t.status === 'paid')).length;
     }, [user, tickets]);
 
     const userSpinsAvailable = useMemo(() => {
