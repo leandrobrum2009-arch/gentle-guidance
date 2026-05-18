@@ -416,65 +416,190 @@ export default function AdminCampaignEdit() {
           </Card>
          )}
  
-         <div className="grid gap-8 lg:grid-cols-3">
-          <div className="space-y-8 lg:col-span-2">
-            {/* Informações Básicas */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5 text-primary" /> Informações Básicas
-                </CardTitle>
-                <CardDescription>O título e a descrição que os usuários verão.</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Título da Campanha <FieldInfo text="Nome principal da rifa. Ex: iPhone 15 Pro Max" /></Label>
-                  <Input id="title" placeholder="Ex: iPhone 15 Pro Max" value={form.title} onChange={(e) => set("title", e.target.value)} />
+          <Tabs defaultValue="general" className="space-y-6">
+            <TabsList className="bg-white p-1 border rounded-2xl h-14 flex overflow-x-auto no-scrollbar">
+              <TabsTrigger value="general" className="flex-1 rounded-xl gap-2 h-10 min-w-[120px]">
+                <Info className="h-4 w-4" /> Geral
+              </TabsTrigger>
+              <TabsTrigger value="pricing" className="flex-1 rounded-xl gap-2 h-10 min-w-[120px]">
+                <Ticket className="h-4 w-4" /> Valores
+              </TabsTrigger>
+              <TabsTrigger value="media" className="flex-1 rounded-xl gap-2 h-10 min-w-[120px]">
+                <ImageIcon className="h-4 w-4" /> Mídia
+              </TabsTrigger>
+              <TabsTrigger value="interactive" className="flex-1 rounded-xl gap-2 h-10 min-w-[120px]">
+                <Sparkles className="h-4 w-4" /> Interativo
+              </TabsTrigger>
+              <TabsTrigger value="advanced" className="flex-1 rounded-xl gap-2 h-10 min-w-[120px]">
+                <Settings2 className="h-4 w-4" /> Avançado
+              </TabsTrigger>
+            </TabsList>
+ 
+            <TabsContent value="general" className="space-y-6">
+              <div className="grid gap-6 lg:grid-cols-3">
+                <div className="lg:col-span-2 space-y-6">
+                  <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                    <CardHeader className="bg-slate-50/50">
+                      <CardTitle className="text-lg font-bold">Informações Básicas</CardTitle>
+                      <CardDescription>O título e a descrição principal da sua campanha.</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="title">Título da Campanha <FieldInfo text="Nome principal. Ex: iPhone 15 Pro Max" /></Label>
+                        <Input id="title" placeholder="Ex: iPhone 15 Pro Max" value={form.title} onChange={(e) => set("title", e.target.value)} />
+                      </div>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label htmlFor="subtitle">Subtítulo <FieldInfo text="Frase de impacto curta." /></Label>
+                          <Input id="subtitle" placeholder="Apenas R$ 0,99 cada cota" value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} />
+                        </div>
+                        <div className="space-y-2">
+                          <Label htmlFor="slug">Link Amigável (Slug) <FieldInfo text="Link da rifa no site." /></Label>
+                          <Input id="slug" placeholder="rifa-iphone-15" value={form.slug} onChange={(e) => set("slug", e.target.value)} />
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="description">Descrição <FieldInfo text="Explique os detalhes do prêmio." /></Label>
+                        <Textarea id="description" placeholder="Descreva sua campanha..." value={form.description} onChange={(e) => set("description", e.target.value)} rows={5} />
+                      </div>
+                    </CardContent>
+                  </Card>
+ 
+                  <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                    <CardHeader className="bg-slate-50/50">
+                      <CardTitle className="text-lg font-bold">Premiação Principal</CardTitle>
+                      <CardDescription>Defina os prêmios por posição (1º ao 5º lugar).</CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-6">
+                      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+                        {form.main_prizes.map((p, i) => (
+                          <div key={i} className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <span className="text-sm font-black text-slate-400 w-20">{p.position}º Lugar</span>
+                            <Input 
+                              placeholder={`Prêmio do ${p.position}º lugar`}
+                              value={p.prize}
+                              onChange={(e) => {
+                                const newList = [...form.main_prizes];
+                                newList[i].prize = e.target.value;
+                                set("main_prizes", newList);
+                              }}
+                              className="bg-white border-slate-200"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="slug">Link amigável (Slug) <FieldInfo text="O que aparecerá no link. Ex: rifa-iphone-15. Não use espaços." /></Label>
-                    <Input id="slug" placeholder="rifa-iphone-15" value={form.slug} onChange={(e) => set("slug", e.target.value)} />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="subtitle">Subtítulo <FieldInfo text="Uma frase curta de impacto. Ex: Apenas R$ 0,99 cada cota." /></Label>
-                    <Input id="subtitle" placeholder="Apenas R$ 0,99 cada cota" value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} />
-                  </div>
+ 
+                <div className="space-y-6">
+                  <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                    <CardHeader className="bg-slate-50/50">
+                      <CardTitle className="text-lg font-bold">Status e Data</CardTitle>
+                    </CardHeader>
+                    <CardContent className="p-6 space-y-4">
+                      <div className="space-y-2">
+                        <Label>Status da Campanha</Label>
+                        <Select value={form.status} onValueChange={(v) => set("status", v)}>
+                          <SelectTrigger className="rounded-xl"><SelectValue /></SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Ativa (Visível)</SelectItem>
+                            <SelectItem value="draft">Rascunho (Oculta)</SelectItem>
+                            <SelectItem value="completed">Concluída (Encerrada)</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Data do Sorteio</Label>
+                        <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} className="rounded-xl" />
+                      </div>
+                      <div className="flex items-center justify-between p-3 bg-slate-50 rounded-xl border border-slate-100">
+                        <Label className="font-bold">Em Destaque?</Label>
+                        <Switch checked={form.featured} onCheckedChange={(v) => set("featured", v)} />
+                      </div>
+                    </CardContent>
+                  </Card>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Descrição Longa <FieldInfo text="Explique todos os detalhes do prêmio e da campanha." /></Label>
-                  <Textarea id="description" placeholder="Descreva sua campanha aqui..." value={form.description} onChange={(e) => set("description", e.target.value)} rows={4} />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="regulations">Regulamento <FieldInfo text="Regras específicas da sua campanha." /></Label>
-                    <Textarea id="regulations" placeholder="Regras da campanha..." value={form.regulations} onChange={(e) => set("regulations", e.target.value)} rows={3} />
-                  </div>
-                  <div className="space-y-4">
-                    <Label className="flex items-center gap-2">
-                      Premiação Principal <FieldInfo text="Defina os prêmios do 1º ao 5º lugar que aparecerão no site." />
-                    </Label>
-                    <div className="space-y-2">
-                      {form.main_prizes.map((p, i) => (
-                        <div key={i} className="flex items-center gap-2">
-                          <span className="text-xs font-bold text-muted-foreground w-16">{p.position}º Lugar:</span>
-                          <Input 
-                            placeholder={`Prêmio do ${p.position}º lugar`}
-                            value={p.prize}
-                            onChange={(e) => {
-                              const newList = [...form.main_prizes];
-                              newList[i].prize = e.target.value;
-                              set("main_prizes", newList);
-                            }}
-                            className="h-8 text-xs"
-                          />
+              </div>
+            </TabsContent>
+ 
+            <TabsContent value="pricing" className="space-y-6">
+              <div className="grid gap-6 lg:grid-cols-2">
+                <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                  <CardHeader className="bg-slate-50/50">
+                    <CardTitle className="text-lg font-bold">Configuração de Bilhetes</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-6 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Preço por Cota (R$)</Label>
+                        <Input type="number" step="0.01" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Total de Bilhetes</Label>
+                        <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Mínimo por Compra</Label>
+                        <Input type="number" value={form.min_tickets} onChange={(e) => set("min_tickets", e.target.value)} />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Máximo por Compra</Label>
+                        <Input type="number" value={form.max_tickets} onChange={(e) => set("max_tickets", e.target.value)} />
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+ 
+                <Card className="rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+                  <CardHeader className="bg-slate-50/50 flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle className="text-lg font-bold">Pacotes de Desconto</CardTitle>
+                      <CardDescription>Combos que incentivam compras maiores.</CardDescription>
+                    </div>
+                    <Button type="button" size="sm" onClick={() => set("price_bundles", [...form.price_bundles, { quantity: 10, price: 9.00 }])}>
+                      <Plus className="h-4 w-4 mr-1" /> Add Combo
+                    </Button>
+                  </CardHeader>
+                  <CardContent className="p-6">
+                    <div className="space-y-3">
+                      {form.price_bundles.map((bundle, i) => (
+                        <div key={i} className="flex items-center gap-3 bg-slate-50 p-3 rounded-xl border border-slate-100">
+                          <div className="flex-1">
+                            <Label className="text-[10px] uppercase font-bold text-slate-400">Qtd Bilhetes</Label>
+                            <Input type="number" value={bundle.quantity} onChange={(e) => {
+                              const newList = [...form.price_bundles];
+                              newList[i].quantity = Number(e.target.value);
+                              set("price_bundles", newList);
+                            }} />
+                          </div>
+                          <div className="flex-1">
+                            <Label className="text-[10px] uppercase font-bold text-slate-400">Preço Total (R$)</Label>
+                            <Input type="number" step="0.01" value={bundle.price} onChange={(e) => {
+                              const newList = [...form.price_bundles];
+                              newList[i].price = Number(e.target.value);
+                              set("price_bundles", newList);
+                            }} />
+                          </div>
+                          <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
+                            const newList = [...form.price_bundles];
+                            newList.splice(i, 1);
+                            set("price_bundles", newList);
+                          }}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
                         </div>
                       ))}
+                      {form.price_bundles.length === 0 && (
+                        <div className="text-center py-6 text-slate-400 italic text-sm border-2 border-dashed rounded-xl">Nenhum pacote cadastrado.</div>
+                      )}
                     </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                  </CardContent>
+                </Card>
+              </div>
+            </TabsContent>
 
             {/* Imagens e Mídia */}
             <Card>
