@@ -119,6 +119,7 @@ import { cn } from "@/lib/utils";
             <nav className="space-y-2">
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
+                { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
                  { label: "Conquistas", id: "achievements", icon: Star },
