@@ -8,10 +8,14 @@ import { motion } from "framer-motion";
  import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
- import { useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets } from "@/hooks/useData";
+  import { 
+    useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
+    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins
+  } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import RaffleGallery from "@/components/RaffleGallery";
@@ -34,6 +38,9 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: roulettePrizes } = useRoulettePrizes(id || "");
    const { data: allWinners } = useWinners();
    const { data: tickets } = useTickets(id || "");
+   const { data: campaignRanking } = useCampaignRanking(id || "", 10);
+   const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
+   const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
@@ -65,9 +72,17 @@ import { useAuth } from "@/contexts/AuthContext";
      return tickets?.filter(t => t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
    }, [tickets]);
  
-   const luckyNumbers = useMemo(() => {
-     return campaign?.lucky_numbers_prizes || [];
-   }, [campaign]);
+    const allLuckyNumbers = useMemo(() => {
+      return campaign?.lucky_numbers_prizes || [];
+    }, [campaign]);
+
+    const luckyNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => !p.protected);
+    }, [allLuckyNumbers]);
+
+    const protectedNumbers = useMemo(() => {
+      return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
+    }, [allLuckyNumbers]);
  
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
@@ -248,7 +263,7 @@ import { useAuth } from "@/contexts/AuthContext";
                          Escolha seus números da sorte abaixo. Clique para selecionar.
                        </p>
                         {/* Lucky Numbers Section */}
-                        {luckyNumbers.length > 0 && (
+                        {campaign.show_instant_prizes !== false && luckyNumbers.length > 0 && (
                           <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4 space-y-3 mb-6 shadow-[0_0_20px_rgba(245,158,11,0.05)]">
                             <h2 className="flex items-center gap-2 text-sm font-bold text-amber-500 uppercase tracking-wider">
                               <Star className="h-4 w-4 fill-current" /> Números Premiados
@@ -273,7 +288,7 @@ import { useAuth } from "@/contexts/AuthContext";
  
                         <TicketGrid 
                           totalTickets={campaign.total_tickets}
-                          soldTickets={soldTickets}
+                          soldTickets={[...soldTickets, ...protectedNumbers]}
                           selectedTickets={selectedTickets}
                           onSelect={handleToggleTicket}
                           luckyNumbers={luckyNumbersList}
@@ -302,7 +317,7 @@ import { useAuth } from "@/contexts/AuthContext";
                  </div>
                </div>
               
-              {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+              {campaign.roulette_enabled && campaign.show_roulette_status !== false && roulettePrizes && roulettePrizes.length > 0 && (
                 <div className="rounded-[40px] border border-white/5 bg-black/20 p-2 shadow-2xl backdrop-blur-xl">
                   <Roulette prizes={roulettePrizes} campaign={campaign} />
                 </div>
@@ -331,6 +346,31 @@ import { useAuth } from "@/contexts/AuthContext";
 
       <div className="container pb-20">
         <div className="grid gap-8 lg:grid-cols-3">
+          {campaign.main_prizes && campaign.main_prizes.length > 0 && (
+            <div className="lg:col-span-3">
+              <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-6">
+                <h2 className="flex items-center gap-2 text-lg font-bold">
+                  <Trophy className="h-5 w-5 text-primary" /> Premiação Principal
+                </h2>
+                <div className="grid gap-4 sm:grid-cols-5">
+                  {campaign.main_prizes.map((p: any, i: number) => (
+                    <div key={i} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-secondary/30 border border-border/50 text-center">
+                      <div className={cn(
+                        "h-12 w-12 rounded-full flex items-center justify-center font-bold text-xl",
+                        i === 0 ? "bg-amber-500 text-white" : i === 1 ? "bg-slate-300 text-slate-800" : i === 2 ? "bg-amber-700 text-white" : "bg-primary/20 text-primary"
+                      )}>
+                        {i + 1}º
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter">{i === 0 ? "Ganhador" : `${i + 1}º Lugar`}</p>
+                        <p className="text-sm font-black">{p.prize}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
           <div className="lg:col-span-2 space-y-8">
             {/* Description & Info */}
             <div className="space-y-6">
@@ -410,6 +450,82 @@ import { useAuth } from "@/contexts/AuthContext";
                 Ver Benefícios
               </Button>
             </div>
+          </div>
+
+          {/* New Campaign Specific Stats/Rankings */}
+          <div className="lg:col-span-3 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+             {campaign.ranking_enabled && campaignRanking && campaignRanking.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <TrendingUp className="h-4 w-4 text-primary" /> Top Compradores
+                 </h3>
+                 <div className="space-y-3">
+                   {campaignRanking.map((rank: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-3">
+                         <span className="text-[10px] font-bold text-muted-foreground w-4">#{i+1}</span>
+                         <Avatar className="h-8 w-8">
+                           <AvatarImage src={rank.avatar_url} />
+                           <AvatarFallback className="text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <span className="text-xs font-medium">{rank.name}</span>
+                       </div>
+                       <Badge variant="secondary" className="text-[10px]">{rank.total_tickets} cotas</Badge>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {campaign.show_instant_prizes !== false && instantWinners && instantWinners.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <Gift className="h-4 w-4 text-amber-500" /> Ganhadores Instantâneos
+                 </h3>
+                 <div className="space-y-3">
+                   {instantWinners.map((win: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-2">
+                         <Avatar className="h-6 w-6">
+                           <AvatarImage src={win.profiles?.avatar_url} />
+                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <div className="flex flex-col">
+                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
+                           <span className="text-[8px] text-muted-foreground">{win.prize_title}</span>
+                         </div>
+                       </div>
+                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {campaign.roulette_enabled && campaign.show_roulette_status !== false && rouletteWinners && rouletteWinners.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <Sparkles className="h-4 w-4 text-primary" /> Ganhadores da Roleta
+                 </h3>
+                 <div className="space-y-3">
+                   {rouletteWinners.map((win: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-2">
+                         <Avatar className="h-6 w-6">
+                           <AvatarImage src={win.profiles?.avatar_url} />
+                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <div className="flex flex-col">
+                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
+                           <span className="text-[8px] text-muted-foreground">{win.prize_label}</span>
+                         </div>
+                       </div>
+                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
           </div>
         </div>
       </div>

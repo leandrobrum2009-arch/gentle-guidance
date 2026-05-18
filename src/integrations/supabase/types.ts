@@ -154,6 +154,7 @@ export type Database = {
           image_url: string | null
           ltp_code: string | null
           lucky_numbers_prizes: Json | null
+          main_prizes: Json | null
           manual_numbers: boolean | null
           max_tickets: number | null
           min_tickets: number | null
@@ -165,12 +166,16 @@ export type Database = {
           roulette_enabled: boolean | null
           roulette_free_tickets: number | null
           roulette_multiplier_max: number | null
+          roulette_payout_rate: number | null
           roulette_spin_cost: number | null
           sales_goal: number | null
+          show_instant_prizes: boolean | null
+          show_roulette_status: boolean | null
           slug: string
           sold_tickets: number
           status: string
           subtitle: string | null
+          ticket_generation_type: string | null
           ticket_price: number
           title: string
           total_tickets: number
@@ -191,6 +196,7 @@ export type Database = {
           image_url?: string | null
           ltp_code?: string | null
           lucky_numbers_prizes?: Json | null
+          main_prizes?: Json | null
           manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
@@ -202,12 +208,16 @@ export type Database = {
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
+          roulette_payout_rate?: number | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          show_instant_prizes?: boolean | null
+          show_roulette_status?: boolean | null
           slug: string
           sold_tickets?: number
           status?: string
           subtitle?: string | null
+          ticket_generation_type?: string | null
           ticket_price?: number
           title: string
           total_tickets?: number
@@ -228,6 +238,7 @@ export type Database = {
           image_url?: string | null
           ltp_code?: string | null
           lucky_numbers_prizes?: Json | null
+          main_prizes?: Json | null
           manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
@@ -239,12 +250,16 @@ export type Database = {
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
+          roulette_payout_rate?: number | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          show_instant_prizes?: boolean | null
+          show_roulette_status?: boolean | null
           slug?: string
           sold_tickets?: number
           status?: string
           subtitle?: string | null
+          ticket_generation_type?: string | null
           ticket_price?: number
           title?: string
           total_tickets?: number

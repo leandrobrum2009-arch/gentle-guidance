@@ -38,9 +38,15 @@ interface CampaignForm {
   regulations: string;
   auto_numbers: boolean;
   manual_numbers: boolean;
+  ticket_generation_type: 'manual' | 'auto';
   lucky_numbers_prizes: string;
+  main_prizes: string;
   federal_lottery_draw: boolean;
   sales_goal: number;
+  roulette_free_tickets: number;
+  roulette_payout_rate: number;
+  show_instant_prizes: boolean;
+  show_roulette_status: boolean;
 }
 
 const empty: CampaignForm = {
@@ -57,9 +63,15 @@ const empty: CampaignForm = {
   regulations: "",
   auto_numbers: true,
   manual_numbers: true,
+  ticket_generation_type: 'auto',
   lucky_numbers_prizes: "[]",
+  main_prizes: "[]",
   federal_lottery_draw: false,
   sales_goal: 0,
+  roulette_free_tickets: 10,
+  roulette_payout_rate: 0,
+  show_instant_prizes: true,
+  show_roulette_status: true,
 };
 
 export default function AdminCampaigns() {
@@ -92,9 +104,15 @@ export default function AdminCampaigns() {
       regulations: c.regulations ?? "",
       auto_numbers: c.auto_numbers ?? true,
       manual_numbers: c.manual_numbers ?? false,
+      ticket_generation_type: c.ticket_generation_type ?? 'auto',
       lucky_numbers_prizes: JSON.stringify(c.lucky_numbers_prizes ?? [], null, 2),
+      main_prizes: JSON.stringify(c.main_prizes ?? [], null, 2),
       federal_lottery_draw: c.federal_lottery_draw ?? false,
       sales_goal: c.sales_goal ?? 0,
+      roulette_free_tickets: c.roulette_free_tickets ?? 10,
+      roulette_payout_rate: c.roulette_payout_rate ?? 0,
+      show_instant_prizes: c.show_instant_prizes ?? true,
+      show_roulette_status: c.show_roulette_status ?? true,
     });
     setOpen(true);
   };
@@ -120,8 +138,14 @@ export default function AdminCampaigns() {
       lucky_numbers_prizes: JSON.parse(form.lucky_numbers_prizes || "[]"),
       auto_numbers: form.auto_numbers,
       manual_numbers: form.manual_numbers,
+      ticket_generation_type: form.ticket_generation_type,
+      main_prizes: JSON.parse(form.main_prizes || "[]"),
       federal_lottery_draw: form.federal_lottery_draw,
       sales_goal: Number(form.sales_goal),
+      roulette_free_tickets: Number(form.roulette_free_tickets),
+      roulette_payout_rate: Number(form.roulette_payout_rate),
+      show_instant_prizes: form.show_instant_prizes,
+      show_roulette_status: form.show_roulette_status,
     };
 
     const { error } = editId
@@ -194,6 +218,30 @@ export default function AdminCampaigns() {
               <Input placeholder="Tag de urgência" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
               <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
               
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Tipo de Geração</Label>
+                  <Select value={form.ticket_generation_type} onValueChange={(v: any) => set("ticket_generation_type", v)}>
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="auto">Automática (Até 10M)</SelectItem>
+                      <SelectItem value="manual">Manual (Até 5k)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">Giro Grátis a cada X cotas</Label>
+                  <Input type="number" value={form.roulette_free_tickets} onChange={(e) => set("roulette_free_tickets", e.target.value)} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-xs font-bold uppercase">% de Premiação Roleta</Label>
+                  <Input type="number" placeholder="Ex: 10" value={form.roulette_payout_rate} onChange={(e) => set("roulette_payout_rate", e.target.value)} />
+                </div>
+              </div>
+
               <div className="space-y-2">
                 <Label className="text-xs font-bold uppercase">Galeria (URLs JSON)</Label>
                 <Textarea placeholder='["https://...", "https://..."]' value={form.gallery_urls} onChange={(e) => set("gallery_urls", e.target.value)} rows={2} className="font-mono text-xs" />
@@ -234,6 +282,14 @@ export default function AdminCampaigns() {
                     <Label htmlFor="fed_draw">Sorteio Federal</Label>
                     <Switch id="fed_draw" checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
                   </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="show_instant">Mostrar Prêmios Instantâneos</Label>
+                    <Switch id="show_instant" checked={form.show_instant_prizes} onCheckedChange={(v) => set("show_instant_prizes", v)} />
+                  </div>
+                  <div className="flex items-center justify-between space-x-2">
+                    <Label htmlFor="show_roulette">Status da Roleta</Label>
+                    <Switch id="show_roulette" checked={form.show_roulette_status} onCheckedChange={(v) => set("show_roulette_status", v)} />
+                  </div>
                 </div>
               </div>
 
@@ -242,8 +298,12 @@ export default function AdminCampaigns() {
                 <Textarea placeholder='[{"quantity": 10, "price": 9.90}]' value={form.price_bundles} onChange={(e) => set("price_bundles", e.target.value)} rows={4} className="font-mono text-xs" />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON)</Label>
-                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15"}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
+                <Label className="text-xs font-bold uppercase">Números da Sorte & Prêmios (JSON) - Use "protected": true para ocultar</Label>
+                <Textarea placeholder='[{"number": "12345", "prize": "iPhone 15", "protected": false}]' value={form.lucky_numbers_prizes} onChange={(e) => set("lucky_numbers_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
+              </div>
+              <div className="space-y-2">
+                <Label className="text-xs font-bold uppercase">Premiação Principal (1º ao 5º) (JSON)</Label>
+                <Textarea placeholder='[{"position": 1, "prize": "Carro"}, {"position": 2, "prize": "Moto"}]' value={form.main_prizes} onChange={(e) => set("main_prizes", e.target.value)} rows={3} className="font-mono text-xs" />
               </div>
               <Button onClick={save} disabled={saving || !form.title || !form.slug}>
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
