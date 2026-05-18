@@ -188,6 +188,7 @@ import { useAuth } from "@/contexts/AuthContext";
   }
 
   const isActive = campaign.status === "active";
+  const canManualSelect = campaign.manual_numbers && campaign.total_tickets <= 5000;
   const drawDate = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString("pt-BR") : "";
   const drawTime = campaign.draw_date ? new Date(campaign.draw_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
 
@@ -261,16 +262,18 @@ import { useAuth } from "@/contexts/AuthContext";
              <div className="sticky top-20 space-y-6">
                <div className="rounded-3xl border border-border/50 bg-card p-1 shadow-xl ring-1 ring-primary/10 overflow-hidden">
                  <Tabs defaultValue="auto" className="w-full">
-                   <div className="p-4 pb-0">
-                     <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
-                       <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                         <Zap className="h-4 w-4" /> Automático
-                       </TabsTrigger>
-                       <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                         <MousePointer2 className="h-4 w-4" /> Manual
-                       </TabsTrigger>
-                     </TabsList>
-                   </div>
+                    {canManualSelect && (
+                      <div className="p-4 pb-0">
+                        <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
+                          <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                            <Zap className="h-4 w-4" /> Automático
+                          </TabsTrigger>
+                          <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                            <MousePointer2 className="h-4 w-4" /> Manual
+                          </TabsTrigger>
+                        </TabsList>
+                      </div>
+                    )}
  
                    <TabsContent value="auto" className="p-5 mt-0">
                      <CampaignPricing campaign={campaign} onBuy={handleBuy} />
