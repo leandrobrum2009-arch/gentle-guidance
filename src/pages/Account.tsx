@@ -70,6 +70,16 @@ import { cn } from "@/lib/utils";
     amount: Number(t.amount)
   }));
 
+  const handleMarkAllRead = async () => {
+    if (!user) return;
+    try {
+      await markNotificationsAsRead(user.id);
+      toast.success("Notificações marcadas como lidas");
+    } catch (error) {
+      toast.error("Erro ao marcar notificações como lidas");
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
