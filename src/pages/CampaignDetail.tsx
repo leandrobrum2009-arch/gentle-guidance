@@ -221,7 +221,6 @@ import { useAuth } from "@/contexts/AuthContext";
   }
 
   const isActive = campaign.status === "active";
-  const canManualSelect = campaign.manual_numbers && campaign.total_tickets <= 5000;
   const drawDate = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString("pt-BR") : "";
   const drawTime = campaign.draw_date ? new Date(campaign.draw_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
 
