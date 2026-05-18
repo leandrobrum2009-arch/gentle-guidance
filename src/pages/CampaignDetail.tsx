@@ -313,7 +313,11 @@ import { useAuth } from "@/contexts/AuthContext";
               )}
 
               <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">
+                <Button 
+                  variant="outline" 
+                  className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5"
+                  onClick={handleShareCampaign}
+                >
                   <Share2 className="h-4 w-4 text-primary" /> Compartilhar
                 </Button>
                 <Button variant="outline" className="h-12 rounded-xl gap-2 text-sm font-bold border-primary/20 hover:bg-primary/5">
