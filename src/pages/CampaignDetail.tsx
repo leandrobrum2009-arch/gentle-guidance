@@ -11,7 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
- import { useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets } from "@/hooks/useData";
+  import { 
+    useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
+    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins
+  } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
  import RaffleGallery from "@/components/RaffleGallery";
@@ -34,6 +37,9 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: roulettePrizes } = useRoulettePrizes(id || "");
    const { data: allWinners } = useWinners();
    const { data: tickets } = useTickets(id || "");
+   const { data: campaignRanking } = useCampaignRanking(id || "", 10);
+   const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
+   const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
@@ -443,6 +449,82 @@ import { useAuth } from "@/contexts/AuthContext";
                 Ver Benefícios
               </Button>
             </div>
+          </div>
+
+          {/* New Campaign Specific Stats/Rankings */}
+          <div className="lg:col-span-3 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+             {campaign.ranking_enabled && campaignRanking && campaignRanking.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <TrendingUp className="h-4 w-4 text-primary" /> Top Compradores
+                 </h3>
+                 <div className="space-y-3">
+                   {campaignRanking.map((rank: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-3">
+                         <span className="text-[10px] font-bold text-muted-foreground w-4">#{i+1}</span>
+                         <Avatar className="h-8 w-8">
+                           <AvatarImage src={rank.avatar_url} />
+                           <AvatarFallback className="text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <span className="text-xs font-medium">{rank.name}</span>
+                       </div>
+                       <Badge variant="secondary" className="text-[10px]">{rank.total_tickets} cotas</Badge>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {campaign.show_instant_prizes !== false && instantWinners && instantWinners.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <Gift className="h-4 w-4 text-amber-500" /> Ganhadores Instantâneos
+                 </h3>
+                 <div className="space-y-3">
+                   {instantWinners.map((win: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-2">
+                         <Avatar className="h-6 w-6">
+                           <AvatarImage src={win.profiles?.avatar_url} />
+                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <div className="flex flex-col">
+                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
+                           <span className="text-[8px] text-muted-foreground">{win.prize_title}</span>
+                         </div>
+                       </div>
+                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {campaign.roulette_enabled && campaign.show_roulette_status !== false && rouletteWinners && rouletteWinners.length > 0 && (
+               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
+                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
+                   <Sparkles className="h-4 w-4 text-primary" /> Ganhadores da Roleta
+                 </h3>
+                 <div className="space-y-3">
+                   {rouletteWinners.map((win: any, i: number) => (
+                     <div key={i} className="flex items-center justify-between">
+                       <div className="flex items-center gap-2">
+                         <Avatar className="h-6 w-6">
+                           <AvatarImage src={win.profiles?.avatar_url} />
+                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                         </Avatar>
+                         <div className="flex flex-col">
+                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
+                           <span className="text-[8px] text-muted-foreground">{win.prize_label}</span>
+                         </div>
+                       </div>
+                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
           </div>
         </div>
       </div>
