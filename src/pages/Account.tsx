@@ -47,8 +47,7 @@ import { cn } from "@/lib/utils";
    const { data: ranking } = useRanking(10);
    const { data: notifications } = useUserNotifications(user?.id || "");
     const { data: rewards } = useUserRewards(user?.id || "");
-    const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
-   
+
    const [spinsPage, setSpinsPage] = useState(1);
    const [boxesPage, setBoxesPage] = useState(1);
    const [ordersPage, setOrdersPage] = useState(1);
@@ -57,6 +56,8 @@ import { cn } from "@/lib/utils";
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
+   const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
+
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
