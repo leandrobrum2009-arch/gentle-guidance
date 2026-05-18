@@ -28,6 +28,7 @@ import Roulette from "@/components/Roulette";
 import MysteryBox from "@/components/MysteryBox";
 import CampaignPrizes from "@/components/CampaignPrizes";
 import UserRanking from "@/components/UserRanking";
+import CampaignPublicInfo from "@/components/CampaignPublicInfo";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -398,9 +399,11 @@ import { useAuth } from "@/contexts/AuthContext";
         </div>
       </motion.div>
 
-      <div className="container pb-20">
+      <div className="container pb-20 space-y-12">
+        <CampaignPublicInfo campaign={campaign} />
+
         <div className="grid gap-8 lg:grid-cols-3">
-          <div className="lg:col-span-3 mb-8">
+          <div className="lg:col-span-3">
             <CampaignPrizes 
               mainPrizes={campaign.main_prizes} 
               instantPrizes={campaign.lucky_numbers_prizes}
