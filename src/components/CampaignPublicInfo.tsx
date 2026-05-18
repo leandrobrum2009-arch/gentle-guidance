@@ -271,8 +271,3 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
  );
  
  export default CampaignPublicInfo;
-    </div>
-  );
-};
-
-export default CampaignPublicInfo;
