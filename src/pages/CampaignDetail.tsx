@@ -418,7 +418,24 @@ import { useAuth } from "@/contexts/AuthContext";
         </div>
       </motion.div>
 
-       <div className="container pb-20 space-y-16">
+       <div className="container pb-24 space-y-16">
+         {/* How it works steps */}
+         <section className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+           {[
+             { icon: Ticket, title: "1. Escolha", desc: "Selecione seus números da sorte" },
+             { icon: Zap, title: "2. Pague", desc: "Confirmação rápida via PIX" },
+             { icon: Trophy, title: "3. Concorra", desc: "Aguarde o sorteio oficial" },
+           ].map((step, i) => (
+             <div key={i} className="flex flex-col items-center text-center p-6 bg-white/[0.02] border border-white/5 rounded-3xl">
+               <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+                 <step.icon className="h-6 w-6 text-primary" />
+               </div>
+               <h3 className="font-black uppercase italic text-sm mb-1">{step.title}</h3>
+               <p className="text-[10px] font-medium text-muted-foreground uppercase tracking-widest">{step.desc}</p>
+             </div>
+           ))}
+         </section>
+ 
          {/* Top sections for stats and history */}
          <div className="space-y-16">
            <CampaignPublicInfo campaign={campaign} />
