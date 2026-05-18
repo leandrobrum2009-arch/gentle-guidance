@@ -1,16 +1,17 @@
 import AdminLayout from "@/components/AdminLayout";
-import { useAdminRoulette } from "@/hooks/useAdmin";
+ import { useAdminRoulette, useAdminRouletteStats } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Dices, Plus, Pencil, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export default function AdminRoulette() {
-  const { data: prizes, isLoading } = useAdminRoulette();
-
-  return (
-    <AdminLayout>
+ export default function AdminRoulette() {
+   const { data: prizes, isLoading } = useAdminRoulette();
+   const { data: stats, isLoading: isLoadingStats } = useAdminRouletteStats();
+ 
+   return (
+     <AdminLayout>
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-400">
@@ -20,10 +21,39 @@ export default function AdminRoulette() {
         </div>
         <Button className="bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
           <Plus className="mr-2 h-4 w-4" /> Novo Prêmio
-        </Button>
-      </div>
-
-      <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+         </Button>
+       </div>
+ 
+       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+         <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+           <CardContent className="p-6">
+             <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">Total de Giros</p>
+             <h3 className="text-2xl font-black text-white">{stats?.totalSpins || 0}</h3>
+           </CardContent>
+         </Card>
+         <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+           <CardContent className="p-6">
+             <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">Prêmios Distribuídos</p>
+             <h3 className="text-2xl font-black text-emerald-400">R$ {stats?.totalPrizesValue.toFixed(2) || "0.00"}</h3>
+           </CardContent>
+         </Card>
+         <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+           <CardContent className="p-6">
+             <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">Giros Grátis / Pagos</p>
+             <h3 className="text-2xl font-black text-white">
+               {stats?.freeSpinsCount || 0} <span className="text-slate-600 text-sm">/ {stats?.paidSpinsCount || 0}</span>
+             </h3>
+           </CardContent>
+         </Card>
+         <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+           <CardContent className="p-6">
+             <p className="text-[10px] font-black uppercase text-slate-500 tracking-widest mb-1">Receita Estimada</p>
+             <h3 className="text-2xl font-black text-primary">R$ {stats?.estimatedRevenue.toFixed(2) || "0.00"}</h3>
+           </CardContent>
+         </Card>
+       </div>
+ 
+       <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
