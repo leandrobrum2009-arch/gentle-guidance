@@ -14,7 +14,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
   import { 
     useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
-    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins
+    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
+    useUserCampaignSpins
   } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -42,6 +43,7 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
+   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
