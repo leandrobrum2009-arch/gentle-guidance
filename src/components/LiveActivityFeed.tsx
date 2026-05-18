@@ -52,7 +52,7 @@
        <div className="flex items-center justify-between mb-2">
          <div className="flex items-center gap-2">
            <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-           <h3 className="text-sm font-black uppercase tracking-widest italic">Atividade em <span className="text-primary">Tempo Real</span></h3>
+            <h3 className="text-sm font-black uppercase tracking-widest italic text-foreground">Atividade em <span className="text-primary">Tempo Real</span></h3>
          </div>
          <Badge variant="outline" className="text-[8px] border-primary/30 text-primary uppercase gap-1">
            <Users className="h-2 w-2" /> 2.4k Online
@@ -69,7 +69,7 @@
                animate={{ opacity: 1, x: 0, scale: 1 }}
                exit={{ opacity: 0, scale: 0.95 }}
                transition={{ duration: 0.3 }}
-               className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-secondary/30 border border-white/5 group hover:border-primary/30 transition-all"
+                className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-slate-50 border border-slate-100 group hover:border-primary/30 transition-all"
              >
                <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                
