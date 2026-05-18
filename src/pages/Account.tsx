@@ -506,13 +506,34 @@ import { cn } from "@/lib/utils";
 
                    <div className="grid lg:grid-cols-2 gap-6">
                       <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                         <CardHeader className="p-0 mb-6">
+                         <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                  <RotateCw className="h-4 w-4 text-primary" /> Últimos Giros
                              </CardTitle>
+                             <div className="flex items-center gap-2">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={spinsPage === 1}
+                                  onClick={() => setSpinsPage(p => p - 1)}
+                                >
+                                  <ChevronLeft className="h-3 w-3" />
+                                </Button>
+                                <span className="text-[10px] font-bold text-slate-500">{spinsPage}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={!spins || spins.length <= spinsPage * ITEMS_PER_PAGE}
+                                  onClick={() => setSpinsPage(p => p + 1)}
+                                >
+                                  <ChevronRight className="h-3 w-3" />
+                                </Button>
+                             </div>
                          </CardHeader>
                          <div className="space-y-3">
-                            {spins?.length ? spins.slice(0, 5).map((s: any) => (
+                            {spins?.length ? spins.slice((spinsPage - 1) * ITEMS_PER_PAGE, spinsPage * ITEMS_PER_PAGE).map((s: any) => (
                                 <div key={s.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{s.prize_label}</p>
@@ -525,13 +546,34 @@ import { cn } from "@/lib/utils";
                       </Card>
 
                       <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                         <CardHeader className="p-0 mb-6">
+                         <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                  <Package className="h-4 w-4 text-orange-400" /> Caixas Abertas
                              </CardTitle>
+                             <div className="flex items-center gap-2">
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={boxesPage === 1}
+                                  onClick={() => setBoxesPage(p => p - 1)}
+                                >
+                                  <ChevronLeft className="h-3 w-3" />
+                                </Button>
+                                <span className="text-[10px] font-bold text-slate-500">{boxesPage}</span>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="h-6 w-6" 
+                                  disabled={!boxWins || boxWins.length <= boxesPage * ITEMS_PER_PAGE}
+                                  onClick={() => setBoxesPage(p => p + 1)}
+                                >
+                                  <ChevronRight className="h-3 w-3" />
+                                </Button>
+                             </div>
                          </CardHeader>
                          <div className="space-y-3">
-                            {boxWins?.length ? boxWins.slice(0, 5).map((bw: any) => (
+                            {boxWins?.length ? boxWins.slice((boxesPage - 1) * ITEMS_PER_PAGE, boxesPage * ITEMS_PER_PAGE).map((bw: any) => (
                                 <div key={bw.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{bw.prize_title}</p>
