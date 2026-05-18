@@ -244,92 +244,78 @@ import { useAuth } from "@/contexts/AuthContext";
   const drawDate = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString("pt-BR") : "";
   const drawTime = campaign.draw_date ? new Date(campaign.draw_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
 
-  return (
-    <div className="min-h-screen bg-background">
-      <Header />
-      <div className="container py-4">
-        <Link to="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-foreground">
-          <ArrowLeft className="h-4 w-4" /> Voltar para campanhas
-        </Link>
-      </div>
-
-      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} className="container pb-10">
-        <div className="grid gap-6 lg:grid-cols-5">
-          <div className="space-y-4 lg:col-span-3">
-             <RaffleGallery 
-               images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
-               videoUrl={campaign.video_url} 
-             />
-
-            <div className="rounded-xl border border-border/50 bg-card p-5 space-y-4">
-              <div>
-                <h1 className="font-display text-xl font-bold sm:text-2xl">{campaign.title}</h1>
-                <p className="mt-1 text-sm text-muted-foreground">{campaign.subtitle}</p>
-              </div>
-              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
-                <span className="font-mono font-semibold text-foreground/70">{campaign.ltp_code}</span>
-                <Badge variant={isActive ? "default" : "secondary"} className="text-[10px]">{isActive ? "Ativo" : "Concluído"}</Badge>
-                {drawDate && (
-                  <span className="flex items-center gap-1"><Calendar className="h-3.5 w-3.5" />{drawDate} às {drawTime}</span>
-                )}
-              </div>
-              <Separator />
-               <div className="space-y-3">
-                 <div className="h-4 overflow-hidden rounded-full bg-secondary border border-border/50 shadow-inner">
-                   <motion.div 
-                     initial={{ width: 0 }} 
-                     animate={{ width: `${progress}%` }} 
-                     transition={{ duration: 1.5, ease: "easeOut" }} 
-                     className="h-full rounded-full bg-gradient-to-r from-primary via-[hsl(80,96%,60%)] to-primary shimmer-effect shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" 
-                   />
-                 </div>
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Progresso de vendas</span>
-                  <span className="font-semibold text-primary">{progress}%</span>
-                </div>
-                <div className="h-3 overflow-hidden rounded-full bg-secondary">
-                  <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} transition={{ duration: 1.2, ease: "easeOut" }} className="h-full rounded-full bg-gradient-to-r from-primary to-[hsl(80,96%,60%)]" />
-                </div>
-                <div className="flex justify-between text-xs text-muted-foreground">
-                  <span>{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
-                  <span>{campaign.total_tickets.toLocaleString("pt-BR")} total</span>
-                </div>
-              </div>
-              <Separator />
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div className="rounded-lg bg-secondary/50 p-3">
-                  <Trophy className="mx-auto mb-1 h-5 w-5 text-primary" /><p className="text-xs text-muted-foreground">Prêmio</p><p className="text-xs font-semibold">Garantido</p>
-                </div>
-                <div className="rounded-lg bg-secondary/50 p-3">
-                  <Shield className="mx-auto mb-1 h-5 w-5 text-primary" /><p className="text-xs text-muted-foreground">Pagamento</p><p className="text-xs font-semibold">Seguro</p>
-                </div>
-                <div className="rounded-lg bg-secondary/50 p-3">
-                  <Users className="mx-auto mb-1 h-5 w-5 text-primary" /><p className="text-xs text-muted-foreground">Participantes</p><p className="text-xs font-semibold">{(campaign.sold_tickets / 3).toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".")}+</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-            <div className="lg:col-span-2" id="purchase-tabs">
-             <div className="sticky top-20 space-y-6">
-               <div className="rounded-3xl border border-border/50 bg-card p-1 shadow-xl ring-1 ring-primary/10 overflow-hidden">
-                 <Tabs defaultValue="auto" className="w-full">
-                    {canManualSelect && (
-                      <div className="p-4 pb-0">
-                        <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary/50 rounded-2xl p-1">
-                          <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            <Zap className="h-4 w-4" /> Automático
-                          </TabsTrigger>
-                          <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                            <MousePointer2 className="h-4 w-4" /> Manual
-                          </TabsTrigger>
-                        </TabsList>
-                      </div>
-                    )}
+   return (
+     <div className="min-h-screen bg-slate-50">
+       <Header />
+       
+       {/* Hero Image Section */}
+       <div className="w-full bg-black relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mt-14">
+         <RaffleGallery 
+           images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
+           videoUrl={campaign.video_url} 
+         />
+         <div className="absolute bottom-4 right-4 z-10">
+           <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4">
+             <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
+           </Button>
+         </div>
+       </div>
  
-                   <TabsContent value="auto" className="p-5 mt-0">
-                     <CampaignPricing campaign={campaign} onBuy={handleBuy} />
-                   </TabsContent>
+       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container py-6 space-y-6">
+         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+           <div className="space-y-1">
+             <h1 className="text-2xl font-black text-slate-900 leading-tight">{campaign.title}</h1>
+             <p className="text-sm text-slate-500 font-medium">{campaign.subtitle}</p>
+           </div>
+           <div className="flex items-center gap-2">
+             <Badge variant={isActive ? "default" : "secondary"} className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider">
+               {isActive ? "Sorteio Ativo" : "Concluído"}
+             </Badge>
+             {drawDate && (
+               <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-white">
+                 <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
+               </Badge>
+             )}
+           </div>
+         </div>
+ 
+         {/* Progress Bar Section */}
+         <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
+           <div className="flex items-center justify-between">
+             <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-400 not-italic font-bold">concluído</span></span>
+             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
+           </div>
+           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+             <motion.div 
+               initial={{ width: 0 }} 
+               animate={{ width: `${progress}%` }} 
+               transition={{ duration: 1.5 }}
+               className="h-full bg-primary rounded-full"
+             />
+           </div>
+         </div>
+ 
+         <div className="grid gap-6 lg:grid-cols-3">
+           <div className="lg:col-span-2 space-y-6">
+             {/* Purchase Area */}
+             <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden" id="purchase-tabs">
+               <Tabs defaultValue="auto" className="w-full">
+                 {canManualSelect && (
+                   <div className="px-6 pt-6">
+                     <TabsList className="grid w-full grid-cols-2 h-12 bg-slate-100 rounded-2xl p-1">
+                       <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                         <Zap className="h-4 w-4" /> Automático
+                       </TabsTrigger>
+                       <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+                         <MousePointer2 className="h-4 w-4" /> Manual
+                       </TabsTrigger>
+                     </TabsList>
+                   </div>
+                 )}
+ 
+                 <TabsContent value="auto" className="p-6">
+                   <CampaignPricing campaign={campaign} onBuy={handleBuy} />
+                 </TabsContent>
  
                    <TabsContent value="manual" className="p-5 mt-0 space-y-6">
                      <div className="space-y-4">
