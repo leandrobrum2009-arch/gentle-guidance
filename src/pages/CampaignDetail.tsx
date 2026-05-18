@@ -25,6 +25,7 @@ import Footer from "@/components/Footer";
 import CampaignPricing from "@/components/CampaignPricing";
 import Roulette from "@/components/Roulette";
 import MysteryBox from "@/components/MysteryBox";
+import CampaignPrizes from "@/components/CampaignPrizes";
 import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -84,6 +85,24 @@ import { useAuth } from "@/contexts/AuthContext";
       return allLuckyNumbers.filter((p: any) => p.protected).map((p: any) => p.number);
     }, [allLuckyNumbers]);
  
+    const availableInstantPrizes = useMemo(() => {
+      return luckyNumbers.filter(p => !soldTickets.includes(p.number)).length;
+    }, [luckyNumbers, soldTickets]);
+
+    const userTicketsCount = useMemo(() => {
+      if (!user || !tickets) return 0;
+      return tickets.filter(t => t.user_id === user.id && t.status === 'paid').length;
+    }, [user, tickets]);
+
+    const userSpinsAvailable = useMemo(() => {
+      if (!campaign?.roulette_free_tickets || campaign.roulette_free_tickets <= 0) return 0;
+      const totalEarnedSpins = Math.floor(userTicketsCount / campaign.roulette_free_tickets);
+      // We would need a way to track used spins per user/campaign.
+      // For now, let's assume we show the potential spins.
+      // TODO: Subtract used spins from a roulette_spins table count.
+      return totalEarnedSpins;
+    }, [userTicketsCount, campaign]);
+
    const luckyNumbersList = useMemo(() => {
      return luckyNumbers.map((p: any) => p.number) || [];
    }, [luckyNumbers]);
@@ -346,31 +365,15 @@ import { useAuth } from "@/contexts/AuthContext";
 
       <div className="container pb-20">
         <div className="grid gap-8 lg:grid-cols-3">
-          {campaign.main_prizes && campaign.main_prizes.length > 0 && (
-            <div className="lg:col-span-3">
-              <div className="rounded-2xl border border-border/50 bg-card p-6 space-y-6">
-                <h2 className="flex items-center gap-2 text-lg font-bold">
-                  <Trophy className="h-5 w-5 text-primary" /> Premiação Principal
-                </h2>
-                <div className="grid gap-4 sm:grid-cols-5">
-                  {campaign.main_prizes.map((p: any, i: number) => (
-                    <div key={i} className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-secondary/30 border border-border/50 text-center">
-                      <div className={cn(
-                        "h-12 w-12 rounded-full flex items-center justify-center font-bold text-xl",
-                        i === 0 ? "bg-amber-500 text-white" : i === 1 ? "bg-slate-300 text-slate-800" : i === 2 ? "bg-amber-700 text-white" : "bg-primary/20 text-primary"
-                      )}>
-                        {i + 1}º
-                      </div>
-                      <div>
-                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-tighter">{i === 0 ? "Ganhador" : `${i + 1}º Lugar`}</p>
-                        <p className="text-sm font-black">{p.prize}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
+          <div className="lg:col-span-3 mb-8">
+            <CampaignPrizes 
+              mainPrizes={campaign.main_prizes} 
+              instantPrizes={campaign.lucky_numbers_prizes}
+              showInstant={campaign.show_instant_prizes !== false}
+              soldTickets={soldTickets}
+            />
+          </div>
+
           <div className="lg:col-span-2 space-y-8">
             {/* Description & Info */}
             <div className="space-y-6">
@@ -452,80 +455,149 @@ import { useAuth } from "@/contexts/AuthContext";
             </div>
           </div>
 
-          {/* New Campaign Specific Stats/Rankings */}
-          <div className="lg:col-span-3 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-             {campaign.ranking_enabled && campaignRanking && campaignRanking.length > 0 && (
-               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
-                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
-                   <TrendingUp className="h-4 w-4 text-primary" /> Top Compradores
-                 </h3>
-                 <div className="space-y-3">
-                   {campaignRanking.map((rank: any, i: number) => (
-                     <div key={i} className="flex items-center justify-between">
-                       <div className="flex items-center gap-3">
-                         <span className="text-[10px] font-bold text-muted-foreground w-4">#{i+1}</span>
-                         <Avatar className="h-8 w-8">
+          {/* Stats & Availability Bar */}
+          <div className="lg:col-span-3 grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
+               <Users className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Participantes</p>
+               <p className="text-lg font-black italic">{campaignRanking?.length || 0}</p>
+             </div>
+             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
+               <Gift className="h-5 w-5 text-amber-500 opacity-50 group-hover:opacity-100" />
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Cotas Premiadas</p>
+               <p className="text-lg font-black italic">{availableInstantPrizes} / {luckyNumbers.length}</p>
+             </div>
+             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
+               <Zap className="h-5 w-5 text-primary opacity-50 group-hover:opacity-100" />
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Seus Giros</p>
+               <p className="text-lg font-black italic">{user ? userSpinsAvailable : '-'}</p>
+             </div>
+             <div className="bg-card/40 border border-white/5 p-4 rounded-3xl flex flex-col items-center text-center gap-1 group hover:bg-white/5 transition-all">
+               <Trophy className="h-5 w-5 text-yellow-500 opacity-50 group-hover:opacity-100" />
+               <p className="text-[8px] font-black uppercase tracking-widest text-slate-500">Ganhadores</p>
+               <p className="text-lg font-black italic">{(campaignWinners?.length || 0) + (instantWinners?.length || 0) + (rouletteWinners?.length || 0)}</p>
+             </div>
+          </div>
+
+          {/* Rankings & Winners Section */}
+          <div className="lg:col-span-3 grid gap-8 lg:grid-cols-2">
+             {/* Buyers Ranking */}
+             {campaign.ranking_enabled && (
+               <div className="space-y-6">
+                 <div className="flex items-center gap-3">
+                   <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                     <TrendingUp className="h-6 w-6 text-primary" />
+                   </div>
+                   <div>
+                     <h2 className="text-xl font-black uppercase italic tracking-tighter">Maiores Compradores</h2>
+                     <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Os que mais acreditaram na sorte</p>
+                   </div>
+                 </div>
+
+                 <div className="grid gap-3">
+                   {campaignRanking && campaignRanking.length > 0 ? campaignRanking.map((rank: any, i: number) => (
+                     <motion.div 
+                       key={i} 
+                       initial={{ opacity: 0, x: -20 }}
+                       whileInView={{ opacity: 1, x: 0 }}
+                       transition={{ delay: i * 0.05 }}
+                       className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl hover:bg-white/5 transition-all"
+                     >
+                       <div className="flex items-center gap-4">
+                         <span className={cn(
+                           "w-6 text-sm font-black italic",
+                           i === 0 ? "text-amber-500" : i === 1 ? "text-slate-400" : i === 2 ? "text-amber-700" : "text-slate-700"
+                         )}>
+                           #{i + 1}
+                         </span>
+                         <Avatar className="h-10 w-10 border-2 border-white/5">
                            <AvatarImage src={rank.avatar_url} />
-                           <AvatarFallback className="text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
+                           <AvatarFallback className="font-black text-[10px]">{rank.name.substring(0, 2)}</AvatarFallback>
                          </Avatar>
-                         <span className="text-xs font-medium">{rank.name}</span>
+                         <div>
+                           <p className="text-sm font-black uppercase tracking-tighter">{rank.name}</p>
+                           <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{rank.total_tickets} COTAS</p>
+                         </div>
                        </div>
-                       <Badge variant="secondary" className="text-[10px]">{rank.total_tickets} cotas</Badge>
-                     </div>
-                   ))}
+                       <Badge className="bg-primary/20 text-primary border-none font-black italic">
+                         TOP {i + 1}
+                       </Badge>
+                     </motion.div>
+                   )) : (
+                     <div className="text-center py-10 text-slate-500 italic text-sm">Nenhum comprador ainda. Seja o primeiro!</div>
+                   )}
                  </div>
                </div>
              )}
 
-             {campaign.show_instant_prizes !== false && instantWinners && instantWinners.length > 0 && (
-               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
-                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
-                   <Gift className="h-4 w-4 text-amber-500" /> Ganhadores Instantâneos
-                 </h3>
-                 <div className="space-y-3">
-                   {instantWinners.map((win: any, i: number) => (
-                     <div key={i} className="flex items-center justify-between">
-                       <div className="flex items-center gap-2">
-                         <Avatar className="h-6 w-6">
-                           <AvatarImage src={win.profiles?.avatar_url} />
-                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
-                         </Avatar>
-                         <div className="flex flex-col">
-                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
-                           <span className="text-[8px] text-muted-foreground">{win.prize_title}</span>
-                         </div>
-                       </div>
-                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
-                     </div>
-                   ))}
+             {/* Recent Winners (Combined) */}
+             <div className="space-y-6">
+               <div className="flex items-center gap-3">
+                 <div className="h-10 w-10 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                   <Trophy className="h-6 w-6 text-amber-500" />
+                 </div>
+                 <div>
+                   <h2 className="text-xl font-black uppercase italic tracking-tighter">Últimos Ganhadores</h2>
+                   <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">A sorte sorriu para estes jogadores</p>
                  </div>
                </div>
-             )}
 
-             {campaign.roulette_enabled && campaign.show_roulette_status !== false && rouletteWinners && rouletteWinners.length > 0 && (
-               <div className="rounded-2xl border border-border/50 bg-card p-5 space-y-4">
-                 <h3 className="flex items-center gap-2 font-bold text-sm uppercase">
-                   <Sparkles className="h-4 w-4 text-primary" /> Ganhadores da Roleta
-                 </h3>
-                 <div className="space-y-3">
-                   {rouletteWinners.map((win: any, i: number) => (
-                     <div key={i} className="flex items-center justify-between">
-                       <div className="flex items-center gap-2">
-                         <Avatar className="h-6 w-6">
-                           <AvatarImage src={win.profiles?.avatar_url} />
-                           <AvatarFallback className="text-[8px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
-                         </Avatar>
-                         <div className="flex flex-col">
-                           <span className="text-[10px] font-medium">{win.profiles?.name}</span>
-                           <span className="text-[8px] text-muted-foreground">{win.prize_label}</span>
-                         </div>
+               <div className="grid gap-4">
+                 {/* Campaign Winners */}
+                 {campaignWinners.map((winner, i) => (
+                   <div key={winner.id} className="flex items-center justify-between p-4 bg-amber-500/5 border border-amber-500/10 rounded-3xl">
+                     <div className="flex items-center gap-4">
+                       <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white">
+                         <Trophy className="h-5 w-5" />
                        </div>
-                       <span className="text-[8px] text-muted-foreground">{new Date(win.created_at).toLocaleDateString()}</span>
+                       <div>
+                         <p className="text-sm font-black uppercase tracking-tighter text-white">{winner.winner_name}</p>
+                         <p className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Bilhete #{winner.ticket_number}</p>
+                       </div>
                      </div>
-                   ))}
-                 </div>
+                     <Badge className="bg-amber-500 text-white border-none font-black italic">PRÊMIO FINAL</Badge>
+                   </div>
+                 ))}
+
+                 {/* Instant Wins */}
+                 {instantWinners?.map((win, i) => (
+                   <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl">
+                     <div className="flex items-center gap-4">
+                       <Avatar className="h-10 w-10 border-2 border-white/5">
+                         <AvatarImage src={win.profiles?.avatar_url} />
+                         <AvatarFallback className="font-black text-[10px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                       </Avatar>
+                       <div>
+                         <p className="text-sm font-black uppercase tracking-tighter">{win.profiles?.name}</p>
+                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{win.prize_title}</p>
+                       </div>
+                     </div>
+                     <Badge variant="outline" className="border-white/10 text-slate-500 uppercase font-black text-[8px] tracking-widest">INSTANTÂNEO</Badge>
+                   </div>
+                 ))}
+
+                 {/* Roulette Wins */}
+                 {rouletteWinners?.map((win, i) => (
+                   <div key={i} className="flex items-center justify-between p-4 bg-white/[0.02] border border-white/5 rounded-3xl">
+                     <div className="flex items-center gap-4">
+                       <Avatar className="h-10 w-10 border-2 border-white/5">
+                         <AvatarImage src={win.profiles?.avatar_url} />
+                         <AvatarFallback className="font-black text-[10px]">{win.profiles?.name?.substring(0, 2)}</AvatarFallback>
+                       </Avatar>
+                       <div>
+                         <p className="text-sm font-black uppercase tracking-tighter">{win.profiles?.name}</p>
+                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">{win.prize_label}</p>
+                       </div>
+                     </div>
+                     <Badge variant="outline" className="border-primary/20 text-primary uppercase font-black text-[8px] tracking-widest">ROLETA</Badge>
+                   </div>
+                 ))}
+
+                 {campaignWinners.length === 0 && (!instantWinners || instantWinners.length === 0) && (!rouletteWinners || rouletteWinners.length === 0) && (
+                   <div className="text-center py-10 text-slate-500 italic text-sm">Nenhum ganhador nesta campanha ainda.</div>
+                 )}
                </div>
-             )}
+             </div>
           </div>
         </div>
       </div>
