@@ -157,6 +157,48 @@ export const useAdminOrders = () =>
     },
   });
 
+export const useAdminRouletteStats = () =>
+  useQuery({
+    queryKey: ["admin-roulette-stats"],
+    queryFn: async () => {
+      const { data: spins, error } = await supabase
+        .from("roulette_spins")
+        .select("*");
+
+      if (error) throw error;
+
+      const totalSpins = spins.length;
+      const totalPrizesValue = spins.reduce((acc, spin) => acc + (Number(spin.prize_value) || 0), 0);
+      const freeSpinsCount = spins.filter(spin => (spin as any).is_free).length;
+      const paidSpinsCount = totalSpins - freeSpinsCount;
+
+      // Get campaigns to calculate spin cost revenue
+      const { data: campaigns } = await supabase.from("campaigns").select("id, roulette_spin_cost");
+      
+      let estimatedRevenue = 0;
+      spins.forEach(spin => {
+        if (!(spin as any).is_free) {
+          const campaign = campaigns?.find(c => c.id === spin.campaign_id);
+          if (campaign && campaign.roulette_spin_cost) {
+            // This is an estimate as we don't store the multiplier at spin time yet in the DB 
+            // but we can infer it or we should add multiplier to roulette_spins table
+            // For now, let's just sum the prize_value if it's not free as a proxy or just use the spin_cost
+            // Actually, we should probably add 'multiplier' and 'cost_paid' to roulette_spins table for accuracy.
+            estimatedRevenue += Number(campaign.roulette_spin_cost);
+          }
+        }
+      });
+
+      return {
+        totalSpins,
+        totalPrizesValue,
+        freeSpinsCount,
+        paidSpinsCount,
+        estimatedRevenue
+      };
+    },
+  });
+
 export const useAdminWinners = () =>
   useQuery({
     queryKey: ["admin-winners"],

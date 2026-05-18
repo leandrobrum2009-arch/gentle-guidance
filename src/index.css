@@ -196,8 +196,16 @@
   .card-hover {
     @apply transition-all duration-300;
   }
-  .card-hover:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px hsl(220 30% 4% / 0.5);
-  }
-}
+   .card-hover:hover {
+     transform: translateY(-2px);
+     box-shadow: 0 8px 30px hsl(220 30% 4% / 0.5);
+   }
+
+   .no-scrollbar::-webkit-scrollbar {
+     display: none;
+   }
+   .no-scrollbar {
+     -ms-overflow-style: none;
+     scrollbar-width: none;
+   }
+ }

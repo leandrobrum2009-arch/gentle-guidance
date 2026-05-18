@@ -357,9 +357,32 @@ export const useCampaignRouletteSpins = (campaignId: string, limit = 10) =>
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data as any) as RouletteSpin[];
+       return (data as any) as RouletteSpin[];
+     },
+     enabled: !!campaignId,
+   });
+
+export const useGlobalRouletteSpins = (limit = 20) =>
+  useQuery({
+    queryKey: ["global-roulette-spins", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("roulette_spins")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          ),
+          campaigns!campaign_id (
+            title
+          )
+        `)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as (RouletteSpin & { campaigns: { title: string } })[];
     },
-    enabled: !!campaignId,
   });
 
 export const useUserCampaignSpins = (userId: string, campaignId: string) =>

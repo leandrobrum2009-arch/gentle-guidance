@@ -5,7 +5,7 @@ import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { RoulettePrize, Campaign } from "@/hooks/useData";
+ import { RoulettePrize, Campaign, useGlobalRouletteSpins } from "@/hooks/useData";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,8 +27,9 @@ const SOUND_URLS = {
   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
 };
 
-const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: RouletteProps) => {
-  const [isSpinning, setIsSpinning] = useState(false);
+ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: RouletteProps) => {
+   const { data: globalSpins } = useGlobalRouletteSpins(10);
+   const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
   const [wonPrize, setWonPrize] = useState<RoulettePrize | null>(null);
@@ -278,10 +279,35 @@ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: Roul
               </span>
             </div>
           )}
-        </div>
-      </div>
-
-      <div className="relative group">
+         </div>
+       </div>
+ 
+       {/* Live Win Feed */}
+       <div className="w-full px-6 mb-4">
+         <div className="bg-white/5 border border-white/10 rounded-2xl p-3 backdrop-blur-md overflow-hidden relative">
+           <div className="flex items-center gap-2 mb-2">
+             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+             <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Ganhadores em Tempo Real</span>
+           </div>
+           <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
+             {globalSpins?.map((spin, i) => (
+               <div key={i} className="flex items-center gap-2 bg-white/5 px-3 py-1.5 rounded-full border border-white/5 flex-shrink-0">
+                 <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center text-[8px] font-black text-primary">
+                   {spin.profiles?.name?.substring(0, 1)}
+                 </div>
+                 <span className="text-[10px] font-bold text-white">{spin.profiles?.name}</span>
+                 <span className="text-[10px] text-white/40">ganhou</span>
+                 <span className="text-[10px] font-black text-primary uppercase">{spin.prize_label}</span>
+               </div>
+             ))}
+             {(!globalSpins || globalSpins.length === 0) && (
+               <span className="text-[10px] text-white/20 italic">Aguardando novos giros...</span>
+             )}
+           </div>
+         </div>
+       </div>
+ 
+       <div className="relative group">
         {/* Metallic Outer Ring */}
         <div className="absolute -inset-10 rounded-full border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
         <div className="absolute -inset-6 rounded-full border-[2px] border-white/20 pointer-events-none" />
