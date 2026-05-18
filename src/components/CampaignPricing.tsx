@@ -30,83 +30,69 @@ const CampaignPricing = ({ campaign, onBuy }: CampaignPricingProps) => {
     return quantity * Number(campaign.ticket_price);
   }, [quantity, selectedBundle, campaign.ticket_price]);
 
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {bundles.map((bundle) => (
-          <motion.button
-            key={bundle.quantity}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => setQuantity(bundle.quantity)}
-            className={cn(
-              "relative flex flex-col items-center rounded-2xl border-2 p-4 transition-all",
-              quantity === bundle.quantity
-                ? "border-primary bg-primary/5 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]"
-                : "border-border bg-card hover:border-primary/50"
-            )}
-          >
-            {bundle.is_popular && (
-              <Badge className="absolute -top-3 bg-primary text-[10px] font-bold uppercase tracking-wider">
-                Popular
-              </Badge>
-            )}
-            <span className="text-2xl font-black text-foreground">
-              {bundle.quantity}
-            </span>
-            <span className="text-[10px] font-medium uppercase text-muted-foreground">
-              Bilhetes
-            </span>
-            <div className="mt-3 text-lg font-bold text-primary">
-              R$ {bundle.price.toFixed(2).replace(".", ",")}
-            </div>
-            {quantity === bundle.quantity && (
-              <div className="absolute -right-2 -top-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-lg">
-                <Check className="h-4 w-4" />
-              </div>
-            )}
-          </motion.button>
-        ))}
-      </div>
-
-      <div className="rounded-2xl border border-border bg-card/50 p-6 backdrop-blur-sm">
-        <div className="flex items-center justify-between mb-4">
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">Total selecionado</p>
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-black text-primary">
-                R$ {totalPrice.toFixed(2).replace(".", ",")}
-              </span>
-              {selectedBundle && selectedBundle.price < (selectedBundle.quantity * Number(campaign.ticket_price)) && (
-                <span className="text-sm text-muted-foreground line-through decoration-destructive/50">
-                  R$ {(selectedBundle.quantity * Number(campaign.ticket_price)).toFixed(2).replace(".", ",")}
-                </span>
-              )}
-            </div>
-          </div>
-          <div className="text-right">
-            <p className="text-sm font-medium text-muted-foreground">Quantidade</p>
-            <p className="text-2xl font-bold">{quantity || 0}</p>
-          </div>
-        </div>
-
-        <Button
-          size="lg"
-          className="w-full h-14 gap-3 text-lg font-black uppercase tracking-wide glow-primary"
-          disabled={quantity === 0 || campaign.status !== "active"}
-          onClick={() => onBuy(quantity)}
-        >
-          <ShoppingCart className="h-6 w-6" />
-          Quero Participar
-          <Zap className="h-5 w-5 fill-current" />
-        </Button>
-        
-        <p className="mt-4 text-center text-[10px] uppercase tracking-widest text-muted-foreground font-semibold">
-          ⚡ Confirmação instantânea via PIX ⚡
-        </p>
-      </div>
-    </div>
-  );
+   return (
+     <div className="space-y-8">
+       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+         {bundles.map((bundle) => (
+           <motion.button
+             key={bundle.quantity}
+             whileHover={{ scale: 1.02 }}
+             whileTap={{ scale: 0.98 }}
+             onClick={() => setQuantity(bundle.quantity)}
+             className={cn(
+               "relative flex flex-col items-center rounded-2xl border p-4 transition-all",
+               quantity === bundle.quantity
+                 ? "border-primary bg-primary/5 ring-1 ring-primary"
+                 : "border-slate-200 bg-white hover:border-primary/50"
+             )}
+           >
+             <span className="text-xl font-black text-slate-900">+{bundle.quantity}</span>
+             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mt-0.5">Títulos</span>
+             <div className="mt-2 text-sm font-black text-primary">
+               R$ {bundle.price.toFixed(2).replace(".", ",")}
+             </div>
+             {quantity === bundle.quantity && (
+               <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white shadow-sm">
+                 <Check className="h-3 w-3" />
+               </div>
+             )}
+           </motion.button>
+         ))}
+       </div>
+ 
+       <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+         <div className="flex items-center justify-between mb-6">
+           <div className="space-y-1">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total a pagar</p>
+             <div className="flex items-baseline gap-2">
+               <span className="text-3xl font-black text-slate-900">
+                 R$ {totalPrice.toFixed(2).replace(".", ",")}
+               </span>
+             </div>
+           </div>
+           <div className="text-right">
+             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Títulos</p>
+             <p className="text-xl font-black text-slate-900">{quantity || 0}</p>
+           </div>
+         </div>
+ 
+         <Button
+           size="lg"
+           className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200"
+           disabled={quantity === 0 || campaign.status !== "active"}
+           onClick={() => onBuy(quantity)}
+         >
+           Quero Participar
+         </Button>
+         
+         <div className="mt-4 flex items-center justify-center gap-2">
+            <div className="h-[1px] flex-1 bg-slate-200" />
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Pague com PIX</p>
+            <div className="h-[1px] flex-1 bg-slate-200" />
+         </div>
+       </div>
+     </div>
+   );
 };
 
 export default CampaignPricing;
