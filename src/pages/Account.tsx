@@ -613,8 +613,25 @@ import { cn } from "@/lib/utils";
                    </Card>
                 </TabsContent>
 
-                <TabsContent value="ranking" className="space-y-6">
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
+                 <TabsContent value="ranking" className="space-y-6">
+                   {/* User Current Rank Summary */}
+                   <Card className="bg-gradient-to-r from-primary/10 to-purple-500/10 border-primary/20 p-6 flex items-center justify-between">
+                      <div className="flex items-center gap-4">
+                         <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center">
+                            <Trophy className="h-6 w-6 text-primary" />
+                         </div>
+                         <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Sua Posição Atual</p>
+                            <p className="text-xl font-black italic text-white">#{(ranking?.findIndex((r: any) => r.name === profile?.name) ?? -1) + 1 || '--'} no Ranking Global</p>
+                         </div>
+                      </div>
+                      <div className="text-right">
+                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Total de Pontos</p>
+                         <p className="text-xl font-black italic text-primary">{profile?.points || 0} PTS</p>
+                      </div>
+                   </Card>
+
+                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-8 rounded-[40px] overflow-hidden relative">
                      <div className="absolute top-0 right-0 p-8 opacity-5">
                         <Crown className="h-64 w-64" />
                      </div>
