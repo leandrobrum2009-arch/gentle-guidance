@@ -48,6 +48,8 @@ import { cn } from "@/lib/utils";
    
    const [spinsPage, setSpinsPage] = useState(1);
    const [boxesPage, setBoxesPage] = useState(1);
+   const [ordersPage, setOrdersPage] = useState(1);
+   const [txsPage, setTxsPage] = useState(1);
    const ITEMS_PER_PAGE = 5;
  
    const [profile, setProfile] = useState<any>(null);
