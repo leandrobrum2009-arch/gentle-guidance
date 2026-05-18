@@ -39,7 +39,37 @@ import { useAuth } from "@/contexts/AuthContext";
     const { data: mysteryBoxes } = useMysteryBoxConfigs(id || "");
    const { data: roulettePrizes } = useRoulettePrizes(id || "");
    const { data: allWinners } = useWinners();
-   const { data: tickets } = useTickets(id || "");
+   const { data: tickets } = useTickets(id || "", canManualSelect);
+    // Get status of lucky numbers separately to avoid fetching all tickets for high-volume campaigns
+    const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
+
+    useEffect(() => {
+      if (!id || !luckyNumbersList.length) return;
+      
+      const fetchLuckyStatus = async () => {
+        const { data } = await supabase
+          .from('tickets')
+          .select('number, status')
+          .eq('campaign_id', id)
+          .in('number', luckyNumbersList);
+          
+        if (data) {
+          const statusMap: Record<string, boolean> = {};
+          data.forEach(t => {
+            if (t.status === 'paid' || t.status === 'reserved') {
+              statusMap[t.number] = true;
+            }
+          });
+          setLuckyNumbersStatus(statusMap);
+        }
+      };
+      
+      fetchLuckyStatus();
+      // Refresh every 30 seconds
+      const interval = setInterval(fetchLuckyStatus, 30000);
+      return () => clearInterval(interval);
+    }, [id, luckyNumbersList]);
+
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
@@ -299,8 +329,8 @@ import { useAuth } from "@/contexts/AuthContext";
                                     </div>
                                     <span className="text-[10px] font-bold">{p.prize}</span>
                                   </div>
-                                  <Badge variant={soldTickets.includes(p.number) ? "secondary" : "default"} className={cn("text-[8px] h-5", !soldTickets.includes(p.number) && "bg-amber-500 text-white")}>
-                                    {soldTickets.includes(p.number) ? "Ganhado" : "Livre"}
+                                  <Badge variant={luckyNumbersStatus[p.number] ? "secondary" : "default"} className={cn("text-[8px] h-5", !luckyNumbersStatus[p.number] && "bg-amber-500 text-white")}>
+                                    {luckyNumbersStatus[p.number] ? "Ganhado" : "Livre"}
                                   </Badge>
                                 </div>
                               ))}
