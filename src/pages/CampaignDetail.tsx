@@ -369,6 +369,7 @@ import { useAuth } from "@/contexts/AuthContext";
             <CampaignPrizes 
               mainPrizes={campaign.main_prizes} 
               instantPrizes={campaign.lucky_numbers_prizes}
+              roulettePrizes={roulettePrizes}
               showInstant={campaign.show_instant_prizes !== false}
               soldTickets={soldTickets}
             />
