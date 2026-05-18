@@ -77,7 +77,7 @@ const Index = () => {
        </div>
 
        <Header />
-       <div className="h-20 md:h-24" /> {/* Improved Spacer for fixed header */}
+        <div className="h-16 md:h-20" />
 
        {loadingCampaigns ? (
         <div className="flex h-[90vh] items-center justify-center">
@@ -90,7 +90,7 @@ const Index = () => {
            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
-          <section className="container relative z-30 -mt-10 md:-mt-16 py-8">
+          <section className="container relative z-30 -mt-8 md:-mt-12 py-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6">
                 {[
                   { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
@@ -192,13 +192,13 @@ const Index = () => {
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {endingSoon.slice(0, 2).map((campaign, i) => (
-                    <div key={i} className="bg-background/40 backdrop-blur-sm border border-white/10 rounded-2xl p-4 flex items-center gap-4">
+                    <div key={i} className="bg-white/60 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
                        <div className="relative h-16 w-16 flex-shrink-0">
                          <img src={campaign.image_url || ""} className="h-full w-full rounded-xl object-cover" alt="" />
                          <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse" />
                        </div>
                       <div className="min-w-0 flex-1">
-                         <div className="flex items-center justify-between mb-1">
+                         <div className="flex items-center justify-between mb-1 text-foreground">
                            <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
                            {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
                          </div>

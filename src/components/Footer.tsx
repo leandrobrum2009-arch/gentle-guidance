@@ -36,9 +36,9 @@ const Footer = () => {
               A maior e mais segura plataforma de rifas online do Brasil. Prêmios cinematográficos toda semana.
             </p>
             <div className="flex gap-3">
-              {[Instagram, Youtube, MessageCircle].map((Icon, i) => (
-                <a key={i} href="#" className="h-10 w-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all">
-                  <Icon className="h-5 w-5" />
+              {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
+                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
+                  <Icon className="h-4 w-4" />
                 </a>
               ))}
             </div>
@@ -59,11 +59,11 @@ const Footer = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Suporte</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs">
-                <div className="h-8 w-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
+                <div className="h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
                 <span className="font-bold text-muted-foreground">0800 123 4567</span>
               </div>
               <div className="flex items-center gap-3 text-xs">
-                <div className="h-8 w-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
+                <div className="h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
                 <span className="font-bold text-muted-foreground">ajuda@rifaspro.com</span>
               </div>
             </div>
@@ -73,7 +73,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Certificações</h3>
             <div className="flex flex-col gap-4">
-              <div className="p-4 rounded-2xl border border-white/10 bg-white/5 flex items-center gap-4">
+              <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex items-center gap-4 shadow-sm">
                 <ShieldCheck className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Pagamento Seguro</p>
@@ -88,7 +88,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <Separator className="my-10 bg-white/5" />
+        <Separator className="my-10 bg-slate-100" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
