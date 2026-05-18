@@ -310,7 +310,7 @@ import { useAuth } from "@/contexts/AuthContext";
             </div>
           </div>
 
-           <div className="lg:col-span-2">
+            <div className="lg:col-span-2" id="purchase-tabs">
              <div className="sticky top-20 space-y-6">
                <div className="rounded-3xl border border-border/50 bg-card p-1 shadow-xl ring-1 ring-primary/10 overflow-hidden">
                  <Tabs defaultValue="auto" className="w-full">
