@@ -185,10 +185,6 @@ import { cn } from "@/lib/utils";
       toast.error("Erro ao fazer upload do avatar: " + error.message);
     }
   };
-    } catch (error) {
-      toast.error("Erro ao marcar notificações como lidas");
-    }
-  };
 
   if (isLoading) {
     return (
@@ -276,7 +272,6 @@ import { cn } from "@/lib/utils";
                 <LogOut className="h-4 w-4" /> Sair
               </Button>
             </nav>
-          </aside>
           </aside>
 
           <main className="lg:col-span-9 space-y-6">
