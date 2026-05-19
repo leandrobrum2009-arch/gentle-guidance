@@ -282,14 +282,13 @@ aside:has(a[href*="lovable.dev"]) {
      opacity: var(--border-shimmer-opacity);
      background-size: 200% 100%;
      transition: opacity 0.5s ease;
+     mask: 
+       linear-gradient(#fff 0 0) content-box, 
+       linear-gradient(#fff 0 0);
+     mask-composite: exclude;
+     -webkit-mask-composite: destination-out;
      animation: border-shimmer 6s infinite linear;
      pointer-events: none;
-   }
-
-   .border-light-path:hover::before,
-   .border-light-always::before {
-     opacity: var(--border-shimmer-opacity);
-   }
    }
 
    .border-light-path:hover::before,
