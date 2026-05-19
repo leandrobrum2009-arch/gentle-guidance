@@ -199,12 +199,40 @@ import { cn } from "@/lib/utils";
               </CardContent>
             </Card>
 
+          <aside className="lg:col-span-3 space-y-6">
+            <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
+                     <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
+                        <User className="h-10 w-10 text-white" />
+                     </div>
+                  </div>
+                  <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
+                  <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
+                  <div className="w-full bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-2">
+                      <span>Nível {profile?.vip_level || 1} VIP</span>
+                      <span>{profile?.xp || 0} XP</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <nav className="space-y-2">
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
                 { label: "Meus Títulos", id: "tickets", icon: Ticket },
                 { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
+                { label: "Ranking Global", id: "ranking", icon: Trophy },
+                { label: "Conquistas", id: "achievements", icon: Star },
+                { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
+              ].map((item) => (
                 <Button 
                     key={item.id} 
                     variant="ghost" 
@@ -222,6 +250,7 @@ import { cn } from "@/lib/utils";
                 <LogOut className="h-4 w-4" /> Sair
               </Button>
             </nav>
+          </aside>
           </aside>
 
           <main className="lg:col-span-9 space-y-6">
