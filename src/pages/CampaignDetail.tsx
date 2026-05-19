@@ -508,7 +508,7 @@ const CampaignDetail = () => {
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-amber-500 neon-text-amber">Premiada</span></h2>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Experimente nossa nova raspadinha digital e sinta a emoção!</p>
             </div>
             <ScratchCard 
