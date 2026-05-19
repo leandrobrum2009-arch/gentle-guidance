@@ -123,7 +123,6 @@ aside:has(a[href*="lovable.dev"]) {
     --hover-scale: 1.02;
     --hover-translate: -2px;
   }
-  }
 
   .dark {
     --background: 240 10% 3.9%;
