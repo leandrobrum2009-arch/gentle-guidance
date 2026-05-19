@@ -404,7 +404,76 @@ export default function AdminSettings() {
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
-                </div>
+      </div>
+
+      {/* Preset Preview Dialog */}
+      <Dialog open={!!presetToPreview} onOpenChange={(open) => !open && setPresetToPreview(null)}>
+        <DialogContent className="bg-card border-border backdrop-blur-xl max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2">
+              <Eye className="h-5 w-5 text-primary" />
+              Pré-visualizar Preset: {presetToPreview?.name}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Veja as alterações que este preset fará nas suas configurações atuais.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground pb-2 border-b border-border">
+              <span>Item de Configuração</span>
+              <div className="grid grid-cols-2 gap-2">
+                <span>Valor Atual</span>
+                <span>Novo Valor</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              {presetToPreview && Object.entries(presetToPreview.values).map(([key, newValue]: [string, any]) => {
+                const currentSetting = settings.find(s => s.key === key);
+                if (!currentSetting) return null;
+                const currentValue = currentSetting.value;
+                const isChanged = currentValue !== newValue;
+                
+                return (
+                  <div key={key} className={`grid grid-cols-2 gap-4 items-center text-sm ${isChanged ? 'text-foreground' : 'text-muted-foreground opacity-50'}`}>
+                    <span className="font-medium truncate">{key.replace(/_/g, ' ')}</span>
+                    <div className="grid grid-cols-2 gap-2 items-center">
+                      <div className="flex items-center gap-2 truncate">
+                        {key.includes('color') ? (
+                          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: currentValue as string }} />
+                        ) : null}
+                        <span className="truncate">{currentValue}</span>
+                      </div>
+                      <div className={`flex items-center gap-2 truncate ${isChanged ? 'text-primary font-bold' : ''}`}>
+                        {key.includes('color') ? (
+                          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: newValue as string }} />
+                        ) : null}
+                        <span className="truncate">{newValue}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setPresetToPreview(null)} className="border-border text-foreground hover:bg-secondary/20 font-bold">
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => {
+                applyPreset(presetToPreview.values);
+                setPresetToPreview(null);
+              }} 
+              className="bg-primary hover:bg-primary/90 text-foreground font-bold"
+            >
+              Aplicar Preset
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
               ))}
             </div>
           </div>
