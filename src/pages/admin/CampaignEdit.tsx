@@ -267,8 +267,27 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="general" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
-               <Label>Título da Campanha</Label>
-               <Input value={form.title} onChange={(e) => set("title", e.target.value)} className="mt-2" />
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label>Título da Campanha</Label>
+                   <Input value={form.title} onChange={(e) => set("title", e.target.value)} />
+                 </div>
+                 <div className="space-y-2">
+                   <Label>Status da Campanha</Label>
+                   <Select value={form.status} onValueChange={(v) => set("status", v)}>
+                     <SelectTrigger>
+                       <SelectValue placeholder="Selecione o status" />
+                     </SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="active">Ativa (Aberta para vendas)</SelectItem>
+                       <SelectItem value="paused">Pausada (Vendas suspensas)</SelectItem>
+                       <SelectItem value="audit">Em Auditoria (Verificação final)</SelectItem>
+                       <SelectItem value="completed">Finalizada (Sorteio realizado)</SelectItem>
+                       <SelectItem value="draft">Rascunho (Privada)</SelectItem>
+                     </SelectContent>
+                   </Select>
+                 </div>
+               </div>
                <Label className="mt-4 block">Subtítulo</Label>
                <Input value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} className="mt-2" />
                <Label className="mt-4 block">Descrição</Label>
