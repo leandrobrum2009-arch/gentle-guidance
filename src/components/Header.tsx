@@ -9,6 +9,7 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { ThemeToggle } from "./ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
+import { useSiteSettings } from "@/hooks/useData";
 
 const navLinks = [
   { label: "Início", href: "/" },
