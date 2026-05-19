@@ -128,7 +128,7 @@
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none ring-offset-background;
   }
 
   body {
@@ -195,12 +195,17 @@
   }
 
   .card-hover {
-    @apply transition-all duration-300;
+    @apply transition-all duration-300 focus-within:ring-2 focus-within:ring-primary/50;
   }
-   .card-hover:hover {
-     transform: translateY(-2px);
-     box-shadow: 0 8px 30px hsl(220 30% 4% / 0.5);
-   }
+  
+  .card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -10px hsl(var(--primary) / 0.3);
+  }
+
+  .interactive-element {
+    @apply transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:ring-2 focus-visible:ring-primary;
+  }
 
    .no-scrollbar::-webkit-scrollbar {
      display: none;

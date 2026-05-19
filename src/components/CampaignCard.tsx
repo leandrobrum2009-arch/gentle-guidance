@@ -49,8 +49,8 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
       className="group relative h-full perspective-1000"
     >
-      <Link to={`/campanha/${campaign.id}`} className="block h-full">
-        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-2xl shadow-sm">
+      <Link to={`/campanha/${campaign.id}`} className="block h-full outline-none">
+        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-2xl shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2">
           
           {/* Reflection Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />

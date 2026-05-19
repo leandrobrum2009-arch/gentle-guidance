@@ -88,38 +88,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
   ];
 
   return (
-    <div className="space-y-12">
-      {/* Real-time Stats */}
-      <section className="space-y-6">
-        <div className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-            <BarChart3 className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-xl font-black uppercase italic tracking-tighter">Estatísticas em Tempo Real</h2>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Acompanhe o desempenho da campanha agora</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.05 }}
-              className="p-4 rounded-3xl border border-white/5 bg-white/[0.02] hover:bg-white/5 transition-all group"
-            >
-              <div className={cn("h-8 w-8 rounded-xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110", stat.bg)}>
-                <stat.icon className={cn("h-4 w-4", stat.color)} />
-              </div>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
-              <p className="text-xl font-black italic">{stat.value}</p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
+    <div className="flex flex-col gap-12">
        {/* Winners History */}
        <section className="space-y-6">
          <div className="flex items-center gap-3">
@@ -239,8 +208,38 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
              )}
            </TabsContent>
          </Tabs>
-       </section>
-     </div>
+        </section>
+
+      {/* Real-time Stats - Moved to bottom and made compact */}
+      <section className="space-y-4 pt-8 border-t border-border/50">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-4 w-4 text-primary" />
+            <h2 className="text-xs font-black uppercase italic tracking-widest">Estatísticas Ao Vivo</h2>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap gap-2">
+          {stats.map((stat, i) => (
+            <motion.div
+              key={i}
+              initial={{ opacity: 0, x: -10 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.05 }}
+              className="flex items-center gap-3 px-4 py-2 rounded-2xl border border-border bg-card/50 hover:bg-secondary transition-all group cursor-default"
+            >
+              <div className={cn("h-6 w-6 rounded-lg flex items-center justify-center transition-transform group-hover:scale-110", stat.bg)}>
+                <stat.icon className={cn("h-3 w-3", stat.color)} />
+              </div>
+              <div className="flex flex-col">
+                <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest leading-none mb-0.5">{stat.label}</p>
+                <p className="text-xs font-black italic leading-none">{stat.value}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </section>
+    </div>
    );
  };
  
