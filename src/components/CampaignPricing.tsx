@@ -13,9 +13,9 @@ interface CampaignPricingProps {
 }
 
 const DEFAULT_BUNDLES: PriceBundle[] = [
-  { quantity: 50, price: 45.00, label: "Econômico" },
-  { quantity: 100, price: 80.00, label: "Mais Popular", is_popular: true },
-  { quantity: 500, price: 350.00, label: "Melhor Valor" },
+  { quantity: 50, price: 45.00, label: "ECONÔMICO" },
+  { quantity: 100, price: 80.00, label: "MAIS VENDIDO 🔥", is_popular: true },
+  { quantity: 500, price: 350.00, label: "VALOR VIP 👑" },
 ];
 
 const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
@@ -100,10 +100,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                Reservando...
              </>
            ) : (
-             <>
-               <Zap className="h-5 w-5 fill-current" />
-               Quero Participar
-             </>
+              <>
+                <Zap className="h-5 w-5 fill-current" />
+                FINALIZAR COMPRA
+              </>
            )}
          </Button>
          

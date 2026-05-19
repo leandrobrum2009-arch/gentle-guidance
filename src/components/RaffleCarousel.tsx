@@ -113,12 +113,12 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                          whileTap={{ scale: 0.95 }}
                        >
                           <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
-                           Participar Agora <Zap className="h-5 w-5 fill-current" />
+                           QUERO MEU PRÊMIO <Zap className="h-5 w-5 fill-current" />
                          </Button>
                        </motion.div>
                      </Link>
                        <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-border hover:bg-secondary font-black uppercase italic tracking-widest text-foreground backdrop-blur-md">
-                       Ver Detalhes
+                       CONFERIR CHANCES
                      </Button>
                    </div>
                  </motion.div>
@@ -155,11 +155,11 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
          >
            {[...Array(10)].map((_, i) => (
              <div key={i} className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
-               <span>PARTICIPE AGORA</span>
+               <span>ÚLTIMAS COTAS DISPONÍVEIS</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>PRÊMIOS INSTANTÂNEOS</span>
+               <span>PRÊMIOS INSTANTÂNEOS NO PIX</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>SORTEIO GARANTIDO</span>
+               <span>SORTEIO 100% GARANTIDO</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
              </div>
            ))}
