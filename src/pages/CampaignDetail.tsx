@@ -246,7 +246,7 @@ import { useAuth } from "@/contexts/AuthContext";
   const drawTime = campaign.draw_date ? new Date(campaign.draw_date).toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" }) : "";
 
    return (
-     <div className="min-h-screen bg-slate-50">
+     <div className="min-h-screen bg-background">
        <Header />
        
        {/* Hero Image Section */}
@@ -281,7 +281,7 @@ import { useAuth } from "@/contexts/AuthContext";
          </div>
  
          {/* Progress Bar Section */}
-         <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
+          <div className="bg-card rounded-3xl p-6 shadow-sm border border-border space-y-4">
            <div className="flex items-center justify-between">
               <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-600 not-italic font-bold">concluído</span></span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
@@ -297,22 +297,22 @@ import { useAuth } from "@/contexts/AuthContext";
          </div>
  
          <div className="grid gap-6 lg:grid-cols-3">
-           <div className="lg:col-span-2 space-y-6">
-             {/* Purchase Area */}
-             <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden" id="purchase-tabs">
-               <Tabs defaultValue="auto" className="w-full">
-                 {canManualSelect && (
-                   <div className="px-6 pt-6">
-                     <TabsList className="grid w-full grid-cols-2 h-12 bg-slate-100 rounded-2xl p-1">
-                       <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                         <Zap className="h-4 w-4" /> Automático
-                       </TabsTrigger>
-                       <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-                         <MousePointer2 className="h-4 w-4" /> Manual
-                       </TabsTrigger>
-                     </TabsList>
-                   </div>
-                 )}
+             <div className="lg:col-span-2 space-y-6">
+               {/* Purchase Area */}
+               <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
+                 <Tabs defaultValue="auto" className="w-full">
+                   {canManualSelect && (
+                     <div className="px-6 pt-6">
+                       <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary rounded-2xl p-1">
+                         <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                           <Zap className="h-4 w-4" /> Automático
+                         </TabsTrigger>
+                         <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                           <MousePointer2 className="h-4 w-4" /> Manual
+                         </TabsTrigger>
+                       </TabsList>
+                     </div>
+                   )}
  
                  <TabsContent value="auto" className="p-6">
                    <CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} />
@@ -344,61 +344,61 @@ import { useAuth } from "@/contexts/AuthContext";
              {/* Info Sections */}
              <CampaignPublicInfo campaign={campaign} />
  
-             {/* Instant Prizes Section (Cotas Premiadas) */}
-             {luckyNumbers.length > 0 && (
-               <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm space-y-6">
-                 <div className="flex items-center justify-between">
-                   <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
-                     <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
-                   </h3>
-                   <Badge variant="outline" className="rounded-full bg-slate-50 text-[10px] font-bold">
-                     {availableInstantPrizes} disponíveis
-                   </Badge>
-                 </div>
-                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                   {luckyNumbers.map((p: any, i: number) => (
-                     <div 
-                       key={i} 
-                       className={cn(
-                         "flex items-center justify-between p-4 rounded-2xl border transition-all",
-                         luckyNumbersStatus[p.number] 
-                           ? "bg-slate-50 border-slate-100 opacity-60" 
-                           : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/30"
-                       )}
-                     >
-                       <div className="flex items-center gap-3">
-                         <div className={cn(
-                           "h-10 w-10 rounded-xl flex items-center justify-center font-black italic text-sm",
-                           luckyNumbersStatus[p.number] ? "bg-slate-200 text-slate-400" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
-                         )}>
-                           #{p.number}
+               {/* Instant Prizes Section (Cotas Premiadas) */}
+               {luckyNumbers.length > 0 && (
+                 <div className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6">
+                   <div className="flex items-center justify-between">
+                     <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
+                       <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
+                     </h3>
+                     <Badge variant="outline" className="rounded-full bg-secondary text-[10px] font-bold">
+                       {availableInstantPrizes} disponíveis
+                     </Badge>
+                   </div>
+                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                     {luckyNumbers.map((p: any, i: number) => (
+                       <div 
+                         key={i} 
+                         className={cn(
+                           "flex items-center justify-between p-4 rounded-2xl border transition-all",
+                           luckyNumbersStatus[p.number] 
+                             ? "bg-secondary border-border opacity-60" 
+                             : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/30"
+                         )}
+                       >
+                         <div className="flex items-center gap-3">
+                           <div className={cn(
+                             "h-10 w-10 rounded-xl flex items-center justify-center font-black italic text-sm",
+                             luckyNumbersStatus[p.number] ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                           )}>
+                             #{p.number}
+                           </div>
+                           <div className="text-left min-w-0">
+                             <p className={cn("text-xs font-black uppercase tracking-tight truncate", luckyNumbersStatus[p.number] ? "text-muted-foreground" : "text-foreground")}>
+                               {p.prize}
+                             </p>
+                             {luckyNumbersStatus[p.number] ? (
+                               <p className="text-[8px] font-black text-primary uppercase tracking-tighter truncate">
+                                 Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Verificando..."}
+                               </p>
+                             ) : (
+                               <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+                                 Disponível
+                               </p>
+                             )}
+                           </div>
                          </div>
-                        <div className="text-left min-w-0">
-                          <p className={cn("text-xs font-black uppercase tracking-tight truncate", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
-                            {p.prize}
-                          </p>
-                          {luckyNumbersStatus[p.number] ? (
-                            <p className="text-[8px] font-black text-primary uppercase tracking-tighter truncate">
-                              Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Verificando..."}
-                            </p>
-                          ) : (
-                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                              Disponível
-                            </p>
-                          )}
-                        </div>
+                         {luckyNumbersStatus[p.number] && (
+                           <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                         )}
                        </div>
-                       {luckyNumbersStatus[p.number] && (
-                         <CheckCircle2 className="h-4 w-4 text-slate-300" />
-                       )}
-                     </div>
-                   ))}
+                     ))}
+                   </div>
                  </div>
-               </div>
-             )}
+               )}
 
-             {campaign.description && (
-               <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm space-y-4">
+               {campaign.description && (
+                 <div className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-4">
                  <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
                    <Info className="h-5 w-5 text-primary" /> Descrição
                  </h3>
