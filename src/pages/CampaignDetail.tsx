@@ -315,7 +315,7 @@ import { useAuth } from "@/contexts/AuthContext";
                  )}
  
                  <TabsContent value="auto" className="p-6">
-                   <CampaignPricing campaign={campaign} onBuy={handleBuy} />
+                   <CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} />
                  </TabsContent>
  
                  <TabsContent value="manual" className="p-6">
