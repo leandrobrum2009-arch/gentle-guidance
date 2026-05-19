@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Search, Trophy, ExternalLink, Calendar, User, Gift } from "lucide-react";
+import { Loader2, Plus, Trash2, Search, Trophy, ExternalLink, Calendar, User, Gift, Camera } from "lucide-react";
 import { format } from "date-fns";
 
 interface WinnerForm {
@@ -23,11 +23,13 @@ interface WinnerForm {
   phone_masked: string;
   video_url: string;
   draw_date: string;
+  avatar_url: string;
 }
 
 const empty: WinnerForm = {
   campaign_id: "", winner_name: "", ticket_number: "",
   prize_description: "", phone_masked: "", video_url: "", draw_date: "",
+  avatar_url: "",
 };
 
 export default function AdminWinners() {
@@ -38,19 +40,61 @@ export default function AdminWinners() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<WinnerForm>(empty);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState("");
 
   const set = (k: keyof WinnerForm, v: string) => setForm((p) => ({ ...p, [k]: v }));
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+    try {
+      setUploading(true);
+
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        throw new Error("O arquivo não é uma imagem válida (JPG, PNG, WebP ou GIF).");
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        throw new Error("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      set("avatar_url", publicUrl);
+      toast({ title: "Sucesso", description: "Foto enviada com sucesso!" });
+    } catch (error: any) {
+      toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  };
+
   const save = async () => {
     setSaving(true);
-    const { error } = await supabase.from("winners").insert({
+    const { error } = await (supabase.from("winners") as any).insert({
       campaign_id: form.campaign_id,
       winner_name: form.winner_name,
       ticket_number: form.ticket_number,
       prize_description: form.prize_description,
       phone_masked: form.phone_masked || null,
       video_url: form.video_url || null,
+      avatar_url: form.avatar_url || null,
       draw_date: form.draw_date,
     });
     setSaving(false);
@@ -164,6 +208,27 @@ export default function AdminWinners() {
                     <div className="space-y-2">
                       <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Data do Sorteio</Label>
                       <Input type="date" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Foto do Ganhador (Opcional)</Label>
+                    <div className="flex items-center gap-4">
+                      {form.avatar_url ? (
+                        <div className="h-12 w-12 rounded-xl overflow-hidden border border-white/10">
+                          <img src={form.avatar_url} className="h-full w-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                          <User className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                      )}
+                      <Label className="flex-1 cursor-pointer">
+                        <div className="flex items-center justify-center gap-2 h-12 rounded-xl bg-white/5 border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors">
+                          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                          {form.avatar_url ? "Alterar Foto" : "Fazer Upload"}
+                        </div>
+                        <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                      </Label>
                     </div>
                   </div>
                   <div className="space-y-2">

@@ -74,10 +74,23 @@ export default function AdminCampaignEdit() {
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
     try {
       setUploading(type);
       
       const uploadPromises = Array.from(files).map(async (file) => {
+        // Validate type
+        if (!ALLOWED_TYPES.includes(file.type)) {
+          throw new Error(`O arquivo ${file.name} não é uma imagem válida (JPG, PNG, WebP ou GIF).`);
+        }
+
+        // Validate size
+        if (file.size > MAX_FILE_SIZE) {
+          throw new Error(`O arquivo ${file.name} é muito grande. O tamanho máximo permitido é 5MB.`);
+        }
+
         const fileExt = file.name.split('.').pop();
         const filePath = `${crypto.randomUUID()}.${fileExt}`;
         
