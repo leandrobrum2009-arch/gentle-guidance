@@ -485,8 +485,7 @@ const CampaignDetail = () => {
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Experimente nossa nova raspadinha digital e sinta a emoção!</p>
             </div>
             <ScratchCard 
-              isWinner={Math.random() > 0.5}
-              prizeLabel="Prêmio Surpresa"
+              potentialPrizes={roulettePrizes?.map(p => p.label) || ["R$ 10,00", "R$ 50,00", "Giro Grátis"]}
               cost={0}
             />
           </div>
