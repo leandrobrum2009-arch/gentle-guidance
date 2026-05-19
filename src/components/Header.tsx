@@ -129,10 +129,10 @@ const Header = () => {
             <div className="flex items-center gap-3">
               <motion.div 
                 whileHover={{ scale: 1.02 }}
-                className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex"
+                className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex border-light-path border-[#22c55e]/40"
               >
                 <Wallet className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
+                <span className="text-[10px] font-black italic text-animate-gradient">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
               </motion.div>
               
                 <button
