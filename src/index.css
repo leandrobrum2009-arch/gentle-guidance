@@ -121,7 +121,6 @@ aside:has(a[href*="lovable.dev"]) {
     --button-glow-speed: 4s;
     --title-shimmer-speed: 10s;
   }
-  }
 
   .dark {
     --background: 240 10% 3.9%;
