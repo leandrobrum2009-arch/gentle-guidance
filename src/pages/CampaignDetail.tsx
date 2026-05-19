@@ -410,48 +410,48 @@ import { useAuth } from "@/contexts/AuthContext";
            </div>
  
              <div className="space-y-6">
-                {/* Roulette Incentive Section */}
-                {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
-                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
-                      <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
-                    </h3>
-                    <div className="space-y-2">
-                      {(campaign.roulette_rules as any[]).map((rule, i) => (
-                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
-                          <span className="text-[11px] font-bold text-slate-700">Compre +{rule.min_tickets} cotas</span>
-                          <Badge className="bg-primary text-white border-none text-[10px] font-black uppercase tracking-wider">
-                            Ganha {rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
+               {/* Roulette Incentive Section */}
+               {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
+                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
+                     <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
+                   </h3>
+                   <div className="space-y-2">
+                     {(campaign.roulette_rules as any[]).map((rule, i) => (
+                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
+                         <span className="text-[11px] font-bold text-muted-foreground">Compre +{rule.min_tickets} cotas</span>
+                         <Badge className="bg-primary text-white border-none text-[10px] font-black uppercase tracking-wider">
+                           Ganha {rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
+                         </Badge>
+                       </div>
+                     ))}
+                   </div>
+                 </div>
+               )}
 
                {/* Compact Games Section */}
                {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
-                 <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                      <Gamepad2 className="h-4 w-4 text-primary" /> Jogos Instantâneos
                    </h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                        <Dialog>
                          <DialogTrigger asChild>
-                           <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-primary/50 hover:bg-white transition-all group">
+                           <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary border border-border hover:border-primary/50 hover:bg-card transition-all group">
                              <div className="flex items-center gap-3">
                                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-180 transition-transform duration-500">
                                  <RotateCw className="h-5 w-5" />
                                </div>
                                <div className="text-left">
-                                 <p className="text-xs font-black uppercase tracking-tight text-slate-900">Roleta Premiada</p>
-                                 <p className="text-[10px] font-medium text-slate-500">Gire e ganhe prêmios agora</p>
+                                 <p className="text-xs font-black uppercase tracking-tight text-foreground">Roleta Premiada</p>
+                                 <p className="text-[10px] font-medium text-muted-foreground">Gire e ganhe prêmios agora</p>
                                </div>
                              </div>
                              <div className="flex items-center gap-2">
                                <Badge className="bg-primary/10 text-primary border-none text-[9px] font-black">{userSpinsAvailable} Giros</Badge>
-                               <ArrowLeft className="h-4 w-4 text-slate-300 rotate-180" />
+                               <ArrowLeft className="h-4 w-4 text-muted-foreground rotate-180" />
                              </div>
                            </button>
                          </DialogTrigger>
@@ -469,26 +469,26 @@ import { useAuth } from "@/contexts/AuthContext";
                )}
 
                {/* Sidebar Content */}
-              <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
-               <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900">Como participar</h3>
-               <div className="space-y-4">
-                 {[
-                   { icon: Ticket, title: "1. Escolha", desc: "Selecione seus números" },
-                   { icon: Zap, title: "2. Pague", desc: "Confirmação rápida via PIX" },
-                   { icon: Trophy, title: "3. Concorra", desc: "Aguarde o sorteio oficial" },
-                 ].map((step, i) => (
-                   <div key={i} className="flex items-center gap-4">
-                     <div className="h-10 w-10 rounded-xl bg-slate-50 flex items-center justify-center border border-slate-100">
-                       <step.icon className="h-5 w-5 text-primary" />
+               <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+                 <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground">Como participar</h3>
+                 <div className="space-y-4">
+                   {[
+                     { icon: Ticket, title: "1. Escolha", desc: "Selecione seus números" },
+                     { icon: Zap, title: "2. Pague", desc: "Confirmação rápida via PIX" },
+                     { icon: Trophy, title: "3. Concorra", desc: "Aguarde o sorteio oficial" },
+                   ].map((step, i) => (
+                     <div key={i} className="flex items-center gap-4">
+                       <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center border border-border">
+                         <step.icon className="h-5 w-5 text-primary" />
+                       </div>
+                       <div>
+                         <p className="text-xs font-black uppercase tracking-tight text-foreground">{step.title}</p>
+                         <p className="text-[10px] font-medium text-muted-foreground">{step.desc}</p>
+                       </div>
                      </div>
-                     <div>
-                       <p className="text-xs font-black uppercase tracking-tight text-slate-900">{step.title}</p>
-                       <p className="text-[10px] font-medium text-slate-500">{step.desc}</p>
-                     </div>
-                   </div>
-                 ))}
+                   ))}
+                 </div>
                </div>
-             </div>
  
             </div>
           </div>
