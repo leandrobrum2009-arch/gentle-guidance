@@ -121,6 +121,13 @@ const Index = () => {
       if (siteSettings.border_shimmer_opacity) {
         root.style.setProperty('--border-shimmer-opacity', siteSettings.border_shimmer_opacity);
       }
+      if (siteSettings.button_hover_effect === 'false') {
+        root.style.setProperty('--hover-scale', '1');
+        root.style.setProperty('--hover-translate', '0');
+      } else {
+        root.style.setProperty('--hover-scale', '1.02');
+        root.style.setProperty('--hover-translate', '-2px');
+      }
       if (siteSettings.primary_color) {
         root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
       }
@@ -181,24 +188,28 @@ const Index = () => {
                    <HeroModel1 
                      campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                     transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 2 && (
                    <HeroModel2 
                      campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                     transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 3 && (
                    <HeroModel3 
                      campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                     transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 4 && (
                    <HeroModel4 
                      campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                     transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
              </div>

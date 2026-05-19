@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { motion } from "framer-motion";
+import Fade from "embla-carousel-fade";
 import { ChevronLeft, ChevronRight, Zap, Trophy, Users, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -13,10 +14,14 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 interface HeroModel1Props {
   campaigns: Campaign[];
   delay?: number;
+  transitionType?: 'slide' | 'fade';
 }
 
-const HeroModel1 = ({ campaigns, delay = 5000 }: HeroModel1Props) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 }, [Autoplay({ delay })]);
+const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroModel1Props) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, duration: 40 }, 
+    transitionType === 'fade' ? [Autoplay({ delay }), Fade()] : [Autoplay({ delay })]
+  );
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
