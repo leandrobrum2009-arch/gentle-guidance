@@ -14,6 +14,8 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Plus, Trash2, Search, Trophy, ExternalLink, Calendar, User, Gift, Camera } from "lucide-react";
 import { format } from "date-fns";
+import { compressImage } from "@/lib/image-upload";
+
 
 interface WinnerForm {
   campaign_id: string;
@@ -58,16 +60,20 @@ export default function AdminWinners() {
       if (!ALLOWED_TYPES.includes(file.type)) {
         throw new Error("O arquivo não é uma imagem válida (JPG, PNG, WebP ou GIF).");
       }
-      if (file.size > MAX_FILE_SIZE) {
-        throw new Error("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+      
+      const processedFile = await compressImage(file);
+
+      if (processedFile.size > MAX_FILE_SIZE) {
+        throw new Error("O arquivo é muito grande mesmo após compressão. O tamanho máximo permitido é 5MB.");
       }
 
-      const fileExt = file.name.split('.').pop();
+      const fileExt = processedFile.name.split('.').pop();
       const filePath = `${crypto.randomUUID()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('campaigns')
-        .upload(filePath, file);
+        .upload(filePath, processedFile);
+
 
       if (uploadError) throw uploadError;
 

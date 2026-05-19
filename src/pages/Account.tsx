@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
- import { 
-    User, LogOut, Trophy, History, Coins, Activity, Camera,
-    Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
-    Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
- } from "lucide-react";
+import { 
+   User, LogOut, Trophy, History, Coins, Activity, Camera,
+   Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
+   Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
+   Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
+} from "lucide-react";
 import { Loader2 } from "lucide-react";
+import { compressImage } from "@/lib/image-upload";
+
 import { useAuth } from "@/contexts/AuthContext";
  import { 
    useUserOrders, 
@@ -166,17 +168,20 @@ import { cn } from "@/lib/utils";
         throw new Error("O arquivo não é uma imagem válida (JPG, PNG, WebP ou GIF).");
       }
 
+      const processedFile = await compressImage(file);
+
       // Validate size
-      if (file.size > MAX_FILE_SIZE) {
-        throw new Error("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+      if (processedFile.size > MAX_FILE_SIZE) {
+        throw new Error("O arquivo é muito grande mesmo após compressão. O tamanho máximo permitido é 5MB.");
       }
 
-      const fileExt = file.name.split('.').pop();
+      const fileExt = processedFile.name.split('.').pop();
       const filePath = `${user.id}/${Math.random()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, processedFile, { upsert: true });
+
 
       if (uploadError) throw uploadError;
 
