@@ -45,11 +45,11 @@ const UserRanking = () => {
         </div>
 
         <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
-          <TabsList className="bg-white/5 border border-white/10 h-12 p-1 rounded-2xl">
-            <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white uppercase font-black text-[10px] tracking-widest gap-2">
+          <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
+            <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
               <Star className="h-3 w-3" /> Pontos
             </TabsTrigger>
-            <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-white uppercase font-black text-[10px] tracking-widest gap-2">
+            <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
               <Zap className="h-3 w-3" /> Experiência
             </TabsTrigger>
           </TabsList>
@@ -99,25 +99,25 @@ const UserRanking = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="group flex items-center justify-between p-4 bg-[#0d0d0f]/50 border border-white/5 rounded-3xl hover:bg-white/5 hover:border-primary/30 transition-all duration-300"
+                className="group flex items-center justify-between p-4 bg-card border border-border rounded-3xl hover:bg-secondary/50 hover:border-primary/30 transition-all duration-300 shadow-sm"
               >
                 <div className="flex items-center gap-4">
                   <span className="w-6 text-sm font-black italic text-foreground group-hover:text-primary transition-colors">
                     #{index + 4}
                   </span>
                   <div className="relative">
-                    <Avatar className="h-12 w-12 border-2 border-white/5 group-hover:border-primary/30 transition-all">
+                    <Avatar className="h-12 w-12 border-2 border-border group-hover:border-primary/30 transition-all">
                       <AvatarImage src={user.avatar_url || ""} />
-                      <AvatarFallback className="bg-white/5 text-white font-black uppercase text-xs">
+                      <AvatarFallback className="bg-secondary text-foreground font-black uppercase text-xs">
                         {user.name.substring(0, 2)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-zinc-900 border border-white/10 flex items-center justify-center">
+                    <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-card border border-border flex items-center justify-center">
                       <span className="text-[8px] font-black text-primary">{user.vip_level || 1}</span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm font-black uppercase tracking-tighter text-white">{user.name}</p>
+                    <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
                     <div className="flex items-center gap-3 mt-0.5">
                       <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
                         {user.xp} XP
@@ -211,7 +211,7 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
         <div className="flex flex-col items-center">
           <p className={cn(
             "font-black italic tracking-tighter",
-            isFirst ? "text-xl md:text-2xl text-yellow-400" : "text-lg md:text-xl text-white/80"
+            isFirst ? "text-xl md:text-2xl text-yellow-500" : "text-lg md:text-xl text-foreground/80"
           )}>
             {category === 'points' ? user.points : user.xp}
             <span className="text-[8px] md:text-[10px] uppercase ml-1 opacity-50 font-black">{category === 'points' ? 'pts' : 'xp'}</span>
