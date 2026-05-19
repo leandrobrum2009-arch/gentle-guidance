@@ -73,9 +73,9 @@ const ScratchCardPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.1 }}
-                className="bg-card/50 backdrop-blur-md border border-border rounded-3xl p-6 text-center space-y-3 group hover:border-primary/50 transition-all"
+                className="bg-card/50 backdrop-blur-md border border-border rounded-3xl p-6 text-center space-y-3 group hover:border-primary/50 transition-all border-light-path border-[#22c55e]/20 hover:border-[#22c55e]/50"
               >
-                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform border-light-path border-[#22c55e]/30">
                   <item.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-sm font-black uppercase tracking-widest text-foreground">{item.title}</h3>
