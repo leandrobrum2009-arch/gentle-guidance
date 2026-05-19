@@ -91,9 +91,19 @@ const Footer = () => {
         <Separator className="my-10 bg-border" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-            © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
-          </p>
+          <div className="text-center md:text-left">
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
+              © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
+            </p>
+            <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
+              <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                Sistema de Rifas
+              </a>
+            </p>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+              NC Brasil
+            </p>
+          </div>
           <div className="flex gap-6">
             <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Privacidade</a>
             <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos</a>
