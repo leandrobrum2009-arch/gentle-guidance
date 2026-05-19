@@ -36,7 +36,7 @@ const ScratchCardPage = () => {
                 Prêmios Instantâneos
               </Badge>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                Raspadinha <span className="text-primary neon-text-primary">Premiada</span>
+                Raspadinha <span className="text-animate-gradient">Premiada</span>
               </h1>
               <p className="text-sm md:text-base text-muted-foreground uppercase font-bold tracking-[0.2em] max-w-2xl mx-auto italic">
                 A emoção de ganhar prêmios reais na palma da sua mão. Escolha um cartão e raspe agora!
