@@ -73,7 +73,7 @@ const LiveNotifications = () => {
 
     // Subscribe to new orders (purchases)
     const ordersChannel = supabase
-      .channel('live-orders')
+      .channel(`live-orders-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'orders', filter: 'payment_status=eq.paid' },
@@ -105,7 +105,7 @@ const LiveNotifications = () => {
 
     // Subscribe to new winners
     const winnersChannel = supabase
-      .channel('live-winners')
+      .channel(`live-winners-${Math.random().toString(36).slice(2)}`)
       .on(
         'postgres_changes',
         { event: 'INSERT', schema: 'public', table: 'winners' },
