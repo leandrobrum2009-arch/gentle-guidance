@@ -30,9 +30,10 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
      { title: "Cupons", url: "/admin/cupons", icon: Percent },
      { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
    ]},
-   { category: "Sistema", items: [
-     { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
-   ]},
+    { category: "Sistema", items: [
+      { title: "Preview UI", url: "/preview", icon: Image },
+      { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
+    ]},
  ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
