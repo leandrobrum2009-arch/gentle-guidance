@@ -83,6 +83,10 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" },
         },
+        "blink": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.2" },
+        },
         "slide-up": {
           from: { transform: "translateY(10px)", opacity: "0" },
           to: { transform: "translateY(0)", opacity: "1" },
@@ -92,6 +96,7 @@ export default {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "blink": "blink 1s step-end infinite",
         "slide-up": "slide-up 0.5s ease-out",
         "spin-slow": "spin 8s linear infinite",
         "ping-slow": "ping 3s cubic-bezier(0, 0, 0.2, 1) infinite",
