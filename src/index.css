@@ -279,16 +279,17 @@ aside:has(a[href*="lovable.dev"]) {
        transparent 75%, 
        transparent 100%
      );
-     opacity: 0;
+     opacity: var(--border-shimmer-opacity);
      background-size: 200% 100%;
      transition: opacity 0.5s ease;
-     mask: 
-       linear-gradient(#fff 0 0) content-box, 
-       linear-gradient(#fff 0 0);
-     mask-composite: exclude;
-     -webkit-mask-composite: destination-out;
-     animation: border-shimmer 3s infinite linear;
+     animation: border-shimmer 6s infinite linear;
      pointer-events: none;
+   }
+
+   .border-light-path:hover::before,
+   .border-light-always::before {
+     opacity: var(--border-shimmer-opacity);
+   }
    }
 
    .border-light-path:hover::before,
@@ -307,12 +308,12 @@ aside:has(a[href*="lovable.dev"]) {
      color: transparent;
      -webkit-background-clip: text;
      background-clip: text;
-     animation: text-shimmer 4s linear infinite;
+     animation: text-shimmer 8s linear infinite;
      @apply transition-all duration-300;
    }
 
    .text-animate-gradient:hover {
-     animation-duration: 1.5s;
+     animation-duration: 4s;
      filter: brightness(1.2);
    }
 
