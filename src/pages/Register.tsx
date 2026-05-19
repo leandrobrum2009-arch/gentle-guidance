@@ -1,5 +1,3 @@
-  const [avatar, setAvatar] = useState<File | null>(null);
-  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -14,7 +12,6 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
 
-
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
@@ -23,6 +20,8 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -56,7 +55,6 @@ const Register = () => {
           }
         }
 
-
         const referredBy = localStorage.getItem('referred_by');
         if (referredBy) {
           await supabase.from("profiles").update({ referred_by_code: referredBy }).eq("user_id", user.id);
@@ -64,28 +62,6 @@ const Register = () => {
         }
       }
     }
-            <div className="space-y-2 flex flex-col items-center">
-              <Label>Foto de Perfil (Opcional)</Label>
-              <div className="relative group mt-2">
-                <div className="h-20 w-20 rounded-full border-2 border-border/50 overflow-hidden bg-muted flex items-center justify-center">
-                  {avatarPreview ? (
-                    <img src={avatarPreview} className="h-full w-full object-cover" />
-                  ) : (
-                    <User className="h-8 w-8 text-muted-foreground" />
-                  )}
-                </div>
-                <label className="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
-                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setAvatar(file);
-                      setAvatarPreview(URL.createObjectURL(file));
-                    }
-                  }} />
-                </label>
-              </div>
-              <p className="text-[10px] text-muted-foreground mt-1">Clique para selecionar imagem ou GIF</p>
-            </div>
 
     setIsLoading(false);
     if (error) {
@@ -113,6 +89,29 @@ const Register = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="rounded-xl border border-border/50 bg-card p-6 space-y-4">
+            <div className="space-y-2 flex flex-col items-center">
+              <Label>Foto de Perfil (Opcional)</Label>
+              <div className="relative group mt-2">
+                <div className="h-20 w-20 rounded-full border-2 border-border/50 overflow-hidden bg-muted flex items-center justify-center">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} className="h-full w-full object-cover" />
+                  ) : (
+                    <User className="h-8 w-8 text-muted-foreground" />
+                  )}
+                </div>
+                <label className="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setAvatar(file);
+                      setAvatarPreview(URL.createObjectURL(file));
+                    }
+                  }} />
+                </label>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1">Clique para selecionar imagem ou GIF</p>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="name">Nome completo *</Label>
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome completo" required />
