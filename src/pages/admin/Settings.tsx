@@ -26,6 +26,18 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
