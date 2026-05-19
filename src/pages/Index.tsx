@@ -195,9 +195,24 @@ const Index = () => {
                    badge="Em Destaque"
                  />
                   <div className="grid gap-6 sm:grid-cols-2">
-                    {otherCampaigns.map((campaign, i) => (
-                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                    ))}
+                    {otherCampaigns.length > 0 ? (
+                      otherCampaigns.map((campaign, i) => (
+                        <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                      ))
+                    ) : (
+                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-4">
+                        <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center">
+                          <Trophy className="h-8 w-8 text-muted-foreground opacity-20" />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="font-display text-xl font-black uppercase italic tracking-tighter">Nenhum sorteio ativo</h3>
+                          <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Fique de olho! Novas oportunidades estão chegando.</p>
+                        </div>
+                        <Button variant="outline" size="sm" className="h-10 rounded-xl px-8 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-[10px]" onClick={() => window.location.reload()}>
+                          ATUALIZAR PÁGINA
+                        </Button>
+                      </div>
+                    )}
                   </div>
                </div>
  
