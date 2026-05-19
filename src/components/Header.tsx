@@ -103,7 +103,7 @@ const Header = () => {
                <Link
                  key={link.href}
                  to={link.href}
-                   className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-muted-foreground' : 'text-muted-foreground'}`}
+                   className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-foreground' : 'text-foreground/90'}`}
                >
                  {link.label}
                </Link>
@@ -114,7 +114,7 @@ const Header = () => {
           <div className="flex items-center gap-3">
             <ThemeToggle />
            <Link to="/contato" className="hidden sm:block">
-             <Button variant="ghost" size="sm" className="gap-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+             <Button variant="ghost" size="sm" className="gap-2 text-[11px] font-bold uppercase tracking-wider text-foreground/90">
                <Activity className="h-4 w-4 text-primary" />
                Suporte
              </Button>
@@ -131,7 +131,7 @@ const Header = () => {
               
                 <button
                    onClick={() => navigate("/conta")}
-                   className="relative rounded-full bg-secondary/50 p-2 text-muted-foreground hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
+                   className="relative rounded-full bg-secondary/50 p-2 text-foreground/90 hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
                 >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
@@ -173,7 +173,7 @@ const Header = () => {
 
            <button
              onClick={() => setMobileOpen(!mobileOpen)}
-             className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-muted-foreground lg:hidden border border-border shadow-sm"
+             className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
            >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -194,7 +194,7 @@ const Header = () => {
                   key={link.href}
                   to={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                   className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-primary"
                 >
                   {link.label}
                 </Link>
