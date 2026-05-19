@@ -16,6 +16,7 @@ import AdminBanners from "./pages/admin/Banners";
 import AdminCoupons from "./pages/admin/Coupons";
 import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
+import AdminScratchCards from "./pages/admin/ScratchCards";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -94,6 +95,7 @@ const App = () => {
                 <Route path="/admin/usuarios" element={<ProtectedRoute adminOnly><AdminUsers /></ProtectedRoute>} />
                 <Route path="/admin/afiliados" element={<ProtectedRoute adminOnly><AdminAffiliates /></ProtectedRoute>} />
                 <Route path="/admin/roletas" element={<ProtectedRoute adminOnly><AdminRoulette /></ProtectedRoute>} />
+                <Route path="/admin/raspadinhas" element={<ProtectedRoute adminOnly><AdminScratchCards /></ProtectedRoute>} />
                 <Route path="/admin/caixas" element={<ProtectedRoute adminOnly><AdminMysteryBoxes /></ProtectedRoute>} />
                 <Route path="/admin/banners" element={<ProtectedRoute adminOnly><AdminBanners /></ProtectedRoute>} />
                 <Route path="/admin/cupons" element={<ProtectedRoute adminOnly><AdminCoupons /></ProtectedRoute>} />
