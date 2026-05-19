@@ -48,6 +48,7 @@ export default function AdminSettings() {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
     if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
     if (key.includes('whatsapp') || key.includes('support')) return <MessageSquare className="h-4 w-4" />;
+    if (key.includes('hero_style')) return <Layout className="h-4 w-4" />;
     return <Settings className="h-4 w-4" />;
   };
 
