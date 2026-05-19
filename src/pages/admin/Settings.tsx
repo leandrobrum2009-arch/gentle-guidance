@@ -141,7 +141,7 @@ export default function AdminSettings() {
                       <SelectItem value="cubic-bezier(0.34, 1.56, 0.64, 1)">Elástico (Divertido)</SelectItem>
                     </SelectContent>
                   </Select>
-                ) : s.key.includes('color') ? (
+                ) : (s.key.includes('color') || s.key.includes('shimmer_primary') || s.key.includes('shimmer_secondary')) ? (
                   <div className="flex gap-2">
                     <Input 
                       type="color"
