@@ -42,7 +42,6 @@ const ScratchCard = ({
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
   const [history, setHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
 
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScratched, setIsScratched] = useState(false);
@@ -63,7 +62,6 @@ const ScratchCard = ({
   }, []);
 
   useEffect(() => {
-
     if (containerRef.current) {
       const { width, height } = containerRef.current.getBoundingClientRect();
       setCanvasSize({ width, height });
@@ -114,9 +112,6 @@ const ScratchCard = ({
       y: clientY - rect.top
     };
   };
-
-  const scratch = async (x: number, y: number) => {
-    if (!canvasRef.current || isScratched || isProcessing) return;
 
   const startScratch = async () => {
     if (isSimulation) {
@@ -195,7 +190,6 @@ const ScratchCard = ({
         origin: { y: 0.6 }
       });
       
-      // Add to history
       const newEntry = {
         name: "Você",
         prize: prizeLabel,
@@ -213,6 +207,7 @@ const ScratchCard = ({
       setHistory(prev => [newEntry, ...prev].slice(0, 5));
     }
     if (onComplete) onComplete();
+    queryClient.invalidateQueries({ queryKey: ["global-scratch-card-scratches"] });
   };
 
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
@@ -234,7 +229,6 @@ const ScratchCard = ({
 
   return (
     <div className="flex flex-col items-center gap-6 w-full max-w-md mx-auto p-6 rounded-3xl bg-zinc-900/50 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden relative">
-      {/* Decorative Glows */}
       <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-[80px] rounded-full" />
       <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-[80px] rounded-full" />
 
@@ -264,10 +258,9 @@ const ScratchCard = ({
         className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-zinc-800 bg-zinc-950 group"
         style={{ cursor: isScratched ? "default" : "crosshair" }}
       >
-        {/* Prize Content (Hidden under scratch layer) */}
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-zinc-900 to-black">
           <AnimatePresence>
-            {isScratched && (
+            {isScratched && !isProcessing && (
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -292,33 +285,40 @@ const ScratchCard = ({
             )}
           </AnimatePresence>
           
-          {!isScratched && (
+          {isProcessing && (
+            <div className="flex flex-col items-center gap-2">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+              <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Processando Sorte...</p>
+            </div>
+          )}
+
+          {!isScratched && !isProcessing && (
              <div className="opacity-10 scale-150 grayscale blur-sm">
                 <Gift className="h-20 w-20 text-white" />
              </div>
           )}
         </div>
 
-        {/* Scratch Canvas */}
-        <canvas
-          ref={canvasRef}
-          width={canvasSize.width}
-          height={canvasSize.height}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleMouseDown}
-          onTouchMove={handleMouseMove}
-          onTouchEnd={handleMouseUp}
-          className={cn(
-            "absolute inset-0 z-20 transition-opacity duration-1000",
-            isScratched && "opacity-0 pointer-events-none"
-          )}
-        />
+        {!isProcessing && (
+          <canvas
+            ref={canvasRef}
+            width={canvasSize.width}
+            height={canvasSize.height}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseUp}
+            onTouchStart={handleMouseDown}
+            onTouchMove={handleMouseMove}
+            onTouchEnd={handleMouseUp}
+            className={cn(
+              "absolute inset-0 z-20 transition-opacity duration-1000",
+              isScratched && "opacity-0 pointer-events-none"
+            )}
+          />
+        )}
         
-        {/* Sparkles effect on hover */}
-        {!isScratched && (
+        {!isScratched && !isProcessing && (
           <div className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity">
             <Sparkles className="absolute top-4 left-4 h-4 w-4 text-primary animate-pulse" />
             <Sparkles className="absolute bottom-4 right-4 h-4 w-4 text-secondary animate-pulse" />
@@ -340,7 +340,7 @@ const ScratchCard = ({
           />
         </div>
 
-        {isScratched && (
+        {isScratched && !isProcessing && (
           <Button 
             className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group"
             onClick={() => window.location.reload()}
@@ -365,7 +365,6 @@ const ScratchCard = ({
         </div>
       </div>
 
-      {/* History Section */}
       <div className="w-full mt-4 space-y-3 z-10">
         <div className="flex items-center gap-2 px-1">
           <History className="h-3 w-3 text-primary" />
