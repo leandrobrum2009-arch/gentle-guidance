@@ -152,42 +152,60 @@ const Index = () => {
  
                  {/* Small Featured Roulette - Redesigned */}
                  {featuredCampaign?.roulette_enabled && (
-                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card to-primary/5 p-6 shadow-xl relative overflow-hidden group">
-                     <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
-                     <div className="absolute -left-10 -bottom-10 h-40 w-40 bg-secondary/20 blur-3xl rounded-full" />
+                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group">
+                     {/* Decorative Elements */}
+                     <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
+                     <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
                      
-                     <div className="relative z-10">
-                        <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-[0.2em] mb-3">
-                          Giro Premiado
+                     <div className="relative z-10 flex flex-col items-center text-center">
+                        <Badge className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg shadow-primary/20">
+                          🔥 OPORTUNIDADE ÚNICA
                         </Badge>
-                        <h3 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter leading-tight mb-4">
-                          Tente a <span className="text-primary neon-text-primary">Sorte</span> Agora!
+                        <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
+                          Gire a <span className="text-primary neon-text-primary">Sorte</span> Agora!
                         </h3>
+                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
+                          Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
+                        </p>
                         
-                        <div className="relative flex justify-center py-6">
+                        <div className="relative flex justify-center py-4 mb-6">
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="relative h-32 w-32 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-2"
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="relative h-40 w-40 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-3"
                           >
-                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/10 via-background to-secondary/10 border border-primary/20 flex items-center justify-center">
-                               <RotateCw className="h-10 w-10 text-primary opacity-50" />
+                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/20 via-card to-secondary/20 border-2 border-primary/30 flex items-center justify-center shadow-inner">
+                               <RotateCw className="h-12 w-12 text-primary opacity-60" />
                              </div>
                           </motion.div>
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <Gamepad2 className="h-10 w-10 text-primary animate-bounce" />
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            >
+                              <Gamepad2 className="h-12 w-12 text-primary drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
+                            </motion.div>
                           </div>
                         </div>
 
-                        <Link to={`/campaign/${featuredCampaign.id}`}>
-                          <Button className="w-full h-12 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-lg">
-                            Girar Roleta <Sparkles className="ml-2 h-4 w-4" />
+                        <Link to={`/roleta`} className="w-full">
+                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
                           </Button>
                         </Link>
                         
-                        <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-widest mt-4">
-                          Prêmios instantâneos em todos os sorteios ativos
-                        </p>
+                        <div className="flex items-center gap-2 mt-6">
+                           <div className="flex -space-x-2">
+                              {[1,2,3].map(i => (
+                                <div key={i} className="h-6 w-6 rounded-full border-2 border-card bg-secondary flex items-center justify-center overflow-hidden">
+                                  <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
+                                </div>
+                              ))}
+                           </div>
+                           <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
+                             +1.2k giraram hoje
+                           </p>
+                        </div>
                      </div>
                    </div>
                  )}
