@@ -86,11 +86,28 @@ export default function AdminSettings() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Input 
-                  value={s.value} 
-                  onChange={(e) => handleUpdate(s.key, e.target.value)}
-                  className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
-                />
+                {s.key === 'home_hero_style' ? (
+                  <Select 
+                    value={s.value} 
+                    onValueChange={(val) => handleUpdate(s.key, val)}
+                  >
+                    <SelectTrigger className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold">
+                      <SelectValue placeholder="Selecione o estilo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Modelo 1 (Clássico Premium)</SelectItem>
+                      <SelectItem value="2">Modelo 2 (Impacto Centralizado)</SelectItem>
+                      <SelectItem value="3">Modelo 3 (Interativo Moderno)</SelectItem>
+                      <SelectItem value="4">Modelo 4 (Visual Limpo - Sem Texto)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input 
+                    value={s.value} 
+                    onChange={(e) => handleUpdate(s.key, e.target.value)}
+                    className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
+                  />
+                )}
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {s.description || "Sem descrição disponível."}
                 </p>
