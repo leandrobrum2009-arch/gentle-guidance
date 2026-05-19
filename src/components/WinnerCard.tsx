@@ -17,7 +17,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative overflow-hidden rounded-2xl border border-border bg-white p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group"
+      className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group"
     >
       {/* Background Icon */}
       <Trophy className="absolute -right-4 -top-4 h-32 w-32 text-primary/5 rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6" />
@@ -37,7 +37,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
                 className="h-full w-full object-cover transition-transform group-hover:scale-110"
               />
             </div>
-            <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-primary border-2 border-white flex items-center justify-center shadow-lg">
+            <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-primary border-2 border-card flex items-center justify-center shadow-lg">
               <Trophy className="h-4 w-4 text-white" />
             </div>
           </div>
@@ -60,7 +60,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
           </div>
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Nº da sorte</span>
-            <span className="font-mono text-xs font-black text-foreground px-2 py-0.5 rounded bg-white border border-border">{winner.ticket_number}</span>
+            <span className="font-mono text-xs font-black text-foreground px-2 py-0.5 rounded bg-card border border-border">{winner.ticket_number}</span>
           </div>
         </div>
 

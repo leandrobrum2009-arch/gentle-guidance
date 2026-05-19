@@ -68,7 +68,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   }
 
   const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-white">
+    <div className="flex h-full flex-col bg-card">
       <div className="flex items-center gap-3 border-b border-border p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
           <ShieldAlert className="h-6 w-6 text-primary-foreground" />
@@ -128,9 +128,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen w-full bg-[#f8fafc] text-foreground">
+    <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-border bg-white lg:flex shadow-sm">
+      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-border bg-card lg:flex shadow-sm">
         <SidebarContent />
       </aside>
 
@@ -142,14 +142,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Menu className="h-6 w-6 text-white" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 border-r border-border bg-white p-0">
+          <SheetContent side="left" className="w-72 border-r border-border bg-card p-0">
             <SidebarContent />
           </SheetContent>
         </Sheet>
       </div>
 
       {/* Main */}
-      <main className="flex-1 overflow-y-auto bg-[#f8fafc] p-4 lg:p-8 custom-scrollbar">
+      <main className="flex-1 overflow-y-auto bg-background p-4 lg:p-8 custom-scrollbar">
         <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
           {children}
         </div>

@@ -71,7 +71,7 @@ const GoogleReviews = () => {
   return (
     <section className="container py-20 relative overflow-hidden">
       <div className="flex flex-col items-center text-center gap-4 mb-12">
-        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-border shadow-sm">
+        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm">
           <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" className="h-4" />
           <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Avaliações 4.9/5.0</span>
           <div className="flex gap-0.5">

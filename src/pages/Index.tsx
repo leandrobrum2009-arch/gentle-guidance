@@ -152,42 +152,60 @@ const Index = () => {
  
                  {/* Small Featured Roulette - Redesigned */}
                  {featuredCampaign?.roulette_enabled && (
-                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card to-primary/5 p-6 shadow-xl relative overflow-hidden group">
-                     <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
-                     <div className="absolute -left-10 -bottom-10 h-40 w-40 bg-secondary/20 blur-3xl rounded-full" />
+                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group">
+                     {/* Decorative Elements */}
+                     <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
+                     <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
                      
-                     <div className="relative z-10">
-                        <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-[0.2em] mb-3">
-                          Giro Premiado
+                     <div className="relative z-10 flex flex-col items-center text-center">
+                        <Badge className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg shadow-primary/20">
+                          🔥 OPORTUNIDADE ÚNICA
                         </Badge>
-                        <h3 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter leading-tight mb-4">
-                          Tente a <span className="text-primary neon-text-primary">Sorte</span> Agora!
+                        <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
+                          Gire a <span className="text-primary neon-text-primary">Sorte</span> Agora!
                         </h3>
+                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
+                          Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
+                        </p>
                         
-                        <div className="relative flex justify-center py-6">
+                        <div className="relative flex justify-center py-4 mb-6">
                           <motion.div
                             animate={{ rotate: 360 }}
-                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                            className="relative h-32 w-32 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-2"
+                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                            className="relative h-40 w-40 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-3"
                           >
-                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/10 via-background to-secondary/10 border border-primary/20 flex items-center justify-center">
-                               <RotateCw className="h-10 w-10 text-primary opacity-50" />
+                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/20 via-card to-secondary/20 border-2 border-primary/30 flex items-center justify-center shadow-inner">
+                               <RotateCw className="h-12 w-12 text-primary opacity-60" />
                              </div>
                           </motion.div>
                           <div className="absolute inset-0 flex items-center justify-center">
-                            <Gamepad2 className="h-10 w-10 text-primary animate-bounce" />
+                            <motion.div
+                              animate={{ scale: [1, 1.2, 1] }}
+                              transition={{ duration: 2, repeat: Infinity }}
+                            >
+                              <Gamepad2 className="h-12 w-12 text-primary drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
+                            </motion.div>
                           </div>
                         </div>
 
-                        <Link to={`/campaign/${featuredCampaign.id}`}>
-                          <Button className="w-full h-12 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-lg">
-                            Girar Roleta <Sparkles className="ml-2 h-4 w-4" />
+                        <Link to={`/roleta`} className="w-full">
+                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+                            ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
                           </Button>
                         </Link>
                         
-                        <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-widest mt-4">
-                          Prêmios instantâneos em todos os sorteios ativos
-                        </p>
+                        <div className="flex items-center gap-2 mt-6">
+                           <div className="flex -space-x-2">
+                              {[1,2,3].map(i => (
+                                <div key={i} className="h-6 w-6 rounded-full border-2 border-card bg-secondary flex items-center justify-center overflow-hidden">
+                                  <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
+                                </div>
+                              ))}
+                           </div>
+                           <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
+                             +1.2k giraram hoje
+                           </p>
+                        </div>
                      </div>
                    </div>
                  )}
@@ -239,7 +257,9 @@ const Index = () => {
                             {[
                               "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=32&h=32&auto=format&fit=crop",
                               "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=32&h=32&auto=format&fit=crop",
-                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=32&h=32&auto=format&fit=crop"
+                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=32&h=32&auto=format&fit=crop",
+                              "https://images.unsplash.com/photo-1531123897727-8f129e16fd3c?q=80&w=32&h=32&auto=format&fit=crop",
+                              "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=32&h=32&auto=format&fit=crop"
                             ].map((img, idx) => (
                               <img key={idx} src={img} className="h-5 w-5 rounded-full border-2 border-card object-cover" alt="User" />
                             ))}
@@ -261,7 +281,7 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Ganhadores Cinematic Section - Enhanced with speech bubbles */}
+          {/* Ganhadores Cinematic Section - Hall da Fama */}
           <section className="container py-20 relative">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-64 w-64 bg-primary/10 blur-[100px] rounded-full" />
             
@@ -277,22 +297,28 @@ const Index = () => {
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                {(winners && winners.length > 0 ? winners : [
-                  { id: "1", winner_name: "Ricardo Silva", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "2", winner_name: "Juliana Costa", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "3", winner_name: "Fernando Souza", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "4", winner_name: "Mariana Alves", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" }
-                ]).slice(0, 4).map((winner, i) => (
+               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                 {(winners && winners.length > 0 ? winners : [
+                   { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "2", winner_name: "Maria Luiza", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "3", winner_name: "Carlos Manoel", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "4", winner_name: "Beatriz Souza", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop" }
+                 ]).slice(0, 8).map((winner, i) => (
                   <div key={winner.id} className="relative group">
                     {/* Speech Bubble / Balloon Effect */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.9 }}
                       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: i * 0.2 }}
-                      className="absolute -top-12 left-6 right-6 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg z-20 hidden group-hover:block animate-bounce"
+                      transition={{ 
+                        delay: i * 0.2,
+                        duration: 0.5,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        repeatDelay: 5
+                      }}
+                      className="absolute -top-14 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
                     >
-                      "Acreditei e ganhei!"
+                      {["EU GANHEI!", "ACREDITEI E FOI!", "DEU BOM!", "SÓ ALEGRIA!"][i % 4]}
                       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 border-t-8 border-t-primary border-x-8 border-x-transparent" />
                     </motion.div>
                     
