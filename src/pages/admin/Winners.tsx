@@ -87,7 +87,7 @@ export default function AdminWinners() {
 
   const save = async () => {
     setSaving(true);
-    const { error } = await supabase.from("winners").insert({
+    const { error } = await (supabase.from("winners") as any).insert({
       campaign_id: form.campaign_id,
       winner_name: form.winner_name,
       ticket_number: form.ticket_number,
