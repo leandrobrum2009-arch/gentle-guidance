@@ -1,12 +1,14 @@
+import { useState, useEffect } from "react";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
    ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
 } from "lucide-react";
 import { motion } from "framer-motion";
- import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
       {/* Gamification Teaser */}
       <section className="container py-6">
         <div className="grid grid-cols-2 gap-3">
