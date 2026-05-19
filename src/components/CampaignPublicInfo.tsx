@@ -97,7 +97,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
           </div>
           <div>
             <h2 className="text-xl font-black uppercase italic tracking-tighter">Estatísticas em Tempo Real</h2>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Acompanhe o desempenho da campanha agora</p>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Acompanhe o desempenho da campanha agora</p>
           </div>
         </div>
 
@@ -113,7 +113,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
               <div className={cn("h-8 w-8 rounded-xl flex items-center justify-center mb-3 transition-transform group-hover:scale-110", stat.bg)}>
                 <stat.icon className={cn("h-4 w-4", stat.color)} />
               </div>
-              <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-1">{stat.label}</p>
+              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mb-1">{stat.label}</p>
               <p className="text-xl font-black italic">{stat.value}</p>
             </motion.div>
           ))}
@@ -128,7 +128,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            </div>
            <div>
              <h2 className="text-xl font-black uppercase italic tracking-tighter">Histórico de Ganhadores</h2>
-             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Veja quem já levou prêmios nesta edição</p>
+             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Veja quem já levou prêmios nesta edição</p>
            </div>
          </div>
  
@@ -148,25 +148,25 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Mystery Box Tab */}
            <TabsContent value="mystery" className="space-y-3 outline-none">
              {mysteryBoxWins && mysteryBoxWins.length > 0 ? (
-               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
-                  <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100 hidden sm:grid">
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Ganhador</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prêmio</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Horário</span>
+               <div className="bg-white rounded-3xl border border-border overflow-hidden">
+                  <div className="grid grid-cols-3 bg-secondary/50 p-4 border-b border-border hidden sm:grid">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ganhador</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmio</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Horário</span>
                  </div>
                  <div className="divide-y divide-slate-50">
                     {mysteryBoxWins.map((win, idx) => (
-                      <div key={idx} className="flex flex-col sm:grid sm:grid-cols-3 p-4 gap-3 sm:gap-0 sm:items-center hover:bg-slate-50/50 transition-colors">
+                      <div key={idx} className="flex flex-col sm:grid sm:grid-cols-3 p-4 gap-3 sm:gap-0 sm:items-center hover:bg-secondary/50/50 transition-colors">
                         <div className="flex items-center gap-3 flex-1">
                           <Avatar className="h-8 w-8 border shadow-sm">
                             <AvatarImage src={win.profiles?.avatar_url || ""} />
-                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{win.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                           <AvatarFallback className="text-[10px] font-bold bg-secondary">{win.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                          </Avatar>
-                         <span className="text-xs font-bold text-slate-900 truncate">{win.profiles?.name || "Participante"}</span>
+                         <span className="text-xs font-bold text-foreground truncate">{win.profiles?.name || "Participante"}</span>
                        </div>
                         <div className="flex items-center justify-between sm:contents">
                           <span className="text-xs font-black text-purple-600 uppercase italic bg-purple-50 px-2 py-0.5 rounded-full w-fit">{win.prize_title}</span>
-                          <span className="text-[10px] font-bold text-slate-400 sm:text-right uppercase tracking-wider">{format(new Date(win.created_at), "HH:mm")}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground sm:text-right uppercase tracking-wider">{format(new Date(win.created_at), "HH:mm")}</span>
                         </div>
                       </div>
                     ))}
@@ -180,25 +180,25 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Roulette Tab */}
            <TabsContent value="roulette" className="space-y-3 outline-none">
              {rouletteSpins && rouletteSpins.length > 0 ? (
-               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
-                  <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100 hidden sm:grid">
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Participante</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Prêmio</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Horário</span>
+               <div className="bg-white rounded-3xl border border-border overflow-hidden">
+                  <div className="grid grid-cols-3 bg-secondary/50 p-4 border-b border-border hidden sm:grid">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Participante</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmio</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Horário</span>
                  </div>
                  <div className="divide-y divide-slate-50">
                     {rouletteSpins.map((spin, idx) => (
-                      <div key={idx} className="flex flex-col sm:grid sm:grid-cols-3 p-4 gap-3 sm:gap-0 sm:items-center hover:bg-slate-50/50 transition-colors">
+                      <div key={idx} className="flex flex-col sm:grid sm:grid-cols-3 p-4 gap-3 sm:gap-0 sm:items-center hover:bg-secondary/50/50 transition-colors">
                         <div className="flex items-center gap-3 flex-1">
                           <Avatar className="h-8 w-8 border shadow-sm">
                             <AvatarImage src={spin.profiles?.avatar_url || ""} />
-                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{spin.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                           <AvatarFallback className="text-[10px] font-bold bg-secondary">{spin.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                          </Avatar>
-                         <span className="text-xs font-bold text-slate-900 truncate">{spin.profiles?.name || "Participante"}</span>
+                         <span className="text-xs font-bold text-foreground truncate">{spin.profiles?.name || "Participante"}</span>
                        </div>
                         <div className="flex items-center justify-between sm:contents">
                           <span className="text-xs font-black text-blue-600 uppercase italic bg-blue-50 px-2 py-0.5 rounded-full w-fit">{spin.prize_label}</span>
-                          <span className="text-[10px] font-bold text-slate-400 sm:text-right uppercase tracking-wider">{format(new Date(spin.created_at), "HH:mm")}</span>
+                          <span className="text-[10px] font-bold text-muted-foreground sm:text-right uppercase tracking-wider">{format(new Date(spin.created_at), "HH:mm")}</span>
                         </div>
                       </div>
                     ))}
@@ -212,21 +212,21 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
            {/* Lucky Quotas Tab */}
            <TabsContent value="lucky" className="space-y-3 outline-none">
              {luckyWinners && luckyWinners.length > 0 ? (
-               <div className="bg-white rounded-3xl border border-slate-100 overflow-hidden">
-                  <div className="grid grid-cols-3 bg-slate-50 p-4 border-b border-slate-100 hidden sm:grid">
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Ganhador</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">Número</span>
-                   <span className="text-[10px] font-black uppercase tracking-widest text-slate-400 text-right">Prêmio</span>
+               <div className="bg-white rounded-3xl border border-border overflow-hidden">
+                  <div className="grid grid-cols-3 bg-secondary/50 p-4 border-b border-border hidden sm:grid">
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Ganhador</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Número</span>
+                   <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground text-right">Prêmio</span>
                  </div>
                  <div className="divide-y divide-slate-50">
                    {luckyWinners.map((winner, i) => (
-                     <div key={i} className="grid grid-cols-3 p-4 items-center hover:bg-slate-50/50 transition-colors">
+                     <div key={i} className="grid grid-cols-3 p-4 items-center hover:bg-secondary/50/50 transition-colors">
                        <div className="flex items-center gap-3">
                           <Avatar className="h-8 w-8 border shadow-sm">
                            <AvatarImage src={winner.profiles?.avatar_url || ""} />
-                           <AvatarFallback className="text-[10px] font-bold bg-slate-100">{winner.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
+                           <AvatarFallback className="text-[10px] font-bold bg-secondary">{winner.profiles?.name?.substring(0, 2).toUpperCase()}</AvatarFallback>
                          </Avatar>
-                         <span className="text-xs font-bold text-slate-900 truncate">{winner.profiles?.name || "Ganhador"}</span>
+                         <span className="text-xs font-bold text-foreground truncate">{winner.profiles?.name || "Ganhador"}</span>
                        </div>
                        <Badge variant="outline" className="w-fit font-black text-primary border-primary/20">{winner.number}</Badge>
                        <span className="text-xs font-black text-emerald-600 uppercase text-right">{luckyPrizesMap[winner.number] || "Cota Premiada"}</span>
@@ -246,8 +246,8 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
  
  const EmptyHistory = ({ icon: Icon, message }: { icon: any, message: string }) => (
    <div className="flex flex-col items-center justify-center py-12 rounded-[2.5rem] border border-dashed border-white/10 bg-white/[0.01]">
-     <Icon className="h-10 w-10 mb-4 text-slate-600 opacity-20" />
-     <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">{message}</p>
+     <Icon className="h-10 w-10 mb-4 text-muted-foreground opacity-20" />
+     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{message}</p>
    </div>
  );
  

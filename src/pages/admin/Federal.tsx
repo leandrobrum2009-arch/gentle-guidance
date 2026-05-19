@@ -116,7 +116,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
          <div>
            <h1 className="font-display text-3xl font-bold text-white tracking-tight">Loteria Federal</h1>
-           <p className="text-slate-400 mt-1">Sincronize ou registre resultados oficiais para as rifas.</p>
+           <p className="text-muted-foreground mt-1">Sincronize ou registre resultados oficiais para as rifas.</p>
          </div>
           <div className="flex gap-2">
              <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditingId(null); }}>
@@ -126,11 +126,11 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                 <div className="grid gap-6 p-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                       <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Concurso</Label>
+                       <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Concurso</Label>
                        <Input placeholder="0000" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.concurso} onChange={e => setManualResult(p => ({ ...p, concurso: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
-                       <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Data do Sorteio</Label>
+                       <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Data do Sorteio</Label>
                        <Input type="date" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.data_sorteio} onChange={e => setManualResult(p => ({ ...p, data_sorteio: e.target.value }))} />
                     </div>
                   </div>
@@ -138,7 +138,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                      {[1, 2, 3, 4, 5].map(n => (
                       <div key={n} className="space-y-1">
                          <div className="flex items-center gap-3">
-                           <Label className="text-[10px] uppercase font-bold text-slate-400 min-w-[70px]">{n}º Prêmio</Label>
+                           <Label className="text-[10px] uppercase font-bold text-muted-foreground min-w-[70px]">{n}º Prêmio</Label>
                            <Input placeholder="000000" className="bg-white/5 border-white/10 h-10 rounded-lg flex-1 font-mono font-bold tracking-widest" value={(manualResult as any)[`p${n}`]} onChange={e => setManualResult(p => ({ ...p, [`p${n}`]: e.target.value }))} />
                          </div>
                       </div>
@@ -162,16 +162,16 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-32 gap-4">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
-                <p className="text-slate-500 text-sm font-medium animate-pulse uppercase tracking-widest">Acessando servidores da CEF...</p>
+                <p className="text-muted-foreground text-sm font-medium animate-pulse uppercase tracking-widest">Acessando servidores da CEF...</p>
               </div>
             ) : (
               <Table>
                 <TableHeader className="bg-white/[0.02]">
                   <TableRow className="border-white/5 hover:bg-transparent">
-                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Concurso</TableHead>
-                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
-                    <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Premiados (1º ao 5º)</TableHead>
-                    <TableHead className="text-right text-slate-400 font-bold uppercase text-[9px] tracking-widest pr-8 py-5">Ações</TableHead>
+                    <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Concurso</TableHead>
+                    <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
+                    <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Premiados (1º ao 5º)</TableHead>
+                    <TableHead className="text-right text-muted-foreground font-bold uppercase text-[9px] tracking-widest pr-8 py-5">Ações</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -184,7 +184,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                         </div>
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-2 text-slate-400">
+                        <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="h-3.5 w-3.5" />
                           <span className="text-[10px] font-bold uppercase tracking-widest">{format(new Date(r.data_sorteio), "dd MMM, yyyy")}</span>
                         </div>
@@ -201,7 +201,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                               }`}
                               title={`${p.premio}º Prêmio`}
                             >
-                              <span className={`text-[8px] font-bold uppercase tracking-tighter ${p.premio === "1" ? "text-primary" : "text-slate-500"}`}>{p.premio}º</span>
+                              <span className={`text-[8px] font-bold uppercase tracking-tighter ${p.premio === "1" ? "text-primary" : "text-muted-foreground"}`}>{p.premio}º</span>
                               <span className={`font-mono text-xs font-bold ${p.premio === "1" ? "text-white" : "text-slate-300"}`}>{p.numero}</span>
                             </div>
                           ))}
@@ -209,10 +209,10 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                       </TableCell>
                       <TableCell className="text-right pr-8">
                         <div className="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-xl" onClick={() => handleEdit(r)}>
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl" onClick={() => handleEdit(r)}>
                             <Pencil className="h-4.5 w-4.5" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl" onClick={() => deleteResult(r.id)}>
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded-xl" onClick={() => deleteResult(r.id)}>
                             <Trash2 className="h-4.5 w-4.5" />
                           </Button>
                         </div>

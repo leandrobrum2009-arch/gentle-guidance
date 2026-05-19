@@ -53,7 +53,7 @@ export default function Ranking() {
                 className="bg-white/5 border border-white/10 rounded-3xl p-4 flex flex-col items-center text-center gap-2 group hover:bg-white/10 transition-all cursor-default"
               >
                 <stat.icon className={cn("h-5 w-5 mb-1 opacity-50 group-hover:opacity-100 transition-opacity", stat.color)} />
-                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">{stat.label}</p>
+                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
                 <p className="text-xl font-black italic">{stat.val}</p>
               </motion.div>
             ))}

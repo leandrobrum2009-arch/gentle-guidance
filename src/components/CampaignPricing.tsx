@@ -43,12 +43,12 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
              className={cn(
                "relative flex flex-col items-center rounded-2xl border p-4 transition-all",
                quantity === bundle.quantity
-                 ? "border-primary bg-primary/5 ring-1 ring-primary"
-                 : "border-slate-200 bg-white hover:border-primary/50"
+                  ? "border-primary bg-primary/10 ring-1 ring-primary"
+                  : "border-border bg-card hover:border-primary/50"
              )}
            >
-             <span className="text-xl font-black text-slate-900">+{bundle.quantity}</span>
-             <span className="text-[9px] font-bold uppercase tracking-widest text-slate-400 mt-0.5">Títulos</span>
+             <span className="text-xl font-black text-foreground">+{bundle.quantity}</span>
+             <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">Títulos</span>
              <div className="mt-2 text-sm font-black text-primary">
                R$ {bundle.price.toFixed(2).replace(".", ",")}
              </div>
@@ -61,25 +61,25 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
          ))}
        </div>
  
-       <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+        <div className="bg-secondary/30 rounded-2xl p-6 border border-border">
          <div className="flex items-center justify-between mb-6">
            <div className="space-y-1">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Total a pagar</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Total a pagar</p>
              <div className="flex items-baseline gap-2">
-               <span className="text-3xl font-black text-slate-900">
+               <span className="text-3xl font-black text-foreground">
                  R$ {totalPrice.toFixed(2).replace(".", ",")}
                </span>
              </div>
            </div>
            <div className="text-right">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Títulos</p>
-             <p className="text-xl font-black text-slate-900">{quantity || 0}</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Títulos</p>
+             <p className="text-xl font-black text-foreground">{quantity || 0}</p>
            </div>
          </div>
  
          <Button
            size="lg"
-           className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200"
+            className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
            disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
            onClick={() => onBuy(quantity)}
          >
@@ -98,7 +98,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
          
          <div className="mt-4 flex items-center justify-center gap-2">
             <div className="h-[1px] flex-1 bg-slate-200" />
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-slate-400">Pague com PIX</p>
+            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Pague com PIX</p>
             <div className="h-[1px] flex-1 bg-slate-200" />
          </div>
        </div>

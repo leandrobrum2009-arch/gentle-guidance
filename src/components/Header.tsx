@@ -103,7 +103,7 @@ const Header = () => {
                <Link
                  key={link.href}
                  to={link.href}
-                  className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-slate-500' : 'text-slate-600'}`}
+                   className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-muted-foreground' : 'text-muted-foreground'}`}
                >
                  {link.label}
                </Link>
@@ -208,7 +208,7 @@ const Header = () => {
                   Meus Títulos
                 </Link>
               )}
-              <div className="mt-2 flex gap-2 border-t border-slate-100 pt-3">
+              <div className="mt-2 flex gap-2 border-t border-border pt-3">
                 {user ? (
                   <Button size="sm" variant="ghost" className="flex-1" onClick={handleSignOut}>
                     <LogOut className="mr-1.5 h-4 w-4" /> Sair

@@ -21,12 +21,12 @@ export default function AdminUsers() {
     <AdminLayout>
       <div className="mb-8">
         <h1 className="font-display text-3xl font-bold text-white">Gestão de Usuários</h1>
-        <p className="text-slate-400">Gerencie todos os membros registrados na plataforma.</p>
+        <p className="text-muted-foreground">Gerencie todos os membros registrados na plataforma.</p>
       </div>
 
       <div className="mb-6 flex items-center gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
             placeholder="Buscar por nome, email ou telefone..." 
             className="pl-10 border-white/5 bg-[#0d0d0f]/50 text-white focus:border-primary/50"
@@ -44,10 +44,10 @@ export default function AdminUsers() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Usuário / ID</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Telefone</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Saldo</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Membro desde</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Usuário / ID</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Telefone</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Saldo</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Membro desde</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -63,7 +63,7 @@ export default function AdminUsers() {
                         </Avatar>
                         <div>
                            <p className="font-bold text-white tracking-tight">{u.name || "Sem Nome"}</p>
-                           <p className="text-[10px] text-slate-500 font-mono">{(u.user_id || u.id).substring(0, 8)}</p>
+                           <p className="text-[10px] text-muted-foreground font-mono">{(u.user_id || u.id).substring(0, 8)}</p>
                         </div>
                       </div>
                     </TableCell>
@@ -71,14 +71,14 @@ export default function AdminUsers() {
                      <TableCell className="text-emerald-400 font-bold font-mono text-xs">
                        R$ {Number(u.balance || 0).toFixed(2)}
                      </TableCell>
-                    <TableCell className="text-slate-400 text-sm">
+                    <TableCell className="text-muted-foreground text-sm">
                       {format(new Date(u.created_at), 'dd MMM yyyy')}
                     </TableCell>
                   </TableRow>
                 ))}
                 {filtered?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-10 text-slate-500 font-medium italic">
+                    <TableCell colSpan={4} className="text-center py-10 text-muted-foreground font-medium italic">
                       Nenhum usuário encontrado.
                     </TableCell>
                   </TableRow>

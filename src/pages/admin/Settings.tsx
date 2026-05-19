@@ -49,7 +49,7 @@ export default function AdminSettings() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Configurações do Sistema</h1>
-          <p className="text-slate-400 mt-1">Ajuste taxas, limites e informações de contato.</p>
+          <p className="text-muted-foreground mt-1">Ajuste taxas, limites e informações de contato.</p>
         </div>
         <Button 
           onClick={saveSettings} 
@@ -68,7 +68,7 @@ export default function AdminSettings() {
           <Card key={s.id} className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl group hover:border-primary/20 transition-all">
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-white/5 text-slate-400 group-hover:text-primary transition-colors">
+                <div className="p-2 rounded-lg bg-white/5 text-muted-foreground group-hover:text-primary transition-colors">
                   {getIcon(s.key)}
                 </div>
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-200">
@@ -83,7 +83,7 @@ export default function AdminSettings() {
                   onChange={(e) => handleUpdate(s.key, e.target.value)}
                   className="border-white/5 bg-black/20 text-white focus:border-primary/50 font-bold"
                 />
-                <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">
+                <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {s.description || "Sem descrição disponível."}
                 </p>
               </div>
@@ -100,7 +100,7 @@ export default function AdminSettings() {
               <ShieldCheck className="h-6 w-6 text-primary" />
               Segurança do Sistema
             </h3>
-            <p className="text-slate-400 mt-1 max-w-md">
+            <p className="text-muted-foreground mt-1 max-w-md">
               Todas as alterações realizadas no painel administrativo são registradas para fins de auditoria. 
               Certifique-se de validar os valores antes de salvar.
             </p>

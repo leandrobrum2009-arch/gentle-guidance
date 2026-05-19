@@ -69,7 +69,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-white">
-      <div className="flex items-center gap-3 border-b border-slate-100 p-6">
+      <div className="flex items-center gap-3 border-b border-border p-6">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
           <ShieldAlert className="h-6 w-6 text-primary-foreground" />
         </div>
@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
         {navItems.map((group) => (
           <div key={group.category} className="space-y-2">
-            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-slate-600">
+            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-muted-foreground">
               {group.category}
             </h3>
             <div className="space-y-1">
@@ -95,10 +95,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                       active
                         ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
-                        : "text-slate-700 hover:bg-slate-50 hover:text-primary"
+                        : "text-foreground hover:bg-secondary/50 hover:text-primary"
                     }`}
                   >
-                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-slate-600 group-hover:text-primary"}`} />
+                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-muted-foreground group-hover:text-primary"}`} />
                     <span className="font-medium">{item.title}</span>
                   </Link>
                 );
@@ -108,17 +108,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-slate-100 p-4">
+      <div className="space-y-1 border-t border-border p-4">
         <Link
           to="/"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-foreground transition-colors"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-secondary/50 hover:text-foreground transition-colors"
         >
-          <ArrowLeft className="h-4 w-4 text-slate-500" />
+          <ArrowLeft className="h-4 w-4 text-muted-foreground" />
           Voltar ao site
         </Link>
         <button
           onClick={signOut}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-50 hover:text-rose-500 transition-colors"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-muted-foreground hover:bg-secondary/50 hover:text-rose-500 transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Sair do Sistema
@@ -130,7 +130,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-[#f8fafc] text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-slate-200 bg-white lg:flex shadow-sm">
+      <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-border bg-white lg:flex shadow-sm">
         <SidebarContent />
       </aside>
 
@@ -142,7 +142,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               <Menu className="h-6 w-6 text-white" />
             </Button>
           </SheetTrigger>
-          <SheetContent side="left" className="w-72 border-r border-slate-200 bg-white p-0">
+          <SheetContent side="left" className="w-72 border-r border-border bg-white p-0">
             <SidebarContent />
           </SheetContent>
         </Sheet>

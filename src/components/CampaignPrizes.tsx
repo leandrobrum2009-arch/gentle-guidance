@@ -68,7 +68,7 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
                     {p.position}º
                   </div>
                   <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">{i === 0 ? "O GRANDE PRÊMIO" : `${p.position}º LUGAR`}</p>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">{i === 0 ? "O GRANDE PRÊMIO" : `${p.position}º LUGAR`}</p>
                     <p className="text-lg font-black uppercase italic tracking-tighter text-white leading-tight">{p.prize}</p>
                   </div>
                 </div>
@@ -109,12 +109,12 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
                   <div className="flex items-center gap-4">
                     <div className={cn(
                       "h-10 w-10 rounded-xl flex items-center justify-center font-mono font-black text-sm shadow-inner transition-all duration-300",
-                      isWon ? "bg-slate-800 text-slate-500" : "bg-amber-500 text-white group-hover:scale-110"
+                      isWon ? "bg-slate-800 text-muted-foreground" : "bg-amber-500 text-white group-hover:scale-110"
                     )}>
                       {p.number}
                     </div>
                     <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Prêmio Instantâneo</p>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Prêmio Instantâneo</p>
                       <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.prize}</p>
                     </div>
                   </div>
@@ -156,7 +156,7 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
                   <RoulettePrizeIcon type={p.prize_type} className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-0.5">Roleta da Sorte</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Roleta da Sorte</p>
                   <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.label}</p>
                 </div>
               </div>

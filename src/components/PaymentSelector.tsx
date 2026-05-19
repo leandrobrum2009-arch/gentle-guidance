@@ -30,7 +30,7 @@
  
    return (
      <div className="space-y-4">
-        <h3 className="text-sm font-black uppercase tracking-wider text-slate-600">Forma de Pagamento</h3>
+        <h3 className="text-sm font-black uppercase tracking-wider text-muted-foreground">Forma de Pagamento</h3>
        <div className="grid gap-3">
          {filteredMethods.map((method) => (
            <motion.button
@@ -50,13 +50,13 @@
            >
              <div className={cn(
                "flex h-12 w-12 items-center justify-center rounded-xl transition-colors",
-                selected === method.id ? "bg-primary text-primary-foreground" : "bg-slate-100 text-slate-500"
+                selected === method.id ? "bg-primary text-primary-foreground" : "bg-secondary text-muted-foreground"
              )}>
                <method.icon className="h-6 w-6" />
              </div>
              <div className="flex-1">
                <p className="font-bold">{method.name}</p>
-                <p className="text-xs text-slate-500 font-medium">{method.description}</p>
+                <p className="text-xs text-muted-foreground font-medium">{method.description}</p>
              </div>
              {selected === method.id && (
                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">

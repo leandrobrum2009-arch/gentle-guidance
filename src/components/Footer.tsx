@@ -32,7 +32,7 @@ const Footer = () => {
                 Rifas<span className="text-primary neon-text-primary">Pro</span>
               </span>
             </a>
-            <p className="max-w-xs text-xs font-medium leading-relaxed text-slate-500 uppercase tracking-widest">
+            <p className="max-w-xs text-xs font-medium leading-relaxed text-muted-foreground uppercase tracking-widest">
               A maior e mais segura plataforma de rifas online do Brasil. Prêmios cinematográficos toda semana.
             </p>
             <div className="flex gap-3">
@@ -49,7 +49,7 @@ const Footer = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Navegação</h3>
             <div className="grid grid-cols-2 gap-4">
               {footerLinks.slice(0, 6).map((link) => (
-                <a key={link.href} href={link.href} className="text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-foreground transition-colors">{link.label}</a>
+                <a key={link.href} href={link.href} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
               ))}
             </div>
           </div>
@@ -77,7 +77,7 @@ const Footer = () => {
                 <ShieldCheck className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Pagamento Seguro</p>
-                  <p className="text-[9px] text-slate-500">Processamento via SSL 256 bits</p>
+                  <p className="text-[9px] text-muted-foreground">Processamento via SSL 256 bits</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">

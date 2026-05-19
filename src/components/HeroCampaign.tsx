@@ -84,7 +84,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
               { label: "Segundos", value: timeLeft.seconds },
             ].map((item) => (
               <div key={item.label} className="flex flex-col items-center">
-                <div className="relative h-16 w-14 md:h-24 md:w-20 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shadow-xl">
+                <div className="relative h-16 w-14 md:h-24 md:w-20 rounded-2xl bg-secondary border border-border flex items-center justify-center overflow-hidden shadow-xl">
                   <span className="font-display text-2xl md:text-4xl font-black text-primary italic neon-text-primary">
                     {String(item.value).padStart(2, '0')}
                   </span>
@@ -103,7 +103,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
                 <span className="text-muted-foreground">Progresso de Vendas</span>
                 <span className="text-primary">{progress}% Vendido</span>
               </div>
-              <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden border border-slate-200 p-[1px]">
+              <div className="h-2 w-full rounded-full bg-secondary overflow-hidden border border-border p-[1px]">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
@@ -120,7 +120,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
                   Participar Agora
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-slate-200 bg-white/50 hover:bg-white font-bold uppercase tracking-widest text-xs">
+              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-border bg-white/50 hover:bg-white font-bold uppercase tracking-widest text-xs">
                 Ver Prêmios <Star className="ml-2 h-4 w-4 text-primary" />
               </Button>
             </div>
@@ -129,7 +129,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute bottom-6 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-100 shadow-lg">
+      <div className="absolute bottom-6 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-border shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Trophy className="h-6 w-6 text-primary" />
         </div>
@@ -139,7 +139,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-slate-100 shadow-lg">
+      <div className="absolute bottom-6 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-border shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Clock className="h-6 w-6 text-primary" />
         </div>

@@ -209,9 +209,9 @@ import { cn } from "@/lib/utils";
                      </div>
                   </div>
                   <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
-                  <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
+                  <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
                   <div className="w-full bg-white/5 p-4 rounded-xl border border-white/5">
-                    <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-2">
+                    <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
                       <span>Nível {profile?.vip_level || 1} VIP</span>
                       <span>{profile?.xp || 0} XP</span>
                     </div>
@@ -239,7 +239,7 @@ import { cn } from "@/lib/utils";
                     onClick={() => setActiveTab(item.id)}
                     className={cn(
                         "w-full justify-start gap-3 rounded-xl transition-all duration-300",
-                        activeTab === item.id ? "bg-primary/10 text-primary border border-primary/20" : "text-slate-400 hover:text-white"
+                        activeTab === item.id ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:text-white"
                     )}
                 >
                   <item.icon className="h-4 w-4" /> {item.label}
@@ -267,14 +267,14 @@ import { cn } from "@/lib/utils";
                        <stat.icon className={`h-5 w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
                     </div>
                     <div>
-                      <p className="text-[9px] uppercase font-bold text-slate-500">{stat.label}</p>
+                      <p className="text-[9px] uppercase font-bold text-muted-foreground">{stat.label}</p>
                       <p className="font-bold text-lg">{stat.val}</p>
                     </div>
                   </div>
 
                       {referrals && referrals.length > 0 && (
                         <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
-                          <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                             <Users className="h-3 w-3" /> Seus Convidados ({referrals.length})
                           </h4>
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -285,7 +285,7 @@ import { cn } from "@/lib/utils";
                                 </div>
                                 <div className="min-w-0">
                                   <p className="text-[10px] font-bold text-white truncate">{ref.name}</p>
-                                  <p className="text-[8px] text-slate-500 uppercase font-black">{format(new Date(ref.created_at), "dd/MM/yy")}</p>
+                                  <p className="text-[8px] text-muted-foreground uppercase font-black">{format(new Date(ref.created_at), "dd/MM/yy")}</p>
                                 </div>
                               </div>
                             ))}
@@ -296,7 +296,7 @@ import { cn } from "@/lib/utils";
                       {commissions && commissions.length > 0 && (
                         <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
                           <div className="flex items-center justify-between">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-500 flex items-center gap-2">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                               <TrendingUp className="h-3 w-3" /> Histórico de Comissões
                             </h4>
                             <div className="flex items-center gap-2">
@@ -309,7 +309,7 @@ import { cn } from "@/lib/utils";
                                 >
                                   <ChevronLeft className="h-3 w-3" />
                                 </Button>
-                                <span className="text-[10px] font-bold text-slate-500">{commissionsPage}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground">{commissionsPage}</span>
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
@@ -330,7 +330,7 @@ import { cn } from "@/lib/utils";
                                   </div>
                                   <div className="min-w-0">
                                     <p className="text-[10px] font-bold text-white truncate">{comm.orders?.campaigns?.title || 'Venda Direta'}</p>
-                                    <p className="text-[8px] text-slate-500 uppercase font-black">{format(new Date(comm.created_at), "dd/MM HH:mm")}</p>
+                                    <p className="text-[8px] text-muted-foreground uppercase font-black">{format(new Date(comm.created_at), "dd/MM HH:mm")}</p>
                                   </div>
                                 </div>
                                 <p className="text-sm font-black italic text-emerald-400">+ R$ {Number(comm.amount).toFixed(2)}</p>
@@ -351,7 +351,7 @@ import { cn } from "@/lib/utils";
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
                       </CardTitle>
-                      <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos 10 lançamentos</CardDescription>
+                      <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Últimos 10 lançamentos</CardDescription>
                     </CardHeader>
                     <div className="h-[200px] w-full">
                       <ResponsiveContainer width="100%" height="100%">
@@ -386,12 +386,12 @@ import { cn } from "@/lib/utils";
                           </div>
                           <div>
                             <p className="text-xs font-black uppercase tracking-tight">{a.title}</p>
-                            <p className="text-[9px] text-slate-500">{a.description}</p>
+                            <p className="text-[9px] text-muted-foreground">{a.description}</p>
                           </div>
                         </div>
                       )) : (
                         <div className="text-center py-8">
-                          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest italic">Nenhuma conquista ainda</p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest italic">Nenhuma conquista ainda</p>
                         </div>
                       )}
                     </div>
@@ -494,7 +494,7 @@ import { cn } from "@/lib/utils";
                                   </div>
                                 ))}
                                 {!o.tickets?.length && (
-                                  <p className="text-[10px] text-slate-600 font-bold uppercase italic py-2">Gerando números... Recarregue em instantes.</p>
+                                  <p className="text-[10px] text-muted-foreground font-bold uppercase italic py-2">Gerando números... Recarregue em instantes.</p>
                                 )}
                               </div>
                             </div>
@@ -502,7 +502,7 @@ import { cn } from "@/lib/utils";
                         </div>
                       )) : (
                         <div className="text-center py-24 opacity-30">
-                            <Ticket className="h-16 w-16 mx-auto mb-4 text-slate-700" />
+                            <Ticket className="h-16 w-16 mx-auto mb-4 text-foreground" />
                             <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
                             <Button onClick={() => window.location.href='/'} variant="link" className="text-primary mt-2">Explorar Rifas Ativas</Button>
                         </div>
@@ -661,18 +661,18 @@ import { cn } from "@/lib/utils";
                                       <div className="flex-1">
                                         <div className="flex items-center gap-2">
                                           <p className="text-sm font-black uppercase tracking-tight">{achievement.title}</p>
-                                          {!isUnlocked && <Lock className="h-3 w-3 text-slate-600" />}
+                                          {!isUnlocked && <Lock className="h-3 w-3 text-muted-foreground" />}
                                         </div>
-                                        <p className="text-[10px] text-slate-500 font-medium leading-tight mb-2">{achievement.description}</p>
+                                        <p className="text-[10px] text-muted-foreground font-medium leading-tight mb-2">{achievement.description}</p>
                                         <div className="flex items-center justify-between">
                                           <Badge variant="outline" className={cn(
                                             "text-[8px] font-black px-2 py-0 h-4 uppercase",
-                                            isUnlocked ? "border-primary/50 text-primary" : "border-white/10 text-slate-600"
+                                            isUnlocked ? "border-primary/50 text-primary" : "border-white/10 text-muted-foreground"
                                           )}>
                                             +{achievement.points} PTS
                                           </Badge>
                                           {isUnlocked && unlockedData && (
-                                            <span className="text-[8px] text-slate-600 font-bold uppercase">
+                                            <span className="text-[8px] text-muted-foreground font-bold uppercase">
                                               {format(new Date(unlockedData.created_at), "dd/MM/yy")}
                                             </span>
                                           )}
@@ -694,7 +694,7 @@ import { cn } from "@/lib/utils";
                          <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                              <Gift className="h-4 w-4 text-primary" /> Loja de Recompensas
                          </CardTitle>
-                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Troque seus pontos por vantagens reais</CardDescription>
+                         <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Troque seus pontos por vantagens reais</CardDescription>
                       </CardHeader>
                       
                       <div className="grid gap-4 sm:grid-cols-3">
@@ -723,11 +723,11 @@ import { cn } from "@/lib/utils";
                 <TabsContent value="games" className="space-y-6">
                    <div className="grid gap-4 sm:grid-cols-3">
                       <Card className="bg-white/5 border-white/10 p-4">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Giros Totais</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Giros Totais</p>
                          <p className="text-2xl font-black italic">{spins?.length || 0}</p>
                       </Card>
                       <Card className="bg-white/5 border-white/10 p-4">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Caixas Abertas</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Caixas Abertas</p>
                          <p className="text-2xl font-black italic">{boxWins?.length || 0}</p>
                       </Card>
                       <Card className="bg-primary/5 border-primary/20 p-4">
@@ -755,7 +755,7 @@ import { cn } from "@/lib/utils";
                                 >
                                   <ChevronLeft className="h-3 w-3" />
                                 </Button>
-                                <span className="text-[10px] font-bold text-slate-500">{spinsPage}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground">{spinsPage}</span>
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
@@ -772,11 +772,11 @@ import { cn } from "@/lib/utils";
                                 <div key={s.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{s.prize_label}</p>
-                                        <p className="text-[9px] text-slate-500 font-bold uppercase">{s.campaigns?.title}</p>
+                                        <p className="text-[9px] text-muted-foreground font-bold uppercase">{s.campaigns?.title}</p>
                                     </div>
                                     <p className="text-xs font-bold text-primary">R$ {Number(s.prize_value).toFixed(2)}</p>
                                 </div>
-                            )) : <p className="text-center py-10 text-[10px] text-slate-600 font-black uppercase italic">Sem giros registrados</p>}
+                            )) : <p className="text-center py-10 text-[10px] text-muted-foreground font-black uppercase italic">Sem giros registrados</p>}
                          </div>
                       </Card>
 
@@ -795,7 +795,7 @@ import { cn } from "@/lib/utils";
                                 >
                                   <ChevronLeft className="h-3 w-3" />
                                 </Button>
-                                <span className="text-[10px] font-bold text-slate-500">{boxesPage}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground">{boxesPage}</span>
                                 <Button 
                                   variant="ghost" 
                                   size="icon" 
@@ -812,11 +812,11 @@ import { cn } from "@/lib/utils";
                                 <div key={bw.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{bw.prize_title}</p>
-                                        <p className="text-[9px] text-slate-500 font-bold uppercase">{format(new Date(bw.created_at), 'dd/MM HH:mm')}</p>
+                                        <p className="text-[9px] text-muted-foreground font-bold uppercase">{format(new Date(bw.created_at), 'dd/MM HH:mm')}</p>
                                     </div>
                                     <p className="text-xs font-bold text-orange-400">R$ {Number(bw.prize_value).toFixed(2)}</p>
                                 </div>
-                            )) : <p className="text-center py-10 text-[10px] text-slate-600 font-black uppercase italic">Sem vitórias em caixas</p>}
+                            )) : <p className="text-center py-10 text-[10px] text-muted-foreground font-black uppercase italic">Sem vitórias em caixas</p>}
                          </div>
                       </Card>
                    </div>
@@ -829,7 +829,7 @@ import { cn } from "@/lib/utils";
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                  <Bell className="h-4 w-4 text-primary" /> Central de Notificações
                              </CardTitle>
-                             <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Fique por dentro de tudo</CardDescription>
+                             <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Fique por dentro de tudo</CardDescription>
                          </div>
                          {notifications && notifications.some(n => !n.is_read) && (
                              <div className="flex gap-2">
@@ -878,15 +878,15 @@ import { cn } from "@/lib/utils";
                                      </div>
                                      <div>
                                          <p className="text-xs font-black uppercase tracking-tight">{n.title}</p>
-                                         <p className="text-[10px] text-slate-400 font-medium">{n.message}</p>
-                                         <p className="text-[8px] text-slate-600 font-bold uppercase tracking-widest mt-1">{format(new Date(n.created_at), "dd/MM HH:mm")}</p>
+                                         <p className="text-[10px] text-muted-foreground font-medium">{n.message}</p>
+                                         <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest mt-1">{format(new Date(n.created_at), "dd/MM HH:mm")}</p>
                                      </div>
                                  </div>
                                  {!n.is_read && <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />}
                              </div>
                          )) : (
                              <div className="text-center py-20 opacity-30">
-                                 <Bell className="h-12 w-12 mx-auto mb-4 text-slate-500" />
+                                 <Bell className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                                  <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma notificação</p>
                              </div>
                          )}

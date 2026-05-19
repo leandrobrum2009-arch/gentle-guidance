@@ -110,7 +110,7 @@ export default function AdminCampaignEdit() {
           </TabsList>
 
           <TabsContent value="general" className="mt-6 space-y-6">
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <Label>Título da Campanha</Label>
                <Input value={form.title} onChange={(e) => set("title", e.target.value)} className="mt-2" />
                <Label className="mt-4 block">Subtítulo</Label>
@@ -121,7 +121,7 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
+            <Card className="p-6 rounded-2xl border-border shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
                <div>
                  <Label>Preço Unitário (R$)</Label>
                  <Input type="number" step="0.01" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} className="mt-2" />
@@ -137,7 +137,7 @@ export default function AdminCampaignEdit() {
                    </div>
                    <div className="flex-1">
                      <Label className="text-base font-bold">Modo de Operação</Label>
-                     <p className="text-xs text-slate-500">Defina como os números serão entregues ao cliente.</p>
+                     <p className="text-xs text-muted-foreground">Defina como os números serão entregues ao cliente.</p>
                    </div>
                  </div>
                  
@@ -149,15 +149,15 @@ export default function AdminCampaignEdit() {
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'auto' 
                         ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
-                        : "border-slate-100 bg-white hover:border-primary/30"
+                        : "border-border bg-white hover:border-primary/30"
                      )}
                    >
-                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-white" : "bg-secondary text-muted-foreground")}>
                        <Zap className="h-5 w-5" />
                      </div>
                      <div>
                        <p className="font-bold text-sm">Sorteio Aleatório (Automático)</p>
-                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Os números são gerados pelo sistema apenas **após a confirmação do pagamento**. Ideal para grandes volumes de bilhetes.</p>
+                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">Os números são gerados pelo sistema apenas **após a confirmação do pagamento**. Ideal para grandes volumes de bilhetes.</p>
                      </div>
                    </button>
 
@@ -168,31 +168,31 @@ export default function AdminCampaignEdit() {
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'manual' 
                         ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
-                        : "border-slate-100 bg-white hover:border-primary/30"
+                        : "border-border bg-white hover:border-primary/30"
                      )}
                    >
-                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-white" : "bg-secondary text-muted-foreground")}>
                        <MousePointer2 className="h-5 w-5" />
                      </div>
                      <div>
                        <p className="font-bold text-sm">Seleção Manual (Grade)</p>
-                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
+                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
                      </div>
                    </button>
                  </div>
                </div>
             </Card>
             
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex justify-between items-center mb-4">
                  <Label className="text-lg font-bold">Combos de Desconto</Label>
                  <Button size="sm" onClick={() => set("price_bundles", [...form.price_bundles, {quantity: 10, price: 9}])}><Plus className="h-4 w-4 mr-2" /> Novo Combo</Button>
                </div>
                <div className="space-y-3">
                  {form.price_bundles.map((b, i) => (
-                   <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl">
+                   <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-xl">
                      <div className="flex-1">
-                       <Label className="text-[10px] uppercase font-bold text-slate-400">Quantidade</Label>
+                       <Label className="text-[10px] uppercase font-bold text-muted-foreground">Quantidade</Label>
                        <Input type="number" value={b.quantity} onChange={(e) => {
                          const n = [...form.price_bundles];
                          n[i].quantity = Number(e.target.value);
@@ -200,7 +200,7 @@ export default function AdminCampaignEdit() {
                        }} />
                      </div>
                      <div className="flex-1">
-                       <Label className="text-[10px] uppercase font-bold text-slate-400">Preço (R$)</Label>
+                       <Label className="text-[10px] uppercase font-bold text-muted-foreground">Preço (R$)</Label>
                        <Input type="number" step="0.01" value={b.price} onChange={(e) => {
                          const n = [...form.price_bundles];
                          n[i].price = Number(e.target.value);
@@ -219,7 +219,7 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="media" className="mt-6 space-y-6">
-             <Card className="p-6 rounded-2xl border-slate-100 shadow-sm space-y-4">
+             <Card className="p-6 rounded-2xl border-border shadow-sm space-y-4">
                <Label>URL da Imagem de Capa</Label>
                <Input value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
                <Label>URL do Vídeo (YouTube)</Label>
@@ -228,12 +228,12 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="prizes" className="mt-6 space-y-6">
-             <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+             <Card className="p-6 rounded-2xl border-border shadow-sm">
                 <Label className="text-lg font-bold mb-4 block">Premiação Principal</Label>
                 <div className="space-y-3">
                   {form.main_prizes.map((p, i) => (
-                    <div key={i} className="flex items-center gap-4 bg-slate-50 p-3 rounded-xl">
-                      <span className="w-20 font-bold text-slate-400">{p.position}º Lugar</span>
+                    <div key={i} className="flex items-center gap-4 bg-secondary/50 p-3 rounded-xl">
+                      <span className="w-20 font-bold text-muted-foreground">{p.position}º Lugar</span>
                       <Input value={p.prize} onChange={(e) => {
                         const n = [...form.main_prizes];
                         n[i].prize = e.target.value;
@@ -244,14 +244,14 @@ export default function AdminCampaignEdit() {
                 </div>
              </Card>
 
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+            <Card className="p-6 rounded-2xl border-border shadow-sm overflow-hidden">
                <div className="flex justify-between items-center mb-6">
                  <div className="space-y-1">
                    <Label className="text-lg font-bold flex items-center gap-2">
                      <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
                      Cotas Premiadas (Instantâneas)
                    </Label>
-                   <p className="text-xs text-slate-500">Números que ganham prêmios no momento da compra.</p>
+                   <p className="text-xs text-muted-foreground">Números que ganham prêmios no momento da compra.</p>
                  </div>
                  <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: "", protected: true}])}>
                    <Plus className="h-4 w-4 mr-2" /> Nova Cota
@@ -260,9 +260,9 @@ export default function AdminCampaignEdit() {
                
                <div className="grid gap-3">
                  {form.lucky_numbers_prizes.map((p, i) => (
-                   <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100 transition-all hover:border-amber-200">
+                   <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-2xl border border-border transition-all hover:border-amber-200">
                      <div className="w-32">
-                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Nº da Cota</Label>
+                       <Label className="text-[10px] uppercase font-bold text-muted-foreground mb-1.5 block">Nº da Cota</Label>
                        <Input 
                          placeholder="Ex: 5485" 
                          className="bg-white font-mono font-bold text-center"
@@ -275,7 +275,7 @@ export default function AdminCampaignEdit() {
                        />
                      </div>
                      <div className="flex-1">
-                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Descrição do Prêmio</Label>
+                       <Label className="text-[10px] uppercase font-bold text-muted-foreground mb-1.5 block">Descrição do Prêmio</Label>
                        <Input 
                          placeholder="Ex: iPhone 16 Pro Max" 
                          className="bg-white"
@@ -292,7 +292,7 @@ export default function AdminCampaignEdit() {
                          <Tooltip>
                            <TooltipTrigger asChild>
                              <div className="flex flex-col items-center gap-1">
-                               <Label className="text-[9px] uppercase font-bold text-slate-400">Protegida</Label>
+                               <Label className="text-[9px] uppercase font-bold text-muted-foreground">Protegida</Label>
                                <Switch 
                                  checked={p.protected !== false} 
                                  onCheckedChange={(v) => {
@@ -317,7 +317,7 @@ export default function AdminCampaignEdit() {
                    </div>
                  ))}
                  {form.lucky_numbers_prizes.length === 0 && (
-                   <div className="text-center py-12 border-2 border-dashed rounded-3xl text-slate-400 bg-slate-50/50">
+                   <div className="text-center py-12 border-2 border-dashed rounded-3xl text-muted-foreground bg-secondary/50/50">
                      <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-20" />
                      <p className="text-sm font-medium">Nenhuma cota premiada configurada.</p>
                      <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>
@@ -328,14 +328,14 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex items-center gap-2 mb-6">
                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                    <Dices className="h-5 w-5" />
                  </div>
                  <div className="flex-1">
                    <h3 className="text-lg font-bold">Incentivos da Roleta</h3>
-                   <p className="text-sm text-slate-500">Configure quantos giros o cliente ganha ao comprar certas quantidades</p>
+                   <p className="text-sm text-muted-foreground">Configure quantos giros o cliente ganha ao comprar certas quantidades</p>
                  </div>
                  <Switch checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
                </div>
@@ -351,9 +351,9 @@ export default function AdminCampaignEdit() {
                    
                    <div className="grid gap-3">
                      {form.roulette_rules.map((rule, i) => (
-                       <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl border border-slate-100">
+                       <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-xl border border-border">
                          <div className="flex-1">
-                           <Label className="text-[10px] uppercase font-bold text-slate-400">Ao comprar acima de (Qtd)</Label>
+                           <Label className="text-[10px] uppercase font-bold text-muted-foreground">Ao comprar acima de (Qtd)</Label>
                            <Input type="number" value={rule.min_tickets} onChange={(e) => {
                              const n = [...form.roulette_rules];
                              n[i].min_tickets = Number(e.target.value);
@@ -361,7 +361,7 @@ export default function AdminCampaignEdit() {
                            }} />
                          </div>
                          <div className="flex-1">
-                           <Label className="text-[10px] uppercase font-bold text-slate-400">Ganha (Giros)</Label>
+                           <Label className="text-[10px] uppercase font-bold text-muted-foreground">Ganha (Giros)</Label>
                            <Input type="number" value={rule.spins} onChange={(e) => {
                              const n = [...form.roulette_rules];
                              n[i].spins = Number(e.target.value);
@@ -376,7 +376,7 @@ export default function AdminCampaignEdit() {
                        </div>
                      ))}
                      {form.roulette_rules.length === 0 && (
-                       <div className="text-center py-8 border-2 border-dashed rounded-2xl text-slate-400">
+                       <div className="text-center py-8 border-2 border-dashed rounded-2xl text-muted-foreground">
                          Nenhuma regra definida. O cliente não ganhará giros automáticos.
                        </div>
                      )}
@@ -386,14 +386,14 @@ export default function AdminCampaignEdit() {
                      <div className="space-y-2">
                        <Label>Custo do Giro Individual (R$)</Label>
                        <Input type="number" step="0.01" value={form.roulette_spin_cost} onChange={(e) => set("roulette_spin_cost", Number(e.target.value))} />
-                       <p className="text-[10px] text-slate-500 italic">Caso queira permitir compra avulsa de giros</p>
+                       <p className="text-[10px] text-muted-foreground italic">Caso queira permitir compra avulsa de giros</p>
                      </div>
                    </div>
                  </div>
                )}
             </Card>
 
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex items-center gap-2 mb-6">
                  <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-500">
                    <Target className="h-5 w-5" />
@@ -404,23 +404,23 @@ export default function AdminCampaignEdit() {
                   <div className="space-y-2">
                     <Label>Meta de Vendas (%)</Label>
                     <Input type="number" value={form.sales_goal} onChange={(e) => set("sales_goal", Number(e.target.value))} />
-                    <p className="text-[10px] text-slate-400">Exibida como barra de progresso</p>
+                    <p className="text-[10px] text-muted-foreground">Exibida como barra de progresso</p>
                   </div>
                   <div className="space-y-2">
                     <Label>Tag de Urgência</Label>
                     <Input placeholder="Ex: ÚLTIMAS COTAS" value={form.urgency_tag} onChange={(e) => set("urgency_tag", e.target.value)} />
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl border border-border">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-bold">Em Destaque</Label>
-                      <p className="text-[11px] text-slate-500">Aparece no topo da página inicial</p>
+                      <p className="text-[11px] text-muted-foreground">Aparece no topo da página inicial</p>
                     </div>
                     <Switch checked={form.featured} onCheckedChange={(v) => set("featured", v)} />
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl border border-border">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-bold">Exibir Ranking</Label>
-                      <p className="text-[11px] text-slate-500">Mostrar maiores compradores</p>
+                      <p className="text-[11px] text-muted-foreground">Mostrar maiores compradores</p>
                     </div>
                     <Switch checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
                   </div>
@@ -429,7 +429,7 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="settings" className="mt-6 space-y-6">
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex items-center gap-2 mb-6">
                  <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
                    <Settings2 className="h-5 w-5" />
@@ -445,10 +445,10 @@ export default function AdminCampaignEdit() {
                     <Label>Data do Sorteio</Label>
                     <Input type="datetime-local" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
+                  <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl border border-border">
                     <div className="space-y-0.5">
                       <Label className="text-sm font-bold">Extração pela Federal</Label>
-                      <p className="text-[11px] text-slate-500">Usa os números da Loteria Federal</p>
+                      <p className="text-[11px] text-muted-foreground">Usa os números da Loteria Federal</p>
                     </div>
                     <Switch checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
                   </div>

@@ -174,14 +174,14 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       {isCompact ? (
         <Dialog>
           <DialogTrigger asChild>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-slate-50 border border-slate-100 hover:border-orange-500/50 hover:bg-white transition-all group">
+            <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-white transition-all group">
               <div className="flex items-center gap-3">
                 <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
                   <Gift className="h-5 w-5" />
                 </div>
                 <div className="text-left">
-                  <p className="text-xs font-black uppercase tracking-tight text-slate-900">Caixas Misteriosas</p>
-                  <p className="text-[10px] font-medium text-slate-500">Ganhe prêmios abrindo caixas</p>
+                  <p className="text-xs font-black uppercase tracking-tight text-foreground">Caixas Misteriosas</p>
+                  <p className="text-[10px] font-medium text-muted-foreground">Ganhe prêmios abrindo caixas</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
