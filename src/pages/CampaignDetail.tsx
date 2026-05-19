@@ -403,6 +403,25 @@ import { useAuth } from "@/contexts/AuthContext";
            </div>
  
              <div className="space-y-6">
+                {/* Roulette Incentive Section */}
+                {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
+                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                      <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
+                    </h3>
+                    <div className="space-y-2">
+                      {(campaign.roulette_rules as any[]).map((rule, i) => (
+                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
+                          <span className="text-[11px] font-bold text-slate-700">Compre +{rule.min_tickets} cotas</span>
+                          <Badge className="bg-primary text-white border-none text-[10px] font-black uppercase tracking-wider">
+                            Ganha {rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                {/* Compact Games Section */}
                {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
