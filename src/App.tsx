@@ -1,3 +1,4 @@
+import LiveNotifications from "./components/LiveNotifications";
 import Roulette from "./pages/Roulette";
 import MysteryBox from "./pages/MysteryBox";
 import Ranking from "./pages/Ranking";
@@ -44,6 +45,7 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
+        <LiveNotifications />
         <BrowserRouter>
           <AuthProvider>
             <Routes>
