@@ -261,7 +261,7 @@ const Index = () => {
                         </div>
 
                         <Link to={`/roleta`} className="w-full">
-                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-light-path border-[#22c55e]/30">
                             ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
                           </Button>
                         </Link>
