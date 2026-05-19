@@ -320,6 +320,30 @@ export type Database = {
         }
         Relationships: []
       }
+      custom_presets: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          updated_at: string
+          values: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          updated_at?: string
+          values: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          updated_at?: string
+          values?: Json
+        }
+        Relationships: []
+      }
       federal_lottery_results: {
         Row: {
           concurso: string
