@@ -137,7 +137,7 @@ export default function AdminDashboard() {
                 onClick={() => window.location.href = action.url}
                 className="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-white p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98]"
               >
-                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${action.color} text-white shadow-lg transition-transform group-hover:scale-110`}>
+                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${action.color} text-foreground shadow-lg transition-transform group-hover:scale-110`}>
                   <action.icon className="h-6 w-6" />
                 </div>
                 <span className="text-sm font-bold text-muted-foreground group-hover:text-primary transition-colors">{action.title}</span>
@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{s.label}</CardTitle>
                   <div className={`rounded-lg bg-gradient-to-br ${s.color} p-2 shadow-lg transition-transform group-hover:scale-110`}>
-                    <s.icon className="h-4 w-4 text-white" />
+                    <s.icon className="h-4 w-4 text-foreground" />
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                   <CardTitle className="text-lg font-bold text-foreground tracking-tight">Análise de Receita</CardTitle>
                   <p className="text-xs text-muted-foreground font-medium">Performance financeira dos últimos 7 dias</p>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 transition-all hover:bg-white/10 hover:scale-110 group-hover:text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/20 transition-all hover:bg-white/10 hover:scale-110 group-hover:text-primary">
                   <TrendingUp className="h-5 w-5 text-muted-foreground" />
                 </div>
               </CardHeader>
@@ -338,7 +338,7 @@ export default function AdminDashboard() {
                           <log.icon className="h-5 w-5" />
                         </div>
                         <div>
-                          <p className="text-xs font-bold text-slate-200 group-hover/log:text-white transition-colors">{log.action}</p>
+                          <p className="text-xs font-bold text-foreground group-hover/log:text-foreground transition-colors">{log.action}</p>
                           <p className="text-[10px] text-muted-foreground font-medium">{log.user} • <span className="text-muted-foreground">{log.target}</span></p>
                         </div>
                       </div>

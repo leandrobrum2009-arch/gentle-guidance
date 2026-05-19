@@ -20,7 +20,7 @@ export default function AdminUsers() {
   return (
     <AdminLayout>
       <div className="mb-8">
-        <h1 className="font-display text-3xl font-bold text-white">Gestão de Usuários</h1>
+        <h1 className="font-display text-3xl font-bold text-foreground">Gestão de Usuários</h1>
         <p className="text-muted-foreground">Gerencie todos os membros registrados na plataforma.</p>
       </div>
 
@@ -29,21 +29,21 @@ export default function AdminUsers() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
             placeholder="Buscar por nome, email ou telefone..." 
-            className="pl-10 border-white/5 bg-[#0d0d0f]/50 text-white focus:border-primary/50"
+            className="pl-10 border-border bg-card/50 text-foreground focus:border-primary/50"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
 
-      <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+      <Card className="border-border bg-card/50 backdrop-blur-xl">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-white/5 hover:bg-transparent">
+                <TableRow className="border-border hover:bg-transparent">
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Usuário / ID</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Telefone</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Saldo</TableHead>
@@ -52,22 +52,22 @@ export default function AdminUsers() {
               </TableHeader>
               <TableBody>
                 {filtered?.map((u) => (
-                  <TableRow key={u.id} className="border-white/5 hover:bg-white/5 transition-colors group">
+                  <TableRow key={u.id} className="border-border hover:bg-secondary/20 transition-colors group">
                     <TableCell>
                       <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 border border-white/10 ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
+                        <Avatar className="h-10 w-10 border border-border ring-2 ring-transparent group-hover:ring-primary/20 transition-all">
                           <AvatarImage src={u.avatar_url} />
                          <AvatarFallback className="bg-primary/10 text-primary font-bold uppercase">
                            {u.name?.substring(0, 2) || "U"}
                          </AvatarFallback>
                         </Avatar>
                         <div>
-                           <p className="font-bold text-white tracking-tight">{u.name || "Sem Nome"}</p>
+                           <p className="font-bold text-foreground tracking-tight">{u.name || "Sem Nome"}</p>
                            <p className="text-[10px] text-muted-foreground font-mono">{(u.user_id || u.id).substring(0, 8)}</p>
                         </div>
                       </div>
                     </TableCell>
-                     <TableCell className="text-slate-300 font-medium">{u.phone || "-"}</TableCell>
+                     <TableCell className="text-foreground font-medium">{u.phone || "-"}</TableCell>
                      <TableCell className="text-emerald-400 font-bold font-mono text-xs">
                        R$ {Number(u.balance || 0).toFixed(2)}
                      </TableCell>

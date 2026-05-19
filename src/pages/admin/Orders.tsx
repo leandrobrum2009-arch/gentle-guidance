@@ -73,7 +73,7 @@ import { Input } from "@/components/ui/input";
      <AdminLayout>
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Gestão de Pedidos</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Gestão de Pedidos</h1>
           <p className="text-muted-foreground mt-1">Monitore e aprove pagamentos em tempo real.</p>
         </div>
         <div className="flex items-center gap-3">
@@ -86,11 +86,11 @@ import { Input } from "@/components/ui/input";
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
               <div className="flex items-center gap-2">
                 <span className={`h-1.5 w-1.5 rounded-full ${s.color.replace('text', 'bg')} animate-pulse`} />
-                <p className="text-xl font-bold text-white leading-none">{s.value}</p>
+                <p className="text-xl font-bold text-foreground leading-none">{s.value}</p>
               </div>
             </div>
           ))}
-          <Button variant="outline" size="icon" className="h-10 w-10 border-white/10 bg-white/5 text-muted-foreground hover:text-white">
+          <Button variant="outline" size="icon" className="h-10 w-10 border-border bg-secondary/20 text-muted-foreground hover:text-foreground">
             <Download className="h-4 w-4" />
           </Button>
         </div>
@@ -101,7 +101,7 @@ import { Input } from "@/components/ui/input";
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
             placeholder="Buscar por ID, nome ou e-mail..." 
-            className="pl-10 border-white/5 bg-[#0d0d0f]/50 text-white focus:border-primary/50 h-12 rounded-xl"
+            className="pl-10 border-border bg-card/50 text-foreground focus:border-primary/50 h-12 rounded-xl"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -114,7 +114,7 @@ import { Input } from "@/components/ui/input";
               className={`flex-1 h-12 rounded-xl text-[10px] uppercase font-bold tracking-widest border transition-all ${
                 statusFilter === s 
                   ? "bg-primary/10 border-primary/30 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]" 
-                  : "border-white/5 bg-white/5 text-muted-foreground hover:text-slate-300"
+                  : "border-border bg-secondary/20 text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => setStatusFilter(s)}
             >
@@ -124,7 +124,7 @@ import { Input } from "@/components/ui/input";
         </div>
       </div>
  
-       <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+       <Card className="border-border bg-card/50 backdrop-blur-xl">
          <CardContent className="p-0">
            {isLoading ? (
              <div className="flex justify-center py-20">
@@ -138,7 +138,7 @@ import { Input } from "@/components/ui/input";
            ) : (
              <Table>
                <TableHeader>
-                  <TableRow className="border-white/5 hover:bg-transparent bg-white/[0.02]">
+                  <TableRow className="border-border hover:bg-transparent bg-white/[0.02]">
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Identificação</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Cliente</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Campanha</TableHead>
@@ -150,7 +150,7 @@ import { Input } from "@/components/ui/input";
                </TableHeader>
                <TableBody>
                   {filteredOrders.map((o: any) => (
-                    <TableRow key={o.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                    <TableRow key={o.id} className="border-border hover:bg-white/[0.02] transition-colors group">
                       <TableCell className="pl-8 py-4">
                         <div className="flex flex-col gap-0.5">
                           <span className="font-mono text-[10px] text-primary font-bold tracking-tighter">ORD-{o.id.substring(0, 8).toUpperCase()}</span>
@@ -162,11 +162,11 @@ import { Input } from "@/components/ui/input";
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="h-8 w-8 rounded-lg bg-white/5 flex items-center justify-center border border-white/5">
+                          <div className="h-8 w-8 rounded-lg bg-secondary/20 flex items-center justify-center border border-border">
                             <User className="h-4 w-4 text-muted-foreground" />
                           </div>
                           <div className="flex flex-col">
-                            <span className="text-sm font-bold text-slate-200 leading-tight">{o.profiles?.name || "Convidado"}</span>
+                            <span className="text-sm font-bold text-foreground leading-tight">{o.profiles?.name || "Convidado"}</span>
                             <span className="text-[10px] text-muted-foreground font-medium truncate max-w-[120px]">{o.profiles?.email || "—"}</span>
                           </div>
                         </div>
@@ -174,16 +174,16 @@ import { Input } from "@/components/ui/input";
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <div className="h-1 w-1 rounded-full bg-primary" />
-                          <span className="font-bold text-slate-300 tracking-tight text-xs uppercase">{o.campaigns?.title ?? "—"}</span>
+                          <span className="font-bold text-foreground tracking-tight text-xs uppercase">{o.campaigns?.title ?? "—"}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-center">
-                        <Badge variant="outline" className="bg-white/5 border-white/10 text-white font-bold h-6 rounded-md">
+                        <Badge variant="outline" className="bg-secondary/20 border-border text-foreground font-bold h-6 rounded-md">
                           {o.quantity}
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        <span className="font-bold text-white tracking-tighter text-sm">R$ {Number(o.total_amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
+                        <span className="font-bold text-foreground tracking-tighter text-sm">R$ {Number(o.total_amount).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}</span>
                       </TableCell>
                      <TableCell>
                         <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border w-fit font-bold text-[9px] uppercase tracking-widest ${statusBg(o.payment_status)}`}>
@@ -194,11 +194,11 @@ import { Input } from "@/components/ui/input";
                       <TableCell className="text-right pr-8">
                        <DropdownMenu>
                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-white hover:bg-white/10 rounded-xl transition-all">
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-white/10 rounded-xl transition-all">
                               <MoreVertical className="h-5 w-5" />
                            </Button>
                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end" className="w-56 bg-[#131316] border-white/10 text-slate-200 shadow-2xl rounded-xl p-1.5">
+                          <DropdownMenuContent align="end" className="w-56 bg-card border-border text-foreground shadow-2xl rounded-xl p-1.5">
                             <DropdownMenuLabel className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground px-3 py-2">Opções do Pedido</DropdownMenuLabel>
                             <div className="space-y-1">
                               {o.payment_status !== 'paid' && (
@@ -220,7 +220,7 @@ import { Input } from "@/components/ui/input";
                                 </DropdownMenuItem>
                               )}
                               <DropdownMenuItem 
-                                className="flex items-center gap-3 focus:bg-white/5 focus:text-white cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                className="flex items-center gap-3 focus:bg-secondary/20 focus:text-foreground cursor-pointer py-3 rounded-lg font-bold text-xs"
                                 onClick={() => window.open(`/checkout/${o.id}`, '_blank')}
                               >
                                 <ShoppingBag className="h-4 w-4" />

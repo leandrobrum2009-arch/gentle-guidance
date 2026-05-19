@@ -293,7 +293,7 @@ export default function AdminCampaignEdit() {
                         : "border-border bg-white hover:border-primary/30"
                      )}
                    >
-                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-white" : "bg-secondary text-muted-foreground")}>
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-foreground" : "bg-secondary text-muted-foreground")}>
                        <Zap className="h-5 w-5" />
                      </div>
                      <div>
@@ -312,7 +312,7 @@ export default function AdminCampaignEdit() {
                         : "border-border bg-white hover:border-primary/30"
                      )}
                    >
-                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-white" : "bg-secondary text-muted-foreground")}>
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-foreground" : "bg-secondary text-muted-foreground")}>
                        <MousePointer2 className="h-5 w-5" />
                      </div>
                      <div>
@@ -369,7 +369,7 @@ export default function AdminCampaignEdit() {
                        <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
                        <button 
                         onClick={removeCoverImage}
-                        className="absolute top-2 right-2 p-2 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-2 right-2 p-2 bg-destructive text-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                        >
                          <X className="h-4 w-4" />
                        </button>
@@ -384,7 +384,7 @@ export default function AdminCampaignEdit() {
                         />
                      </div>
                      <Label className="cursor-pointer">
-                       <div className="flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-white font-bold text-sm transition-all hover:bg-primary/90">
+                       <div className="flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-foreground font-bold text-sm transition-all hover:bg-primary/90">
                          {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                          Fazer Upload
                        </div>
@@ -419,7 +419,7 @@ export default function AdminCampaignEdit() {
                        <img src={url} alt={`Galeria ${index}`} className="w-full h-full object-cover" />
                        <button 
                          onClick={() => removeGalleryImage(index)}
-                         className="absolute top-1 right-1 p-1.5 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                         className="absolute top-1 right-1 p-1.5 bg-destructive text-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                        >
                          <X className="h-3 w-3" />
                        </button>
@@ -529,7 +529,7 @@ export default function AdminCampaignEdit() {
                          </Tooltip>
                        </TooltipProvider>
                      </div>
-                     <Button variant="ghost" size="icon" className="mt-5 text-slate-300 hover:text-destructive hover:bg-destructive/5" onClick={() => {
+                     <Button variant="ghost" size="icon" className="mt-5 text-foreground hover:text-destructive hover:bg-destructive/5" onClick={() => {
                        const n = [...form.lucky_numbers_prizes];
                        n.splice(i, 1);
                        set("lucky_numbers_prizes", n);
