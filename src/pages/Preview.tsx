@@ -63,9 +63,9 @@ const PreviewPage = () => {
             <section className="space-y-8">
               <h2 className="text-2xl font-black uppercase italic tracking-tighter border-l-4 border-primary pl-4">Cartões de Campanha</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                <CampaignCard campaign={mockCampaign as any} />
-                <CampaignCard campaign={{ ...mockCampaign, featured: false, urgency_tag: "Últimas Cotas" } as any} />
-                <CampaignCard campaign={{ ...mockCampaign, sold_tickets: 95000, status: "drawn", urgency_tag: "Finalizado" } as any} />
+                <CampaignCard campaign={mockCampaign as any} index={0} />
+                <CampaignCard campaign={{ ...mockCampaign, featured: false, urgency_tag: "Últimas Cotas" } as any} index={1} />
+                <CampaignCard campaign={{ ...mockCampaign, sold_tickets: 95000, status: "drawn", urgency_tag: "Finalizado" } as any} index={2} />
               </div>
             </section>
 
