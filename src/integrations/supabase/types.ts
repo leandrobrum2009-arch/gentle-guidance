@@ -779,8 +779,8 @@ export type Database = {
           created_at: string
           id: string
           is_free: boolean | null
-          prize_label: string
-          prize_type: string
+          prize_label: string | null
+          prize_type: string | null
           prize_value: number | null
           user_id: string
         }
@@ -789,8 +789,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_free?: boolean | null
-          prize_label: string
-          prize_type: string
+          prize_label?: string | null
+          prize_type?: string | null
           prize_value?: number | null
           user_id: string
         }
@@ -799,8 +799,8 @@ export type Database = {
           created_at?: string
           id?: string
           is_free?: boolean | null
-          prize_label?: string
-          prize_type?: string
+          prize_label?: string | null
+          prize_type?: string | null
           prize_value?: number | null
           user_id?: string
         }
