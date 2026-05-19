@@ -40,11 +40,13 @@ import {
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
+  const [initialSettings, setInitialSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [customPresets, setCustomPresets] = useState<any[]>([]);
   const [isSavingPreset, setIsSavingPreset] = useState(false);
   const [newPresetName, setNewPresetName] = useState("");
+  const [presetToPreview, setPresetToPreview] = useState<any>(null);
 
   const presets = [
     {
