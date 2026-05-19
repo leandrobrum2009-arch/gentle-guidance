@@ -297,13 +297,13 @@ const Index = () => {
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-                {(winners && winners.length > 0 ? winners : [
+               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                 {(winners && winners.length > 0 ? winners : [
                    { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
                    { id: "2", winner_name: "Maria Luiza", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" },
                    { id: "3", winner_name: "Carlos Manoel", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=256&h=256&auto=format&fit=crop" },
                    { id: "4", winner_name: "Beatriz Souza", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop" }
-                ]).slice(0, 4).map((winner, i) => (
+                 ]).slice(0, 8).map((winner, i) => (
                   <div key={winner.id} className="relative group">
                     {/* Speech Bubble / Balloon Effect */}
                     <motion.div
