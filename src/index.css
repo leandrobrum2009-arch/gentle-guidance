@@ -256,11 +256,11 @@ aside:has(a[href*="lovable.dev"]) {
      z-index: 1;
    }
 
-   .border-light-path::before {
-     content: "";
-     position: absolute;
-     inset: -1.5px;
-     padding: 1.5px;
+    .border-light-path::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      padding: 2px;
      border-radius: inherit;
      background: linear-gradient(
        90deg, 
