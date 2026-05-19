@@ -9,10 +9,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2 } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -56,6 +57,7 @@ export default function AdminCampaignEdit() {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [aiGenerating, setAiGenerating] = useState(false);
+  const [uploading, setUploading] = useState<string | null>(null);
 
   useEffect(() => {
     if (id) fetchCampaign();
@@ -66,6 +68,45 @@ export default function AdminCampaignEdit() {
     const { data, error } = await supabase.from("campaigns").select("*").eq("id", id).single();
     if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "", price_bundles: (data.price_bundles as any[]) ?? [], gallery_urls: (data.gallery_urls as any[]) ?? [], lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], main_prizes: (data.main_prizes as any[]) ?? [], roulette_rules: (data.roulette_rules as any[]) ?? [] } as CampaignForm);
     setLoading(false);
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setUploading(type);
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${crypto.randomUUID()}.${fileExt}`;
+      
+      const { error: uploadError, data } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      if (type === 'cover') {
+        set("image_url", publicUrl);
+      } else {
+        setForm(p => ({ ...p, gallery_urls: [...p.gallery_urls, publicUrl] }));
+      }
+      
+      toast({ title: "Sucesso", description: "Imagem enviada com sucesso!" });
+    } catch (error: any) {
+      toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(null);
+    }
+  };
+
+  const removeGalleryImage = (index: number) => {
+    const newGallery = [...form.gallery_urls];
+    newGallery.splice(index, 1);
+    set("gallery_urls", newGallery);
   };
 
   const set = (k: keyof CampaignForm, v: any) => {
@@ -263,11 +304,90 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="media" className="mt-6 space-y-6">
-             <Card className="p-6 rounded-2xl border-border shadow-sm space-y-4">
-               <Label>URL da Imagem de Capa</Label>
-               <Input value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
-               <Label>URL do Vídeo (YouTube)</Label>
-               <Input value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+             <Card className="p-6 rounded-2xl border-border shadow-sm space-y-6">
+               <div className="space-y-4">
+                 <Label className="text-base font-bold">Imagem de Capa (Principal)</Label>
+                 <div className="flex flex-col gap-4">
+                   {form.image_url && (
+                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border group">
+                       <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
+                       <button 
+                        onClick={() => set("image_url", "")}
+                        className="absolute top-2 right-2 p-2 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                       >
+                         <X className="h-4 w-4" />
+                       </button>
+                     </div>
+                   )}
+                   <div className="flex items-center gap-4">
+                     <div className="flex-1">
+                        <Input 
+                          placeholder="Ou cole a URL da imagem aqui..." 
+                          value={form.image_url} 
+                          onChange={(e) => set("image_url", e.target.value)} 
+                        />
+                     </div>
+                     <Label className="cursor-pointer">
+                       <div className="flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-white font-bold text-sm transition-all hover:bg-primary/90">
+                         {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                         Fazer Upload
+                       </div>
+                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
+                     </Label>
+                   </div>
+                 </div>
+               </div>
+
+               <Separator />
+
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between">
+                   <div className="flex flex-col gap-0.5">
+                     <Label className="text-base font-bold">Galeria de Fotos (Slide)</Label>
+                     <p className="text-[10px] text-primary font-bold flex items-center gap-1">
+                       <Sparkles className="h-3 w-3" /> Slide criado automaticamente
+                     </p>
+                   </div>
+                   <Label className="cursor-pointer">
+                     <div className="flex items-center gap-2 px-4 h-9 rounded-lg bg-secondary text-foreground font-bold text-xs transition-all hover:bg-secondary/80">
+                       {uploading === 'gallery' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                       Adicionar Foto
+                     </div>
+                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
+                   </Label>
+                 </div>
+                 
+                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                   {form.gallery_urls.map((url, index) => (
+                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-border group">
+                       <img src={url} alt={`Galeria ${index}`} className="w-full h-full object-cover" />
+                       <button 
+                         onClick={() => removeGalleryImage(index)}
+                         className="absolute top-1 right-1 p-1.5 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                       >
+                         <X className="h-3 w-3" />
+                       </button>
+                     </div>
+                   ))}
+                   {form.gallery_urls.length === 0 && (
+                     <div className="col-span-full py-8 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-muted-foreground bg-secondary/20">
+                       <ImageIcon className="h-8 w-8 mb-2 opacity-20" />
+                       <p className="text-xs font-medium">Sua galeria está vazia.</p>
+                     </div>
+                   )}
+                 </div>
+               </div>
+
+               <Separator />
+
+               <div className="space-y-4">
+                 <Label className="text-base font-bold">Vídeo do YouTube</Label>
+                 <Input 
+                   placeholder="Link do vídeo (Ex: https://www.youtube.com/watch?v=...)" 
+                   value={form.video_url} 
+                   onChange={(e) => set("video_url", e.target.value)} 
+                 />
+               </div>
              </Card>
           </TabsContent>
 
