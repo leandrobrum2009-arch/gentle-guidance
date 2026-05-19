@@ -64,14 +64,14 @@ import { cn } from "@/lib/utils";
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
-     const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+     const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
      return validTabs.includes(hash) ? hash : "overview";
    });
  
    useEffect(() => {
      const handleHashChange = () => {
        const hash = window.location.hash.replace('#', '');
-       const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
        if (validTabs.includes(hash)) {
          setActiveTab(hash);
        }
@@ -202,8 +202,86 @@ import { cn } from "@/lib/utils";
             <nav className="space-y-2">
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
+                { label: "Meus Títulos", id: "tickets", icon: Ticket },
                 { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
+               <TabsContent value="tickets" className="space-y-6">
+                 <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                    <CardHeader className="p-0 mb-8">
+                        <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                            <Ticket className="h-4 w-4 text-primary" /> Meus Títulos de Capitalização
+                        </CardTitle>
+                        <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Consulte aqui todos os seus números da sorte</CardDescription>
+                    </CardHeader>
+                    
+                    <div className="space-y-4">
+                      {orders?.length ? orders.map((o: any) => (
+                        <div key={o.id} className="bg-white/[0.02] border border-white/5 rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all">
+                          <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
+                              <div className="min-w-0">
+                                <p className="text-sm font-black uppercase tracking-tight text-white truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge variant="outline" className="text-[8px] font-bold border-white/10 text-slate-400">PEDIDO #{o.id.slice(0, 8)}</Badge>
+                                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="text-right hidden md:block">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Qtd.</p>
+                                <p className="text-lg font-black italic text-white">{o.quantity}</p>
+                              </div>
+                              <Badge className={cn(
+                                  "text-[10px] font-black italic uppercase px-4 h-8 rounded-full",
+                                  o.payment_status === 'paid' ? "bg-emerald-500 text-white glow-emerald border-none" : "bg-amber-500 text-white glow-amber border-none"
+                              )}>
+                                  {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {o.payment_status === 'paid' && (
+                            <div className="bg-black/40 p-6 border-t border-white/5">
+                              <div className="flex items-center justify-between mb-4">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                  <Zap className="h-3 w-3 fill-current" /> Seus Números da Sorte
+                                </p>
+                                <p className="text-[9px] font-bold text-slate-500 italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {o.tickets?.map((t: any) => (
+                                  <div 
+                                    key={t.id} 
+                                    className={cn(
+                                      "h-10 px-4 flex items-center justify-center rounded-xl font-mono font-bold text-sm transition-all hover:scale-110 cursor-default shadow-lg",
+                                      t.is_lucky 
+                                        ? "bg-amber-500 text-white ring-2 ring-amber-500/50 shadow-amber-500/20" 
+                                        : "bg-white/10 text-white hover:bg-primary hover:text-white"
+                                    )}
+                                  >
+                                    {t.number}
+                                  </div>
+                                ))}
+                                {!o.tickets?.length && (
+                                  <p className="text-[10px] text-slate-600 font-bold uppercase italic py-2">Gerando números... Recarregue em instantes.</p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )) : (
+                        <div className="text-center py-24 opacity-30">
+                            <Ticket className="h-16 w-16 mx-auto mb-4 text-slate-700" />
+                            <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
+                            <Button onClick={() => window.location.href='/'} variant="link" className="text-primary mt-2">Explorar Rifas Ativas</Button>
+                        </div>
+                      )}
+                    </div>
+                 </Card>
+               </TabsContent>
+
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
                  { label: "Conquistas", id: "achievements", icon: Star },
                  { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
