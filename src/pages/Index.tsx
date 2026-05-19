@@ -234,7 +234,7 @@ const Index = () => {
                           🔥 OPORTUNIDADE ÚNICA
                         </Badge>
                         <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
-                          Gire a <span className="text-primary neon-text-primary">Sorte</span> Agora!
+                          Gire a <span className="text-animate-gradient">Sorte</span> Agora!
                         </h3>
                         <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
                           Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
