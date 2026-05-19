@@ -24,8 +24,22 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
 
       <div className="relative z-10">
         <div className="mb-4 flex items-start justify-between">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 border border-primary/20">
-            <Trophy className="h-6 w-6 text-primary neon-text-primary" />
+          <div className="relative">
+            <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-primary/20 bg-secondary/30">
+              <img 
+                src={winner.avatar_url || `https://images.unsplash.com/photo-${[
+                  "1507003211169-0a1dd7228f2d",
+                  "1544005313-94ddf0286df2",
+                  "1506794778202-cad84cf45f1d",
+                  "1494790108377-be9c29b29330"
+                ][index % 4]}?q=80&w=256&h=256&auto=format&fit=crop`} 
+                alt={winner.winner_name}
+                className="h-full w-full object-cover transition-transform group-hover:scale-110"
+              />
+            </div>
+            <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-primary border-2 border-white flex items-center justify-center shadow-lg">
+              <Trophy className="h-4 w-4 text-white" />
+            </div>
           </div>
           <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-widest italic">
             Ganhador Certificado

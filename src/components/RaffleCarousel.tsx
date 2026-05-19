@@ -25,11 +25,11 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
        <div className="overflow-hidden" ref={emblaRef}>
          <div className="flex">
             {campaigns.map((campaign, index) => (
-               <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[320px] md:h-[400px] lg:h-[380px]">
+               <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[400px] md:h-[500px] lg:h-[550px]">
                 {/* Background with scale effect */}
                 <div className="absolute inset-0 overflow-hidden">
                   <motion.img 
-                    src={campaign.image_url || ""} 
+                    src={campaign.image_url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=1920&h=1080&auto=format&fit=crop"} 
                     className="h-full w-full object-cover" 
                     alt={campaign.title}
                     animate={{ scale: [1, 1.1, 1] }}
@@ -81,8 +81,8 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                       </h1>
                     </div>
  
-                    <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-tight">
-                      {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
+                    <p className="text-base md:text-xl text-muted-foreground font-semibold max-w-xl leading-snug drop-shadow-sm">
+                      {campaign.subtitle || campaign.description?.slice(0, 150) + '...'}
                     </p>
  
                      <div className="flex flex-wrap items-center gap-6 py-2">

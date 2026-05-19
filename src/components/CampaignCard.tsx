@@ -55,9 +55,9 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
           {/* Reflection Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
 
-          <div className="relative aspect-video w-full overflow-hidden rounded-xl">
+          <div className="relative aspect-video w-full overflow-hidden rounded-xl bg-secondary/30">
             <img
-              src={campaign.image_url || "/placeholder.svg"}
+              src={campaign.image_url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=640&h=360&auto=format&fit=crop"}
               alt={campaign.title}
               className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
             />
