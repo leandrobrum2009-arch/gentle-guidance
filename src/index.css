@@ -291,7 +291,8 @@ aside:has(a[href*="lovable.dev"]) {
      pointer-events: none;
    }
 
-   .border-light-path:hover::before {
+   .border-light-path:hover::before,
+   .border-light-always::before {
      opacity: var(--border-shimmer-opacity);
    }
 
