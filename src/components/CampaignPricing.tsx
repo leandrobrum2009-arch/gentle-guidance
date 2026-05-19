@@ -48,7 +48,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
              )}
            >
              <span className="text-xl font-black text-foreground">+{bundle.quantity}</span>
-             <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">Títulos</span>
+             <span className="text-[9px] font-black uppercase tracking-widest text-foreground/70 mt-0.5">Títulos</span>
              <div className="mt-2 text-sm font-black text-primary">
                R$ {bundle.price.toFixed(2).replace(".", ",")}
              </div>
@@ -64,7 +64,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
         <div className="bg-secondary/30 rounded-2xl p-6 border border-border">
          <div className="flex items-center justify-between mb-6">
            <div className="space-y-1">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Total a pagar</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Total a pagar</p>
              <div className="flex items-baseline gap-2">
                <span className="text-3xl font-black text-foreground">
                  R$ {totalPrice.toFixed(2).replace(".", ",")}
@@ -72,7 +72,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
              </div>
            </div>
            <div className="text-right">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Títulos</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Títulos</p>
              <p className="text-xl font-black text-foreground">{quantity || 0}</p>
            </div>
          </div>
@@ -98,7 +98,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
          
          <div className="mt-4 flex items-center justify-center gap-2">
             <div className="h-[1px] flex-1 bg-slate-200" />
-            <p className="text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Pague com PIX</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-foreground/70">Pague com PIX</p>
             <div className="h-[1px] flex-1 bg-slate-200" />
          </div>
        </div>

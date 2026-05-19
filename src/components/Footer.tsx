@@ -32,12 +32,12 @@ const Footer = () => {
                 Rifas<span className="text-primary neon-text-primary">Pro</span>
               </span>
             </a>
-            <p className="max-w-xs text-xs font-medium leading-relaxed text-muted-foreground uppercase tracking-widest">
+            <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
               A maior e mais segura plataforma de rifas online do Brasil. Prêmios cinematográficos toda semana.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
-                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
+                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
@@ -49,7 +49,7 @@ const Footer = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Navegação</h3>
             <div className="grid grid-cols-2 gap-4">
               {footerLinks.slice(0, 6).map((link) => (
-                <a key={link.href} href={link.href} className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">{link.label}</a>
+                <a key={link.href} href={link.href} className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors opacity-80">{link.label}</a>
               ))}
             </div>
           </div>
@@ -60,11 +60,11 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
-                <span className="font-bold text-muted-foreground">0800 123 4567</span>
+                <span className="font-black text-foreground">0800 123 4567</span>
               </div>
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
-                <span className="font-bold text-muted-foreground">ajuda@rifaspro.com</span>
+                <span className="font-black text-foreground">ajuda@rifaspro.com</span>
               </div>
             </div>
           </div>
@@ -77,7 +77,7 @@ const Footer = () => {
                 <ShieldCheck className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Pagamento Seguro</p>
-                  <p className="text-[9px] text-muted-foreground">Processamento via SSL 256 bits</p>
+                  <p className="text-[9px] text-foreground/70 font-bold">Processamento via SSL 256 bits</p>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -91,13 +91,13 @@ const Footer = () => {
         <Separator className="my-10 bg-border" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
             © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
           </p>
           <div className="flex gap-6">
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Privacidade</a>
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Termos</a>
-            <a href="#" className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors">Cookies</a>
+            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Privacidade</a>
+            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos</a>
+            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Cookies</a>
           </div>
         </div>
       </div>

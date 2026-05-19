@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
         {navItems.map((group) => (
           <div key={group.category} className="space-y-2">
-            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-sidebar-foreground/50">
+            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-sidebar-foreground/80">
               {group.category}
             </h3>
             <div className="space-y-1">
@@ -98,7 +98,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                         : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                     }`}
                   >
-                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-sidebar-primary" : "text-sidebar-foreground/60 group-hover:text-sidebar-primary"}`} />
+                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-sidebar-primary" : "text-sidebar-foreground/80 group-hover:text-sidebar-primary"}`} />
                     <span className="font-medium">{item.title}</span>
                   </Link>
                 );
@@ -111,14 +111,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <div className="space-y-1 border-t border-sidebar-border p-4">
         <Link
           to="/"
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar ao site
         </Link>
         <button
           onClick={signOut}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors"
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors"
         >
           <LogOut className="h-4 w-4" />
           Sair do Sistema
