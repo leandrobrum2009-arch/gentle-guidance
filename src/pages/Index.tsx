@@ -138,11 +138,11 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                 <div className="grid gap-6 sm:grid-cols-2">
-                   {otherCampaigns.slice(0, 4).map((campaign, i) => (
-                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                   ))}
-                 </div>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {otherCampaigns.map((campaign, i) => (
+                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                    ))}
+                  </div>
                </div>
  
                 <div className="space-y-6">
