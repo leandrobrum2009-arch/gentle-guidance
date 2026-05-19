@@ -141,7 +141,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 </div>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Garantido</span>
               </div>
-              <Button size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 glow-primary">
+              <Button size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 glow-primary border-light-path border-[#22c55e]/30">
                 COMPRAR AGORA
               </Button>
             </div>
