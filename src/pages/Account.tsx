@@ -1,7 +1,40 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
  import { 
-    User, LogOut, Trophy, History, Coins, Activity,
+    User, LogOut, Trophy, History, Coins, Activity, Camera,
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    const fileExt = file.name.split('.').pop();
+    const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+
+    try {
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ avatar_url: publicUrl })
+        .eq('user_id', user.id);
+
+      if (updateError) throw updateError;
+
+      setProfile({ ...profile, avatar_url: publicUrl });
+      toast.success("Avatar atualizado com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
+    } catch (error: any) {
+      toast.error("Erro ao fazer upload do avatar: " + error.message);
+    }
+  };
+
     Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
     Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
     Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
@@ -179,37 +212,23 @@ import { cn } from "@/lib/utils";
             <Card className="bg-card border-border backdrop-blur-xl">
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center text-center">
-                  <motion.div 
-                    whileHover={{ scale: 1.05 }}
-                    className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] cursor-pointer focus-within:ring-2 focus-within:ring-primary"
-                  >
-                    <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
-                      <User className="h-10 w-10 text-foreground" />
-                    </div>
-                  </motion.div>
-                  <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
-                  <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
-                  <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
-                    <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
-                      <span>Nível {profile?.vip_level || 1} VIP</span>
-                      <span>{profile?.xp || 0} XP</span>
-                    </div>
-                    <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                      <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-          <aside className="lg:col-span-3 space-y-6">
-            <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl">
-              <CardContent className="pt-6">
-                <div className="flex flex-col items-center text-center">
-                  <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
-                     <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
-                        <User className="h-10 w-10 text-white" />
-                     </div>
+                  <div className="relative group">
+                    <motion.div 
+                      whileHover={{ scale: 1.05 }}
+                      className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] cursor-pointer overflow-hidden"
+                    >
+                      <div className="h-full w-full rounded-full bg-card flex items-center justify-center overflow-hidden">
+                        {profile?.avatar_url ? (
+                          <img src={profile.avatar_url} alt="Avatar" className="h-full w-full object-cover" />
+                        ) : (
+                          <User className="h-10 w-10 text-foreground" />
+                        )}
+                      </div>
+                    </motion.div>
+                    <label className="absolute bottom-4 right-0 h-8 w-8 bg-primary rounded-full flex items-center justify-center cursor-pointer shadow-lg border-2 border-background hover:scale-110 transition-transform">
+                      <Camera className="h-4 w-4 text-white" />
+                      <input type="file" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
+                    </label>
                   </div>
                   <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
