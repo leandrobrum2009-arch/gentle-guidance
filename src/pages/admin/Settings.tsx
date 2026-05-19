@@ -346,9 +346,12 @@ export default function AdminSettings() {
             {presets.map((preset, idx) => (
               <button
                 key={idx}
-                onClick={() => applyPreset(preset.values)}
-                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+                onClick={() => setPresetToPreview(preset)}
+                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left relative overflow-hidden"
               >
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Eye className="h-3 w-3 text-primary" />
+                </div>
                 <div className="w-full flex justify-between items-center">
                   <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
                     {preset.icon}
