@@ -68,7 +68,7 @@ const HeroModel1 = ({ campaigns }: HeroModel1Props) => {
 
                   <div className="flex items-center gap-4 pt-4">
                     <Link to={`/campanha/${campaign.id}`}>
-                      <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg border-light-path border-[#22c55e]/30 relative z-10">
+                      <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg border-light-path border-light-always border-[#22c55e]/30 relative z-10">
                         PARTICIPAR AGORA <Zap className="h-6 w-6 fill-current" />
                       </Button>
                     </Link>
