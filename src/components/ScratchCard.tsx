@@ -42,7 +42,18 @@ const ScratchCard = ({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
+    // Generate some initial mock history
+    const names = ["Marcos S.", "Ana Paula", "Ricardo T.", "Juliana M.", "Felipe G."];
+    const initialHistory = Array.from({ length: 3 }).map((_, i) => ({
+      name: names[Math.floor(Math.random() * names.length)],
+      prize: Math.random() > 0.5 ? "Cota Premiada" : "Giro Grátis",
+      time: `${Math.floor(Math.random() * 10) + 1}m atrás`,
+      isWinner: true
+    }));
+    setHistory(initialHistory);
+
     if (!initialPrizeLabel && potentialPrizes.length > 0) {
+
       const winner = Math.random() > 0.6; // 40% win chance for simulation
       setIsWinner(winner);
       if (winner) {
