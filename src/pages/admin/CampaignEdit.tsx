@@ -346,28 +346,48 @@ export default function AdminCampaignEdit() {
                </div>
                <div className="space-y-3">
                  {form.price_bundles.map((b, i) => (
-                   <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-xl">
-                     <div className="flex-1">
-                       <Label className="text-[10px] uppercase font-bold text-muted-foreground">Quantidade</Label>
-                       <Input type="number" value={b.quantity} onChange={(e) => {
+                   <div key={i} className="flex flex-col gap-4 bg-secondary/50 p-4 rounded-xl border border-border">
+                     <div className="flex gap-4 items-center">
+                       <div className="flex-1">
+                         <Label className="text-[10px] uppercase font-bold text-muted-foreground">Quantidade</Label>
+                         <Input type="number" value={b.quantity} onChange={(e) => {
+                           const n = [...form.price_bundles];
+                           n[i].quantity = Number(e.target.value);
+                           set("price_bundles", n);
+                         }} />
+                       </div>
+                       <div className="flex-1">
+                         <Label className="text-[10px] uppercase font-bold text-muted-foreground">Preço (R$)</Label>
+                         <Input type="number" step="0.01" value={b.price} onChange={(e) => {
+                           const n = [...form.price_bundles];
+                           n[i].price = Number(e.target.value);
+                           set("price_bundles", n);
+                         }} />
+                       </div>
+                       <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
                          const n = [...form.price_bundles];
-                         n[i].quantity = Number(e.target.value);
+                         n.splice(i, 1);
                          set("price_bundles", n);
-                       }} />
+                       }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                      </div>
-                     <div className="flex-1">
-                       <Label className="text-[10px] uppercase font-bold text-muted-foreground">Preço (R$)</Label>
-                       <Input type="number" step="0.01" value={b.price} onChange={(e) => {
-                         const n = [...form.price_bundles];
-                         n[i].price = Number(e.target.value);
-                         set("price_bundles", n);
-                       }} />
+                     <div className="flex gap-4 items-center">
+                       <div className="flex-1">
+                         <Label className="text-[10px] uppercase font-bold text-muted-foreground">Badge (Ex: Mais Popular)</Label>
+                         <Input placeholder="Opcional" value={(b as any).label || ""} onChange={(e) => {
+                           const n = [...form.price_bundles];
+                           (n[i] as any).label = e.target.value;
+                           set("price_bundles", n);
+                         }} />
+                       </div>
+                       <div className="flex flex-col items-center gap-1.5 px-4 pt-4">
+                         <Label className="text-[9px] uppercase font-bold text-muted-foreground">Destaque</Label>
+                         <Switch checked={(b as any).is_popular} onCheckedChange={(v) => {
+                            const n = [...form.price_bundles];
+                            (n[i] as any).is_popular = v;
+                            set("price_bundles", n);
+                         }} />
+                       </div>
                      </div>
-                     <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
-                       const n = [...form.price_bundles];
-                       n.splice(i, 1);
-                       set("price_bundles", n);
-                     }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                    </div>
                  ))}
                </div>
