@@ -55,9 +55,9 @@ const HeroModel1 = ({ campaigns }: HeroModel1Props) => {
                     {campaign.draw_date && (
                       <CountdownTimer targetDate={campaign.draw_date} className="scale-110 origin-left" />
                     )}
-                    <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[0.85] tracking-tighter text-foreground filter drop-shadow-2xl pr-6">
-                      {campaign.title.split(' ')[0]} <br />
-                      <span className="text-animate-gradient inline-block pr-6">
+                    <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl pr-8 py-2">
+                      <span className="block mb-2">{campaign.title.split(' ')[0]}</span>
+                      <span className="text-animate-gradient inline-block pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
                     </h1>
