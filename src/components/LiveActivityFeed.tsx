@@ -86,11 +86,11 @@
                     <p className="text-[10px] md:text-[11px] font-black uppercase tracking-tight truncate text-foreground">
                       {activity.profiles?.name || "Usuário"}
                     </p>
-                    <span className="text-[7px] md:text-[8px] font-bold text-muted-foreground uppercase flex items-center gap-1 shrink-0">
+                    <span className="text-[7px] md:text-[8px] font-bold text-slate-500 uppercase flex items-center gap-1 shrink-0">
                       <Clock className="h-2 w-2" /> {formatDistanceToNow(new Date(activity.created_at), { addSuffix: true, locale: ptBR })}
                     </span>
                   </div>
-                  <p className="text-[9px] md:text-[10px] text-muted-foreground truncate italic">
+                  <p className="text-[9px] md:text-[10px] text-slate-600 truncate italic">
                     {activity.type === 'roulette' ? 'Ganhou ' : 'Abriu a caixa e ganhou '}
                     <span className={activity.type === 'roulette' ? "text-primary font-bold not-italic" : "text-amber-500 font-bold not-italic"}>
                       {activity.type === 'roulette' ? (activity as RouletteSpin).prize_label : (activity as MysteryBoxWin).prize_title}

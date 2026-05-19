@@ -104,7 +104,7 @@ export default function AdminDashboard() {
               Dashboard
             </h1>
           </div>
-          <p className="text-slate-500 text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de rifas.</p>
+          <p className="text-slate-600 text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de rifas.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-2.5 border border-emerald-500/20">
@@ -154,7 +154,7 @@ export default function AdminDashboard() {
               <Card key={s.label} className="relative overflow-hidden border-slate-100 bg-white shadow-sm transition-all hover:border-primary/30 group cursor-default">
                 <div className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${s.color} opacity-10 blur-2xl transition-all group-hover:opacity-20`}></div>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
-                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-500">{s.label}</CardTitle>
+                  <CardTitle className="text-xs font-bold uppercase tracking-widest text-slate-600">{s.label}</CardTitle>
                   <div className={`rounded-lg bg-gradient-to-br ${s.color} p-2 shadow-lg transition-transform group-hover:scale-110`}>
                     <s.icon className="h-4 w-4 text-white" />
                   </div>

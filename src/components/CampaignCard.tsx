@@ -98,14 +98,14 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               <h3 className="font-display text-base font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
               </h3>
-              <p className="text-[10px] font-bold text-slate-400 line-clamp-1 mt-0.5 uppercase tracking-widest">
+              <p className="text-[10px] font-bold text-slate-500 line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
             </div>
 
             <div className="space-y-1.5">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
-                <span className="text-muted-foreground flex items-center gap-1">
+                <span className="text-slate-600 flex items-center gap-1">
                   <TrendingUp className="h-3 w-3" /> {campaign.sold_tickets.toLocaleString()} vendidos
                 </span>
                 <span className="text-primary">{progress}%</span>
@@ -114,7 +114,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: `${progress}%` }}
-                  className="h-full rounded-full bg-gradient-to-r from-primary to-primary/40 shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]"
+                  className="h-full rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]"
                 />
               </div>
             </div>
@@ -122,9 +122,9 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2">
                 <div className="h-6 w-6 rounded-full bg-slate-50 border border-slate-100 flex items-center justify-center">
-                  <ShieldCheck className="h-3 w-3 text-muted-foreground" />
+                <ShieldCheck className="h-3 w-3 text-slate-600" />
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Garantido</span>
+              <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Garantido</span>
               </div>
               <Button size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 glow-primary">
                 Ver Detalhes

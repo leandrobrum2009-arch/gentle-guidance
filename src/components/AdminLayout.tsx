@@ -82,7 +82,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
         {navItems.map((group) => (
           <div key={group.category} className="space-y-2">
-            <h3 className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400">
+            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-slate-600">
               {group.category}
             </h3>
             <div className="space-y-1">
@@ -95,10 +95,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                     className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
                       active
                         ? "bg-primary/10 text-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
-                        : "text-slate-500 hover:bg-slate-50 hover:text-primary"
+                        : "text-slate-700 hover:bg-slate-50 hover:text-primary"
                     }`}
                   >
-                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-slate-500 group-hover:text-slate-300"}`} />
+                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-primary" : "text-slate-600 group-hover:text-primary"}`} />
                     <span className="font-medium">{item.title}</span>
                   </Link>
                 );
