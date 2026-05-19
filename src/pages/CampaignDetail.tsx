@@ -534,7 +534,7 @@ const CampaignDetail = () => {
               element?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            Comprar agora
+            QUERO MEUS BILHETES
           </Button>
         </div>
       </div>
