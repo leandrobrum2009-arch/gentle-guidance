@@ -110,6 +110,11 @@ aside:has(a[href*="lovable.dev"]) {
     --success: 142 72% 50%;
     --warning: 38 92% 50%;
     --info: 217 91% 60%;
+
+    /* Effects variables */
+    --text-gradient-shimmer: #000;
+    --border-shimmer-color: #22c55e;
+    --border-shimmer-opacity: 0.8;
   }
 
   .dark {
@@ -141,6 +146,11 @@ aside:has(a[href*="lovable.dev"]) {
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 240 5% 18%;
     --sidebar-ring: 142.1 70.6% 45.3%;
+
+    /* Effects variables dark */
+    --text-gradient-shimmer: #fff;
+    --border-shimmer-color: #4ade80;
+    --border-shimmer-opacity: 1;
   }
 }
 
@@ -256,10 +266,11 @@ aside:has(a[href*="lovable.dev"]) {
        90deg, 
        transparent 0%, 
        transparent 25%, 
-       #4ade80 50%, 
+       var(--border-shimmer-color) 50%, 
        transparent 75%, 
        transparent 100%
      );
+     opacity: var(--border-shimmer-opacity);
      background-size: 200% 100%;
      mask: 
        linear-gradient(#fff 0 0) content-box, 
@@ -276,7 +287,7 @@ aside:has(a[href*="lovable.dev"]) {
    }
 
    .text-animate-gradient {
-     background: linear-gradient(90deg, #fff 0%, #22c55e 50%, #fff 100%);
+     background: linear-gradient(90deg, var(--text-gradient-shimmer) 0%, #22c55e 50%, var(--text-gradient-shimmer) 100%);
      background-size: 200% auto;
      color: transparent;
      -webkit-background-clip: text;
