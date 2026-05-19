@@ -16,7 +16,7 @@ const footerLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative border-t border-slate-100 bg-background pt-20 pb-10 overflow-hidden">
+    <footer className="relative border-t border-border bg-background pt-20 pb-10 overflow-hidden">
       {/* Background Glow */}
       <div className="absolute -bottom-24 left-1/2 -translate-x-1/2 h-64 w-[80%] bg-primary/10 blur-[120px] rounded-full pointer-events-none" />
 
@@ -37,7 +37,7 @@ const Footer = () => {
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
-                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-500 hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
+                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-muted-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
@@ -59,12 +59,12 @@ const Footer = () => {
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Suporte</h3>
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs">
-                <div className="h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
-                <span className="font-bold text-slate-600">0800 123 4567</span>
+                <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
+                <span className="font-bold text-muted-foreground">0800 123 4567</span>
               </div>
               <div className="flex items-center gap-3 text-xs">
-                <div className="h-8 w-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
-                <span className="font-bold text-slate-600">ajuda@rifaspro.com</span>
+                <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
+                <span className="font-bold text-muted-foreground">ajuda@rifaspro.com</span>
               </div>
             </div>
           </div>
@@ -73,7 +73,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Certificações</h3>
             <div className="flex flex-col gap-4">
-              <div className="p-4 rounded-2xl border border-slate-100 bg-slate-50 flex items-center gap-4 shadow-sm">
+              <div className="p-4 rounded-2xl border border-border bg-secondary flex items-center gap-4 shadow-sm">
                 <ShieldCheck className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Pagamento Seguro</p>
@@ -88,7 +88,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <Separator className="my-10 bg-slate-100" />
+        <Separator className="my-10 bg-border" />
 
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
