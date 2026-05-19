@@ -76,8 +76,22 @@ const Index = () => {
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
   useEffect(() => {
-    if (siteSettings?.home_hero_style) {
-      setHeroStyle(parseInt(siteSettings.home_hero_style));
+    if (siteSettings) {
+      if (siteSettings.home_hero_style) {
+        setHeroStyle(parseInt(siteSettings.home_hero_style));
+      }
+
+      // Inject dynamic CSS variables for animations
+      const root = document.documentElement;
+      if (siteSettings.button_glow_speed) {
+        root.style.setProperty('--button-glow-speed', `${siteSettings.button_glow_speed}s`);
+      }
+      if (siteSettings.title_shimmer_speed) {
+        root.style.setProperty('--title-shimmer-speed', `${siteSettings.title_shimmer_speed}s`);
+      }
+      if (siteSettings.border_shimmer_opacity) {
+        root.style.setProperty('--border-shimmer-opacity', siteSettings.border_shimmer_opacity);
+      }
     } else {
       const savedStyle = localStorage.getItem('home_hero_style');
       if (savedStyle) setHeroStyle(parseInt(savedStyle));
