@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
@@ -45,6 +45,7 @@ import GoogleReviews from "@/components/GoogleReviews";
 import { useCampaigns, useWinners, useSiteSettings } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
+import { useTheme } from "@/components/ThemeProvider";
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
   <div className="flex flex-col gap-2 mb-8">
@@ -102,6 +103,7 @@ const Index = () => {
   const { data: winners, isLoading: loadingWinners } = useWinners();
   const { data: siteSettings } = useSiteSettings();
   const { data: isAdmin } = useIsAdmin();
+  const { theme } = useTheme();
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
   useEffect(() => {
@@ -137,11 +139,27 @@ const Index = () => {
       if (siteSettings.primary_color) {
         root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
       }
+
+      if (siteSettings.title_shimmer_primary) {
+        root.style.setProperty('--title-shimmer-primary', siteSettings.title_shimmer_primary);
+      }
+
+      const isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      
+      if (isDark) {
+        if (siteSettings.title_shimmer_secondary) {
+          root.style.setProperty('--text-gradient-shimmer', siteSettings.title_shimmer_secondary);
+        }
+      } else {
+        if (siteSettings.title_shimmer_secondary_light) {
+          root.style.setProperty('--text-gradient-shimmer', siteSettings.title_shimmer_secondary_light);
+        }
+      }
     } else {
       const savedStyle = localStorage.getItem('home_hero_style');
       if (savedStyle) setHeroStyle(parseInt(savedStyle));
     }
-  }, [siteSettings]);
+  }, [siteSettings, theme]);
 
   const changeHeroStyle = (style: number) => {
     setHeroStyle(style);

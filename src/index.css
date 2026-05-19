@@ -309,7 +309,7 @@ aside:has(a[href*="lovable.dev"]) {
    }
 
    .text-animate-gradient {
-     background: linear-gradient(90deg, var(--text-gradient-shimmer) 0%, #22c55e 50%, var(--text-gradient-shimmer) 100%);
+     background: linear-gradient(90deg, var(--text-gradient-shimmer) 0%, var(--title-shimmer-primary, #22c55e) 50%, var(--text-gradient-shimmer) 100%);
      background-size: 800px auto;
      color: transparent;
      -webkit-background-clip: text;
