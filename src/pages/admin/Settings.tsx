@@ -110,6 +110,11 @@ export default function AdminSettings() {
                     className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
                   />
                 )}
+                {s.key === 'site_logo_url' && s.value && (
+                  <div className="mt-2 p-2 rounded-lg bg-secondary/10 border border-border inline-block">
+                    <img src={s.value} alt="Logo Preview" className="h-8 w-auto object-contain" />
+                  </div>
+                )}
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {s.description || "Sem descrição disponível."}
                 </p>
