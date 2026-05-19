@@ -41,6 +41,13 @@ const LiveNotifications = () => {
       .order('created_at', { ascending: false })
       .limit(3);
 
+    // Get last 2 winners
+    const { data: recentWinners } = await supabase
+      .from('winners')
+      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .order('created_at', { ascending: false })
+      .limit(2);
+
     const allRecent = [
       ...(recentOrders?.map(o => ({ ...o, type: 'purchase' as const })) || []),
       ...(recentWinners?.map(w => ({ ...w, type: 'winner' as const })) || [])
@@ -120,7 +127,7 @@ const LiveNotifications = () => {
               type: 'winner',
               userName: profile.name || 'Alguém',
               avatarUrl: profile.avatar_url,
-              message: `foi premiado(a) na cota ${payload.new.winning_ticket} e ganhou ${payload.new.prize_description}`,
+              message: `ganhou ${payload.new.prize_description} na cota ${payload.new.winning_ticket}`,
               campaignTitle: campaign.title,
             });
           }
