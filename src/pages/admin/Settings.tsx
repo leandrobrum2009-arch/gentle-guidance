@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box, Plus, Trash2 } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box, Plus, Trash2, Eye, X, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -25,14 +25,27 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
+  const [initialSettings, setInitialSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [customPresets, setCustomPresets] = useState<any[]>([]);
   const [isSavingPreset, setIsSavingPreset] = useState(false);
   const [newPresetName, setNewPresetName] = useState("");
+  const [presetToPreview, setPresetToPreview] = useState<any>(null);
 
   const presets = [
     {
@@ -131,7 +144,6 @@ export default function AdminSettings() {
 
     const presetValues: Record<string, string> = {};
     settings.forEach(s => {
-      // Only save keys that are part of the visual identity
       if (s.key.includes('color') || s.key.includes('shimmer') || s.key.includes('glow') || s.key.includes('transition') || s.key.includes('easing') || s.key.includes('hero_style')) {
         presetValues[s.key] = s.value;
       }
@@ -165,7 +177,10 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("site_settings").select("*");
-    if (!error) setSettings(data);
+    if (!error) {
+      setSettings(data);
+      setInitialSettings(JSON.parse(JSON.stringify(data)));
+    }
     setLoading(false);
   };
 
@@ -197,8 +212,12 @@ export default function AdminSettings() {
     setSaving(true);
     try {
       for (const s of settings) {
-        await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+        const initial = initialSettings.find(i => i.key === s.key);
+        if (initial && initial.value !== s.value) {
+          await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+        }
       }
+      setInitialSettings(JSON.parse(JSON.stringify(settings)));
       toast.success("Configurações salvas com sucesso!");
     } catch (error) {
       toast.error("Erro ao salvar configurações.");
@@ -206,6 +225,13 @@ export default function AdminSettings() {
       setSaving(false);
     }
   };
+
+  const discardChanges = () => {
+    setSettings(JSON.parse(JSON.stringify(initialSettings)));
+    toast.info("Alterações descartadas.");
+  };
+
+  const hasChanges = JSON.stringify(settings) !== JSON.stringify(initialSettings);
 
   const getIcon = (key: string) => {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
@@ -230,17 +256,45 @@ export default function AdminSettings() {
           <p className="text-muted-foreground mt-1">Personalize a identidade visual e comportamento do site.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button 
-            variant="outline"
-            onClick={restoreDefaults}
-            className="border-border hover:bg-secondary/20 font-bold"
-          >
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Restaurar Padrão
-          </Button>
+          {hasChanges && (
+            <Button 
+              variant="outline"
+              onClick={discardChanges}
+              className="border-destructive/30 text-destructive hover:bg-destructive/10 font-bold"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Descartar
+            </Button>
+          )}
+          
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="outline"
+                className="border-border hover:bg-secondary/20 font-bold"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Restaurar Padrão
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-card border-border backdrop-blur-xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-foreground">Confirmar Restauração</AlertDialogTitle>
+                <AlertDialogDescription className="text-muted-foreground">
+                  Isso substituirá suas configurações atuais pelos valores padrão de fábrica. 
+                  Você ainda precisará clicar em "Salvar" para tornar as mudanças permanentes.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="border-border text-foreground hover:bg-secondary/20">Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={restoreDefaults} className="bg-primary hover:bg-primary/90 text-foreground">Restaurar Agora</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <Button 
             onClick={saveSettings} 
-            disabled={saving}
+            disabled={saving || !hasChanges}
             className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
           >
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
@@ -249,7 +303,6 @@ export default function AdminSettings() {
         </div>
       </div>
 
-      {/* Presets Section */}
       <div className="mb-8 space-y-6">
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -289,9 +342,12 @@ export default function AdminSettings() {
             {presets.map((preset, idx) => (
               <button
                 key={idx}
-                onClick={() => applyPreset(preset.values)}
-                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+                onClick={() => setPresetToPreview(preset)}
+                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left relative overflow-hidden"
               >
+                <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Eye className="h-3 w-3 text-primary" />
+                </div>
                 <div className="w-full flex justify-between items-center">
                   <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
                     {preset.icon}
@@ -315,7 +371,7 @@ export default function AdminSettings() {
               {customPresets.map((preset) => (
                 <div key={preset.id} className="relative group">
                   <button
-                    onClick={() => applyPreset(preset.values)}
+                    onClick={() => setPresetToPreview(preset)}
                     className="w-full flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
                   >
                     <div className="w-full flex justify-between items-center">
@@ -323,7 +379,6 @@ export default function AdminSettings() {
                         <Box className="h-4 w-4" />
                       </div>
                       <div className="flex -space-x-1">
-                        {/* Try to extract some colors for the preview */}
                         {[
                           preset.values.primary_color || "#888",
                           preset.values.title_shimmer_primary || "#999",
@@ -350,6 +405,74 @@ export default function AdminSettings() {
           </div>
         )}
       </div>
+
+      <Dialog open={!!presetToPreview} onOpenChange={(open) => !open && setPresetToPreview(null)}>
+        <DialogContent className="bg-card border-border backdrop-blur-xl max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-foreground flex items-center gap-2">
+              <Eye className="h-5 w-5 text-primary" />
+              Pré-visualizar Preset: {presetToPreview?.name}
+            </DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              Veja as alterações que este preset fará nas suas configurações atuais.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="py-6 space-y-4">
+            <div className="grid grid-cols-2 gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground pb-2 border-b border-border">
+              <span>Item de Configuração</span>
+              <div className="grid grid-cols-2 gap-2">
+                <span>Valor Atual</span>
+                <span>Novo Valor</span>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              {presetToPreview && Object.entries(presetToPreview.values).map(([key, newValue]: [string, any]) => {
+                const currentSetting = settings.find(s => s.key === key);
+                if (!currentSetting) return null;
+                const currentValue = currentSetting.value;
+                const isChanged = currentValue !== newValue;
+                
+                return (
+                  <div key={key} className={`grid grid-cols-2 gap-4 items-center text-sm ${isChanged ? 'text-foreground' : 'text-muted-foreground opacity-50'}`}>
+                    <span className="font-medium truncate">{key.replace(/_/g, ' ')}</span>
+                    <div className="grid grid-cols-2 gap-2 items-center">
+                      <div className="flex items-center gap-2 truncate">
+                        {key.includes('color') ? (
+                          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: currentValue as string }} />
+                        ) : null}
+                        <span className="truncate">{currentValue}</span>
+                      </div>
+                      <div className={`flex items-center gap-2 truncate ${isChanged ? 'text-primary font-bold' : ''}`}>
+                        {key.includes('color') ? (
+                          <div className="w-3 h-3 rounded-full border" style={{ backgroundColor: newValue as string }} />
+                        ) : null}
+                        <span className="truncate">{newValue}</span>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          
+          <DialogFooter className="gap-2 sm:gap-0">
+            <Button variant="outline" onClick={() => setPresetToPreview(null)} className="border-border text-foreground hover:bg-secondary/20 font-bold">
+              Cancelar
+            </Button>
+            <Button 
+              onClick={() => {
+                applyPreset(presetToPreview.values);
+                setPresetToPreview(null);
+              }} 
+              className="bg-primary hover:bg-primary/90 text-foreground font-bold"
+            >
+              Aplicar Preset
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <div className="grid gap-6 md:grid-cols-2">
         {loading ? (
