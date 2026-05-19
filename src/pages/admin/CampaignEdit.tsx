@@ -71,35 +71,44 @@ export default function AdminCampaignEdit() {
   };
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>, type: 'cover' | 'gallery') => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     try {
       setUploading(type);
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${crypto.randomUUID()}.${fileExt}`;
       
-      const { error: uploadError, data } = await supabase.storage
-        .from('campaigns')
-        .upload(filePath, file);
+      const uploadPromises = Array.from(files).map(async (file) => {
+        const fileExt = file.name.split('.').pop();
+        const filePath = `${crypto.randomUUID()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('campaigns')
+          .upload(filePath, file);
 
-      if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-      const { data: { publicUrl } } = supabase.storage
-        .from('campaigns')
-        .getPublicUrl(filePath);
+        const { data: { publicUrl } } = supabase.storage
+          .from('campaigns')
+          .getPublicUrl(filePath);
+          
+        return publicUrl;
+      });
+
+      const urls = await Promise.all(uploadPromises);
 
       if (type === 'cover') {
-        set("image_url", publicUrl);
+        set("image_url", urls[0]);
       } else {
-        setForm(p => ({ ...p, gallery_urls: [...p.gallery_urls, publicUrl] }));
+        setForm(p => ({ ...p, gallery_urls: [...p.gallery_urls, ...urls] }));
       }
       
-      toast({ title: "Sucesso", description: "Imagem enviada com sucesso!" });
+      toast({ title: "Sucesso", description: `${urls.length} imagem(ns) enviada(s) com sucesso!` });
     } catch (error: any) {
       toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
     } finally {
       setUploading(null);
+      // Reset input value so same file can be selected again
+      e.target.value = '';
     }
   };
 
@@ -332,7 +341,7 @@ export default function AdminCampaignEdit() {
                          {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                          Fazer Upload
                        </div>
-                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
+                       <input type="file" className="hidden" accept="image/*" multiple onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
                      </Label>
                    </div>
                  </div>
@@ -353,7 +362,7 @@ export default function AdminCampaignEdit() {
                        {uploading === 'gallery' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                        Adicionar Foto
                      </div>
-                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
+                     <input type="file" className="hidden" accept="image/*" multiple onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
                    </Label>
                  </div>
                  
