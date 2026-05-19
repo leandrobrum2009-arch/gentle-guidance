@@ -554,21 +554,21 @@ export const useRanking = (limit = 10, category: 'points' | 'xp' = 'points') =>
     },
   });
  
- export const useUserOrders = (userId: string) => {
-   return useQuery({
-     queryKey: ["user-orders", userId],
-     queryFn: async () => {
-       const { data, error } = await supabase
-         .from("orders")
-         .select("*, campaigns(title, image_url)")
-         .eq("user_id", userId)
-         .order("created_at", { ascending: false });
-       if (error) throw error;
-       return data;
-     },
-     enabled: !!userId,
-   });
- };
+export const useUserOrders = (userId: string) => {
+  return useQuery({
+    queryKey: ["user-orders", userId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*, campaigns(title, image_url, ticket_generation_type), tickets(*)")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId,
+  });
+};
  
  export const useUserSpins = (userId: string) => {
    return useQuery({

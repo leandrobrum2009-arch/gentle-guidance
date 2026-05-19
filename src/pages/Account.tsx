@@ -64,14 +64,14 @@ import { cn } from "@/lib/utils";
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
-     const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+     const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
      return validTabs.includes(hash) ? hash : "overview";
    });
  
    useEffect(() => {
      const handleHashChange = () => {
        const hash = window.location.hash.replace('#', '');
-       const validTabs = ["overview", "notifications", "finance", "ranking", "achievements", "games"];
+       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
        if (validTabs.includes(hash)) {
          setActiveTab(hash);
        }
@@ -199,14 +199,39 @@ import { cn } from "@/lib/utils";
               </CardContent>
             </Card>
 
+          <aside className="lg:col-span-3 space-y-6">
+            <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl">
+              <CardContent className="pt-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
+                     <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
+                        <User className="h-10 w-10 text-white" />
+                     </div>
+                  </div>
+                  <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
+                  <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
+                  <div className="w-full bg-white/5 p-4 rounded-xl border border-white/5">
+                    <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-2">
+                      <span>Nível {profile?.vip_level || 1} VIP</span>
+                      <span>{profile?.xp || 0} XP</span>
+                    </div>
+                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
             <nav className="space-y-2">
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
+                { label: "Meus Títulos", id: "tickets", icon: Ticket },
                 { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
-                 { label: "Conquistas", id: "achievements", icon: Star },
-                 { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
+                { label: "Conquistas", id: "achievements", icon: Star },
+                { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
               ].map((item) => (
                 <Button 
                     key={item.id} 
@@ -225,6 +250,7 @@ import { cn } from "@/lib/utils";
                 <LogOut className="h-4 w-4" /> Sair
               </Button>
             </nav>
+          </aside>
           </aside>
 
           <main className="lg:col-span-9 space-y-6">
@@ -319,164 +345,170 @@ import { cn } from "@/lib/utils";
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsContent value="overview" className="space-y-6">
-                 <div className="grid lg:grid-cols-2 gap-6">
-                     <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                         <CardHeader className="p-0 mb-6">
-                             <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                                 <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
-                             </CardTitle>
-                             <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos 10 lançamentos</CardDescription>
-                         </CardHeader>
-                        <div className="h-[200px] w-full">
-                            <ResponsiveContainer width="100%" height="100%">
-                                <AreaChart data={chartData}>
-                                    <defs>
-                                        <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
-                                            <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
-                                            <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
-                                        </linearGradient>
-                                    </defs>
-                                    <Tooltip 
-                                        contentStyle={{ backgroundColor: '#0d0d0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
-                                        itemStyle={{ color: '#8b5cf6', fontWeight: 'bold' }}
-                                    />
-                                    <Area type="monotone" dataKey="amount" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorAmt)" />
-                                </AreaChart>
-                            </ResponsiveContainer>
-                        </div>
-                     </Card>
-
-                     <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                        <CardHeader className="p-0 mb-6">
-                            <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                                <Star className="h-4 w-4 text-amber-400" /> Suas Conquistas
-                            </CardTitle>
-                        </CardHeader>
-                        <div className="space-y-3 max-h-[200px] overflow-auto pr-2 custom-scrollbar">
-                            {achievements?.length ? achievements.map((a: any) => (
-                                <div key={a.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/30 transition-all">
-                                    <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                                        <Star className="h-5 w-5 text-amber-400" />
-                                    </div>
-                                    <div>
-                                        <p className="text-xs font-black uppercase tracking-tight">{a.title}</p>
-                                        <p className="text-[9px] text-slate-500">{a.description}</p>
-                                    </div>
-                                </div>
-                            )) : (
-                                <div className="text-center py-8">
-                                    <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest italic">Nenhuma conquista ainda</p>
-                                </div>
-                            )}
-                        </div>
-                     </Card>
-                  </div>
-
-                   <Card className="bg-gradient-to-r from-primary/10 to-transparent border-primary/20 p-6 backdrop-blur-xl relative overflow-hidden group">
-                      <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:scale-110 transition-transform duration-700">
-                         <Share2 className="h-32 w-32" />
-                      </div>
-                      <CardHeader className="p-0 mb-6">
-                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2 text-primary">
-                             <Users className="h-4 w-4" /> Programa de Afiliados
-                         </CardTitle>
-                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Convide amigos e ganhe comissões sobre cada depósito</CardDescription>
-                      </CardHeader>
-                      
-                      <div className="flex flex-col md:flex-row items-center gap-6 relative z-10">
-                        <div className="flex-1 w-full space-y-4">
-                          <div className="flex items-center gap-3 p-4 bg-white/5 rounded-2xl border border-white/10">
-                            <div className="flex-1">
-                              <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Seu Link de Indicação</p>
-                              <p className="text-xs font-bold text-white truncate max-w-[200px] md:max-w-md">
-                                {affiliate?.referral_code ? `${window.location.origin}/?ref=${affiliate.referral_code}` : 'Carregando...'}
-                              </p>
-                            </div>
-                            <Button 
-                              onClick={copyReferral}
-                              size="sm" 
-                              className="bg-primary hover:bg-primary/90 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl glow-primary"
-                            >
-                              <Copy className="h-3 w-3" /> Copiar
-                            </Button>
-                            <Button 
-                              onClick={handleShareReferral}
-                              size="sm" 
-                              variant="outline"
-                              className="border-white/10 hover:bg-white/5 text-white font-black uppercase italic tracking-widest text-[10px] px-4 gap-2 h-10 rounded-xl"
-                            >
-                              <Share2 className="h-3 w-3" /> Compartilhar
-                            </Button>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-2 gap-4 w-full md:w-auto">
-                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Ganhos Totais</p>
-                            <p className="text-lg font-black italic text-emerald-400">R$ {Number(affiliate?.total_earned || 0).toFixed(2)}</p>
-                          </div>
-                          <div className="bg-white/5 border border-white/10 rounded-2xl p-4 text-center">
-                            <p className="text-[10px] font-black uppercase tracking-widest text-slate-500">Comissão</p>
-                            <p className="text-lg font-black italic text-primary">{Number(affiliate?.commission_rate || 5)}%</p>
-                          </div>
-                        </div>
-                      </div>
-                   </Card>
-
-                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
-                      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
-                         <div>
-                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                             <Ticket className="h-4 w-4 text-primary" /> Participações em Rifas
-                         </CardTitle>
-                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Acompanhe seus bilhetes</CardDescription>
-                         </div>
-                         <div className="flex items-center gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-6 w-6" 
-                              disabled={ordersPage === 1}
-                              onClick={() => setOrdersPage(p => p - 1)}
-                            >
-                              <ChevronLeft className="h-3 w-3" />
-                            </Button>
-                            <span className="text-[10px] font-bold text-slate-500">{ordersPage}</span>
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              className="h-6 w-6" 
-                              disabled={!orders || orders.length <= ordersPage * ITEMS_PER_PAGE}
-                              onClick={() => setOrdersPage(p => p + 1)}
-                            >
-                              <ChevronRight className="h-3 w-3" />
-                            </Button>
-                         </div>
-                      </CardHeader>
-                     <div className="space-y-3">
-                        {orders?.length ? orders.slice((ordersPage - 1) * ITEMS_PER_PAGE, ordersPage * ITEMS_PER_PAGE).map((o: any) => (
-                            <div key={o.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
-                                <div className="flex items-center gap-4">
-                                    <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
-                                    <div>
-                                        <p className="text-sm font-black uppercase tracking-tighter">{o.campaigns?.title}</p>
-                                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
-                                    </div>
-                                </div>
-                                <Badge className={cn(
-                                    "text-[10px] font-black italic uppercase px-3",
-                                    o.payment_status === 'paid' ? "bg-emerald-500/20 text-emerald-500" : "bg-amber-500/20 text-amber-500"
-                                )}>
-                                    {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
-                                </Badge>
-                            </div>
-                        )) : (
-                            <div className="text-center py-10 opacity-40">
-                                <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma rifa participada</p>
-                            </div>
-                        )}
-                     </div>
+                <div className="grid lg:grid-cols-2 gap-6">
+                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                    <CardHeader className="p-0 mb-6">
+                      <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
+                      </CardTitle>
+                      <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos 10 lançamentos</CardDescription>
+                    </CardHeader>
+                    <div className="h-[200px] w-full">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                          <defs>
+                            <linearGradient id="colorAmt" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#8b5cf6" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#8b5cf6" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                          <Tooltip 
+                            contentStyle={{ backgroundColor: '#0d0d0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                            itemStyle={{ color: '#8b5cf6', fontWeight: 'bold' }}
+                          />
+                          <Area type="monotone" dataKey="amount" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorAmt)" />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
                   </Card>
+
+                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                    <CardHeader className="p-0 mb-6">
+                      <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                        <Star className="h-4 w-4 text-amber-400" /> Suas Conquistas
+                      </CardTitle>
+                    </CardHeader>
+                    <div className="space-y-3 max-h-[200px] overflow-auto pr-2 custom-scrollbar">
+                      {achievements?.length ? achievements.map((a: any) => (
+                        <div key={a.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/30 transition-all">
+                          <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                            <Star className="h-5 w-5 text-amber-400" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-black uppercase tracking-tight">{a.title}</p>
+                            <p className="text-[9px] text-slate-500">{a.description}</p>
+                          </div>
+                        </div>
+                      )) : (
+                        <div className="text-center py-8">
+                          <p className="text-[10px] text-slate-600 font-bold uppercase tracking-widest italic">Nenhuma conquista ainda</p>
+                        </div>
+                      )}
+                    </div>
+                  </Card>
+                </div>
+
+                <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                  <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
+                    <div>
+                      <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                        <Ticket className="h-4 w-4 text-primary" /> Participações Recentes
+                      </CardTitle>
+                      <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos pedidos realizados</CardDescription>
+                    </div>
+                    <Button variant="link" size="sm" className="text-primary text-[10px] font-black uppercase tracking-widest" onClick={() => setActiveTab("tickets")}>Ver Todos</Button>
+                  </CardHeader>
+                  <div className="space-y-3">
+                    {orders?.length ? orders.slice(0, 3).map((o: any) => (
+                      <div key={o.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
+                        <div className="flex items-center gap-4">
+                          <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
+                          <div>
+                            <p className="text-sm font-black uppercase tracking-tighter">{o.campaigns?.title}</p>
+                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                          </div>
+                        </div>
+                        <Badge className={cn(
+                          "text-[10px] font-black italic uppercase px-3",
+                          o.payment_status === 'paid' ? "bg-emerald-500/20 text-emerald-500" : "bg-amber-500/20 text-amber-500"
+                        )}>
+                          {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
+                        </Badge>
+                      </div>
+                    )) : (
+                      <div className="text-center py-10 opacity-40">
+                        <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma rifa participada</p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              </TabsContent>
+
+              <TabsContent value="tickets" className="space-y-6">
+                 <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                    <CardHeader className="p-0 mb-8">
+                        <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                            <Ticket className="h-4 w-4 text-primary" /> Meus Títulos de Capitalização
+                        </CardTitle>
+                        <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Consulte aqui todos os seus números da sorte</CardDescription>
+                    </CardHeader>
+                    
+                    <div className="space-y-4">
+                      {orders?.length ? orders.map((o: any) => (
+                        <div key={o.id} className="bg-white/[0.02] border border-white/5 rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all">
+                          <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <div className="flex items-center gap-4">
+                              <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
+                              <div className="min-w-0">
+                                <p className="text-sm font-black uppercase tracking-tight text-white truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
+                                <div className="flex items-center gap-2 mt-1">
+                                  <Badge variant="outline" className="text-[8px] font-bold border-white/10 text-slate-400">PEDIDO #{o.id.slice(0, 8)}</Badge>
+                                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <div className="text-right hidden md:block">
+                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Qtd.</p>
+                                <p className="text-lg font-black italic text-white">{o.quantity}</p>
+                              </div>
+                              <Badge className={cn(
+                                  "text-[10px] font-black italic uppercase px-4 h-8 rounded-full",
+                                  o.payment_status === 'paid' ? "bg-emerald-500 text-white glow-emerald border-none" : "bg-amber-500 text-white glow-amber border-none"
+                              )}>
+                                  {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {o.payment_status === 'paid' && (
+                            <div className="bg-black/40 p-6 border-t border-white/5">
+                              <div className="flex items-center justify-between mb-4">
+                                <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
+                                  <Zap className="h-3 w-3 fill-current" /> Seus Números da Sorte
+                                </p>
+                                <p className="text-[9px] font-bold text-slate-500 italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
+                              </div>
+                              <div className="flex flex-wrap gap-2">
+                                {o.tickets?.map((t: any) => (
+                                  <div 
+                                    key={t.id} 
+                                    className={cn(
+                                      "h-10 px-4 flex items-center justify-center rounded-xl font-mono font-bold text-sm transition-all hover:scale-110 cursor-default shadow-lg",
+                                      t.is_lucky 
+                                        ? "bg-amber-500 text-white ring-2 ring-amber-500/50 shadow-amber-500/20" 
+                                        : "bg-white/10 text-white hover:bg-primary hover:text-white"
+                                    )}
+                                  >
+                                    {t.number}
+                                  </div>
+                                ))}
+                                {!o.tickets?.length && (
+                                  <p className="text-[10px] text-slate-600 font-bold uppercase italic py-2">Gerando números... Recarregue em instantes.</p>
+                                )}
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )) : (
+                        <div className="text-center py-24 opacity-30">
+                            <Ticket className="h-16 w-16 mx-auto mb-4 text-slate-700" />
+                            <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
+                            <Button onClick={() => window.location.href='/'} variant="link" className="text-primary mt-2">Explorar Rifas Ativas</Button>
+                        </div>
+                      )}
+                    </div>
+                 </Card>
                </TabsContent>
 
                <TabsContent value="finance" className="space-y-6">

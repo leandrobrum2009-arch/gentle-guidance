@@ -12,11 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-  import { 
-    useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
-    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
-    useUserCampaignSpins
-  } from "@/hooks/useData";
+import { 
+  useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
+  useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
+  useUserCampaignSpins, useCampaignLuckyWinners
+} from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -94,7 +94,8 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
-   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
+    const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
+    const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
@@ -254,11 +255,11 @@ import { useAuth } from "@/contexts/AuthContext";
            images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
            videoUrl={campaign.video_url} 
          />
-         <div className="absolute bottom-4 right-4 z-10">
-           <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4">
-             <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
-           </Button>
-         </div>
+          <Link to="/conta#tickets" className="absolute bottom-4 right-4 z-10">
+            <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4 hover:bg-black/80">
+              <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
+            </Button>
+          </Link>
        </div>
  
        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container py-6 space-y-6">
@@ -372,14 +373,20 @@ import { useAuth } from "@/contexts/AuthContext";
                          )}>
                            #{p.number}
                          </div>
-                         <div className="text-left">
-                           <p className={cn("text-xs font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
-                             {p.prize}
-                           </p>
-                           <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                             {luckyNumbersStatus[p.number] ? "Já sorteado" : "Disponível"}
-                           </p>
-                         </div>
+                        <div className="text-left min-w-0">
+                          <p className={cn("text-xs font-black uppercase tracking-tight truncate", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
+                            {p.prize}
+                          </p>
+                          {luckyNumbersStatus[p.number] ? (
+                            <p className="text-[8px] font-black text-primary uppercase tracking-tighter truncate">
+                              Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Verificando..."}
+                            </p>
+                          ) : (
+                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                              Disponível
+                            </p>
+                          )}
+                        </div>
                        </div>
                        {luckyNumbersStatus[p.number] && (
                          <CheckCircle2 className="h-4 w-4 text-slate-300" />
