@@ -121,6 +121,13 @@ const Index = () => {
       if (siteSettings.border_shimmer_opacity) {
         root.style.setProperty('--border-shimmer-opacity', siteSettings.border_shimmer_opacity);
       }
+      if (siteSettings.button_hover_effect === 'false') {
+        root.style.setProperty('--hover-scale', '1');
+        root.style.setProperty('--hover-translate', '0');
+      } else {
+        root.style.setProperty('--hover-scale', '1.02');
+        root.style.setProperty('--hover-translate', '-2px');
+      }
       if (siteSettings.primary_color) {
         root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
       }
