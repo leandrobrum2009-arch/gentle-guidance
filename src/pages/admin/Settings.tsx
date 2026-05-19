@@ -214,8 +214,13 @@ export default function AdminSettings() {
     setSaving(true);
     try {
       for (const s of settings) {
-        await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+        // Only update if value changed
+        const initial = initialSettings.find(i => i.key === s.key);
+        if (initial && initial.value !== s.value) {
+          await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+        }
       }
+      setInitialSettings(JSON.parse(JSON.stringify(settings)));
       toast.success("Configurações salvas com sucesso!");
     } catch (error) {
       toast.error("Erro ao salvar configurações.");
@@ -223,6 +228,13 @@ export default function AdminSettings() {
       setSaving(false);
     }
   };
+
+  const discardChanges = () => {
+    setSettings(JSON.parse(JSON.stringify(initialSettings)));
+    toast.info("Alterações descartadas.");
+  };
+
+  const hasChanges = JSON.stringify(settings) !== JSON.stringify(initialSettings);
 
   const getIcon = (key: string) => {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
