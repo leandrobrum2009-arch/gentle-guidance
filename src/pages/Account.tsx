@@ -157,10 +157,23 @@ import { cn } from "@/lib/utils";
     const file = e.target.files?.[0];
     if (!file || !user) return;
 
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 
     try {
+      // Validate type
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        throw new Error("O arquivo não é uma imagem válida (JPG, PNG, WebP ou GIF).");
+      }
+
+      // Validate size
+      if (file.size > MAX_FILE_SIZE) {
+        throw new Error("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+
       const { error: uploadError } = await supabase.storage
         .from('avatars')
         .upload(filePath, file, { upsert: true });
@@ -183,6 +196,9 @@ import { cn } from "@/lib/utils";
       queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
     } catch (error: any) {
       toast.error("Erro ao fazer upload do avatar: " + error.message);
+    } finally {
+      // Reset input value
+      e.target.value = '';
     }
   };
 
