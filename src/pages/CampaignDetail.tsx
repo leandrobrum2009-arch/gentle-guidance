@@ -313,7 +313,7 @@ const CampaignDetail = () => {
                         luckyNumbers={luckyNumbersList}
                       />
                       <Button 
-                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide"
+                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
                         disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
                         onClick={() => handleBuy(selectedTickets)}
                       >
