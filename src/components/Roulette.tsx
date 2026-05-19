@@ -19,6 +19,7 @@ interface RouletteProps {
   onSpinComplete?: (prize: RoulettePrize) => void;
   campaign: Campaign;
   availableSpins?: number;
+  isSimulation?: boolean;
 }
 
 const SOUND_URLS = {
@@ -27,7 +28,7 @@ const SOUND_URLS = {
   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
 };
 
- const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0 }: RouletteProps) => {
+ const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
    const { data: globalSpins } = useGlobalRouletteSpins(10);
    const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
@@ -67,60 +68,69 @@ const SOUND_URLS = {
   const spin = async () => {
     if (isSpinning || prizes.length === 0) return;
     
-    if (!user) {
+    if (!isSimulation && !user) {
       toast.error("Você precisa estar logado para girar a roleta!");
       return;
     }
     
     const spinCost = Number(campaign.roulette_spin_cost || 0);
     const isUsingFreeSpins = availableSpins >= multiplier;
-    const totalCost = isUsingFreeSpins ? 0 : spinCost * multiplier;
-
-    if (!isUsingFreeSpins) {
+    
+    if (!isSimulation && !isUsingFreeSpins) {
       toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
       return;
     }
 
     setIsSpinning(true);
-    playGlobalSound('shake'); // using shake for spin start
+    playGlobalSound('shake'); 
     hapticFeedback();
 
-    // Initial vibration effect
     await controls.start({
       scale: [1, 1.05, 1],
       transition: { duration: 0.2 }
     });
 
-    // Call secure server-side RPC to process the spin
-    const { data: result, error: spinError } = await supabase.rpc('process_roulette_spin', {
-      p_campaign_id: campaign.id,
-      p_multiplier: multiplier
-    });
+    let wonPrizeData;
+    let final_value;
+    let is_free;
+    let new_balance;
 
-    if (spinError) {
-      setIsSpinning(false);
-      toast.error(spinError.message || "Erro ao processar o giro.");
-      return;
+    if (isSimulation) {
+      // For simulation, just pick a random prize locally
+      const { prize, index } = getWeightedPrize();
+      wonPrizeData = prize;
+    } else {
+      const { data: result, error: spinError } = await supabase.rpc('process_roulette_spin', {
+        p_campaign_id: campaign.id,
+        p_multiplier: multiplier
+      });
+
+      if (spinError) {
+        setIsSpinning(false);
+        toast.error(spinError.message || "Erro ao processar o giro.");
+        return;
+      }
+
+      const res = result as any;
+      wonPrizeData = res.prize;
+      final_value = res.final_value;
+      is_free = res.is_free;
+      new_balance = res.new_balance;
     }
 
-    const { prize: wonPrizeData, final_value, is_free, new_balance } = result as any;
     const prize = wonPrizeData as RoulettePrize;
-    
-    // Find the index of the won prize to animate correctly
     const randomIndex = prizes.findIndex(p => p.id === prize.id);
     
     const segmentAngle = 360 / (prizes.length || 1);
-    const extraSpins = 8; // More spins for dramatic effect
+    const extraSpins = 8;
     const baseRotation = extraSpins * 360;
-    // Calculate target angle to land in the middle of the segment
-    // We need to rotate the wheel clockwise, so the target index moves under the pointer
     const targetAngle = baseRotation + (randomIndex * segmentAngle);
     
     await controls.start({
       rotate: targetAngle,
       transition: { 
         duration: 6, 
-        ease: [0.2, 0, 0.1, 1] // Custom cubic-bezier for "cinematic" feel (starts fast, slow motion end)
+        ease: [0.2, 0, 0.1, 1]
       }
     });
     
@@ -128,22 +138,21 @@ const SOUND_URLS = {
     setWonPrize(prize);
     setShowWinAnimation(true);
 
-    // Update local state with new data from server
-    queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
-    queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
-    setUserProfile(prev => ({ ...prev, balance: new_balance }));
+    if (!isSimulation) {
+      queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
+      queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
+      if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
-    // Add notification (this could also be moved to a DB trigger for better security, but leaving here for now as it's less critical)
-    await supabase.from("notifications").insert({
-      user_id: user.id,
-      title: "Você ganhou na roleta!",
-      message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
-      type: "win"
-    });
+      await supabase.from("notifications").insert({
+        user_id: user!.id,
+        title: "Você ganhou na roleta!",
+        message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
+        type: "win"
+      });
+    }
 
     setIsSpinning(false);
     
-    // Celebration
     confetti({
       particleCount: 150,
       spread: 70,
@@ -151,14 +160,18 @@ const SOUND_URLS = {
       colors: [prize.color || '#FACC15', '#ffffff']
     });
 
-    toast.success(`Parabéns! Você ganhou: ${prize.label}${multiplier > 1 ? ` x${multiplier}` : ''}!`);
+    if (isSimulation) {
+      toast.success(`[Simulação] Você ganharia: ${prize.label}!`);
+    } else {
+      toast.success(`Parabéns! Você ganhou: ${prize.label}${multiplier > 1 ? ` x${multiplier}` : ''}!`);
+    }
     
     setTimeout(() => {
       setShowWinAnimation(false);
       setWonPrize(null);
     }, 5000);
 
-    if (onSpinComplete) onSpinComplete(prize);
+    if (onSpinComplete && !isSimulation) onSpinComplete(prize);
   };
 
   return (
