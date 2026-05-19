@@ -38,8 +38,8 @@ const HeroModel2 = ({ campaigns }: HeroModel2Props) => {
                   <Badge className="bg-primary/20 text-primary border-primary/20 px-6 py-1.5 text-xs font-black uppercase tracking-[0.3em] italic">
                     ⭐ OFERTA ESPECIAL ⭐
                   </Badge>
-                  <h1 className="text-4xl md:text-7xl lg:text-8xl font-black uppercase italic leading-none tracking-tighter text-white filter drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] pr-6">
-                    <span className="text-animate-gradient inline-block pr-6">{campaign.title}</span>
+                  <h1 className="text-4xl md:text-7xl lg:text-8xl font-black uppercase italic leading-[1.1] tracking-tighter text-white filter drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] pr-10 py-2">
+                    <span className="text-animate-gradient inline-block pr-10 pb-1">{campaign.title}</span>
                   </h1>
                 </div>
 
