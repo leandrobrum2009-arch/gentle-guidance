@@ -33,6 +33,7 @@ interface CampaignForm {
   federal_lottery_draw: boolean; sales_goal: number; roulette_free_tickets: number;
   roulette_payout_rate: number; roulette_spin_cost: number; roulette_multiplier_max: number;
   show_instant_prizes: boolean; show_roulette_status: boolean; min_tickets: number; max_tickets: number;
+  show_timer: boolean; sections_order: string[]; timer_end_date: string;
 }
 
 const empty: CampaignForm = {
@@ -48,6 +49,8 @@ const empty: CampaignForm = {
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
+  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"],
+  timer_end_date: "",
 };
 
 export default function AdminCampaignEdit() {
@@ -68,7 +71,17 @@ export default function AdminCampaignEdit() {
   const fetchCampaign = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("campaigns").select("*").eq("id", id).single();
-    if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "", price_bundles: (data.price_bundles as any[]) ?? [], gallery_urls: (data.gallery_urls as any[]) ?? [], lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], main_prizes: (data.main_prizes as any[]) ?? [], roulette_rules: (data.roulette_rules as any[]) ?? [] } as CampaignForm);
+    if (data) setForm({ 
+      ...data, 
+      draw_date: data.draw_date?.slice(0, 16) ?? "", 
+      timer_end_date: data.timer_end_date?.slice(0, 16) ?? "",
+      price_bundles: (data.price_bundles as any[]) ?? [], 
+      gallery_urls: (data.gallery_urls as any[]) ?? [], 
+      lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], 
+      main_prizes: (data.main_prizes as any[]) ?? [], 
+      roulette_rules: (data.roulette_rules as any[]) ?? [],
+      sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"]
+    } as CampaignForm);
     setLoading(false);
   };
 
@@ -205,6 +218,7 @@ export default function AdminCampaignEdit() {
         min_tickets: Number(form.min_tickets || 1),
         max_tickets: Number(form.max_tickets || 10000),
         draw_date: form.draw_date ? new Date(form.draw_date).toISOString() : null,
+        timer_end_date: form.timer_end_date ? new Date(form.timer_end_date).toISOString() : null,
       };
 
       const { error } = id
@@ -247,6 +261,7 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
             <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
           </TabsList>
 
@@ -643,6 +658,89 @@ export default function AdminCampaignEdit() {
                       <p className="text-[11px] text-muted-foreground">Mostrar maiores compradores</p>
                     </div>
                     <Switch checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
+                  </div>
+               </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="layout" className="mt-6 space-y-6">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                   <Settings2 className="h-5 w-5" />
+                 </div>
+                 <h3 className="text-lg font-bold">Personalização do Layout</h3>
+               </div>
+               
+               <div className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-border">
+                    <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl border border-border">
+                      <div className="space-y-0.5">
+                        <Label className="text-sm font-bold">Exibir Cronômetro</Label>
+                        <p className="text-[11px] text-muted-foreground">Contagem regressiva na página</p>
+                      </div>
+                      <Switch checked={form.show_timer} onCheckedChange={(v) => set("show_timer", v)} />
+                    </div>
+                    {form.show_timer && (
+                      <div className="space-y-2">
+                        <Label>Data Final do Cronômetro</Label>
+                        <Input type="datetime-local" value={form.timer_end_date} onChange={(e) => set("timer_end_date", e.target.value)} />
+                        <p className="text-[10px] text-muted-foreground italic">Caso vazio, usará a data do sorteio.</p>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="space-y-4">
+                    <Label className="text-base font-bold">Ordem das Seções</Label>
+                    <p className="text-xs text-muted-foreground mb-4">Arraste para reordenar como os elementos aparecem na página da campanha.</p>
+                    
+                    <div className="grid gap-2">
+                      {form.sections_order.map((section, index) => (
+                        <div key={section} className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl shadow-sm">
+                          <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground font-bold text-xs">
+                            {index + 1}
+                          </div>
+                          <div className="flex-1">
+                            <p className="text-sm font-bold capitalize">
+                              {section === 'gallery' ? 'Galeria de Imagens' :
+                               section === 'header' ? 'Título e Informações' :
+                               section === 'progress' ? 'Barra de Progresso' :
+                               section === 'purchase' ? 'Área de Compra' :
+                               section === 'description' ? 'Descrição da Rifa' :
+                               section === 'prizes' ? 'Cotas Premiadas' :
+                               section === 'winners' ? 'Histórico de Ganhadores' :
+                               section === 'ranking' ? 'Ranking de Compradores' : section}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <Button 
+                              variant="ghost" 
+                              size="icon" 
+                              disabled={index === 0}
+                              onClick={() => {
+                                const newOrder = [...form.sections_order];
+                                [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
+                                set("sections_order", newOrder);
+                              }}
+                            >
+                              <ArrowLeft className="h-4 w-4 rotate-90" />
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              disabled={index === form.sections_order.length - 1}
+                              onClick={() => {
+                                const newOrder = [...form.sections_order];
+                                [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
+                                set("sections_order", newOrder);
+                              }}
+                            >
+                              <ArrowLeft className="h-4 w-4 -rotate-90" />
+                            </Button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                </div>
             </Card>
