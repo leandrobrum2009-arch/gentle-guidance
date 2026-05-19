@@ -139,7 +139,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <Sheet>
           <SheetTrigger asChild>
             <Button size="icon" className="h-14 w-14 rounded-full bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] active:scale-95">
-              <Menu className="h-6 w-6 text-white" />
+              <Menu className="h-6 w-6 text-primary-foreground" />
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
