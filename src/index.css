@@ -303,22 +303,25 @@ aside:has(a[href*="lovable.dev"]) {
 
    .text-animate-gradient {
      background: linear-gradient(90deg, var(--text-gradient-shimmer) 0%, #22c55e 50%, var(--text-gradient-shimmer) 100%);
-     background-size: 200% auto;
+     background-size: 800px auto;
      color: transparent;
      -webkit-background-clip: text;
      background-clip: text;
-     animation: text-shimmer 12s linear infinite;
+     animation: text-shimmer 10s linear infinite;
      @apply transition-all duration-300;
+     display: inline-block;
    }
 
    .text-animate-gradient:hover {
-      animation-duration: 8s;
-      filter: brightness(1.1);
+     filter: brightness(1.1);
    }
 
    @keyframes text-shimmer {
+     from {
+       background-position: -800px center;
+     }
      to {
-       background-position: 200% center;
+       background-position: 800px center;
      }
    }
 
