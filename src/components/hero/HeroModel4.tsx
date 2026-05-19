@@ -12,10 +12,12 @@ interface HeroModel4Props {
 }
 
 const HeroModel4 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroModel4Props) => {
-  const plugins = [Autoplay({ delay, stopOnInteraction: false })];
-  if (transitionType === 'fade') plugins.push(Fade());
-
-  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, plugins);
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, duration: 50 }, 
+    transitionType === 'fade' 
+      ? [Autoplay({ delay, stopOnInteraction: false }), Fade()] 
+      : [Autoplay({ delay, stopOnInteraction: false })]
+  );
 
   return (
     <section className="relative overflow-hidden w-full h-[400px] md:h-[500px] lg:h-[600px]">

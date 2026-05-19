@@ -17,10 +17,10 @@ interface HeroModel3Props {
 }
 
 const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroModel3Props) => {
-  const plugins = [Autoplay({ delay })];
-  if (transitionType === 'fade') plugins.push(Fade());
-
-  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 45 }, plugins);
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, duration: 45 }, 
+    transitionType === 'fade' ? [Autoplay({ delay }), Fade()] : [Autoplay({ delay })]
+  );
 
   return (
     <section className="relative overflow-hidden py-12 bg-background" ref={emblaRef}>

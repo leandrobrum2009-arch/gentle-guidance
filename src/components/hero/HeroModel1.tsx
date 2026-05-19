@@ -18,10 +18,10 @@ interface HeroModel1Props {
 }
 
 const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroModel1Props) => {
-  const plugins = [Autoplay({ delay })];
-  if (transitionType === 'fade') plugins.push(Fade());
-
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 }, plugins);
+  const [emblaRef, emblaApi] = useEmblaCarousel(
+    { loop: true, duration: 40 }, 
+    transitionType === 'fade' ? [Autoplay({ delay }), Fade()] : [Autoplay({ delay })]
+  );
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);

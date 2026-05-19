@@ -17,10 +17,10 @@ interface HeroModel2Props {
 }
 
 const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroModel2Props) => {
-  const plugins = [Autoplay({ delay })];
-  if (transitionType === 'fade') plugins.push(Fade());
-
-  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, plugins);
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, duration: 50 }, 
+    transitionType === 'fade' ? [Autoplay({ delay }), Fade()] : [Autoplay({ delay })]
+  );
 
   return (
     <section className="relative min-h-[500px] md:min-h-[600px] bg-zinc-950 flex items-center overflow-hidden" ref={emblaRef}>
