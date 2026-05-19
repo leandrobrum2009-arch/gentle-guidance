@@ -92,7 +92,7 @@ export default function AdminCampaignEdit() {
       if (type === 'cover') {
         set("image_url", publicUrl);
       } else {
-        set("gallery_urls", [...form.gallery_urls, publicUrl]);
+        setForm(p => ({ ...p, gallery_urls: [...p.gallery_urls, publicUrl] }));
       }
       
       toast({ title: "Sucesso", description: "Imagem enviada com sucesso!" });
