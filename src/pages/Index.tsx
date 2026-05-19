@@ -128,6 +128,9 @@ const Index = () => {
         root.style.setProperty('--hover-scale', '1.02');
         root.style.setProperty('--hover-translate', '-2px');
       }
+      if (siteSettings.animation_easing) {
+        root.style.setProperty('--animation-easing', siteSettings.animation_easing);
+      }
       if (siteSettings.primary_color) {
         root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
       }
