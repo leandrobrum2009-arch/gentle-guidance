@@ -41,7 +41,7 @@ import LiveActivityFeed from "@/components/LiveActivityFeed";
 import Roulette from "@/components/Roulette";
 import CountdownTimer from "@/components/CountdownTimer";
 import GoogleReviews from "@/components/GoogleReviews";
-import { useCampaigns, useWinners } from "@/hooks/useData";
+import { useCampaigns, useWinners, useSiteSettings } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
 
