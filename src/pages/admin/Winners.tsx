@@ -211,6 +211,27 @@ export default function AdminWinners() {
                     </div>
                   </div>
                   <div className="space-y-2">
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Foto do Ganhador (Opcional)</Label>
+                    <div className="flex items-center gap-4">
+                      {form.avatar_url ? (
+                        <div className="h-12 w-12 rounded-xl overflow-hidden border border-white/10">
+                          <img src={form.avatar_url} className="h-full w-full object-cover" />
+                        </div>
+                      ) : (
+                        <div className="h-12 w-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
+                          <User className="h-6 w-6 text-muted-foreground" />
+                        </div>
+                      )}
+                      <Label className="flex-1 cursor-pointer">
+                        <div className="flex items-center justify-center gap-2 h-12 rounded-xl bg-white/5 border border-white/10 text-sm font-bold hover:bg-white/10 transition-colors">
+                          {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                          {form.avatar_url ? "Alterar Foto" : "Fazer Upload"}
+                        </div>
+                        <input type="file" className="hidden" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                      </Label>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
                     <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Link do Vídeo (Opcional)</Label>
                     <Input placeholder="https://youtube.com/..." className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
                   </div>
