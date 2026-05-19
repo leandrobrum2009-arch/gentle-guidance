@@ -167,10 +167,14 @@ const ScratchCard = ({
       <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-[80px] rounded-full" />
 
       <div className="w-full flex justify-between items-center z-10">
-        <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest">Raspadinha Premiada</Badge>
+        <Badge className={cn("bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest", isSimulation && "bg-amber-500/20 text-amber-500")}>
+          {isSimulation ? "Simulador de Sorte" : "Raspadinha Premiada"}
+        </Badge>
         <div className="flex items-center gap-2">
-           <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-           <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Ativo Agora</span>
+           <div className={cn("h-2 w-2 rounded-full animate-pulse", isSimulation ? "bg-amber-500" : "bg-green-500")} />
+           <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+             {isSimulation ? "Versão de Teste" : "Ativo Agora"}
+           </span>
         </div>
       </div>
 
