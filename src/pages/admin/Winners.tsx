@@ -29,6 +29,7 @@ interface WinnerForm {
 const empty: WinnerForm = {
   campaign_id: "", winner_name: "", ticket_number: "",
   prize_description: "", phone_masked: "", video_url: "", draw_date: "",
+  avatar_url: "",
 };
 
 export default function AdminWinners() {
