@@ -747,6 +747,8 @@ export default function AdminCampaignEdit() {
                                section === 'purchase' ? 'Área de Compra' :
                                section === 'description' ? 'Descrição da Rifa' :
                                section === 'prizes' ? 'Cotas Premiadas' :
+                               section === 'roulette_footer' ? 'Simulador de Roleta (Final)' :
+                               section === 'scratch_footer' ? 'Simulador de Raspadinha (Final)' :
                                section === 'winners' ? 'Histórico de Ganhadores' :
                                section === 'ranking' ? 'Ranking de Compradores' : section}
                             </p>
