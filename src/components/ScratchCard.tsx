@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
@@ -264,5 +265,3 @@ const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }:
 };
 
 export default ScratchCard;
-
-const cn = (...classes: any[]) => classes.filter(Boolean).join(" ");
