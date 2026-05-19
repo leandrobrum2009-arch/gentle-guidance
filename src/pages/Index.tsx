@@ -56,7 +56,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
         <div className="flex items-center gap-2">
           <Icon className="h-5 w-5 text-primary" />
           <h2 className="font-display text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">
-            {title.split(' ')[0]} <span className="text-primary neon-text-primary">{title.split(' ').slice(1).join(' ')}</span>
+            {title.split(' ')[0]} <span className="text-animate-gradient">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
@@ -195,9 +195,24 @@ const Index = () => {
                    badge="Em Destaque"
                  />
                   <div className="grid gap-6 sm:grid-cols-2">
-                    {otherCampaigns.map((campaign, i) => (
-                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                    ))}
+                    {otherCampaigns.length > 0 ? (
+                      otherCampaigns.map((campaign, i) => (
+                        <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                      ))
+                    ) : (
+                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-4">
+                        <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center">
+                          <Trophy className="h-8 w-8 text-muted-foreground opacity-20" />
+                        </div>
+                        <div className="space-y-1">
+                          <h3 className="font-display text-xl font-black uppercase italic tracking-tighter">Nenhum sorteio ativo</h3>
+                          <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Fique de olho! Novas oportunidades estão chegando.</p>
+                        </div>
+                        <Button variant="outline" size="sm" className="h-10 rounded-xl px-8 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-[10px]" onClick={() => window.location.reload()}>
+                          ATUALIZAR PÁGINA
+                        </Button>
+                      </div>
+                    )}
                   </div>
                </div>
  
@@ -219,7 +234,7 @@ const Index = () => {
                           🔥 OPORTUNIDADE ÚNICA
                         </Badge>
                         <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
-                          Gire a <span className="text-primary neon-text-primary">Sorte</span> Agora!
+                          Gire a <span className="text-animate-gradient">Sorte</span> Agora!
                         </h3>
                         <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
                           Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
@@ -246,7 +261,7 @@ const Index = () => {
                         </div>
 
                         <Link to={`/roleta`} className="w-full">
-                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all">
+                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-light-path border-[#22c55e]/30">
                             ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
                           </Button>
                         </Link>

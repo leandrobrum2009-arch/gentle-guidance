@@ -39,7 +39,7 @@ const HeroModel2 = ({ campaigns }: HeroModel2Props) => {
                     ⭐ OFERTA ESPECIAL ⭐
                   </Badge>
                   <h1 className="text-4xl md:text-7xl lg:text-8xl font-black uppercase italic leading-none tracking-tighter text-white filter drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]">
-                    {campaign.title}
+                    <span className="text-animate-gradient">{campaign.title}</span>
                   </h1>
                 </div>
 
