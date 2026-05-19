@@ -323,6 +323,50 @@ const ScratchCard = ({
           <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
         </div>
       </div>
+
+      {/* History Section */}
+      <div className="w-full mt-4 space-y-3 z-10">
+        <div className="flex items-center gap-2 px-1">
+          <History className="h-3 w-3 text-primary" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Histórico Recente</span>
+        </div>
+        <div className="space-y-2 max-h-40 overflow-y-auto no-scrollbar pr-1">
+          <AnimatePresence>
+            {history.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary opacity-60" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-white">{item.name}</p>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-2 w-2 text-white/40" />
+                      <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">{item.time}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={cn(
+                    "text-[10px] font-black uppercase tracking-tighter",
+                    item.isWinner ? "text-primary" : "text-white/40"
+                  )}>
+                    {item.prize}
+                  </p>
+                  <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                    {item.isWinner ? "Ganhador" : "Participou"}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      </div>
     </div>
   );
 };
