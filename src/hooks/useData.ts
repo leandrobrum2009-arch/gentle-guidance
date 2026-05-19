@@ -108,8 +108,9 @@ export interface Notification {
    video_url: string | null;
    avatar_url?: string | null;
    draw_date: string;
-   campaigns?: { title: string } | null;
- }
+    campaigns?: { title: string } | null;
+    winner_type?: 'raffle' | 'roulette' | 'scratchcard' | 'lucky_number';
+  }
  
  export interface WalletTransaction {
    id: string;
