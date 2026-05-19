@@ -108,7 +108,7 @@ const Index = () => {
              <div className="relative group">
                 {/* Style Selector for Dev/User testing - Can be moved to admin later */}
                 <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                   {[1, 2, 3].map(i => (
+                   {[1, 2, 3, 4].map(i => (
                      <Button 
                        key={i} 
                        size="sm" 
@@ -116,7 +116,7 @@ const Index = () => {
                        className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
                        onClick={() => changeHeroStyle(i)}
                      >
-                       Modelo {i}
+                       M{i}
                      </Button>
                    ))}
                 </div>
@@ -129,6 +129,9 @@ const Index = () => {
                 )}
                 {heroStyle === 3 && (
                   <HeroModel3 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
+                )}
+                {heroStyle === 4 && (
+                  <HeroModel4 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
                 )}
              </div>
            )}
