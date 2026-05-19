@@ -107,6 +107,19 @@ export default function AdminSettings() {
                       <SelectItem value="4">Modelo 4 (Visual Limpo - Sem Texto)</SelectItem>
                     </SelectContent>
                   </Select>
+                ) : s.key === 'hero_transition_type' ? (
+                  <Select 
+                    value={s.value} 
+                    onValueChange={(val) => handleUpdate(s.key, val)}
+                  >
+                    <SelectTrigger className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold">
+                      <SelectValue placeholder="Selecione a transição" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="slide">Deslizar (Slide)</SelectItem>
+                      <SelectItem value="fade">Esmaecer (Fade)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 ) : s.key.includes('color') ? (
                   <div className="flex gap-2">
                     <Input 
