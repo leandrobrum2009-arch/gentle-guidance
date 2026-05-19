@@ -8,14 +8,20 @@ import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-const UserRanking = () => {
+interface UserRankingProps {
+  users?: any[];
+  title?: string;
+}
+
+const UserRanking = ({ users, title }: UserRankingProps) => {
   const [category, setCategory] = useState<'points' | 'xp'>('points');
-  const { data: ranking, isLoading } = useRanking(15, category);
+  const { data: globalRanking, isLoading } = useRanking(15, category);
 
-  const podium = ranking?.slice(0, 3) || [];
-  const rest = ranking?.slice(3) || [];
+  const ranking = users || globalRanking || [];
+  const podium = ranking.slice(0, 3) || [];
+  const rest = ranking.slice(3) || [];
 
-  if (isLoading) {
+  if (isLoading && !users) {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-4 h-64 mb-8">
@@ -39,21 +45,23 @@ const UserRanking = () => {
             <TrendingUp className="h-6 w-6 text-primary" />
           </div>
           <div>
-            <h2 className="text-xl font-black uppercase italic tracking-tighter">Elite da Plataforma</h2>
+            <h2 className="text-xl font-black uppercase italic tracking-tighter">{title || "Elite da Plataforma"}</h2>
             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Compita com os melhores e ganhe destaque</p>
           </div>
         </div>
 
-        <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
-          <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
-            <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-              <Star className="h-3 w-3" /> Pontos
-            </TabsTrigger>
-            <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-              <Zap className="h-3 w-3" /> Experiência
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
+        {!users && (
+          <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
+            <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
+              <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
+                <Star className="h-3 w-3" /> Pontos
+              </TabsTrigger>
+              <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
+                <Zap className="h-3 w-3" /> Experiência
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        )}
       </div>
 
       {/* Podium View */}
@@ -62,7 +70,7 @@ const UserRanking = () => {
         <PodiumPlace 
           user={podium[1]} 
           rank={2} 
-          category={category}
+          category={users ? 'tickets' : category}
           className="order-1"
         />
         
@@ -70,7 +78,7 @@ const UserRanking = () => {
         <PodiumPlace 
           user={podium[0]} 
           rank={1} 
-          category={category}
+          category={users ? 'tickets' : category}
           className="order-2"
         />
 
@@ -78,7 +86,7 @@ const UserRanking = () => {
         <PodiumPlace 
           user={podium[2]} 
           rank={3} 
-          category={category}
+          category={users ? 'tickets' : category}
           className="order-3"
         />
       </div>
@@ -87,7 +95,7 @@ const UserRanking = () => {
       <div className="grid gap-3">
         <AnimatePresence mode="wait">
           <motion.div
-            key={category}
+            key={users ? 'campaign' : category}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
@@ -95,7 +103,7 @@ const UserRanking = () => {
           >
             {rest.map((user, index) => (
               <motion.div
-                key={user.name}
+                key={user.name + index}
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.05 }}
@@ -120,7 +128,7 @@ const UserRanking = () => {
                     <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
                     <div className="flex items-center gap-3 mt-0.5">
                       <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
-                        {user.xp} XP
+                        {users ? `${user.total_tickets} COTAS` : `${user.xp} XP`}
                       </Badge>
                     </div>
                   </div>
@@ -128,8 +136,8 @@ const UserRanking = () => {
 
                 <div className="text-right">
                   <p className="text-lg font-black italic text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]">
-                    {category === 'points' ? user.points : user.xp}
-                    <span className="text-[10px] uppercase ml-1 opacity-50">{category === 'points' ? 'pts' : 'xp'}</span>
+                    {users ? user.total_tickets : (category === 'points' ? user.points : user.xp)}
+                    <span className="text-[10px] uppercase ml-1 opacity-50">{users ? 'cotas' : (category === 'points' ? 'pts' : 'xp')}</span>
                   </p>
                 </div>
               </motion.div>
@@ -151,6 +159,7 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
   if (!user) return <div className={cn("flex-1", className)} />;
 
   const isFirst = rank === 1;
+  const isCampaign = category === 'tickets';
   
   return (
     <motion.div 
@@ -164,7 +173,6 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
       )}
     >
       <div className="relative mb-4 group">
-        {/* Glow behind avatar */}
         <div className={cn(
           "absolute inset-0 blur-2xl opacity-40 rounded-full",
           rank === 1 ? "bg-yellow-500" : rank === 2 ? "bg-slate-300" : "bg-amber-700"
@@ -186,7 +194,6 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
           </div>
         </div>
 
-        {/* Crown / Rank Icon */}
         <div className={cn(
           "absolute -top-6 left-1/2 -translate-x-1/2 z-20 transition-transform duration-500 group-hover:-translate-y-2",
           rank === 1 ? "scale-125" : "scale-100"
@@ -213,16 +220,19 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
             "font-black italic tracking-tighter",
             isFirst ? "text-xl md:text-2xl text-yellow-500" : "text-lg md:text-xl text-foreground/80"
           )}>
-            {category === 'points' ? user.points : user.xp}
-            <span className="text-[8px] md:text-[10px] uppercase ml-1 opacity-50 font-black">{category === 'points' ? 'pts' : 'xp'}</span>
+            {isCampaign ? user.total_tickets : (category === 'points' ? user.points : user.xp)}
+            <span className="text-[8px] md:text-[10px] uppercase ml-1 opacity-50 font-black">
+              {isCampaign ? 'cotas' : (category === 'points' ? 'pts' : 'xp')}
+            </span>
           </p>
-          <Badge variant="outline" className="text-[7px] md:text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-3 md:h-4">
-            NÍVEL {user.vip_level || 1} VIP
-          </Badge>
+          {!isCampaign && (
+            <Badge variant="outline" className="text-[7px] md:text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-3 md:h-4">
+              NÍVEL {user.vip_level || 1} VIP
+            </Badge>
+          )}
         </div>
       </div>
 
-      {/* Podium Block */}
       <div className={cn(
         "mt-4 w-full rounded-t-3xl border-t border-x border-white/5 bg-gradient-to-b from-white/5 to-transparent",
         rank === 1 ? "h-24 md:h-32 shadow-[0_0_40px_rgba(250,204,21,0.05)]" : 
