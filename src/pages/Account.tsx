@@ -398,24 +398,24 @@ import { cn } from "@/lib/utils";
                   </Card>
                 </div>
 
-                <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                <Card className="bg-card border-border p-6 backdrop-blur-xl">
                   <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                     <div>
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <Ticket className="h-4 w-4 text-primary" /> Participações Recentes
                       </CardTitle>
-                      <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Últimos pedidos realizados</CardDescription>
+                      <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Últimos pedidos realizados</CardDescription>
                     </div>
                     <Button variant="link" size="sm" className="text-primary text-[10px] font-black uppercase tracking-widest" onClick={() => setActiveTab("tickets")}>Ver Todos</Button>
                   </CardHeader>
                   <div className="space-y-3">
                     {orders?.length ? orders.slice(0, 3).map((o: any) => (
-                      <div key={o.id} className="flex items-center justify-between p-4 bg-white/5 rounded-2xl border border-white/5 group hover:border-primary/30 transition-all">
+                      <div key={o.id} className="flex items-center justify-between p-4 bg-secondary rounded-2xl border border-border group hover:border-primary/30 transition-all">
                         <div className="flex items-center gap-4">
                           <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
                           <div>
                             <p className="text-sm font-black uppercase tracking-tighter">{o.campaigns?.title}</p>
-                            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
                           </div>
                         </div>
                         <Badge className={cn(
@@ -435,32 +435,32 @@ import { cn } from "@/lib/utils";
               </TabsContent>
 
               <TabsContent value="tickets" className="space-y-6">
-                 <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                 <Card className="bg-card border-border p-6 backdrop-blur-xl">
                     <CardHeader className="p-0 mb-8">
                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                             <Ticket className="h-4 w-4 text-primary" /> Meus Títulos de Capitalização
                         </CardTitle>
-                        <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Consulte aqui todos os seus números da sorte</CardDescription>
+                        <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Consulte aqui todos os seus números da sorte</CardDescription>
                     </CardHeader>
                     
                     <div className="space-y-4">
                       {orders?.length ? orders.map((o: any) => (
-                        <div key={o.id} className="bg-white/[0.02] border border-white/5 rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all">
+                        <div key={o.id} className="bg-secondary/20 border border-border rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all">
                           <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                               <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
                               <div className="min-w-0">
-                                <p className="text-sm font-black uppercase tracking-tight text-white truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
+                                <p className="text-sm font-black uppercase tracking-tight text-foreground truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
                                 <div className="flex items-center gap-2 mt-1">
-                                  <Badge variant="outline" className="text-[8px] font-bold border-white/10 text-slate-400">PEDIDO #{o.id.slice(0, 8)}</Badge>
-                                  <p className="text-[9px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                                  <Badge variant="outline" className="text-[8px] font-bold border-border text-muted-foreground">PEDIDO #{o.id.slice(0, 8)}</Badge>
+                                  <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
                                 </div>
                               </div>
                             </div>
                             <div className="flex items-center gap-3">
                               <div className="text-right hidden md:block">
-                                <p className="text-[9px] font-black uppercase tracking-widest text-slate-500">Qtd.</p>
-                                <p className="text-lg font-black italic text-white">{o.quantity}</p>
+                                <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Qtd.</p>
+                                <p className="text-lg font-black italic text-foreground">{o.quantity}</p>
                               </div>
                               <Badge className={cn(
                                   "text-[10px] font-black italic uppercase px-4 h-8 rounded-full",
@@ -472,12 +472,12 @@ import { cn } from "@/lib/utils";
                           </div>
 
                           {o.payment_status === 'paid' && (
-                            <div className="bg-black/40 p-6 border-t border-white/5">
+                           <div className="bg-secondary/40 p-6 border-t border-border">
                               <div className="flex items-center justify-between mb-4">
                                 <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
                                   <Zap className="h-3 w-3 fill-current" /> Seus Números da Sorte
                                 </p>
-                                <p className="text-[9px] font-bold text-slate-500 italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
+                                <p className="text-[9px] font-bold text-muted-foreground italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
                               </div>
                               <div className="flex flex-wrap gap-2">
                                 {o.tickets?.map((t: any) => (
@@ -486,8 +486,8 @@ import { cn } from "@/lib/utils";
                                     className={cn(
                                       "h-10 px-4 flex items-center justify-center rounded-xl font-mono font-bold text-sm transition-all hover:scale-110 cursor-default shadow-lg",
                                       t.is_lucky 
-                                        ? "bg-amber-500 text-white ring-2 ring-amber-500/50 shadow-amber-500/20" 
-                                        : "bg-white/10 text-white hover:bg-primary hover:text-white"
+                                      ? "bg-amber-500 text-white ring-2 ring-amber-500/50 shadow-amber-500/20"
+                                      : "bg-secondary text-foreground hover:bg-primary hover:text-white"
                                     )}
                                   >
                                     {t.number}
@@ -536,7 +536,7 @@ import { cn } from "@/lib/utils";
                      </Card>
                   </div>
 
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                  <Card className="bg-card border-border p-6 backdrop-blur-xl">
                      <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                             <History className="h-4 w-4 text-primary" /> Extrato Detalhado
@@ -551,7 +551,7 @@ import { cn } from "@/lib/utils";
                             >
                               <ChevronLeft className="h-3 w-3" />
                             </Button>
-                            <span className="text-[10px] font-bold text-slate-500">{txsPage}</span>
+                             <span className="text-[10px] font-bold text-muted-foreground">{txsPage}</span>
                             <Button 
                               variant="ghost" 
                               size="icon" 
@@ -565,7 +565,7 @@ import { cn } from "@/lib/utils";
                      </CardHeader>
                      <div className="space-y-2">
                         {txs?.length ? txs.slice((txsPage - 1) * ITEMS_PER_PAGE, txsPage * ITEMS_PER_PAGE).map((t: any) => (
-                            <div key={t.id} className="flex items-center justify-between p-4 bg-white/[0.02] hover:bg-white/5 rounded-2xl border border-white/5 transition-all">
+                            <div key={t.id} className="flex items-center justify-between p-4 bg-secondary/20 hover:bg-secondary/40 rounded-2xl border border-border transition-all">
                                 <div className="flex items-center gap-4">
                                     <div className={cn(
                                         "h-10 w-10 rounded-xl flex items-center justify-center",
@@ -575,7 +575,7 @@ import { cn } from "@/lib/utils";
                                     </div>
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{t.description || t.type.toUpperCase()}</p>
-                                        <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">{format(new Date(t.created_at), "dd/MM/yyyy HH:mm")}</p>
+                                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(t.created_at), "dd/MM/yyyy HH:mm")}</p>
                                     </div>
                                 </div>
                                 <div className="text-right">
@@ -603,22 +603,22 @@ import { cn } from "@/lib/utils";
                        <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Total de Pontos</p>
                        <p className="text-2xl font-black italic">{profile?.points || 0} PTS</p>
                      </Card>
-                     <Card className="bg-white/5 border-white/10 p-4">
-                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Conquistas Desbloqueadas</p>
+                      <Card className="bg-secondary border-border p-4">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Conquistas Desbloqueadas</p>
                        <p className="text-2xl font-black italic">{achievements?.length || 0} / {ALL_ACHIEVEMENTS.length}</p>
                      </Card>
-                     <Card className="bg-white/5 border-white/10 p-4">
-                       <p className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-1">Nível de Prestígio</p>
+                      <Card className="bg-secondary border-border p-4">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Nível de Prestígio</p>
                        <p className="text-2xl font-black italic">{profile?.vip_level || 1} VIP</p>
                      </Card>
                    </div>
 
-                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                    <Card className="bg-card border-border p-6 backdrop-blur-xl">
                       <CardHeader className="p-0 mb-8">
                          <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                              <Star className="h-4 w-4 text-amber-400" /> Galeria de Conquistas
                          </CardTitle>
-                         <CardDescription className="text-[10px] uppercase font-bold text-slate-500">Acompanhe seu progresso e ganhe recompensas exclusivas</CardDescription>
+                          <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Acompanhe seu progresso e ganhe recompensas exclusivas</CardDescription>
                       </CardHeader>
                       
                       <div className="space-y-8">
@@ -629,7 +629,7 @@ import { cn } from "@/lib/utils";
                           return (
                             <div key={cat} className="space-y-4">
                               <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 flex items-center gap-2">
-                                <div className="h-px w-8 bg-white/10" /> {cat}
+                                 <div className="h-px w-8 bg-border" /> {cat}
                               </h3>
                               <div className="grid gap-4 sm:grid-cols-2">
                                 {catAchievements.map((achievement) => {
@@ -643,8 +643,8 @@ import { cn } from "@/lib/utils";
                                       className={cn(
                                         "relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl border transition-all duration-500 group",
                                         isUnlocked 
-                                          ? "bg-primary/5 border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]" 
-                                          : "bg-white/[0.02] border-white/5 opacity-60 grayscale"
+                                           ? "bg-primary/5 border-primary/20 shadow-[0_0_20px_rgba(var(--primary-rgb),0.1)]"
+                                           : "bg-secondary/20 border-border opacity-60 grayscale"
                                       )}
                                     >
                                       {isUnlocked && (
@@ -654,7 +654,7 @@ import { cn } from "@/lib/utils";
                                       )}
                                       <div className={cn(
                                         "h-14 w-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110",
-                                        isUnlocked ? "bg-primary/10 text-primary" : "bg-white/5 text-slate-600"
+                                         isUnlocked ? "bg-primary/10 text-primary" : "bg-secondary text-muted-foreground"
                                       )}>
                                         <Icon className="h-7 w-7" />
                                       </div>
