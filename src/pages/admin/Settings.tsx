@@ -25,7 +25,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-
 import {
   AlertDialog,
   AlertDialogAction,
@@ -145,7 +144,6 @@ export default function AdminSettings() {
 
     const presetValues: Record<string, string> = {};
     settings.forEach(s => {
-      // Only save keys that are part of the visual identity
       if (s.key.includes('color') || s.key.includes('shimmer') || s.key.includes('glow') || s.key.includes('transition') || s.key.includes('easing') || s.key.includes('hero_style')) {
         presetValues[s.key] = s.value;
       }
@@ -214,7 +212,6 @@ export default function AdminSettings() {
     setSaving(true);
     try {
       for (const s of settings) {
-        // Only update if value changed
         const initial = initialSettings.find(i => i.key === s.key);
         if (initial && initial.value !== s.value) {
           await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
@@ -306,7 +303,6 @@ export default function AdminSettings() {
         </div>
       </div>
 
-      {/* Presets Section */}
       <div className="mb-8 space-y-6">
         <div>
           <div className="flex items-center justify-between mb-4">
@@ -383,7 +379,6 @@ export default function AdminSettings() {
                         <Box className="h-4 w-4" />
                       </div>
                       <div className="flex -space-x-1">
-                        {/* Try to extract some colors for the preview */}
                         {[
                           preset.values.primary_color || "#888",
                           preset.values.title_shimmer_primary || "#999",
@@ -404,9 +399,13 @@ export default function AdminSettings() {
                   >
                     <Trash2 className="h-3 w-3" />
                   </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Preset Preview Dialog */}
       <Dialog open={!!presetToPreview} onOpenChange={(open) => !open && setPresetToPreview(null)}>
         <DialogContent className="bg-card border-border backdrop-blur-xl max-w-2xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
