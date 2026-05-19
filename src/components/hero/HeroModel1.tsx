@@ -57,7 +57,7 @@ const HeroModel1 = ({ campaigns }: HeroModel1Props) => {
                     )}
                     <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[0.85] tracking-tighter text-foreground filter drop-shadow-2xl">
                       {campaign.title.split(' ')[0]} <br />
-                      <span className="text-primary neon-text-primary">
+                      <span className="text-animate-gradient">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
                     </h1>
