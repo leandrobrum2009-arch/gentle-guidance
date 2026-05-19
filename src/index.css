@@ -279,8 +279,14 @@ aside:has(a[href*="lovable.dev"]) {
        transparent 75%, 
        transparent 100%
      );
-     opacity: var(--border-shimmer-opacity);
+     opacity: 0;
      background-size: 200% 100%;
+     transition: opacity 0.5s ease;
+   }
+
+   .border-light-path:hover::before {
+     opacity: var(--border-shimmer-opacity);
+   }
      mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
