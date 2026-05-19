@@ -261,7 +261,7 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Ganhadores Cinematic Section - Enhanced with speech bubbles */}
+          {/* Ganhadores Cinematic Section - Hall da Fama */}
           <section className="container py-20 relative">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-64 w-64 bg-primary/10 blur-[100px] rounded-full" />
             
