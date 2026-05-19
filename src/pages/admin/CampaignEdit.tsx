@@ -25,6 +25,7 @@ interface CampaignForm {
   regulations: string; auto_numbers: boolean; manual_numbers: boolean; ticket_generation_type: 'manual' | 'auto';
   lucky_numbers_prizes: { number: string; prize: string; protected?: boolean }[];
   main_prizes: { position: number; prize: string }[];
+  roulette_rules: { min_tickets: number; spins: number }[];
   federal_lottery_draw: boolean; sales_goal: number; roulette_free_tickets: number;
   roulette_payout_rate: number; roulette_spin_cost: number; roulette_multiplier_max: number;
   show_instant_prizes: boolean; show_roulette_status: boolean; min_tickets: number; max_tickets: number;
@@ -38,6 +39,7 @@ const empty: CampaignForm = {
   price_bundles: [], gallery_urls: [], video_url: "", regulations: "",
   auto_numbers: true, manual_numbers: false, ticket_generation_type: 'auto',
   lucky_numbers_prizes: [],
+  roulette_rules: [],
   main_prizes: [{position:1,prize:""},{position:2,prize:""},{position:3,prize:""},{position:4,prize:""},{position:5,prize:""}],
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
@@ -61,7 +63,7 @@ export default function AdminCampaignEdit() {
   const fetchCampaign = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("campaigns").select("*").eq("id", id).single();
-    if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "", price_bundles: (data.price_bundles as any[]) ?? [], gallery_urls: (data.gallery_urls as any[]) ?? [], lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], main_prizes: (data.main_prizes as any[]) ?? [] } as CampaignForm);
+    if (data) setForm({ ...data, draw_date: data.draw_date?.slice(0, 16) ?? "", price_bundles: (data.price_bundles as any[]) ?? [], gallery_urls: (data.gallery_urls as any[]) ?? [], lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], main_prizes: (data.main_prizes as any[]) ?? [], roulette_rules: (data.roulette_rules as any[]) ?? [] } as CampaignForm);
     setLoading(false);
   };
 
@@ -118,7 +120,7 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
-            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm grid grid-cols-2 gap-4">
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
                <div>
                  <Label>Preço Unitário (R$)</Label>
                  <Input type="number" step="0.01" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} className="mt-2" />
@@ -126,6 +128,19 @@ export default function AdminCampaignEdit() {
                <div>
                  <Label>Total de Bilhetes</Label>
                  <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} className="mt-2" />
+               </div>
+               <div className="md:col-span-2">
+                 <Label>Tipo de Seleção de Números</Label>
+                 <Select value={form.ticket_generation_type} onValueChange={(v: any) => set("ticket_generation_type", v)}>
+                   <SelectTrigger className="mt-2 h-12 rounded-xl">
+                     <SelectValue placeholder="Selecione o tipo" />
+                   </SelectTrigger>
+                   <SelectContent>
+                     <SelectItem value="auto">Aleatória (Números atribuídos após o pagamento)</SelectItem>
+                     <SelectItem value="manual">Manual (Cliente escolhe os números na grade)</SelectItem>
+                   </SelectContent>
+                 </Select>
+                 <p className="text-[11px] text-slate-500 mt-2">Na seleção aleatória, os números são gerados automaticamente pelo sistema somente após a confirmação do pagamento.</p>
                </div>
             </Card>
             
@@ -231,29 +246,64 @@ export default function AdminCampaignEdit() {
                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                    <Dices className="h-5 w-5" />
                  </div>
-                 <h3 className="text-lg font-bold">Roleta Premiada</h3>
+                 <div className="flex-1">
+                   <h3 className="text-lg font-bold">Incentivos da Roleta</h3>
+                   <p className="text-sm text-slate-500">Configure quantos giros o cliente ganha ao comprar certas quantidades</p>
+                 </div>
+                 <Switch checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
                </div>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="flex items-center justify-between p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <div className="space-y-0.5">
-                      <Label className="text-sm font-bold">Habilitar Roleta</Label>
-                      <p className="text-[11px] text-slate-500">Permitir que compradores girem a roleta</p>
-                    </div>
-                    <Switch checked={form.roulette_enabled} onCheckedChange={(v) => set("roulette_enabled", v)} />
-                  </div>
-                  {form.roulette_enabled && (
-                    <>
-                      <div className="space-y-2">
-                        <Label>Giro Grátis a cada X números</Label>
-                        <Input type="number" value={form.roulette_free_tickets} onChange={(e) => set("roulette_free_tickets", Number(e.target.value))} />
-                      </div>
-                      <div className="space-y-2">
-                        <Label>Custo do Giro Individual (R$)</Label>
-                        <Input type="number" step="0.01" value={form.roulette_spin_cost} onChange={(e) => set("roulette_spin_cost", Number(e.target.value))} />
-                      </div>
-                    </>
-                  )}
-               </div>
+               
+               {form.roulette_enabled && (
+                 <div className="space-y-4">
+                   <div className="flex justify-between items-center">
+                     <Label className="font-bold">Regras de Premiação</Label>
+                     <Button size="sm" variant="outline" onClick={() => set("roulette_rules", [...form.roulette_rules, {min_tickets: 50, spins: 1}])}>
+                       <Plus className="h-4 w-4 mr-2" /> Adicionar Regra
+                     </Button>
+                   </div>
+                   
+                   <div className="grid gap-3">
+                     {form.roulette_rules.map((rule, i) => (
+                       <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl border border-slate-100">
+                         <div className="flex-1">
+                           <Label className="text-[10px] uppercase font-bold text-slate-400">Ao comprar acima de (Qtd)</Label>
+                           <Input type="number" value={rule.min_tickets} onChange={(e) => {
+                             const n = [...form.roulette_rules];
+                             n[i].min_tickets = Number(e.target.value);
+                             set("roulette_rules", n);
+                           }} />
+                         </div>
+                         <div className="flex-1">
+                           <Label className="text-[10px] uppercase font-bold text-slate-400">Ganha (Giros)</Label>
+                           <Input type="number" value={rule.spins} onChange={(e) => {
+                             const n = [...form.roulette_rules];
+                             n[i].spins = Number(e.target.value);
+                             set("roulette_rules", n);
+                           }} />
+                         </div>
+                         <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
+                           const n = [...form.roulette_rules];
+                           n.splice(i, 1);
+                           set("roulette_rules", n);
+                         }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
+                       </div>
+                     ))}
+                     {form.roulette_rules.length === 0 && (
+                       <div className="text-center py-8 border-2 border-dashed rounded-2xl text-slate-400">
+                         Nenhuma regra definida. O cliente não ganhará giros automáticos.
+                       </div>
+                     )}
+                   </div>
+
+                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t">
+                     <div className="space-y-2">
+                       <Label>Custo do Giro Individual (R$)</Label>
+                       <Input type="number" step="0.01" value={form.roulette_spin_cost} onChange={(e) => set("roulette_spin_cost", Number(e.target.value))} />
+                       <p className="text-[10px] text-slate-500 italic">Caso queira permitir compra avulsa de giros</p>
+                     </div>
+                   </div>
+                 </div>
+               )}
             </Card>
 
             <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">

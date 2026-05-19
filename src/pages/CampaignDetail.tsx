@@ -2,7 +2,7 @@
   import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
+    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, CheckCircle2,
      Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity
  } from "lucide-react";
  import { cn } from "@/lib/utils";
@@ -136,10 +136,9 @@ import { useAuth } from "@/contexts/AuthContext";
     }, [user, tickets]);
 
     const userSpinsAvailable = useMemo(() => {
-      if (!campaign?.roulette_free_tickets || campaign.roulette_free_tickets <= 0) return 0;
-      const totalEarnedSpins = Math.floor(userTicketsCount / campaign.roulette_free_tickets);
-      const usedSpins = userSpins?.length || 0;
-      return Math.max(0, totalEarnedSpins - usedSpins);
+      if (!userSpins) return 0;
+      // Count spins that have no prize label (pre-awarded but not yet used)
+      return userSpins.filter((s: any) => !s.prize_label).length;
     }, [userTicketsCount, campaign, userSpins]);
  
    const campaignWinners = useMemo(() => {
@@ -344,6 +343,53 @@ import { useAuth } from "@/contexts/AuthContext";
              {/* Info Sections */}
              <CampaignPublicInfo campaign={campaign} />
  
+             {/* Instant Prizes Section (Cotas Premiadas) */}
+             {luckyNumbers.length > 0 && (
+               <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm space-y-6">
+                 <div className="flex items-center justify-between">
+                   <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
+                     <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
+                   </h3>
+                   <Badge variant="outline" className="rounded-full bg-slate-50 text-[10px] font-bold">
+                     {availableInstantPrizes} disponíveis
+                   </Badge>
+                 </div>
+                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                   {luckyNumbers.map((p: any, i: number) => (
+                     <div 
+                       key={i} 
+                       className={cn(
+                         "flex items-center justify-between p-4 rounded-2xl border transition-all",
+                         luckyNumbersStatus[p.number] 
+                           ? "bg-slate-50 border-slate-100 opacity-60" 
+                           : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/30"
+                       )}
+                     >
+                       <div className="flex items-center gap-3">
+                         <div className={cn(
+                           "h-10 w-10 rounded-xl flex items-center justify-center font-black italic text-sm",
+                           luckyNumbersStatus[p.number] ? "bg-slate-200 text-slate-400" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                         )}>
+                           #{p.number}
+                         </div>
+                         <div className="text-left">
+                           <p className={cn("text-xs font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-slate-400" : "text-slate-900")}>
+                             {p.prize}
+                           </p>
+                           <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                             {luckyNumbersStatus[p.number] ? "Já sorteado" : "Disponível"}
+                           </p>
+                         </div>
+                       </div>
+                       {luckyNumbersStatus[p.number] && (
+                         <CheckCircle2 className="h-4 w-4 text-slate-300" />
+                       )}
+                     </div>
+                   ))}
+                 </div>
+               </div>
+             )}
+
              {campaign.description && (
                <div className="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm space-y-4">
                  <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
@@ -357,6 +403,25 @@ import { useAuth } from "@/contexts/AuthContext";
            </div>
  
              <div className="space-y-6">
+                {/* Roulette Incentive Section */}
+                {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
+                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-slate-900 flex items-center gap-2">
+                      <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
+                    </h3>
+                    <div className="space-y-2">
+                      {(campaign.roulette_rules as any[]).map((rule, i) => (
+                        <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
+                          <span className="text-[11px] font-bold text-slate-700">Compre +{rule.min_tickets} cotas</span>
+                          <Badge className="bg-primary text-white border-none text-[10px] font-black uppercase tracking-wider">
+                            Ganha {rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
+                          </Badge>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                {/* Compact Games Section */}
                {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
                  <div className="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm space-y-4">

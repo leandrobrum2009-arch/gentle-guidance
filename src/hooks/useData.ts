@@ -46,6 +46,7 @@ export interface Campaign {
   roulette_payout_rate?: number;
   show_instant_prizes?: boolean;
   show_roulette_status?: boolean;
+  roulette_rules?: { min_tickets: number; spins: number }[];
   main_prizes?: { position: number, prize: string }[];
   created_at: string;
 }

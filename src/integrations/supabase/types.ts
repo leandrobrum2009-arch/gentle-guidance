@@ -167,6 +167,7 @@ export type Database = {
           roulette_free_tickets: number | null
           roulette_multiplier_max: number | null
           roulette_payout_rate: number | null
+          roulette_rules: Json | null
           roulette_spin_cost: number | null
           sales_goal: number | null
           show_instant_prizes: boolean | null
@@ -209,6 +210,7 @@ export type Database = {
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
           roulette_payout_rate?: number | null
+          roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
           show_instant_prizes?: boolean | null
@@ -251,6 +253,7 @@ export type Database = {
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
           roulette_payout_rate?: number | null
+          roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
           show_instant_prizes?: boolean | null
