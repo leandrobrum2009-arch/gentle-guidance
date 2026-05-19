@@ -308,6 +308,12 @@ aside:has(a[href*="lovable.dev"]) {
      -webkit-background-clip: text;
      background-clip: text;
      animation: text-shimmer 4s linear infinite;
+     @apply transition-all duration-300;
+   }
+
+   .text-animate-gradient:hover {
+     animation-duration: 1.5s;
+     filter: brightness(1.2);
    }
 
    @keyframes text-shimmer {
