@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Trophy, Play, Phone, Star, ShieldCheck } from "lucide-react";
+import { Trophy, Play, Phone, Star, ShieldCheck, RotateCw, Sparkles, Ticket, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import type { Winner } from "@/hooks/useData";
