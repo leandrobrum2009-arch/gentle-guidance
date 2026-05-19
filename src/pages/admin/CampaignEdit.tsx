@@ -349,7 +349,7 @@ export default function AdminCampaignEdit() {
                      <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border group">
                        <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
                        <button 
-                        onClick={() => set("image_url", "")}
+                        onClick={removeCoverImage}
                         className="absolute top-2 right-2 p-2 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                        >
                          <X className="h-4 w-4" />
