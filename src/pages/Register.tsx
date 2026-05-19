@@ -1,7 +1,9 @@
+  const [avatar, setAvatar] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -33,15 +35,53 @@ const Register = () => {
     const { error } = await signUp(email, password, name, cpf, phone);
     
     if (!error) {
-      const referredBy = localStorage.getItem('referred_by');
-      if (referredBy) {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        // Handle Avatar Upload
+        if (avatar) {
+          const fileExt = avatar.name.split('.').pop();
+          const filePath = `${user.id}/${Math.random()}.${fileExt}`;
+          const { error: uploadError } = await supabase.storage
+            .from('avatars')
+            .upload(filePath, avatar);
+          
+          if (!uploadError) {
+            const { data: { publicUrl } } = supabase.storage
+              .from('avatars')
+              .getPublicUrl(filePath);
+            await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("user_id", user.id);
+          }
+        }
+
+        const referredBy = localStorage.getItem('referred_by');
+        if (referredBy) {
           await supabase.from("profiles").update({ referred_by_code: referredBy }).eq("user_id", user.id);
           localStorage.removeItem('referred_by');
         }
       }
     }
+            <div className="space-y-2 flex flex-col items-center">
+              <Label>Foto de Perfil (Opcional)</Label>
+              <div className="relative group mt-2">
+                <div className="h-20 w-20 rounded-full border-2 border-border/50 overflow-hidden bg-muted flex items-center justify-center">
+                  {avatarPreview ? (
+                    <img src={avatarPreview} className="h-full w-full object-cover" />
+                  ) : (
+                    <User className="h-8 w-8 text-muted-foreground" />
+                  )}
+                </div>
+                <label className="absolute inset-0 cursor-pointer flex items-center justify-center bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity rounded-full">
+                  <input type="file" className="hidden" accept="image/*" onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setAvatar(file);
+                      setAvatarPreview(URL.createObjectURL(file));
+                    }
+                  }} />
+                </label>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1">Clique para selecionar imagem ou GIF</p>
+            </div>
 
     setIsLoading(false);
     if (error) {
