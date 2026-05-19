@@ -68,19 +68,63 @@ export default function AdminCampaignEdit() {
     setLoading(false);
   };
 
-  const set = (k: keyof CampaignForm, v: any) => setForm((p) => ({ ...p, [k]: v }));
+  const set = (k: keyof CampaignForm, v: any) => {
+    // Auto-generate slug if title is changed and slug is empty or matches previous title slug
+    if (k === "title" && !id) {
+      const newSlug = v.toLowerCase().trim()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/[\s_-]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+      setForm(p => ({ ...p, title: v, slug: p.slug === "" || p.slug === p.title.toLowerCase().replace(/[\s_-]+/g, '-') ? newSlug : p.slug }));
+      return;
+    }
+    setForm((p) => ({ ...p, [k]: v }));
+  };
 
   const save = async () => {
     setSaving(true);
     try {
+      if (!form.title) throw new Error("O título é obrigatório");
+      if (!form.slug) throw new Error("O slug da URL é obrigatório");
+
+      // Prepare clean payload for Supabase
+      const { 
+        id: _, 
+        created_at: __, 
+        updated_at: ___, 
+        sold_tickets: ____,
+        ...rest 
+      } = form as any;
+
+      const payload = {
+        ...rest,
+        ticket_price: Number(form.ticket_price),
+        total_tickets: Number(form.total_tickets),
+        sales_goal: Number(form.sales_goal || 0),
+        roulette_free_tickets: Number(form.roulette_free_tickets || 0),
+        roulette_payout_rate: Number(form.roulette_payout_rate || 0),
+        roulette_spin_cost: Number(form.roulette_spin_cost || 0),
+        roulette_multiplier_max: Number(form.roulette_multiplier_max || 0),
+        min_tickets: Number(form.min_tickets || 1),
+        max_tickets: Number(form.max_tickets || 10000),
+        draw_date: form.draw_date ? new Date(form.draw_date).toISOString() : null,
+      };
+
       const { error } = id
-        ? await supabase.from("campaigns").update(form).eq("id", id)
-        : await supabase.from("campaigns").insert(form);
+        ? await supabase.from("campaigns").update(payload).eq("id", id)
+        : await supabase.from("campaigns").insert(payload);
+
       if (error) throw error;
-      toast({ title: "Sucesso!" });
+      
+      toast({ title: "Sucesso!", description: "Campanha salva com sucesso." });
       navigate("/admin/campanhas");
     } catch (e: any) {
-      toast({ title: "Erro", description: e.message, variant: "destructive" });
+      console.error("Erro ao salvar campanha:", e);
+      toast({ 
+        title: "Erro ao salvar", 
+        description: e.message || "Ocorreu um erro de sintaxe ou validação. Verifique os campos e tente novamente.", 
+        variant: "destructive" 
+      });
     } finally {
       setSaving(false);
     }
@@ -317,7 +361,7 @@ export default function AdminCampaignEdit() {
                    </div>
                  ))}
                  {form.lucky_numbers_prizes.length === 0 && (
-                   <div className="text-center py-12 border-2 border-dashed rounded-3xl text-muted-foreground bg-secondary/50/50">
+                    <div className="text-center py-12 border-2 border-dashed rounded-3xl text-muted-foreground bg-secondary/10">
                      <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-20" />
                      <p className="text-sm font-medium">Nenhuma cota premiada configurada.</p>
                      <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>

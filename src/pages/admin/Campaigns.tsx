@@ -50,8 +50,8 @@ export default function AdminCampaigns() {
     switch(s) {
       case "active": return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
       case "completed": return { label: "Finalizada", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" };
-      case "draft": return { label: "Rascunho", color: "bg-secondary/500/10 text-muted-foreground border-slate-500/20" };
-      default: return { label: s, color: "bg-secondary/500/10 text-muted-foreground border-slate-500/20" };
+      case "draft": return { label: "Rascunho", color: "bg-slate-500/10 text-slate-400 border-slate-500/20" };
+      default: return { label: s, color: "bg-slate-500/10 text-slate-400 border-slate-500/20" };
     }
   };
 
