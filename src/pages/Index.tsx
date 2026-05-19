@@ -70,16 +70,22 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
 const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
+  const { data: siteSettings } = useSiteSettings();
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
-  // Try to load style from localStorage or site settings later
   useEffect(() => {
-    const savedStyle = localStorage.getItem('home_hero_style');
-    if (savedStyle) setHeroStyle(parseInt(savedStyle));
-  }, []);
+    if (siteSettings?.home_hero_style) {
+      setHeroStyle(parseInt(siteSettings.home_hero_style));
+    } else {
+      const savedStyle = localStorage.getItem('home_hero_style');
+      if (savedStyle) setHeroStyle(parseInt(savedStyle));
+    }
+  }, [siteSettings]);
 
   const changeHeroStyle = (style: number) => {
     setHeroStyle(style);
+    // Also save to localStorage for immediate visual feedback if needed, 
+    // but the source of truth is now the database via site_settings
     localStorage.setItem('home_hero_style', style.toString());
     toast.success(`Estilo do slide alterado para Modelo ${style}!`);
   };
