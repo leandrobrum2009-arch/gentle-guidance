@@ -46,13 +46,15 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                  </div>
  
                  <div className="container relative z-30 h-full flex items-center pt-10 md:pt-0">
+                  <div className="absolute inset-y-0 left-0 w-full md:w-[80%] bg-gradient-to-r from-black/80 via-black/40 to-transparent z-0 pointer-events-none" />
+                  
+                  <motion.div 
+                    initial={{ opacity: 0, x: -50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.8 }}
+                    className="max-w-2xl space-y-4 relative z-10"
+                  >
 
-                 <motion.div 
-                   initial={{ opacity: 0, x: -50 }}
-                   whileInView={{ opacity: 1, x: 0 }}
-                   transition={{ duration: 0.8 }}
-                   className="max-w-2xl space-y-4"
-                 >
                     <div className="flex items-center gap-3">
                       <Badge className="bg-primary text-primary-foreground font-black italic px-2 py-0.5 text-[10px]">
                         🔥 DESTAQUE
