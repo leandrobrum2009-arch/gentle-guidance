@@ -14,6 +14,7 @@ import WinnerCard from "@/components/WinnerCard";
 import MysteryBox from "@/components/MysteryBox";
 import Roulette from "@/components/Roulette";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { runContrastAudit } from "@/lib/accessibility";
 
 const mockCampaign = {
   id: "preview-id",
@@ -43,12 +44,23 @@ const PreviewPage = () => {
       <Header />
       
       <main className="container py-32 space-y-16">
-        <section className="space-y-4">
-          <div className="flex flex-col gap-2">
-            <h1 className="text-4xl font-black uppercase tracking-tighter italic">Preview do Sistema</h1>
-            <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Utilize esta página para auditar cores, contrastes e componentes.</p>
+        <section className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+          <div className="space-y-4">
+            <div className="flex flex-col gap-2">
+              <h1 className="text-4xl font-black uppercase tracking-tighter italic">Preview do Sistema</h1>
+              <p className="text-muted-foreground font-medium uppercase tracking-widest text-xs">Utilize esta página para auditar cores, contrastes e componentes.</p>
+            </div>
+            <div className="h-1 w-20 bg-primary rounded-full" />
           </div>
-          <div className="h-1 w-20 bg-primary rounded-full" />
+          
+          <Button 
+            onClick={() => runContrastAudit(true)}
+            variant="outline" 
+            className="h-12 px-6 rounded-2xl gap-2 font-black uppercase italic tracking-widest text-[10px] border-primary/30 hover:bg-primary/5"
+          >
+            <ShieldCheck className="h-4 w-4 text-primary" />
+            Executar Auditoria de Contraste
+          </Button>
         </section>
 
         <Tabs defaultValue="components" className="w-full">
