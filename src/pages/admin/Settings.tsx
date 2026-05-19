@@ -375,7 +375,7 @@ export default function AdminSettings() {
               {customPresets.map((preset) => (
                 <div key={preset.id} className="relative group">
                   <button
-                    onClick={() => applyPreset(preset.values)}
+                    onClick={() => setPresetToPreview(preset)}
                     className="w-full flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
                   >
                     <div className="w-full flex justify-between items-center">
