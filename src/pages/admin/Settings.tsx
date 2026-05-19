@@ -115,7 +115,52 @@ export default function AdminSettings() {
 
   useEffect(() => {
     fetchSettings();
+    fetchCustomPresets();
   }, []);
+
+  const fetchCustomPresets = async () => {
+    const { data, error } = await supabase.from("custom_presets").select("*").order("created_at", { ascending: false });
+    if (!error) setCustomPresets(data);
+  };
+
+  const saveCustomPreset = async () => {
+    if (!newPresetName.trim()) {
+      toast.error("Por favor, insira um nome para o preset.");
+      return;
+    }
+
+    const presetValues: Record<string, string> = {};
+    settings.forEach(s => {
+      // Only save keys that are part of the visual identity
+      if (s.key.includes('color') || s.key.includes('shimmer') || s.key.includes('glow') || s.key.includes('transition') || s.key.includes('easing') || s.key.includes('hero_style')) {
+        presetValues[s.key] = s.value;
+      }
+    });
+
+    const { error } = await supabase.from("custom_presets").insert({
+      name: newPresetName,
+      values: presetValues
+    });
+
+    if (!error) {
+      toast.success("Preset personalizado salvo!");
+      setNewPresetName("");
+      setIsSavingPreset(false);
+      fetchCustomPresets();
+    } else {
+      toast.error("Erro ao salvar preset.");
+    }
+  };
+
+  const deleteCustomPreset = async (id: string) => {
+    const { error } = await supabase.from("custom_presets").delete().eq("id", id);
+    if (!error) {
+      toast.success("Preset removido.");
+      fetchCustomPresets();
+    } else {
+      toast.error("Erro ao remover preset.");
+    }
+  };
 
   const fetchSettings = async () => {
     setLoading(true);
