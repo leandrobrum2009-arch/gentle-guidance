@@ -2,6 +2,7 @@ import React, { useCallback } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import Autoplay from "embla-carousel-autoplay";
 import { motion } from "framer-motion";
+import Fade from "embla-carousel-fade";
 import { Zap, Star, Trophy, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,10 +13,14 @@ import CountdownTimer from "../CountdownTimer";
 interface HeroModel2Props {
   campaigns: Campaign[];
   delay?: number;
+  transitionType?: 'slide' | 'fade';
 }
 
-const HeroModel2 = ({ campaigns, delay = 6000 }: HeroModel2Props) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, [Autoplay({ delay })]);
+const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroModel2Props) => {
+  const plugins = [Autoplay({ delay })];
+  if (transitionType === 'fade') plugins.push(Fade());
+
+  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, plugins);
 
   return (
     <section className="relative min-h-[500px] md:min-h-[600px] bg-zinc-950 flex items-center overflow-hidden" ref={emblaRef}>
