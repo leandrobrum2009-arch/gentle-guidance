@@ -122,8 +122,6 @@ aside:has(a[href*="lovable.dev"]) {
     --title-shimmer-speed: 10s;
     --hover-scale: 1.02;
     --hover-translate: -2px;
-    --animation-easing: cubic-bezier(0.4, 0, 0.2, 1);
-  }
   }
 
   .dark {

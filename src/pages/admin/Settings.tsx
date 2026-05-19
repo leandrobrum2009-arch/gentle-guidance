@@ -121,9 +121,6 @@ export default function AdminSettings() {
                     <SelectContent>
                       <SelectItem value="slide">Deslizar (Slide)</SelectItem>
                       <SelectItem value="fade">Esmaecer (Fade)</SelectItem>
-                    <SelectContent>
-                      <SelectItem value="slide">Deslizar (Slide)</SelectItem>
-                      <SelectItem value="fade">Esmaecer (Fade)</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : s.key === 'animation_easing' ? (
