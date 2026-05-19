@@ -1,7 +1,8 @@
 import { motion } from "framer-motion";
-import { Trophy, Play, Phone, Star, ShieldCheck } from "lucide-react";
+import { Trophy, Play, Phone, Star, ShieldCheck, RotateCw, Sparkles, Ticket, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import type { Winner } from "@/hooks/useData";
 
 interface WinnerCardProps {
@@ -11,6 +12,15 @@ interface WinnerCardProps {
 
 const WinnerCard = ({ winner, index }: WinnerCardProps) => {
   const campaignTitle = winner.campaigns?.title || "Campanha";
+  const typeLabels = {
+    raffle: { label: "Sorteio da Rifa", icon: Ticket, color: "bg-primary/20 text-primary" },
+    roulette: { label: "Roleta da Sorte", icon: RotateCw, color: "bg-purple-500/20 text-purple-500" },
+    scratchcard: { label: "Raspadinha", icon: Sparkles, color: "bg-amber-500/20 text-amber-500" },
+    lucky_number: { label: "Cota Premiada", icon: Star, color: "bg-blue-500/20 text-blue-500" }
+  };
+  
+  const currentType = typeLabels[winner.winner_type || 'raffle'];
+  const Icon = currentType.icon;
 
   return (
     <motion.div
@@ -41,9 +51,14 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
               <Trophy className="h-4 w-4 text-white" />
             </div>
           </div>
-          <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-widest italic">
-            Ganhador Certificado
-          </Badge>
+          <div className="flex flex-col items-end gap-2">
+            <Badge className={cn("border-none text-[8px] font-black uppercase tracking-widest italic px-2 py-0.5", currentType.color)}>
+              <Icon className="mr-1 h-3 w-3" /> {currentType.label}
+            </Badge>
+            <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground uppercase tracking-tighter">
+              <Calendar className="h-3 w-3" /> {new Date(winner.draw_date).toLocaleDateString('pt-BR')}
+            </div>
+          </div>
         </div>
 
         <div className="space-y-1">

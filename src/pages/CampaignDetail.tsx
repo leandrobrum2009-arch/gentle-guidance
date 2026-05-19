@@ -428,37 +428,47 @@ const CampaignDetail = () => {
                 {availableInstantPrizes} disponíveis
               </Badge>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="flex flex-col gap-3">
               {luckyNumbers.map((p: any, i: number) => (
                 <div 
                   key={i} 
                   className={cn(
                     "flex items-center justify-between p-4 rounded-2xl border transition-all",
                     luckyNumbersStatus[p.number] 
-                      ? "bg-secondary border-border opacity-60" 
-                      : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/30"
+                      ? "bg-secondary/40 border-border opacity-60" 
+                      : "bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40"
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-4 flex-1">
                     <div className={cn(
-                      "h-10 w-10 rounded-xl flex items-center justify-center font-black italic text-sm",
+                      "h-12 w-12 rounded-xl flex items-center justify-center font-black italic text-base",
                       luckyNumbersStatus[p.number] ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
                     )}>
                       #{p.number}
                     </div>
-                    <div className="text-left min-w-0">
-                      <p className={cn("text-xs font-black uppercase tracking-tight truncate", luckyNumbersStatus[p.number] ? "text-muted-foreground" : "text-foreground")}>
-                        {p.prize}
-                      </p>
-                      {luckyNumbersStatus[p.number] ? (
-                        <p className="text-[8px] font-black text-primary uppercase tracking-tighter truncate">
-                          Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Verificando..."}
+                    <div className="flex flex-col md:flex-row md:items-center md:justify-between flex-1 gap-2">
+                      <div className="text-left">
+                        <p className={cn("text-sm font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-muted-foreground" : "text-foreground")}>
+                          {p.prize}
                         </p>
-                      ) : (
-                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-                          Disponível
-                        </p>
-                      )}
+                        {luckyNumbersStatus[p.number] ? (
+                          <div className="flex items-center gap-1.5 mt-0.5">
+                            <CheckCircle2 className="h-3 w-3 text-primary" />
+                            <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
+                              Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Sorteado"}
+                            </p>
+                          </div>
+                        ) : (
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">
+                            Disponível para quem comprar esta cota
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                         <Badge variant={luckyNumbersStatus[p.number] ? "secondary" : "default"} className={cn("text-[8px] font-black uppercase tracking-widest", !luckyNumbersStatus[p.number] && "bg-amber-500 text-white border-none")}>
+                           {luckyNumbersStatus[p.number] ? "SORTEADO" : "DISPONÍVEL"}
+                         </Badge>
+                      </div>
                     </div>
                   </div>
                 </div>
