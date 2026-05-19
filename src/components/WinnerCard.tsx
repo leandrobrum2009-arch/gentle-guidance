@@ -11,6 +11,15 @@ interface WinnerCardProps {
 
 const WinnerCard = ({ winner, index }: WinnerCardProps) => {
   const campaignTitle = winner.campaigns?.title || "Campanha";
+  const typeLabels = {
+    raffle: { label: "Sorteio da Rifa", icon: Ticket, color: "bg-primary/20 text-primary" },
+    roulette: { label: "Roleta da Sorte", icon: RotateCw, color: "bg-purple-500/20 text-purple-500" },
+    scratchcard: { label: "Raspadinha", icon: Sparkles, color: "bg-amber-500/20 text-amber-500" },
+    lucky_number: { label: "Cota Premiada", icon: Star, color: "bg-blue-500/20 text-blue-500" }
+  };
+  
+  const currentType = typeLabels[winner.winner_type || 'raffle'];
+  const Icon = currentType.icon;
 
   return (
     <motion.div
