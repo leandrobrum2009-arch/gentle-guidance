@@ -35,17 +35,18 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                     animate={{ scale: [1, 1.1, 1] }}
                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent z-10" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10" />
-                  
-                  {/* Glow/Particles Layer - Reduced opacity for light theme compatibility */}
-                  <div className="absolute inset-0 z-20 pointer-events-none">
-                    <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
-                    <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
-                  </div>
-                </div>
+                   <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
+                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent z-10" />
+                   
+                   {/* Glow/Particles Layer - Reduced opacity for light theme compatibility */}
+                   <div className="absolute inset-0 z-20 pointer-events-none">
+                     <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[100px] rounded-full animate-pulse" />
+                     <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
+                   </div>
+                 </div>
  
-                <div className="container relative h-full flex items-center pt-10 md:pt-0">
+                 <div className="container relative z-30 h-full flex items-center pt-10 md:pt-0">
+
                  <motion.div 
                    initial={{ opacity: 0, x: -50 }}
                    whileInView={{ opacity: 1, x: 0 }}
@@ -70,20 +71,21 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                            animate={{ opacity: 1, y: 0 }}
                            transition={{ delay: 0.3 }}
                          >
-                            <CountdownTimer targetDate={campaign.draw_date} className="scale-100 origin-left" />
-                         </motion.div>
-                       )}
-                         <h1 className="text-2xl md:text-4xl lg:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_10px_rgba(0,0,0,0.3)] text-foreground">
-                        {campaign.title.split(' ')[0]} <br />
-                        <span className="text-primary neon-text-primary">
-                          {campaign.title.split(' ').slice(1).join(' ')}
-                        </span>
-                      </h1>
-                    </div>
+                             <CountdownTimer targetDate={campaign.draw_date} className="scale-100 origin-left drop-shadow-md" />
+                          </motion.div>
+                        )}
+                          <h1 className="text-2xl md:text-4xl lg:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)] text-foreground">
+                         {campaign.title.split(' ')[0]} <br />
+                         <span className="text-primary neon-text-primary">
+                           {campaign.title.split(' ').slice(1).join(' ')}
+                         </span>
+                       </h1>
+                     </div>
  
-                    <p className="text-base md:text-xl text-muted-foreground font-semibold max-w-xl leading-snug drop-shadow-sm">
-                      {campaign.subtitle || campaign.description?.slice(0, 150) + '...'}
-                    </p>
+                     <p className="text-base md:text-xl text-foreground font-bold max-w-xl leading-snug filter drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)]">
+                       {campaign.subtitle || (campaign.description ? campaign.description.slice(0, 150) + '...' : '')}
+                     </p>
+
  
                      <div className="flex flex-wrap items-center gap-6 py-2">
                       <div className="flex flex-col gap-1">
@@ -112,14 +114,15 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                          whileHover={{ scale: 1.05 }}
                          whileTap={{ scale: 0.95 }}
                        >
-                          <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)]">
-                           QUERO MEU PRÊMIO <Zap className="h-5 w-5 fill-current" />
-                         </Button>
-                       </motion.div>
-                     </Link>
-                       <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-border hover:bg-secondary font-black uppercase italic tracking-widest text-foreground backdrop-blur-md">
-                       CONFERIR CHANCES
-                     </Button>
+                           <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] border-light-path">
+                            QUERO MEU PRÊMIO <Zap className="h-5 w-5 fill-current" />
+                          </Button>
+                        </motion.div>
+                      </Link>
+                        <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-border hover:bg-secondary font-black uppercase italic tracking-widest text-foreground backdrop-blur-md border-light-path">
+                        CONFERIR CHANCES
+                      </Button>
+
                    </div>
                  </motion.div>
                </div>
@@ -147,7 +150,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
        </Button>
  
        {/* Moving Text Strip (Marquee Effect) */}
-       <div className="absolute bottom-6 left-0 w-full overflow-hidden bg-primary/10 backdrop-blur-sm border-y border-primary/20 py-2 z-20">
+       <div className="absolute bottom-6 left-0 w-full overflow-hidden bg-primary/20 backdrop-blur-sm border-y border-primary/30 py-2 z-20 pointer-events-none">
          <motion.div 
            animate={{ x: ["0%", "-50%"] }}
            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
