@@ -145,18 +145,30 @@ const Index = () => {
                    </div>
                  )}
 
-                {heroStyle === 1 && (
-                  <HeroModel1 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 2 && (
-                  <HeroModel2 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 3 && (
-                  <HeroModel3 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 4 && (
-                  <HeroModel4 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
+                 {heroStyle === 1 && (
+                   <HeroModel1 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 2 && (
+                   <HeroModel2 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 3 && (
+                   <HeroModel3 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 4 && (
+                   <HeroModel4 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
              </div>
            )}
 
