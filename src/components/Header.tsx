@@ -170,7 +170,7 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to="/cadastrar">
-                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20">
+                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30">
                   Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                 </Button>
               </Link>
