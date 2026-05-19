@@ -255,11 +255,11 @@ import { useAuth } from "@/contexts/AuthContext";
            images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
            videoUrl={campaign.video_url} 
          />
-         <div className="absolute bottom-4 right-4 z-10">
-           <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4">
-             <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
-           </Button>
-         </div>
+          <Link to="/conta#tickets" className="absolute bottom-4 right-4 z-10">
+            <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4 hover:bg-black/80">
+              <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
+            </Button>
+          </Link>
        </div>
  
        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container py-6 space-y-6">
