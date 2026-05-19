@@ -71,6 +71,7 @@ const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
   const { data: siteSettings } = useSiteSettings();
+  const { data: isAdmin } = useIsAdmin();
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
   useEffect(() => {
