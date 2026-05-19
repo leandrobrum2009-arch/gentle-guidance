@@ -12,11 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-  import { 
-    useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
-    useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
-    useUserCampaignSpins
-  } from "@/hooks/useData";
+import { 
+  useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
+  useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
+  useUserCampaignSpins, useCampaignLuckyWinners
+} from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -94,7 +94,8 @@ import { useAuth } from "@/contexts/AuthContext";
    const { data: campaignRanking } = useCampaignRanking(id || "", 10);
    const { data: instantWinners } = useCampaignMysteryBoxWins(id || "", 5);
    const { data: rouletteWinners } = useCampaignRouletteSpins(id || "", 5);
-   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
+    const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
+    const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
  
    const handleShareCampaign = async () => {
      if (!campaign) return;
@@ -372,14 +373,20 @@ import { useAuth } from "@/contexts/AuthContext";
                          )}>
                            #{p.number}
                          </div>
-                         <div className="text-left">
-                           <p className={cn("text-xs font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
-                             {p.prize}
-                           </p>
-                           <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                             {luckyNumbersStatus[p.number] ? "Já sorteado" : "Disponível"}
-                           </p>
-                         </div>
+                        <div className="text-left min-w-0">
+                          <p className={cn("text-xs font-black uppercase tracking-tight truncate", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
+                            {p.prize}
+                          </p>
+                          {luckyNumbersStatus[p.number] ? (
+                            <p className="text-[8px] font-black text-primary uppercase tracking-tighter truncate">
+                              Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Verificando..."}
+                            </p>
+                          ) : (
+                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                              Disponível
+                            </p>
+                          )}
+                        </div>
                        </div>
                        {luckyNumbersStatus[p.number] && (
                          <CheckCircle2 className="h-4 w-4 text-slate-300" />
