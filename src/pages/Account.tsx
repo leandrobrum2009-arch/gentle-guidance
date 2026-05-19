@@ -162,8 +162,8 @@ import { cn } from "@/lib/utils";
   }
 
   return (
-    <div className="min-h-screen bg-[#0a0a0c] text-white overflow-hidden relative">
-      <div className="absolute inset-0 z-0 opacity-20">
+    <div className="min-h-screen bg-background text-foreground overflow-hidden relative">
+      <div className="absolute inset-0 z-0 opacity-20 dark:opacity-40">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
@@ -176,22 +176,22 @@ import { cn } from "@/lib/utils";
       >
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3 space-y-6">
-            <Card className="bg-[#0d0d0f]/50 border-white/5 backdrop-blur-xl">
+            <Card className="bg-card border-border backdrop-blur-xl">
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center text-center">
                   <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
-                     <div className="h-full w-full rounded-full bg-[#0d0d0f] flex items-center justify-center">
-                        <User className="h-10 w-10 text-white" />
+                     <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
+                        <User className="h-10 w-10 text-foreground" />
                      </div>
                   </div>
                   <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
-                  <p className="text-xs text-slate-500 mb-4">{user?.email}</p>
-                  <div className="w-full bg-white/5 p-4 rounded-xl border border-white/5">
-                    <div className="flex justify-between text-[10px] font-bold text-slate-400 mb-2">
+                  <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
+                  <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
+                    <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
                       <span>Nível {profile?.vip_level || 1} VIP</span>
                       <span>{profile?.xp || 0} XP</span>
                     </div>
-                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                       <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
                     </div>
                   </div>
@@ -261,7 +261,7 @@ import { cn } from "@/lib/utils";
                 { label: "Giros Totais", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
                 { label: "Vitórias", val: orders?.filter((o:any) => o.payment_status === 'won').length || 0, icon: Trophy, color: "text-purple-400" },
               ].map((stat, i) => (
-                <Card key={i} className="bg-[#0d0d0f]/50 border-white/5 p-4 group hover:bg-white/5 transition-all duration-300">
+                <Card key={i} className="bg-card border-border p-4 group hover:bg-secondary/50 transition-all duration-300">
                   <div className="flex items-center gap-3">
                     <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
                        <stat.icon className={`h-5 w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
