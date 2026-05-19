@@ -1,12 +1,19 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
@@ -41,6 +48,9 @@ export default function AdminSettings() {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
     if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
     if (key.includes('whatsapp') || key.includes('support')) return <MessageSquare className="h-4 w-4" />;
+    if (key.includes('hero_style')) return <Layout className="h-4 w-4" />;
+    if (key.includes('site_name')) return <Globe className="h-4 w-4" />;
+    if (key.includes('logo')) return <Image className="h-4 w-4" />;
     return <Settings className="h-4 w-4" />;
   };
 
@@ -78,11 +88,33 @@ export default function AdminSettings() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Input 
-                  value={s.value} 
-                  onChange={(e) => handleUpdate(s.key, e.target.value)}
-                  className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
-                />
+                {s.key === 'home_hero_style' ? (
+                  <Select 
+                    value={s.value} 
+                    onValueChange={(val) => handleUpdate(s.key, val)}
+                  >
+                    <SelectTrigger className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold">
+                      <SelectValue placeholder="Selecione o estilo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Modelo 1 (Clássico Premium)</SelectItem>
+                      <SelectItem value="2">Modelo 2 (Impacto Centralizado)</SelectItem>
+                      <SelectItem value="3">Modelo 3 (Interativo Moderno)</SelectItem>
+                      <SelectItem value="4">Modelo 4 (Visual Limpo - Sem Texto)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : (
+                  <Input 
+                    value={s.value} 
+                    onChange={(e) => handleUpdate(s.key, e.target.value)}
+                    className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
+                  />
+                )}
+                {s.key === 'site_logo_url' && s.value && (
+                  <div className="mt-2 p-2 rounded-lg bg-secondary/10 border border-border inline-block">
+                    <img src={s.value} alt="Logo Preview" className="h-8 w-auto object-contain" />
+                  </div>
+                )}
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {s.description || "Sem descrição disponível."}
                 </p>

@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useIsAdmin } from "@/hooks/useAdmin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -41,7 +42,7 @@ import LiveActivityFeed from "@/components/LiveActivityFeed";
 import Roulette from "@/components/Roulette";
 import CountdownTimer from "@/components/CountdownTimer";
 import GoogleReviews from "@/components/GoogleReviews";
-import { useCampaigns, useWinners } from "@/hooks/useData";
+import { useCampaigns, useWinners, useSiteSettings } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
 
@@ -70,16 +71,23 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
 const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
+  const { data: siteSettings } = useSiteSettings();
+  const { data: isAdmin } = useIsAdmin();
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
-  // Try to load style from localStorage or site settings later
   useEffect(() => {
-    const savedStyle = localStorage.getItem('home_hero_style');
-    if (savedStyle) setHeroStyle(parseInt(savedStyle));
-  }, []);
+    if (siteSettings?.home_hero_style) {
+      setHeroStyle(parseInt(siteSettings.home_hero_style));
+    } else {
+      const savedStyle = localStorage.getItem('home_hero_style');
+      if (savedStyle) setHeroStyle(parseInt(savedStyle));
+    }
+  }, [siteSettings]);
 
   const changeHeroStyle = (style: number) => {
     setHeroStyle(style);
+    // Also save to localStorage for immediate visual feedback if needed, 
+    // but the source of truth is now the database via site_settings
     localStorage.setItem('home_hero_style', style.toString());
     toast.success(`Estilo do slide alterado para Modelo ${style}!`);
   };
@@ -106,20 +114,22 @@ const Index = () => {
         <>
            {campaigns && campaigns.length > 0 && (
              <div className="relative group">
-                {/* Style Selector for Dev/User testing - Can be moved to admin later */}
-                <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                   {[1, 2, 3, 4].map(i => (
-                     <Button 
-                       key={i} 
-                       size="sm" 
-                       variant={heroStyle === i ? "default" : "outline"}
-                       className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
-                       onClick={() => changeHeroStyle(i)}
-                     >
-                       M{i}
-                     </Button>
-                   ))}
-                </div>
+                 {/* Style Selector - Only visible for admins to test visually */}
+                 {isAdmin && (
+                   <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {[1, 2, 3, 4].map(i => (
+                        <Button 
+                          key={i} 
+                          size="sm" 
+                          variant={heroStyle === i ? "default" : "outline"}
+                          className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
+                          onClick={() => changeHeroStyle(i)}
+                        >
+                          M{i}
+                        </Button>
+                      ))}
+                   </div>
+                 )}
 
                 {heroStyle === 1 && (
                   <HeroModel1 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
