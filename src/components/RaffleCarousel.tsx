@@ -81,25 +81,25 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                       </h1>
                     </div>
  
-                    <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-tight">
-                     {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
-                   </p>
+                    <p className="text-base md:text-lg text-slate-700 font-medium max-w-md leading-tight">
+                      {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
+                    </p>
  
                      <div className="flex flex-wrap items-center gap-6 py-2">
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Valor do Prêmio</span>
+                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Valor do Prêmio</span>
                          <span className="text-xl font-black text-foreground">
                           R$ {((campaign as any).prize_value || 50000).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Números Disponíveis</span>
+                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Números Disponíveis</span>
                          <span className="text-xl font-black text-foreground">
                           {(campaign.total_tickets - campaign.sold_tickets).toLocaleString('pt-BR')}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
+                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Sorteio em</span>
                          <span className="text-xl font-black text-primary">
                           {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : 'Em breve'}
                         </span>
