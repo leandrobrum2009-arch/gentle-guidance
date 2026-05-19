@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -51,6 +51,10 @@ export default function AdminSettings() {
     if (key.includes('hero_style')) return <Layout className="h-4 w-4" />;
     if (key.includes('site_name')) return <Globe className="h-4 w-4" />;
     if (key.includes('logo')) return <Image className="h-4 w-4" />;
+    if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
+    if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;
+    if (key.includes('hover')) return <MousePointer2 className="h-4 w-4" />;
+    if (key.includes('color')) return <Palette className="h-4 w-4" />;
     return <Settings className="h-4 w-4" />;
   };
 
@@ -103,6 +107,20 @@ export default function AdminSettings() {
                       <SelectItem value="4">Modelo 4 (Visual Limpo - Sem Texto)</SelectItem>
                     </SelectContent>
                   </Select>
+                ) : s.key.includes('color') ? (
+                  <div className="flex gap-2">
+                    <Input 
+                      type="color"
+                      value={s.value} 
+                      onChange={(e) => handleUpdate(s.key, e.target.value)}
+                      className="h-10 w-12 p-1 border-border bg-secondary/20"
+                    />
+                    <Input 
+                      value={s.value} 
+                      onChange={(e) => handleUpdate(s.key, e.target.value)}
+                      className="flex-1 border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
+                    />
+                  </div>
                 ) : (
                   <Input 
                     value={s.value} 

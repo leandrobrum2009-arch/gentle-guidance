@@ -11,10 +11,11 @@ import CountdownTimer from "../CountdownTimer";
 
 interface HeroModel2Props {
   campaigns: Campaign[];
+  delay?: number;
 }
 
-const HeroModel2 = ({ campaigns }: HeroModel2Props) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 6000 })]);
+const HeroModel2 = ({ campaigns, delay = 6000 }: HeroModel2Props) => {
+  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, [Autoplay({ delay })]);
 
   return (
     <section className="relative min-h-[500px] md:min-h-[600px] bg-zinc-950 flex items-center overflow-hidden" ref={emblaRef}>

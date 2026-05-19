@@ -12,10 +12,11 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 
 interface HeroModel1Props {
   campaigns: Campaign[];
+  delay?: number;
 }
 
-const HeroModel1 = ({ campaigns }: HeroModel1Props) => {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+const HeroModel1 = ({ campaigns, delay = 5000 }: HeroModel1Props) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 }, [Autoplay({ delay })]);
 
   const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);

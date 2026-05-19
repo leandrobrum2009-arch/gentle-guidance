@@ -118,6 +118,8 @@ aside:has(a[href*="lovable.dev"]) {
     --text-gradient-shimmer: #000;
     --border-shimmer-color: #22c55e;
     --border-shimmer-opacity: 0.8;
+    --button-glow-speed: 4s;
+    --title-shimmer-speed: 10s;
   }
 
   .dark {
@@ -286,7 +288,7 @@ aside:has(a[href*="lovable.dev"]) {
        linear-gradient(#fff 0 0);
      mask-composite: exclude;
      -webkit-mask-composite: destination-out;
-     animation: border-shimmer 4s infinite linear;
+     animation: border-shimmer var(--button-glow-speed) infinite linear;
      pointer-events: none;
    }
 
@@ -306,7 +308,7 @@ aside:has(a[href*="lovable.dev"]) {
      color: transparent;
      -webkit-background-clip: text;
      background-clip: text;
-     animation: text-shimmer 10s linear infinite;
+     animation: text-shimmer var(--title-shimmer-speed) linear infinite;
      @apply transition-all duration-300;
      display: inline-block;
    }

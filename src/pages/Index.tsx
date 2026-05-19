@@ -68,6 +68,35 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
   </div>
 );
 
+const hexToHsl = (hex: string) => {
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 4) {
+    r = parseInt(hex[1] + hex[1], 16);
+    g = parseInt(hex[2] + hex[2], 16);
+    b = parseInt(hex[3] + hex[3], 16);
+  } else if (hex.length === 7) {
+    r = parseInt(hex.substring(1, 3), 16);
+    g = parseInt(hex.substring(3, 5), 16);
+    b = parseInt(hex.substring(5, 7), 16);
+  }
+  r /= 255; g /= 255; b /= 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s, l = (max + min) / 2;
+  if (max === min) {
+    h = s = 0;
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+      case g: h = (b - r) / d + 2; break;
+      case b: h = (r - g) / d + 4; break;
+    }
+    h /= 6;
+  }
+  return `${Math.round(h * 360)} ${Math.round(s * 100)}% ${Math.round(l * 100)}%`;
+};
+
 const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
@@ -76,8 +105,25 @@ const Index = () => {
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
   
   useEffect(() => {
-    if (siteSettings?.home_hero_style) {
-      setHeroStyle(parseInt(siteSettings.home_hero_style));
+    if (siteSettings) {
+      if (siteSettings.home_hero_style) {
+        setHeroStyle(parseInt(siteSettings.home_hero_style));
+      }
+
+      // Inject dynamic CSS variables for animations
+      const root = document.documentElement;
+      if (siteSettings.button_glow_speed) {
+        root.style.setProperty('--button-glow-speed', `${siteSettings.button_glow_speed}s`);
+      }
+      if (siteSettings.title_shimmer_speed) {
+        root.style.setProperty('--title-shimmer-speed', `${siteSettings.title_shimmer_speed}s`);
+      }
+      if (siteSettings.border_shimmer_opacity) {
+        root.style.setProperty('--border-shimmer-opacity', siteSettings.border_shimmer_opacity);
+      }
+      if (siteSettings.primary_color) {
+        root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
+      }
     } else {
       const savedStyle = localStorage.getItem('home_hero_style');
       if (savedStyle) setHeroStyle(parseInt(savedStyle));
@@ -131,18 +177,30 @@ const Index = () => {
                    </div>
                  )}
 
-                {heroStyle === 1 && (
-                  <HeroModel1 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 2 && (
-                  <HeroModel2 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 3 && (
-                  <HeroModel3 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
-                {heroStyle === 4 && (
-                  <HeroModel4 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
-                )}
+                 {heroStyle === 1 && (
+                   <HeroModel1 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 2 && (
+                   <HeroModel2 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 3 && (
+                   <HeroModel3 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
+                 {heroStyle === 4 && (
+                   <HeroModel4 
+                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
+                   />
+                 )}
              </div>
            )}
 
