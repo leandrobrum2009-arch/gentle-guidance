@@ -31,7 +31,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
      { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
    ]},
     { category: "Sistema", items: [
-      { title: "Preview UI", url: "/preview", icon: Image },
+      { title: "Preview UI", url: "/preview", icon: ImageIcon },
       { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
     ]},
  ];
