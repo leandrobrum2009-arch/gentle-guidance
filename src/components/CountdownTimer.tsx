@@ -40,7 +40,7 @@ export default function CountdownTimer({ targetDate, className = "" }: Countdown
 
   return (
     <div className={`flex items-center gap-2 ${className}`}>
-      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/40 backdrop-blur-md border border-white/10 shadow-lg">
+      <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/80 backdrop-blur-md border border-white/20 shadow-2xl">
         <Clock className="h-3 w-3 text-primary animate-pulse" />
         <div className="flex items-center gap-1 font-mono text-[10px] font-black uppercase tracking-tighter">
           <TimeUnit value={timeLeft.days} label="d" />

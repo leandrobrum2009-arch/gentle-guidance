@@ -240,4 +240,39 @@ aside:has(a[href*="lovable.dev"]) {
      -ms-overflow-style: none;
      scrollbar-width: none;
    }
+
+   .border-light-path {
+     position: relative;
+     z-index: 1;
+   }
+
+   .border-light-path::before {
+     content: "";
+     position: absolute;
+     inset: -1.5px;
+     padding: 1.5px;
+     border-radius: inherit;
+     background: linear-gradient(
+       90deg, 
+       transparent 0%, 
+       transparent 25%, 
+       #4ade80 50%, 
+       transparent 75%, 
+       transparent 100%
+     );
+     background-size: 200% 100%;
+     mask: 
+       linear-gradient(#fff 0 0) content-box, 
+       linear-gradient(#fff 0 0);
+     mask-composite: exclude;
+     -webkit-mask-composite: destination-out;
+     animation: border-shimmer 3s infinite linear;
+     pointer-events: none;
+   }
+
+   @keyframes border-shimmer {
+     0% { background-position: 100% 0; }
+     100% { background-position: -100% 0; }
+   }
+
  }
