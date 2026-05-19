@@ -438,7 +438,7 @@ const SOUND_URLS = {
             ) : (
               <>
                 <Zap className="h-6 w-6 fill-current" />
-                {campaign.roulette_spin_cost > 0 ? `Girar por R$ ${(campaign.roulette_spin_cost * multiplier).toFixed(2)}` : "Girar Agora"}
+                {isSimulation ? "Simular Giro Grátis" : (campaign.roulette_spin_cost > 0 ? `Girar por R$ ${(campaign.roulette_spin_cost * multiplier).toFixed(2)}` : "Girar Agora")}
               </>
             )}
           </Button>
