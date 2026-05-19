@@ -178,7 +178,7 @@ const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }:
                 </div>
                 <div className="space-y-1">
                   <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">
-                    {isWinner ? "VOCÊ GANHOU!" : "NÃO FOI DESSA VEZ"}
+                    {isWinner ? "PARABÉNS, VOCÊ GANHOU!" : "QUASE LÁ! TENTE DE NOVO"}
                   </h3>
                   <p className="text-2xl font-black text-primary neon-text-primary uppercase tracking-tighter">
                     {prizeLabel}
