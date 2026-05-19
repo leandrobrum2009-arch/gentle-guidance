@@ -13,7 +13,7 @@ export default function AdminAffiliates() {
     <AdminLayout>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Afiliados</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Afiliados</h1>
           <p className="text-muted-foreground mt-1">Gerencie a rede de parceiros e comissões.</p>
         </div>
         <Badge className="bg-primary/20 text-primary border-primary/20 py-1.5 px-4 font-bold tracking-wider">
@@ -22,7 +22,7 @@ export default function AdminAffiliates() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-3 mb-8">
-        <Card className="border-white/5 bg-emerald-500/5 backdrop-blur-xl group hover:border-emerald-500/30 transition-all">
+        <Card className="border-border bg-emerald-500/5 backdrop-blur-xl group hover:border-emerald-500/30 transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/20 text-emerald-500">
@@ -32,12 +32,12 @@ export default function AdminAffiliates() {
             </div>
             <div className="mt-4">
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Total Comissões</p>
-              <h3 className="text-3xl font-bold text-white mt-1">R$ 12.450,00</h3>
+              <h3 className="text-3xl font-bold text-foreground mt-1">R$ 12.450,00</h3>
             </div>
           </CardContent>
         </Card>
         
-        <Card className="border-white/5 bg-blue-500/5 backdrop-blur-xl group hover:border-blue-500/30 transition-all">
+        <Card className="border-border bg-blue-500/5 backdrop-blur-xl group hover:border-blue-500/30 transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-500/20 text-blue-500">
@@ -47,12 +47,12 @@ export default function AdminAffiliates() {
             </div>
             <div className="mt-4">
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Afiliados Ativos</p>
-              <h3 className="text-3xl font-bold text-white mt-1">{affiliates?.length || 0}</h3>
+              <h3 className="text-3xl font-bold text-foreground mt-1">{affiliates?.length || 0}</h3>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="border-white/5 bg-purple-500/5 backdrop-blur-xl group hover:border-purple-500/30 transition-all">
+        <Card className="border-border bg-purple-500/5 backdrop-blur-xl group hover:border-purple-500/30 transition-all">
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-500/20 text-purple-500">
@@ -62,20 +62,20 @@ export default function AdminAffiliates() {
             </div>
             <div className="mt-4">
               <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Clicks Totais</p>
-              <h3 className="text-3xl font-bold text-white mt-1">45.890</h3>
+              <h3 className="text-3xl font-bold text-foreground mt-1">45.890</h3>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl">
+      <Card className="border-border bg-card/50 backdrop-blur-xl">
         <CardContent className="p-0">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
           ) : (
             <Table>
               <TableHeader>
-                <TableRow className="border-white/5 hover:bg-transparent">
+                <TableRow className="border-border hover:bg-transparent">
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Parceiro</TableHead>
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Código/Link</TableHead>
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Comissão</TableHead>
@@ -85,20 +85,20 @@ export default function AdminAffiliates() {
               </TableHeader>
               <TableBody>
                 {affiliates?.map((a) => (
-                  <TableRow key={a.id} className="border-white/5 hover:bg-white/5 transition-colors group">
+                  <TableRow key={a.id} className="border-border hover:bg-secondary/20 transition-colors group">
                     <TableCell>
                       <div className="flex flex-col">
-                       <span className="font-bold text-white">{(a.profiles as any)?.name || "Sem Nome"}</span>
+                       <span className="font-bold text-foreground">{(a.profiles as any)?.name || "Sem Nome"}</span>
                        <span className="text-[10px] text-muted-foreground">Afiliado Premium</span>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <code className="bg-white/5 px-2 py-1 rounded text-primary text-xs font-bold">{a.referral_code}</code>
+                      <code className="bg-secondary/20 px-2 py-1 rounded text-primary text-xs font-bold">{a.referral_code}</code>
                     </TableCell>
-                    <TableCell className="text-slate-300 font-medium">{Number(a.commission_rate * 100).toFixed(0)}%</TableCell>
-                    <TableCell className="text-emerald-400 font-bold tracking-tight">R$ 0,00</TableCell>
+                    <TableCell className="text-foreground font-medium">{Number(a.commission_rate * 100).toFixed(0)}%</TableCell>
+                    <TableCell className="text-emerald-500 font-bold tracking-tight">R$ 0,00</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1 text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
+                      <div className="flex items-center gap-1 text-emerald-500 font-bold text-[10px] uppercase tracking-widest">
                         <ShieldCheck className="h-3 w-3" />
                         Verificado
                       </div>

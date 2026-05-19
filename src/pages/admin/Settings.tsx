@@ -48,13 +48,13 @@ export default function AdminSettings() {
     <AdminLayout>
       <div className="mb-8 flex items-center justify-between">
         <div>
-          <h1 className="font-display text-3xl font-bold text-white tracking-tight">Configurações do Sistema</h1>
+          <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Configurações do Sistema</h1>
           <p className="text-muted-foreground mt-1">Ajuste taxas, limites e informações de contato.</p>
         </div>
         <Button 
           onClick={saveSettings} 
           disabled={saving}
-          className="bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+          className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
         >
           {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
           Salvar Alterações
@@ -65,13 +65,13 @@ export default function AdminSettings() {
         {loading ? (
           <div className="col-span-full flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
         ) : settings.map((s) => (
-          <Card key={s.id} className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl group hover:border-primary/20 transition-all">
+          <Card key={s.id} className="border-border bg-card/50 backdrop-blur-xl group hover:border-primary/20 transition-all">
             <CardHeader className="pb-2">
               <div className="flex items-center gap-2">
-                <div className="p-2 rounded-lg bg-white/5 text-muted-foreground group-hover:text-primary transition-colors">
+                <div className="p-2 rounded-lg bg-secondary/20 text-muted-foreground group-hover:text-primary transition-colors">
                   {getIcon(s.key)}
                 </div>
-                <CardTitle className="text-sm font-bold uppercase tracking-widest text-slate-200">
+                <CardTitle className="text-sm font-bold uppercase tracking-widest text-foreground">
                   {s.key.replace(/_/g, ' ')}
                 </CardTitle>
               </div>
@@ -81,7 +81,7 @@ export default function AdminSettings() {
                 <Input 
                   value={s.value} 
                   onChange={(e) => handleUpdate(s.key, e.target.value)}
-                  className="border-white/5 bg-black/20 text-white focus:border-primary/50 font-bold"
+                  className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
                 />
                 <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">
                   {s.description || "Sem descrição disponível."}
@@ -92,11 +92,11 @@ export default function AdminSettings() {
         ))}
       </div>
 
-      <div className="mt-12 p-8 rounded-3xl border border-white/5 bg-gradient-to-br from-primary/5 to-purple-500/5 backdrop-blur-3xl relative overflow-hidden">
+      <div className="mt-12 p-8 rounded-3xl border border-border bg-gradient-to-br from-primary/5 to-purple-500/5 backdrop-blur-3xl relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 rounded-full blur-3xl -mr-32 -mt-32" />
         <div className="relative flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <h3 className="text-xl font-bold text-white flex items-center gap-2">
+            <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
               <ShieldCheck className="h-6 w-6 text-primary" />
               Segurança do Sistema
             </h3>
@@ -105,7 +105,7 @@ export default function AdminSettings() {
               Certifique-se de validar os valores antes de salvar.
             </p>
           </div>
-          <Button variant="outline" className="border-white/10 text-slate-300 hover:bg-white/5 h-12 px-8 rounded-xl font-bold">
+          <Button variant="outline" className="border-border text-foreground hover:bg-secondary/20 h-12 px-8 rounded-xl font-bold">
             Ver Logs de Auditoria
           </Button>
         </div>

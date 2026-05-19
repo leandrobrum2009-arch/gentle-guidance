@@ -115,7 +115,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
      <AdminLayout>
        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
          <div>
-           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Loteria Federal</h1>
+           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Loteria Federal</h1>
            <p className="text-muted-foreground mt-1">Sincronize ou registre resultados oficiais para as rifas.</p>
          </div>
           <div className="flex gap-2">
@@ -127,11 +127,11 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
                        <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Concurso</Label>
-                       <Input placeholder="0000" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.concurso} onChange={e => setManualResult(p => ({ ...p, concurso: e.target.value }))} />
+                       <Input placeholder="0000" className="bg-secondary/20 border-border h-12 rounded-xl" value={manualResult.concurso} onChange={e => setManualResult(p => ({ ...p, concurso: e.target.value }))} />
                     </div>
                     <div className="space-y-2">
                        <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Data do Sorteio</Label>
-                       <Input type="date" className="bg-white/5 border-white/10 h-12 rounded-xl" value={manualResult.data_sorteio} onChange={e => setManualResult(p => ({ ...p, data_sorteio: e.target.value }))} />
+                       <Input type="date" className="bg-secondary/20 border-border h-12 rounded-xl" value={manualResult.data_sorteio} onChange={e => setManualResult(p => ({ ...p, data_sorteio: e.target.value }))} />
                     </div>
                   </div>
                    <div className="grid grid-cols-1 gap-3">
@@ -139,7 +139,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                       <div key={n} className="space-y-1">
                          <div className="flex items-center gap-3">
                            <Label className="text-[10px] uppercase font-bold text-muted-foreground min-w-[70px]">{n}º Prêmio</Label>
-                           <Input placeholder="000000" className="bg-white/5 border-white/10 h-10 rounded-lg flex-1 font-mono font-bold tracking-widest" value={(manualResult as any)[`p${n}`]} onChange={e => setManualResult(p => ({ ...p, [`p${n}`]: e.target.value }))} />
+                           <Input placeholder="000000" className="bg-secondary/20 border-border h-10 rounded-lg flex-1 font-mono font-bold tracking-widest" value={(manualResult as any)[`p${n}`]} onChange={e => setManualResult(p => ({ ...p, [`p${n}`]: e.target.value }))} />
                          </div>
                       </div>
                     ))}
@@ -157,7 +157,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
           </div>
        </div>
  
-        <Card className="border-white/5 bg-[#0d0d0f]/50 backdrop-blur-xl overflow-hidden shadow-2xl">
+        <Card className="border-border bg-card/50 backdrop-blur-xl overflow-hidden shadow-2xl">
           <CardContent className="p-0">
             {isLoading ? (
               <div className="flex flex-col items-center justify-center py-32 gap-4">
@@ -166,8 +166,8 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
               </div>
             ) : (
               <Table>
-                <TableHeader className="bg-white/[0.02]">
-                  <TableRow className="border-white/5 hover:bg-transparent">
+                <TableHeader className="bg-card/[0.02]">
+                  <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Concurso</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Premiados (1º ao 5º)</TableHead>
@@ -176,11 +176,11 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                 </TableHeader>
                 <TableBody>
                   {results?.map((r: any) => (
-                    <TableRow key={r.id} className="border-white/5 hover:bg-white/[0.02] transition-colors group">
+                    <TableRow key={r.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                       <TableCell className="pl-8 py-4">
                         <div className="flex items-center gap-2">
                           <Hash className="h-3.5 w-3.5 text-primary" />
-                          <span className="text-sm font-bold text-white tracking-widest">{r.concurso}</span>
+                          <span className="text-sm font-bold text-foreground tracking-widest">{r.concurso}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -197,12 +197,12 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                               className={`flex flex-col items-center px-3 py-1.5 rounded-lg border ${
                                 p.premio === "1" 
                                   ? "bg-primary/20 border-primary/40 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]" 
-                                  : "bg-white/5 border-white/5"
+                                  : "bg-secondary/20 border-border"
                               }`}
                               title={`${p.premio}º Prêmio`}
                             >
                               <span className={`text-[8px] font-bold uppercase tracking-tighter ${p.premio === "1" ? "text-primary" : "text-muted-foreground"}`}>{p.premio}º</span>
-                              <span className={`font-mono text-xs font-bold ${p.premio === "1" ? "text-white" : "text-slate-300"}`}>{p.numero}</span>
+                              <span className={`font-mono text-xs font-bold ${p.premio === "1" ? "text-foreground" : "text-foreground"}`}>{p.numero}</span>
                             </div>
                           ))}
                         </div>
