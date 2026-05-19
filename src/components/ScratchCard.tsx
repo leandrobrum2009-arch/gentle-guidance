@@ -9,14 +9,25 @@ import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 
 interface ScratchCardProps {
-  prizeLabel: string;
+  prizeLabel?: string;
   prizeImage?: string;
-  isWinner: boolean;
+  isWinner?: boolean;
   onComplete?: () => void;
   cost?: number;
+  potentialPrizes?: string[];
 }
 
-const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }: ScratchCardProps) => {
+const ScratchCard = ({ 
+  prizeLabel: initialPrizeLabel, 
+  prizeImage, 
+  isWinner: initialIsWinner, 
+  onComplete, 
+  cost = 0,
+  potentialPrizes = []
+}: ScratchCardProps) => {
+  const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
+  const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScratched, setIsScratched] = useState(false);
