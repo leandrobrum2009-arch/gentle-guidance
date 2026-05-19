@@ -91,14 +91,18 @@ const Header = () => {
       <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-background/90 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
        <div className="container flex items-center justify-between">
          <div className="flex items-center gap-8">
-           <Link to="/" className="flex items-center gap-2">
-             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-               <Ticket className="h-5 w-5 text-primary-foreground" />
-             </div>
+            <Link to="/" className="flex items-center gap-2">
+              {siteSettings?.site_logo_url ? (
+                <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-9 w-auto object-contain" />
+              ) : (
+                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+                  <Ticket className="h-5 w-5 text-primary-foreground" />
+                </div>
+              )}
               <span className={`font-display text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'}`}>
-               Rifas<span className="text-primary">Pro</span>
-             </span>
-           </Link>
+                {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
+              </span>
+            </Link>
  
            <nav className="hidden items-center gap-6 lg:flex">
              {navLinks.map((link) => (
