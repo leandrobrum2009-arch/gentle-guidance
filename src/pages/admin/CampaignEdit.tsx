@@ -303,11 +303,85 @@ export default function AdminCampaignEdit() {
           </TabsContent>
 
           <TabsContent value="media" className="mt-6 space-y-6">
-             <Card className="p-6 rounded-2xl border-border shadow-sm space-y-4">
-               <Label>URL da Imagem de Capa</Label>
-               <Input value={form.image_url} onChange={(e) => set("image_url", e.target.value)} />
-               <Label>URL do Vídeo (YouTube)</Label>
-               <Input value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
+             <Card className="p-6 rounded-2xl border-border shadow-sm space-y-6">
+               <div className="space-y-4">
+                 <Label className="text-base font-bold">Imagem de Capa (Principal)</Label>
+                 <div className="flex flex-col gap-4">
+                   {form.image_url && (
+                     <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-border group">
+                       <img src={form.image_url} alt="Capa" className="w-full h-full object-cover" />
+                       <button 
+                        onClick={() => set("image_url", "")}
+                        className="absolute top-2 right-2 p-2 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                       >
+                         <X className="h-4 w-4" />
+                       </button>
+                     </div>
+                   )}
+                   <div className="flex items-center gap-4">
+                     <div className="flex-1">
+                        <Input 
+                          placeholder="Ou cole a URL da imagem aqui..." 
+                          value={form.image_url} 
+                          onChange={(e) => set("image_url", e.target.value)} 
+                        />
+                     </div>
+                     <Label className="cursor-pointer">
+                       <div className="flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-white font-bold text-sm transition-all hover:bg-primary/90">
+                         {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                         Fazer Upload
+                       </div>
+                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
+                     </Label>
+                   </div>
+                 </div>
+               </div>
+
+               <Separator />
+
+               <div className="space-y-4">
+                 <div className="flex items-center justify-between">
+                   <Label className="text-base font-bold">Galeria de Fotos (Slide)</Label>
+                   <Label className="cursor-pointer">
+                     <div className="flex items-center gap-2 px-4 h-9 rounded-lg bg-secondary text-foreground font-bold text-xs transition-all hover:bg-secondary/80">
+                       {uploading === 'gallery' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
+                       Adicionar Foto
+                     </div>
+                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
+                   </Label>
+                 </div>
+                 
+                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                   {form.gallery_urls.map((url, index) => (
+                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-border group">
+                       <img src={url} alt={`Galeria ${index}`} className="w-full h-full object-cover" />
+                       <button 
+                         onClick={() => removeGalleryImage(index)}
+                         className="absolute top-1 right-1 p-1.5 bg-destructive text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                       >
+                         <X className="h-3 w-3" />
+                       </button>
+                     </div>
+                   ))}
+                   {form.gallery_urls.length === 0 && (
+                     <div className="col-span-full py-8 border-2 border-dashed rounded-2xl flex flex-col items-center justify-center text-muted-foreground bg-secondary/20">
+                       <ImageIcon className="h-8 w-8 mb-2 opacity-20" />
+                       <p className="text-xs font-medium">Sua galeria está vazia.</p>
+                     </div>
+                   )}
+                 </div>
+               </div>
+
+               <Separator />
+
+               <div className="space-y-4">
+                 <Label className="text-base font-bold">Vídeo do YouTube</Label>
+                 <Input 
+                   placeholder="Link do vídeo (Ex: https://www.youtube.com/watch?v=...)" 
+                   value={form.video_url} 
+                   onChange={(e) => set("video_url", e.target.value)} 
+                 />
+               </div>
              </Card>
           </TabsContent>
 
