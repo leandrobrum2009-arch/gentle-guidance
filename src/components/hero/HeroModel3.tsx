@@ -11,10 +11,11 @@ import CountdownTimer from "../CountdownTimer";
 
 interface HeroModel3Props {
   campaigns: Campaign[];
+  delay?: number;
 }
 
-const HeroModel3 = ({ campaigns }: HeroModel3Props) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+const HeroModel3 = ({ campaigns, delay = 5000 }: HeroModel3Props) => {
+  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay })]);
 
   return (
     <section className="relative overflow-hidden py-12 bg-background" ref={emblaRef}>
