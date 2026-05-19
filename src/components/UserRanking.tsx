@@ -40,7 +40,7 @@ const UserRanking = () => {
           </div>
           <div>
             <h2 className="text-xl font-black uppercase italic tracking-tighter">Elite da Plataforma</h2>
-            <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest">Compita com os melhores e ganhe destaque</p>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Compita com os melhores e ganhe destaque</p>
           </div>
         </div>
 
@@ -102,7 +102,7 @@ const UserRanking = () => {
                 className="group flex items-center justify-between p-4 bg-[#0d0d0f]/50 border border-white/5 rounded-3xl hover:bg-white/5 hover:border-primary/30 transition-all duration-300"
               >
                 <div className="flex items-center gap-4">
-                  <span className="w-6 text-sm font-black italic text-slate-700 group-hover:text-primary transition-colors">
+                  <span className="w-6 text-sm font-black italic text-foreground group-hover:text-primary transition-colors">
                     #{index + 4}
                   </span>
                   <div className="relative">
@@ -119,7 +119,7 @@ const UserRanking = () => {
                   <div>
                     <p className="text-sm font-black uppercase tracking-tighter text-white">{user.name}</p>
                     <div className="flex items-center gap-3 mt-0.5">
-                      <Badge variant="outline" className="text-[8px] border-white/10 text-slate-500 uppercase font-black px-2 py-0 h-4">
+                      <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
                         {user.xp} XP
                       </Badge>
                     </div>
@@ -216,7 +216,7 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
             {category === 'points' ? user.points : user.xp}
             <span className="text-[8px] md:text-[10px] uppercase ml-1 opacity-50 font-black">{category === 'points' ? 'pts' : 'xp'}</span>
           </p>
-          <Badge variant="outline" className="text-[7px] md:text-[8px] border-white/10 text-slate-500 uppercase font-black px-2 py-0 h-3 md:h-4">
+          <Badge variant="outline" className="text-[7px] md:text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-3 md:h-4">
             NÍVEL {user.vip_level || 1} VIP
           </Badge>
         </div>

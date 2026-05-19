@@ -129,7 +129,7 @@
            </Link>
            <div>
              <h1 className="text-2xl font-black uppercase tracking-tighter italic">Checkout</h1>
-              <p className="text-xs text-slate-500 uppercase font-bold tracking-widest">Pedido #{order.id.slice(0, 8)}</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Pedido #{order.id.slice(0, 8)}</p>
            </div>
          </div>
  
@@ -143,7 +143,7 @@
                    </motion.div>
                    <div className="space-y-2">
                      <h2 className="text-3xl font-black uppercase italic">Pagamento Confirmado!</h2>
-                      <p className="text-slate-600 font-medium">Você já está participando do sorteio. Boa sorte!</p>
+                      <p className="text-muted-foreground font-medium">Você já está participando do sorteio. Boa sorte!</p>
                    </div>
                    <div className="pt-4 flex gap-4 justify-center">
                      <Link to="/conta"><Button className="rounded-xl font-bold">Ver meus números</Button></Link>
@@ -175,7 +175,7 @@
                              </div>
                            )}
                           <div className="text-center space-y-1">
-                            <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Valor a pagar</p>
+                            <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">Valor a pagar</p>
                             <p className="text-3xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
                           </div>
                           <Button className="w-full h-12 rounded-xl gap-2 font-black uppercase" onClick={copyPix}>
@@ -227,13 +227,13 @@
  
            <div className="space-y-6">
              <Card className="border-border/50 bg-card/50 backdrop-blur-sm sticky top-24">
-                <CardHeader className="pb-2 bg-slate-50/50">
-                  <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-slate-600">Resumo do Pedido</CardTitle>
+                <CardHeader className="pb-2 bg-secondary/50/50">
+                  <CardTitle className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Resumo do Pedido</CardTitle>
                 </CardHeader>
                <CardContent className="space-y-4">
                  <div className="space-y-1">
                    <p className="text-sm font-bold truncate">{order.campaigns?.title}</p>
-                    <p className="text-[10px] text-slate-500 font-bold">{order.quantity} x R$ {Number(order.campaigns?.ticket_price).toFixed(2)}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold">{order.quantity} x R$ {Number(order.campaigns?.ticket_price).toFixed(2)}</p>
                  </div>
                  <Separator />
                  <div className="flex items-center justify-between">
@@ -241,10 +241,10 @@
                    <span className="text-xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</span>
                  </div>
                  <div className="pt-2 space-y-3">
-                    <div className="flex items-center gap-2 text-[10px] text-slate-500 uppercase font-black">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black">
                      <ShieldCheck className="h-3 w-3 text-green-500" /> Transação 100% Segura
                    </div>
-                    <div className="flex items-center gap-2 text-[10px] text-slate-500 uppercase font-black">
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black">
                      <Clock className="h-3 w-3 text-primary" /> Reserva expira em 15min
                    </div>
                  </div>

@@ -90,14 +90,14 @@ export default function AdminWinners() {
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Ganhadores</h1>
-          <p className="text-slate-400 mt-1">Publique e gerencie os vencedores das campanhas.</p>
+          <p className="text-muted-foreground mt-1">Publique e gerencie os vencedores das campanhas.</p>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-primary/10 text-primary border border-primary/20">
             <Trophy className="h-6 w-6" />
           </div>
           <div>
-            <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Ganhadores</p>
+            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Total Ganhadores</p>
             <p className="text-xl font-bold text-white leading-none">{winners?.length || 0}</p>
           </div>
         </div>
@@ -105,7 +105,7 @@ export default function AdminWinners() {
 
       <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center">
         <div className="relative flex-1 max-w-md">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
             placeholder="Buscar por nome, rifa ou número..." 
             className="pl-10 border-white/5 bg-[#0d0d0f]/50 text-white focus:border-primary/50 h-12 rounded-xl"
@@ -125,12 +125,12 @@ export default function AdminWinners() {
             <DialogContent className="sm:max-w-lg bg-[#131316] border-white/10 text-white p-0 overflow-hidden rounded-3xl">
               <DialogHeader className="p-8 pb-0">
                 <DialogTitle className="text-2xl font-bold tracking-tight">Novo Ganhador</DialogTitle>
-                <DialogDescription className="text-slate-400">Preencha os dados do ganhador para exibir no site.</DialogDescription>
+                <DialogDescription className="text-muted-foreground">Preencha os dados do ganhador para exibir no site.</DialogDescription>
               </DialogHeader>
               <div className="grid gap-6 p-8">
                 <div className="space-y-4">
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Campanha</Label>
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Campanha</Label>
                     <Select value={form.campaign_id} onValueChange={(v) => set("campaign_id", v)}>
                       <SelectTrigger className="bg-white/5 border-white/10 h-12 rounded-xl focus:ring-primary/50">
                         <SelectValue placeholder="Selecione a campanha *" />
@@ -144,30 +144,30 @@ export default function AdminWinners() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Nome do Ganhador</Label>
+                      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Nome do Ganhador</Label>
                       <Input placeholder="Nome completo *" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.winner_name} onChange={(e) => set("winner_name", e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Número Bilhete</Label>
+                      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Número Bilhete</Label>
                       <Input placeholder="000000 *" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.ticket_number} onChange={(e) => set("ticket_number", e.target.value)} />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Descrição do Prêmio</Label>
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Descrição do Prêmio</Label>
                     <Input placeholder="Ex: iPhone 15 Pro Max *" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.prize_description} onChange={(e) => set("prize_description", e.target.value)} />
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Telefone</Label>
+                      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Telefone</Label>
                       <Input placeholder="(11) 9****-****" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.phone_masked} onChange={(e) => set("phone_masked", e.target.value)} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Data do Sorteio</Label>
+                      <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Data do Sorteio</Label>
                       <Input type="date" className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.draw_date} onChange={(e) => set("draw_date", e.target.value)} />
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-xs font-bold uppercase tracking-widest text-slate-500">Link do Vídeo (Opcional)</Label>
+                    <Label className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Link do Vídeo (Opcional)</Label>
                     <Input placeholder="https://youtube.com/..." className="bg-white/5 border-white/10 h-12 rounded-xl" value={form.video_url} onChange={(e) => set("video_url", e.target.value)} />
                   </div>
                 </div>
@@ -189,26 +189,26 @@ export default function AdminWinners() {
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-32 gap-4">
               <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="text-slate-500 text-sm font-medium animate-pulse uppercase tracking-widest">Carregando lista de heróis...</p>
+              <p className="text-muted-foreground text-sm font-medium animate-pulse uppercase tracking-widest">Carregando lista de heróis...</p>
             </div>
           ) : !filteredWinners.length ? (
             <div className="py-32 text-center">
               <div className="h-20 w-20 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
-                <Trophy className="h-10 w-10 text-slate-700" />
+                <Trophy className="h-10 w-10 text-foreground" />
               </div>
-              <p className="text-slate-400 font-bold uppercase tracking-widest text-sm">Nenhum ganhador encontrado</p>
-              <p className="text-slate-600 text-xs mt-2">Os grandes vencedores aparecerão aqui.</p>
+              <p className="text-muted-foreground font-bold uppercase tracking-widest text-sm">Nenhum ganhador encontrado</p>
+              <p className="text-muted-foreground text-xs mt-2">Os grandes vencedores aparecerão aqui.</p>
             </div>
           ) : (
             <Table>
               <TableHeader className="bg-white/[0.02]">
                 <TableRow className="border-white/5 hover:bg-transparent">
-                  <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Ganhador</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Campanha</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Bilhete</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Prêmio</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
-                  <TableHead className="text-right text-slate-400 font-bold uppercase text-[9px] tracking-widest pr-8 py-5">Ações</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Ganhador</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Campanha</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Bilhete</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Prêmio</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
+                  <TableHead className="text-right text-muted-foreground font-bold uppercase text-[9px] tracking-widest pr-8 py-5">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -221,7 +221,7 @@ export default function AdminWinners() {
                         </div>
                         <div className="flex flex-col">
                           <span className="text-sm font-bold text-slate-200 group-hover:text-primary transition-colors">{w.winner_name}</span>
-                          <span className="text-[10px] text-slate-500 font-medium">{w.phone_masked || "Telefone não informado"}</span>
+                          <span className="text-[10px] text-muted-foreground font-medium">{w.phone_masked || "Telefone não informado"}</span>
                         </div>
                       </div>
                     </TableCell>
@@ -245,7 +245,7 @@ export default function AdminWinners() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1.5 text-slate-400">
+                      <div className="flex items-center gap-1.5 text-muted-foreground">
                         <Calendar className="h-3.5 w-3.5" />
                         <span className="text-[10px] font-bold uppercase tracking-widest">{format(new Date(w.draw_date), "dd MMM, yyyy")}</span>
                       </div>
@@ -253,11 +253,11 @@ export default function AdminWinners() {
                     <TableCell className="text-right pr-8">
                       <div className="flex items-center justify-end gap-1">
                         {w.video_url && (
-                          <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-primary hover:bg-primary/10 rounded-xl" onClick={() => window.open(w.video_url, '_blank')}>
+                          <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-primary hover:bg-primary/10 rounded-xl" onClick={() => window.open(w.video_url, '_blank')}>
                             <ExternalLink className="h-4.5 w-4.5" />
                           </Button>
                         )}
-                        <Button variant="ghost" size="icon" className="h-10 w-10 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-xl" onClick={() => remove(w.id)}>
+                        <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10 rounded-xl" onClick={() => remove(w.id)}>
                           <Trash2 className="h-4.5 w-4.5" />
                         </Button>
                       </div>

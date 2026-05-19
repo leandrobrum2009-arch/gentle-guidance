@@ -50,8 +50,8 @@ export default function AdminCampaigns() {
     switch(s) {
       case "active": return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
       case "completed": return { label: "Finalizada", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" };
-      case "draft": return { label: "Rascunho", color: "bg-slate-500/10 text-slate-500 border-slate-500/20" };
-      default: return { label: s, color: "bg-slate-500/10 text-slate-500 border-slate-500/20" };
+      case "draft": return { label: "Rascunho", color: "bg-secondary/500/10 text-muted-foreground border-slate-500/20" };
+      default: return { label: s, color: "bg-secondary/500/10 text-muted-foreground border-slate-500/20" };
     }
   };
 
@@ -81,7 +81,7 @@ export default function AdminCampaigns() {
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Campanhas</h1>
-          <p className="text-slate-400 mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
+          <p className="text-muted-foreground mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
         </div>
         <Button 
           onClick={() => navigate("/admin/campanhas/nova")}
@@ -95,7 +95,7 @@ export default function AdminCampaigns() {
         <CardHeader className="border-b border-white/5 bg-white/5 pb-4">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
               <Input 
                 placeholder="Buscar por título ou slug..." 
                 className="pl-10 border-white/5 bg-black/20 text-white focus:border-primary/50"
@@ -106,21 +106,21 @@ export default function AdminCampaigns() {
             <div className="flex items-center gap-2">
               <Badge 
                 variant="outline" 
-                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-primary/20 border-primary/50 text-primary" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "all" ? "bg-primary/20 border-primary/50 text-primary" : "border-white/10 text-muted-foreground hover:bg-white/5"}`}
                 onClick={() => setFilter("all")}
               >
                 Todos
               </Badge>
               <Badge 
                 variant="outline" 
-                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "active" ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-500" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "active" ? "bg-emerald-500/20 border-emerald-500/50 text-emerald-500" : "border-white/10 text-muted-foreground hover:bg-white/5"}`}
                 onClick={() => setFilter("active")}
               >
                 Ativos
               </Badge>
               <Badge 
                 variant="outline" 
-                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "completed" ? "bg-blue-500/20 border-blue-500/50 text-blue-500" : "border-white/10 text-slate-400 hover:bg-white/5"}`}
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "completed" ? "bg-blue-500/20 border-blue-500/50 text-blue-500" : "border-white/10 text-muted-foreground hover:bg-white/5"}`}
                 onClick={() => setFilter("completed")}
               >
                 Finalizados
@@ -132,17 +132,17 @@ export default function AdminCampaigns() {
           {isLoading ? (
              <div className="flex flex-col items-center justify-center py-20 gap-4">
                <Loader2 className="h-10 w-10 animate-spin text-primary" />
-               <p className="text-slate-500 text-sm font-medium animate-pulse">Carregando campanhas...</p>
+               <p className="text-muted-foreground text-sm font-medium animate-pulse">Carregando campanhas...</p>
              </div>
           ) : (
             <Table>
                <TableHeader className="bg-white/[0.02]">
                  <TableRow className="hover:bg-transparent border-white/5">
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
-                   <TableHead className="text-slate-400 font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -158,7 +158,7 @@ export default function AdminCampaigns() {
                          </div>
                          <div className="flex flex-col">
                            <span className="text-sm font-bold text-white group-hover:text-primary transition-colors">{c.title}</span>
-                           <span className="text-[10px] text-slate-500 font-medium font-mono">/{c.slug}</span>
+                           <span className="text-[10px] text-muted-foreground font-medium font-mono">/{c.slug}</span>
                          <div className="flex items-center gap-1.5 mt-1">
                            {c.ticket_generation_type === 'auto' ? (
                              <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-400 bg-blue-500/5 uppercase tracking-tighter">Aleatória</Badge>
@@ -180,13 +180,13 @@ export default function AdminCampaigns() {
                      <TableCell className="py-4">
                        <div className="flex flex-col">
                          <span className="text-sm font-bold text-white">R$ {Number(c.ticket_price).toFixed(2)}</span>
-                         <span className="text-[10px] text-slate-500 font-medium">Preço Unitário</span>
+                         <span className="text-[10px] text-muted-foreground font-medium">Preço Unitário</span>
                        </div>
                      </TableCell>
                      <TableCell className="py-4 min-w-[150px]">
                        <div className="flex flex-col gap-1.5">
                          <div className="flex justify-between items-center text-[10px] font-bold">
-                           <span className="text-slate-400 uppercase tracking-tighter">{c.sold_tickets.toLocaleString()} VENDIDOS</span>
+                           <span className="text-muted-foreground uppercase tracking-tighter">{c.sold_tickets.toLocaleString()} VENDIDOS</span>
                            <span className="text-primary">{progress}%</span>
                          </div>
                          <Progress value={progress} className="h-1.5 bg-white/5" />
@@ -208,7 +208,7 @@ export default function AdminCampaigns() {
                          <Button 
                            variant="ghost" 
                            size="icon" 
-                           className="text-slate-400 hover:text-white hover:bg-white/5 rounded-lg"
+                           className="text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg"
                            onClick={() => navigate(`/admin/campanhas/editar/${c.id}`)}
                            title="Editar"
                          >
@@ -217,7 +217,7 @@ export default function AdminCampaigns() {
                          
                          <DropdownMenu>
                            <DropdownMenuTrigger asChild>
-                             <Button variant="ghost" size="icon" className="text-slate-400 hover:text-white hover:bg-white/5 rounded-lg">
+                             <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-white hover:bg-white/5 rounded-lg">
                                <MoreHorizontal className="h-4.5 w-4.5" />
                              </Button>
                            </DropdownMenuTrigger>
@@ -225,10 +225,10 @@ export default function AdminCampaigns() {
                              <DropdownMenuLabel>Ações Avançadas</DropdownMenuLabel>
                              <DropdownMenuSeparator className="bg-white/5" />
                              <DropdownMenuItem onClick={() => window.open(`/campanha/${c.id}`, '_blank')} className="gap-2 cursor-pointer">
-                               <ExternalLink className="h-4 w-4 text-slate-400" /> Ver no Site
+                               <ExternalLink className="h-4 w-4 text-muted-foreground" /> Ver no Site
                              </DropdownMenuItem>
                              <DropdownMenuItem onClick={() => duplicate(c)} className="gap-2 cursor-pointer">
-                               <Copy className="h-4 w-4 text-slate-400" /> Duplicar Rifas
+                               <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifas
                              </DropdownMenuItem>
                              <DropdownMenuSeparator className="bg-white/5" />
                              <DropdownMenuItem onClick={() => remove(c.id)} className="gap-2 cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
@@ -245,11 +245,11 @@ export default function AdminCampaigns() {
                    <TableRow>
                      <TableCell colSpan={5} className="py-20 text-center">
                         <div className="flex flex-col items-center gap-3">
-                          <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center text-slate-600">
+                          <div className="h-16 w-16 rounded-full bg-white/5 flex items-center justify-center text-muted-foreground">
                             <Search className="h-8 w-8" />
                           </div>
-                          <p className="text-slate-400 font-medium">Nenhuma campanha encontrada com os filtros atuais.</p>
-                          <Button variant="outline" onClick={() => { setSearch(""); setFilter("all"); }} className="border-white/10 text-slate-400">Limpar Filtros</Button>
+                          <p className="text-muted-foreground font-medium">Nenhuma campanha encontrada com os filtros atuais.</p>
+                          <Button variant="outline" onClick={() => { setSearch(""); setFilter("all"); }} className="border-white/10 text-muted-foreground">Limpar Filtros</Button>
                         </div>
                      </TableCell>
                    </TableRow>

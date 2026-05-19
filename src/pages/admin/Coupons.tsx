@@ -15,7 +15,7 @@ export default function AdminCoupons() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Cupons de Desconto</h1>
-          <p className="text-slate-400 mt-1">Crie códigos promocionais para aumentar suas vendas.</p>
+          <p className="text-muted-foreground mt-1">Crie códigos promocionais para aumentar suas vendas.</p>
         </div>
         <Button className="bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
           <Plus className="mr-2 h-4 w-4" /> Novo Cupom
@@ -30,12 +30,12 @@ export default function AdminCoupons() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Código</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Desconto</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Uso</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Expira em</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Status</TableHead>
-                  <TableHead className="text-right text-slate-400 font-bold uppercase text-[10px]">Ações</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Código</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Desconto</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Uso</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Expira em</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Status</TableHead>
+                  <TableHead className="text-right text-muted-foreground font-bold uppercase text-[10px]">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -62,7 +62,7 @@ export default function AdminCoupons() {
                         </div>
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-400 text-xs">
+                    <TableCell className="text-muted-foreground text-xs">
                       {c.expires_at ? (
                         <div className="flex items-center gap-1.5">
                           <Calendar className="h-3 w-3" />
@@ -71,15 +71,15 @@ export default function AdminCoupons() {
                       ) : 'Nunca'}
                     </TableCell>
                     <TableCell>
-                      <Badge className={c.is_active ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20" : "bg-slate-500/20 text-slate-400 border-slate-500/20"}>
+                      <Badge className={c.is_active ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20" : "bg-secondary/500/20 text-muted-foreground border-slate-500/20"}>
                         {c.is_active ? "ATIVO" : "INATIVO"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-white hover:bg-white/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-white hover:bg-white/10">
                         <Pencil className="h-4 w-4" />
                       </Button>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -87,7 +87,7 @@ export default function AdminCoupons() {
                 ))}
                 {coupons?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-10 text-slate-500 font-medium italic">
+                    <TableCell colSpan={6} className="text-center py-10 text-muted-foreground font-medium italic">
                       Nenhum cupom de desconto encontrado.
                     </TableCell>
                   </TableRow>

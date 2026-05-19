@@ -14,7 +14,7 @@ export default function AdminAffiliates() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Afiliados</h1>
-          <p className="text-slate-400 mt-1">Gerencie a rede de parceiros e comissões.</p>
+          <p className="text-muted-foreground mt-1">Gerencie a rede de parceiros e comissões.</p>
         </div>
         <Badge className="bg-primary/20 text-primary border-primary/20 py-1.5 px-4 font-bold tracking-wider">
           {affiliates?.length || 0} PARCEIROS
@@ -31,7 +31,7 @@ export default function AdminAffiliates() {
               <Badge variant="outline" className="text-[10px] text-emerald-500 border-emerald-500/20">ESTÁVEL</Badge>
             </div>
             <div className="mt-4">
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Total Comissões</p>
+              <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Total Comissões</p>
               <h3 className="text-3xl font-bold text-white mt-1">R$ 12.450,00</h3>
             </div>
           </CardContent>
@@ -46,7 +46,7 @@ export default function AdminAffiliates() {
               <Badge variant="outline" className="text-[10px] text-blue-500 border-blue-500/20">+4 HOJE</Badge>
             </div>
             <div className="mt-4">
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Afiliados Ativos</p>
+              <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Afiliados Ativos</p>
               <h3 className="text-3xl font-bold text-white mt-1">{affiliates?.length || 0}</h3>
             </div>
           </CardContent>
@@ -61,7 +61,7 @@ export default function AdminAffiliates() {
               <Badge variant="outline" className="text-[10px] text-purple-500 border-purple-500/20">TOP RANK</Badge>
             </div>
             <div className="mt-4">
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Clicks Totais</p>
+              <p className="text-sm font-bold text-muted-foreground uppercase tracking-widest">Clicks Totais</p>
               <h3 className="text-3xl font-bold text-white mt-1">45.890</h3>
             </div>
           </CardContent>
@@ -76,11 +76,11 @@ export default function AdminAffiliates() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Parceiro</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Código/Link</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Comissão</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Ganhos Totais</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Status</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Parceiro</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Código/Link</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Comissão</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Ganhos Totais</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -89,7 +89,7 @@ export default function AdminAffiliates() {
                     <TableCell>
                       <div className="flex flex-col">
                        <span className="font-bold text-white">{(a.profiles as any)?.name || "Sem Nome"}</span>
-                       <span className="text-[10px] text-slate-500">Afiliado Premium</span>
+                       <span className="text-[10px] text-muted-foreground">Afiliado Premium</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -107,7 +107,7 @@ export default function AdminAffiliates() {
                 ))}
                 {affiliates?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-10 text-slate-500 font-medium italic">
+                    <TableCell colSpan={5} className="text-center py-10 text-muted-foreground font-medium italic">
                       Nenhum afiliado encontrado.
                     </TableCell>
                   </TableRow>

@@ -15,7 +15,7 @@ export default function AdminNotifications() {
       <div className="mb-8 flex items-center justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-white tracking-tight">Notificações Push</h1>
-          <p className="text-slate-400 mt-1">Envie mensagens instantâneas para seus usuários.</p>
+          <p className="text-muted-foreground mt-1">Envie mensagens instantâneas para seus usuários.</p>
         </div>
         <Button className="bg-primary hover:bg-primary/90 text-white font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
           <Send className="mr-2 h-4 w-4" /> Nova Mensagem
@@ -30,10 +30,10 @@ export default function AdminNotifications() {
             <Table>
               <TableHeader>
                 <TableRow className="border-white/5 hover:bg-transparent">
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Mensagem</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Alvo</TableHead>
-                  <TableHead className="text-slate-400 font-bold uppercase text-[10px]">Data Envio</TableHead>
-                  <TableHead className="text-right text-slate-400 font-bold uppercase text-[10px]">Ações</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Mensagem</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Alvo</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Data Envio</TableHead>
+                  <TableHead className="text-right text-muted-foreground font-bold uppercase text-[10px]">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -42,7 +42,7 @@ export default function AdminNotifications() {
                     <TableCell>
                       <div className="flex flex-col max-w-md">
                         <span className="font-bold text-white tracking-tight">{n.title}</span>
-                        <span className="text-xs text-slate-400 mt-0.5 line-clamp-1">{n.body}</span>
+                        <span className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{n.body}</span>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -53,11 +53,11 @@ export default function AdminNotifications() {
                         </Badge>
                       </div>
                     </TableCell>
-                    <TableCell className="text-slate-400 text-xs">
+                    <TableCell className="text-muted-foreground text-xs">
                       {format(new Date(n.sent_at), 'dd MMM, HH:mm')}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-500 hover:text-rose-400 hover:bg-rose-500/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
@@ -65,7 +65,7 @@ export default function AdminNotifications() {
                 ))}
                 {notifications?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-10 text-slate-500 font-medium italic">
+                    <TableCell colSpan={4} className="text-center py-10 text-muted-foreground font-medium italic">
                       Nenhuma notificação enviada ainda.
                     </TableCell>
                   </TableRow>

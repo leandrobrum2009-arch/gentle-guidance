@@ -265,8 +265,8 @@ import { useAuth } from "@/contexts/AuthContext";
        <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="container py-6 space-y-6">
          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
            <div className="space-y-1">
-             <h1 className="text-2xl font-black text-slate-900 leading-tight">{campaign.title}</h1>
-              <p className="text-sm text-slate-600 font-medium">{campaign.subtitle}</p>
+             <h1 className="text-2xl font-black text-foreground leading-tight">{campaign.title}</h1>
+              <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
            </div>
            <div className="flex items-center gap-2">
              <Badge variant={isActive ? "default" : "secondary"} className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider">
@@ -283,10 +283,10 @@ import { useAuth } from "@/contexts/AuthContext";
          {/* Progress Bar Section */}
           <div className="bg-card rounded-3xl p-6 shadow-sm border border-border space-y-4">
            <div className="flex items-center justify-between">
-              <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-600 not-italic font-bold">concluído</span></span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
+              <span className="text-sm font-black text-foreground italic">{progress}% <span className="text-muted-foreground not-italic font-bold">concluído</span></span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
            </div>
-           <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+           <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
              <motion.div 
                initial={{ width: 0 }} 
                animate={{ width: `${progress}%` }} 
@@ -320,7 +320,7 @@ import { useAuth } from "@/contexts/AuthContext";
  
                  <TabsContent value="manual" className="p-6">
                    <div className="space-y-6">
-                      <p className="text-xs text-slate-600 text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
+                      <p className="text-xs text-muted-foreground text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
                      <TicketGrid 
                        totalTickets={campaign.total_tickets}
                        soldTickets={[...soldTickets, ...protectedNumbers]}
@@ -402,7 +402,7 @@ import { useAuth } from "@/contexts/AuthContext";
                  <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
                    <Info className="h-5 w-5 text-primary" /> Descrição
                  </h3>
-                 <div className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                 <div className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
                    {campaign.description}
                  </div>
                </div>
@@ -494,15 +494,15 @@ import { useAuth } from "@/contexts/AuthContext";
           </div>
 
           {/* Compact Inline Statistics Section */}
-          <section className="space-y-4 pt-10 border-t border-slate-100 overflow-hidden">
+          <section className="space-y-4 pt-10 border-t border-border overflow-hidden">
             <div className="flex items-center justify-between px-2">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
-                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-900 flex items-center gap-1.5 italic">
+                <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground flex items-center gap-1.5 italic">
                   <Activity className="h-3.5 w-3.5 text-primary" /> Live <span className="text-primary">Stats</span>
                 </h2>
               </div>
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Atualizado agora</span>
+              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Atualizado agora</span>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -510,14 +510,14 @@ import { useAuth } from "@/contexts/AuthContext";
               <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 px-2">
                 {/* Priority Ranking Info */}
                 {campaign.ranking_enabled && campaignRanking?.slice(0, 3).map((rank: any, i: number) => (
-                  <div key={`rank-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-white px-3 py-2 rounded-full border border-slate-100 shadow-sm">
+                  <div key={`rank-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-white px-3 py-2 rounded-full border border-border shadow-sm">
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black",
-                      i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-slate-100 text-slate-500'
+                      i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-secondary text-muted-foreground'
                     )}>
                       #{i + 1}
                     </div>
-                    <span className="text-[11px] font-bold text-slate-700 whitespace-nowrap">{rank.name}</span>
+                    <span className="text-[11px] font-bold text-foreground whitespace-nowrap">{rank.name}</span>
                     <Badge variant="outline" className="h-5 px-1.5 text-[8px] border-amber-200 text-amber-600 font-black">{rank.total_tickets} cotas</Badge>
                   </div>
                 ))}
@@ -527,16 +527,16 @@ import { useAuth } from "@/contexts/AuthContext";
                   .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
                   .slice(0, 8)
                   .map((activity, i) => (
-                    <div key={`act-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-slate-50/80 px-3 py-2 rounded-full border border-slate-100/50">
+                    <div key={`act-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-secondary/50/80 px-3 py-2 rounded-full border border-border/50">
                       <Avatar className="h-6 w-6 border border-white shadow-sm">
                         <AvatarImage src={activity.profiles?.avatar_url || ""} />
                         <AvatarFallback className="bg-primary/10 text-primary text-[8px] font-black">
                           {activity.profiles?.name?.[0] || "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <p className="text-[11px] font-medium text-slate-600 whitespace-nowrap">
-                        <span className="font-bold text-slate-900">{activity.profiles?.name?.split(' ')[0] || "Usuário"}</span>
-                        <span className="mx-1.5 text-slate-400">ganhou</span>
+                      <p className="text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+                        <span className="font-bold text-foreground">{activity.profiles?.name?.split(' ')[0] || "Usuário"}</span>
+                        <span className="mx-1.5 text-muted-foreground">ganhou</span>
                         <span className="text-primary font-black uppercase italic text-[10px]">{(activity as any).prize_label || (activity as any).prize_title}</span>
                       </p>
                     </div>
@@ -560,7 +560,7 @@ import { useAuth } from "@/contexts/AuthContext";
        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/80 backdrop-blur-lg border-t lg:hidden">
          <div className="flex items-center gap-4">
            <div className="flex-1">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500">Valor cota</p>
+             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Valor cota</p>
              <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
            </div>
            <Button 
