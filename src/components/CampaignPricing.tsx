@@ -13,9 +13,9 @@ interface CampaignPricingProps {
 }
 
 const DEFAULT_BUNDLES: PriceBundle[] = [
-  { quantity: 10, price: 9.90, label: "Econômico" },
-  { quantity: 50, price: 45.00, label: "Mais Popular", is_popular: true },
-  { quantity: 100, price: 80.00, label: "Melhor Valor" },
+  { quantity: 50, price: 45.00, label: "Econômico" },
+  { quantity: 100, price: 80.00, label: "Mais Popular", is_popular: true },
+  { quantity: 500, price: 350.00, label: "Melhor Valor" },
 ];
 
 const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
@@ -46,12 +46,23 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                   ? "border-primary bg-primary/10 ring-1 ring-primary"
                   : "border-border bg-card hover:border-primary/50"
              )}
-           >
-             <span className="text-xl font-black text-foreground">+{bundle.quantity}</span>
-             <span className="text-[9px] font-black uppercase tracking-widest text-foreground/70 mt-0.5">Títulos</span>
-             <div className="mt-2 text-sm font-black text-primary">
-               R$ {bundle.price.toFixed(2).replace(".", ",")}
-             </div>
+            >
+              {bundle.label && (
+                <Badge 
+                  variant="secondary" 
+                  className={cn(
+                    "absolute -top-2 left-1/2 -translate-x-1/2 px-2 py-0 text-[8px] font-black uppercase tracking-wider rounded-full border border-primary/20",
+                    bundle.is_popular ? "bg-primary text-white" : "bg-card text-muted-foreground"
+                  )}
+                >
+                  {bundle.label}
+                </Badge>
+              )}
+              <span className="text-xl font-black text-foreground">+{bundle.quantity}</span>
+              <span className="text-[9px] font-black uppercase tracking-widest text-foreground/70 mt-0.5">Cotas</span>
+              <div className="mt-2 text-sm font-black text-primary">
+                R$ {bundle.price.toFixed(2).replace(".", ",")}
+              </div>
              {quantity === bundle.quantity && (
                <div className="absolute -right-1.5 -top-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-white shadow-sm">
                  <Check className="h-3 w-3" />
@@ -71,10 +82,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                </span>
              </div>
            </div>
-           <div className="text-right">
-             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Títulos</p>
-             <p className="text-xl font-black text-foreground">{quantity || 0}</p>
-           </div>
+            <div className="text-right">
+              <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Cotas</p>
+              <p className="text-xl font-black text-foreground">{quantity || 0}</p>
+            </div>
          </div>
  
          <Button

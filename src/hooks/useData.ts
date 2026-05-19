@@ -48,6 +48,9 @@ export interface Campaign {
   show_roulette_status?: boolean;
   roulette_rules?: { min_tickets: number; spins: number }[];
   main_prizes?: { position: number, prize: string }[];
+  sections_order?: string[];
+  show_timer?: boolean;
+  timer_end_date?: string | null;
   created_at: string;
 }
 

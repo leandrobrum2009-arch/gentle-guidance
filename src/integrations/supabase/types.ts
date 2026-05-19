@@ -170,14 +170,17 @@ export type Database = {
           roulette_rules: Json | null
           roulette_spin_cost: number | null
           sales_goal: number | null
+          sections_order: Json | null
           show_instant_prizes: boolean | null
           show_roulette_status: boolean | null
+          show_timer: boolean | null
           slug: string
           sold_tickets: number
           status: string
           subtitle: string | null
           ticket_generation_type: string | null
           ticket_price: number
+          timer_end_date: string | null
           title: string
           total_tickets: number
           updated_at: string
@@ -213,14 +216,17 @@ export type Database = {
           roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          sections_order?: Json | null
           show_instant_prizes?: boolean | null
           show_roulette_status?: boolean | null
+          show_timer?: boolean | null
           slug: string
           sold_tickets?: number
           status?: string
           subtitle?: string | null
           ticket_generation_type?: string | null
           ticket_price?: number
+          timer_end_date?: string | null
           title: string
           total_tickets?: number
           updated_at?: string
@@ -256,14 +262,17 @@ export type Database = {
           roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          sections_order?: Json | null
           show_instant_prizes?: boolean | null
           show_roulette_status?: boolean | null
+          show_timer?: boolean | null
           slug?: string
           sold_tickets?: number
           status?: string
           subtitle?: string | null
           ticket_generation_type?: string | null
           ticket_price?: number
+          timer_end_date?: string | null
           title?: string
           total_tickets?: number
           updated_at?: string
