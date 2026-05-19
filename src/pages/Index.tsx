@@ -56,7 +56,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
         <div className="flex items-center gap-2">
           <Icon className="h-5 w-5 text-primary" />
           <h2 className="font-display text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">
-            {title.split(' ')[0]} <span className="text-primary neon-text-primary">{title.split(' ').slice(1).join(' ')}</span>
+            {title.split(' ')[0]} <span className="text-animate-gradient">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
         <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
