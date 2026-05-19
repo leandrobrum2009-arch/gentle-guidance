@@ -1213,6 +1213,10 @@ export type Database = {
         Args: { p_campaign_id: string; p_multiplier: number }
         Returns: Json
       }
+      process_scratch_card_play: {
+        Args: { p_campaign_id?: string; p_cost?: number }
+        Returns: Json
+      }
       reserve_tickets: {
         Args: {
           p_campaign_id: string
