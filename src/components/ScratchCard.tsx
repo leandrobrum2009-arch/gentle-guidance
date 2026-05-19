@@ -153,6 +153,23 @@ const ScratchCard = ({
         spread: 70,
         origin: { y: 0.6 }
       });
+      
+      // Add to history
+      const newEntry = {
+        name: "Você",
+        prize: prizeLabel,
+        time: "Agora",
+        isWinner: true
+      };
+      setHistory(prev => [newEntry, ...prev].slice(0, 5));
+    } else {
+      const newEntry = {
+        name: "Você",
+        prize: "Tente novamente",
+        time: "Agora",
+        isWinner: false
+      };
+      setHistory(prev => [newEntry, ...prev].slice(0, 5));
     }
     if (onComplete) onComplete();
   };
