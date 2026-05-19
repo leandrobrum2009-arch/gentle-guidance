@@ -249,35 +249,30 @@ aside:has(a[href*="lovable.dev"]) {
    .border-light-path::before {
      content: "";
      position: absolute;
-     inset: -1px;
-     padding: 1px;
+     inset: -1.5px;
+     padding: 1.5px;
      border-radius: inherit;
      background: linear-gradient(
-       var(--angle, 0deg),
-       transparent 0%,
-       transparent 40%,
-       #4ade80 50%,
-       transparent 60%,
+       90deg, 
+       transparent 0%, 
+       transparent 25%, 
+       #4ade80 50%, 
+       transparent 75%, 
        transparent 100%
      );
+     background-size: 200% 100%;
      mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
      mask-composite: exclude;
      -webkit-mask-composite: destination-out;
-     animation: rotate-angle 4s linear infinite;
+     animation: border-shimmer 3s infinite linear;
      pointer-events: none;
    }
 
-   @property --angle {
-     syntax: "<angle>";
-     initial-value: 0deg;
-     inherits: false;
+   @keyframes border-shimmer {
+     0% { background-position: 100% 0; }
+     100% { background-position: -100% 0; }
    }
 
-   @keyframes rotate-angle {
-     to {
-       --angle: 360deg;
-     }
-   }
  }
