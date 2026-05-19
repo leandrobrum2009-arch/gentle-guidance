@@ -311,8 +311,7 @@ aside:has(a[href*="lovable.dev"]) {
      display: inline-block;
    }
 
-   .text-animate-gradient:hover {
-   }
+   /* Animating gradient text */
 
    @keyframes text-shimmer {
      from {
