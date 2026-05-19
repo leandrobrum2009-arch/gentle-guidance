@@ -299,20 +299,26 @@ const Index = () => {
             ) : (
               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
                 {(winners && winners.length > 0 ? winners : [
-                  { id: "1", winner_name: "Ricardo Silva", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "2", winner_name: "Juliana Costa", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "3", winner_name: "Fernando Souza", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
-                  { id: "4", winner_name: "Mariana Alves", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" }
+                   { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "2", winner_name: "Maria Luiza", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "3", winner_name: "Carlos Manoel", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=256&h=256&auto=format&fit=crop" },
+                   { id: "4", winner_name: "Beatriz Souza", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop" }
                 ]).slice(0, 4).map((winner, i) => (
                   <div key={winner.id} className="relative group">
                     {/* Speech Bubble / Balloon Effect */}
                     <motion.div
-                      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.9 }}
                       whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                      transition={{ delay: i * 0.2 }}
-                      className="absolute -top-12 left-6 right-6 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg z-20 hidden group-hover:block animate-bounce"
+                      transition={{ 
+                        delay: i * 0.2,
+                        duration: 0.5,
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                        repeatDelay: 5
+                      }}
+                      className="absolute -top-14 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
                     >
-                      "Acreditei e ganhei!"
+                      {["EU GANHEI!", "ACREDITEI E FOI!", "DEU BOM!", "SÓ ALEGRIA!"][i % 4]}
                       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 border-t-8 border-t-primary border-x-8 border-x-transparent" />
                     </motion.div>
                     
