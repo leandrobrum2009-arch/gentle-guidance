@@ -560,7 +560,7 @@ const CampaignDetail = () => {
             <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
           </div>
           <Button 
-            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20"
+            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
             disabled={campaign.status !== "active"}
             onClick={() => {
               const element = document.getElementById('purchase-tabs');
