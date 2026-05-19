@@ -155,11 +155,11 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
          >
            {[...Array(10)].map((_, i) => (
              <div key={i} className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
-               <span>PARTICIPE AGORA</span>
+               <span>ÚLTIMAS COTAS DISPONÍVEIS</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>PRÊMIOS INSTANTÂNEOS</span>
+               <span>PRÊMIOS INSTANTÂNEOS NO PIX</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>SORTEIO GARANTIDO</span>
+               <span>SORTEIO 100% GARANTIDO</span>
                <div className="h-1 w-1 rounded-full bg-primary" />
              </div>
            ))}
