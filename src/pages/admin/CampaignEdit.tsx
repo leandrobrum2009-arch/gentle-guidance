@@ -18,6 +18,8 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { compressImage } from "@/lib/image-upload";
+
 
 interface CampaignForm {
   title: string; slug: string; subtitle: string; description: string; image_url: string; ticket_price: number;
