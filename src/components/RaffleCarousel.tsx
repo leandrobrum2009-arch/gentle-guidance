@@ -25,7 +25,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
        <div className="overflow-hidden" ref={emblaRef}>
          <div className="flex">
             {campaigns.map((campaign, index) => (
-              <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[400px] md:h-[500px] lg:h-[450px]">
+               <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[320px] md:h-[400px] lg:h-[380px]">
                 {/* Background with scale effect */}
                 <div className="absolute inset-0 overflow-hidden">
                   <motion.img 
@@ -73,7 +73,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                             <CountdownTimer targetDate={campaign.draw_date} className="scale-100 origin-left" />
                          </motion.div>
                        )}
-                        <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_10px_rgba(0,0,0,0.3)] text-foreground">
+                         <h1 className="text-2xl md:text-4xl lg:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter filter drop-shadow-[0_0_10px_rgba(0,0,0,0.3)] text-foreground">
                         {campaign.title.split(' ')[0]} <br />
                         <span className="text-primary neon-text-primary">
                           {campaign.title.split(' ').slice(1).join(' ')}
@@ -135,7 +135,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
           className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-card/20 backdrop-blur-md border border-border opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={() => { scrollPrev(); playSound('click'); }}
         >
-         <ChevronLeft className="h-8 w-8 text-white" />
+          <ChevronLeft className="h-8 w-8 text-foreground" />
        </Button>
        <Button 
          variant="ghost" 
@@ -143,7 +143,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
           className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-card/20 backdrop-blur-md border border-border opacity-0 group-hover:opacity-100 transition-opacity"
          onClick={scrollNext}
        >
-         <ChevronRight className="h-8 w-8 text-white" />
+          <ChevronRight className="h-8 w-8 text-foreground" />
        </Button>
  
        {/* Progress Bar (Simulated for each slide) */}
