@@ -66,8 +66,8 @@ const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
 
-  const featuredCampaign = campaigns?.find((c) => c.featured && c.status === "active") || campaigns?.find(c => c.status === "active");
-  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && c.status === 'active') ?? [];
+  const featuredCampaign = campaigns?.find((c) => c.featured && (c.status === "active" || c.status === "paused")) || campaigns?.find(c => c.status === "active");
+  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && (c.status === 'active' || c.status === 'paused' || c.status === 'completed' || c.status === 'audit')) ?? [];
   const endingSoon = campaigns?.filter(c => c.status === 'active' && c.sold_tickets / c.total_tickets > 0.8) ?? [];
 
    return (
