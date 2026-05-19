@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box, Plus, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -16,11 +16,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function AdminSettings() {
   const [settings, setSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [customPresets, setCustomPresets] = useState<any[]>([]);
+  const [isSavingPreset, setIsSavingPreset] = useState(false);
+  const [newPresetName, setNewPresetName] = useState("");
 
   const presets = [
     {
@@ -103,7 +115,52 @@ export default function AdminSettings() {
 
   useEffect(() => {
     fetchSettings();
+    fetchCustomPresets();
   }, []);
+
+  const fetchCustomPresets = async () => {
+    const { data, error } = await supabase.from("custom_presets").select("*").order("created_at", { ascending: false });
+    if (!error) setCustomPresets(data);
+  };
+
+  const saveCustomPreset = async () => {
+    if (!newPresetName.trim()) {
+      toast.error("Por favor, insira um nome para o preset.");
+      return;
+    }
+
+    const presetValues: Record<string, string> = {};
+    settings.forEach(s => {
+      // Only save keys that are part of the visual identity
+      if (s.key.includes('color') || s.key.includes('shimmer') || s.key.includes('glow') || s.key.includes('transition') || s.key.includes('easing') || s.key.includes('hero_style')) {
+        presetValues[s.key] = s.value;
+      }
+    });
+
+    const { error } = await supabase.from("custom_presets").insert({
+      name: newPresetName,
+      values: presetValues
+    });
+
+    if (!error) {
+      toast.success("Preset personalizado salvo!");
+      setNewPresetName("");
+      setIsSavingPreset(false);
+      fetchCustomPresets();
+    } else {
+      toast.error("Erro ao salvar preset.");
+    }
+  };
+
+  const deleteCustomPreset = async (id: string) => {
+    const { error } = await supabase.from("custom_presets").delete().eq("id", id);
+    if (!error) {
+      toast.success("Preset removido.");
+      fetchCustomPresets();
+    } else {
+      toast.error("Erro ao remover preset.");
+    }
+  };
 
   const fetchSettings = async () => {
     setLoading(true);
@@ -193,29 +250,105 @@ export default function AdminSettings() {
       </div>
 
       {/* Presets Section */}
-      <div className="mb-8">
-        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">Presets Visuais Sugeridos</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {presets.map((preset, idx) => (
-            <button
-              key={idx}
-              onClick={() => applyPreset(preset.values)}
-              className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
-            >
-              <div className="w-full flex justify-between items-center">
-                <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
-                  {preset.icon}
+      <div className="mb-8 space-y-6">
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary">Presets Visuais Sugeridos</h2>
+            <Dialog open={isSavingPreset} onOpenChange={setIsSavingPreset}>
+              <DialogTrigger asChild>
+                <Button variant="ghost" size="sm" className="h-8 text-[10px] font-black uppercase tracking-widest hover:text-primary transition-colors">
+                  <Plus className="mr-1 h-3 w-3" />
+                  Salvar Preset Atual
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-card border-border backdrop-blur-xl">
+                <DialogHeader>
+                  <DialogTitle className="text-foreground">Salvar Preset Personalizado</DialogTitle>
+                  <DialogDescription className="text-muted-foreground">
+                    Dê um nome para as configurações visuais atuais para poder reutilizá-las depois.
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="py-4">
+                  <Label htmlFor="name" className="text-foreground">Nome do Preset</Label>
+                  <Input
+                    id="name"
+                    value={newPresetName}
+                    onChange={(e) => setNewPresetName(e.target.value)}
+                    placeholder="Ex: Minimalista Azul, Neon 2026..."
+                    className="mt-2 border-border bg-secondary/20 text-foreground"
+                  />
                 </div>
-                <div className="flex -space-x-1">
-                  {preset.colors.map((c, i) => (
-                    <div key={i} className="w-4 h-4 rounded-full border border-card shadow-sm" style={{ backgroundColor: c }} />
-                  ))}
+                <DialogFooter>
+                  <Button variant="outline" onClick={() => setIsSavingPreset(false)} className="border-border text-foreground hover:bg-secondary/20 font-bold">Cancelar</Button>
+                  <Button onClick={saveCustomPreset} className="bg-primary hover:bg-primary/90 text-foreground font-bold">Salvar Preset</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {presets.map((preset, idx) => (
+              <button
+                key={idx}
+                onClick={() => applyPreset(preset.values)}
+                className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+              >
+                <div className="w-full flex justify-between items-center">
+                  <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
+                    {preset.icon}
+                  </div>
+                  <div className="flex -space-x-1">
+                    {preset.colors.map((c, i) => (
+                      <div key={i} className="w-4 h-4 rounded-full border border-card shadow-sm" style={{ backgroundColor: c }} />
+                    ))}
+                  </div>
                 </div>
-              </div>
-              <span className="w-full text-xs font-black uppercase tracking-widest">{preset.name}</span>
-            </button>
-          ))}
+                <span className="w-full text-xs font-black uppercase tracking-widest">{preset.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
+
+        {customPresets.length > 0 && (
+          <div>
+            <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">Meus Presets Personalizados</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+              {customPresets.map((preset) => (
+                <div key={preset.id} className="relative group">
+                  <button
+                    onClick={() => applyPreset(preset.values)}
+                    className="w-full flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+                  >
+                    <div className="w-full flex justify-between items-center">
+                      <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
+                        <Box className="h-4 w-4" />
+                      </div>
+                      <div className="flex -space-x-1">
+                        {/* Try to extract some colors for the preview */}
+                        {[
+                          preset.values.primary_color || "#888",
+                          preset.values.title_shimmer_primary || "#999",
+                          preset.values.border_shimmer_color || "#aaa"
+                        ].map((c, i) => (
+                          <div key={i} className="w-4 h-4 rounded-full border border-card shadow-sm" style={{ backgroundColor: c }} />
+                        ))}
+                      </div>
+                    </div>
+                    <span className="w-full text-xs font-black uppercase tracking-widest truncate pr-6">{preset.name}</span>
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteCustomPreset(preset.id);
+                    }}
+                    className="absolute top-2 right-2 p-1.5 rounded-lg bg-destructive/10 text-destructive opacity-0 group-hover:opacity-100 transition-opacity hover:bg-destructive hover:text-white"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
