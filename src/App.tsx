@@ -30,6 +30,7 @@ import CampaignDetail from "./pages/CampaignDetail";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import Winners from "./pages/Winners";
+import Preview from "./pages/Preview";
 import Announcements from "./pages/Announcements";
 import Support from "./pages/Support";
 import NotFound from "./pages/NotFound";
@@ -69,7 +70,8 @@ const App = () => {
                 <Route path="/ganhadores" element={<Winners />} />
                 <Route path="/federal" element={<FederalResults />} />
                 <Route path="/comunicados" element={<Announcements />} />
-                <Route path="/contato" element={<Support />} />
+              <Route path="/contato" element={<Support />} />
+              <Route path="/preview" element={<Preview />} />
                 <Route path="/roleta" element={<Roulette />} />
                 <Route path="/caixa-misteriosa" element={<MysteryBox />} />
                 <Route path="/ranking" element={<Ranking />} />
