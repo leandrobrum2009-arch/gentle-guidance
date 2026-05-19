@@ -6,11 +6,12 @@ import { Link } from "react-router-dom";
 
 interface HeroModel4Props {
   campaigns: Campaign[];
+  delay?: number;
 }
 
-const HeroModel4 = ({ campaigns }: HeroModel4Props) => {
+const HeroModel4 = ({ campaigns, delay = 5000 }: HeroModel4Props) => {
   const [emblaRef] = useEmblaCarousel({ loop: true }, [
-    Autoplay({ delay: 5000, stopOnInteraction: false })
+    Autoplay({ delay, stopOnInteraction: false })
   ]);
 
   return (
