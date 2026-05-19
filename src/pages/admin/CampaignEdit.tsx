@@ -112,10 +112,38 @@ export default function AdminCampaignEdit() {
     }
   };
 
-  const removeGalleryImage = (index: number) => {
-    const newGallery = [...form.gallery_urls];
-    newGallery.splice(index, 1);
-    set("gallery_urls", newGallery);
+  const deleteStorageFile = async (url: string) => {
+    try {
+      const fileName = url.split('/').pop();
+      if (!fileName) return;
+
+      const { error } = await supabase.storage
+        .from('campaigns')
+        .remove([fileName]);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error("Erro ao deletar arquivo do storage:", error);
+    }
+  };
+
+  const removeGalleryImage = async (index: number) => {
+    const urlToRemove = form.gallery_urls[index];
+    if (confirm("Deseja realmente excluir esta imagem permanentemente?")) {
+      await deleteStorageFile(urlToRemove);
+      const newGallery = [...form.gallery_urls];
+      newGallery.splice(index, 1);
+      set("gallery_urls", newGallery);
+      toast({ title: "Sucesso", description: "Imagem removida e deletada do servidor." });
+    }
+  };
+
+  const removeCoverImage = async () => {
+    if (form.image_url && confirm("Deseja realmente excluir a imagem de capa permanentemente?")) {
+      await deleteStorageFile(form.image_url);
+      set("image_url", "");
+      toast({ title: "Sucesso", description: "Capa removida e deletada do servidor." });
+    }
   };
 
   const set = (k: keyof CampaignForm, v: any) => {
