@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { ThemeToggle } from "./ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 
@@ -110,7 +111,8 @@ const Header = () => {
            </nav>
          </div>
 
-         <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
            <Link to="/contato" className="hidden sm:block">
              <Button variant="ghost" size="sm" className="gap-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                <Activity className="h-4 w-4 text-primary" />
