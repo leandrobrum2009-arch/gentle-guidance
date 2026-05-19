@@ -173,10 +173,10 @@ const Index = () => {
                         {item.badge}
                       </Badge>
                     )}
-                    <div className="h-12 w-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
+                    <div className="h-12 w-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all border-light-path border-[#22c55e]/30">
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
+                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2 group-hover:text-animate-gradient transition-all">{item.title}</h3>
                     <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>
