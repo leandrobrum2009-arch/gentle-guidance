@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion } from "framer-motion";
-import { ShoppingCart, Zap, Check } from "lucide-react";
+import { ShoppingCart, Zap, Check, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Campaign, PriceBundle } from "@/hooks/useData";
@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
 
 interface CampaignPricingProps {
   campaign: Campaign;
-   onBuy: (quantity: number | string[]) => void;
+  onBuy: (quantity: number | string[]) => void;
+  isPurchasing?: boolean;
 }
 
 const DEFAULT_BUNDLES: PriceBundle[] = [
@@ -17,7 +18,7 @@ const DEFAULT_BUNDLES: PriceBundle[] = [
   { quantity: 100, price: 80.00, label: "Melhor Valor" },
 ];
 
-const CampaignPricing = ({ campaign, onBuy }: CampaignPricingProps) => {
+const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
   const [quantity, setQuantity] = useState<number>(0);
   const bundles = campaign.price_bundles || DEFAULT_BUNDLES;
 
@@ -79,10 +80,20 @@ const CampaignPricing = ({ campaign, onBuy }: CampaignPricingProps) => {
          <Button
            size="lg"
            className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200"
-           disabled={quantity === 0 || campaign.status !== "active"}
+           disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
            onClick={() => onBuy(quantity)}
          >
-           Quero Participar
+           {isPurchasing ? (
+             <>
+               <Loader2 className="h-5 w-5 animate-spin" />
+               Reservando...
+             </>
+           ) : (
+             <>
+               <Zap className="h-5 w-5 fill-current" />
+               Quero Participar
+             </>
+           )}
          </Button>
          
          <div className="mt-4 flex items-center justify-center gap-2">
