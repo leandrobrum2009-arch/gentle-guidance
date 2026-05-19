@@ -15,7 +15,7 @@ interface HeroModel3Props {
 }
 
 const HeroModel3 = ({ campaigns, delay = 5000 }: HeroModel3Props) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [Autoplay({ delay })]);
+  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 45 }, [Autoplay({ delay })]);
 
   return (
     <section className="relative overflow-hidden py-12 bg-background" ref={emblaRef}>

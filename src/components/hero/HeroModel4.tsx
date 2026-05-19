@@ -10,7 +10,7 @@ interface HeroModel4Props {
 }
 
 const HeroModel4 = ({ campaigns, delay = 5000 }: HeroModel4Props) => {
-  const [emblaRef] = useEmblaCarousel({ loop: true }, [
+  const [emblaRef] = useEmblaCarousel({ loop: true, duration: 50 }, [
     Autoplay({ delay, stopOnInteraction: false })
   ]);
 
