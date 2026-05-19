@@ -2,39 +2,6 @@ import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
  import { 
     User, LogOut, Trophy, History, Coins, Activity, Camera,
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-
-    const fileExt = file.name.split('.').pop();
-    const filePath = `${user.id}/${Math.random()}.${fileExt}`;
-
-    try {
-      const { error: uploadError } = await supabase.storage
-        .from('avatars')
-        .upload(filePath, file, { upsert: true });
-
-      if (uploadError) throw uploadError;
-
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(filePath);
-
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .update({ avatar_url: publicUrl })
-        .eq('user_id', user.id);
-
-      if (updateError) throw updateError;
-
-      setProfile({ ...profile, avatar_url: publicUrl });
-      toast.success("Avatar atualizado com sucesso!");
-      queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
-    } catch (error: any) {
-      toast.error("Erro ao fazer upload do avatar: " + error.message);
-    }
-  };
-
     Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
     Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
     Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
@@ -232,12 +199,12 @@ import { cn } from "@/lib/utils";
                   </div>
                   <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
-                  <div className="w-full bg-white/5 p-4 rounded-xl border border-white/5">
+                  <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
                     <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
                       <span>Nível {profile?.vip_level || 1} VIP</span>
                       <span>{profile?.xp || 0} XP</span>
                     </div>
-                    <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                       <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
                     </div>
                   </div>
