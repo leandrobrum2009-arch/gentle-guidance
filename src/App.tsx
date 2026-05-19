@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { runContrastAudit } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import Roulette from "./pages/Roulette";
 import MysteryBox from "./pages/MysteryBox";
@@ -39,8 +41,23 @@ import AdminWinners from "./pages/admin/Winners";
 
 const queryClient = new QueryClient();
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
+const App = () => {
+  useEffect(() => {
+    // Run initial audit
+    runContrastAudit();
+    
+    // Optional: Audit on route changes or DOM mutations
+    const observer = new MutationObserver(() => {
+      // Debounced or simple call
+      runContrastAudit();
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="light" storageKey="rifas-pro-theme">
       <TooltipProvider>
         <Toaster />
