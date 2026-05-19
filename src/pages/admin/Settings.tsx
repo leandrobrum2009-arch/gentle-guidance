@@ -1,7 +1,9 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Slider } from "@/components/ui/slider";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
@@ -55,6 +57,7 @@ export default function AdminSettings() {
     if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;
     if (key.includes('hover')) return <MousePointer2 className="h-4 w-4" />;
     if (key.includes('color')) return <Palette className="h-4 w-4" />;
+    if (key.includes('opacity')) return <Sliders className="h-4 w-4" />;
     return <Settings className="h-4 w-4" />;
   };
 
@@ -133,6 +136,29 @@ export default function AdminSettings() {
                       onChange={(e) => handleUpdate(s.key, e.target.value)}
                       className="flex-1 border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
                     />
+                  </div>
+                ) : s.key === 'button_hover_effect' ? (
+                  <div className="flex items-center gap-3">
+                    <Switch 
+                      checked={s.value === 'true'} 
+                      onCheckedChange={(checked) => handleUpdate(s.key, checked.toString())}
+                    />
+                    <span className="text-sm font-medium">{s.value === 'true' ? 'Ativado' : 'Desativado'}</span>
+                  </div>
+                ) : s.key === 'border_shimmer_opacity' ? (
+                  <div className="space-y-4 pt-2">
+                    <Slider 
+                      min={0} 
+                      max={1} 
+                      step={0.1} 
+                      value={[parseFloat(s.value)]} 
+                      onValueChange={(val) => handleUpdate(s.key, val[0].toString())}
+                    />
+                    <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      <span>Invisível</span>
+                      <span>{Math.round(parseFloat(s.value) * 100)}% de Opacidade</span>
+                      <span>Visível</span>
+                    </div>
                   </div>
                 ) : (
                   <Input 
