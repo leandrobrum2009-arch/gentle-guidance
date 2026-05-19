@@ -43,8 +43,8 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
              className={cn(
                "relative flex flex-col items-center rounded-2xl border p-4 transition-all",
                quantity === bundle.quantity
-                 ? "border-primary bg-primary/5 ring-1 ring-primary"
-                 : "border-border bg-white hover:border-primary/50"
+                  ? "border-primary bg-primary/10 ring-1 ring-primary"
+                  : "border-border bg-card hover:border-primary/50"
              )}
            >
              <span className="text-xl font-black text-foreground">+{bundle.quantity}</span>
@@ -61,7 +61,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
          ))}
        </div>
  
-       <div className="bg-secondary/50 rounded-2xl p-6 border border-border">
+        <div className="bg-secondary/30 rounded-2xl p-6 border border-border">
          <div className="flex items-center justify-between mb-6">
            <div className="space-y-1">
              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Total a pagar</p>
@@ -79,7 +79,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
  
          <Button
            size="lg"
-           className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200"
+            className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
            disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
            onClick={() => onBuy(quantity)}
          >
