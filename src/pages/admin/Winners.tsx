@@ -23,6 +23,7 @@ interface WinnerForm {
   phone_masked: string;
   video_url: string;
   draw_date: string;
+  avatar_url: string;
 }
 
 const empty: WinnerForm = {
