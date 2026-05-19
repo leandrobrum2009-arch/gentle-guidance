@@ -116,14 +116,15 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                          whileHover={{ scale: 1.05 }}
                          whileTap={{ scale: 0.95 }}
                        >
-                           <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] border-light-path">
+                           <Button size="lg" className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest gap-2 glow-primary text-base shadow-[0_0_25px_rgba(34,197,94,0.6)] border-light-path border-[#22c55e]/30">
                             QUERO MEU PRÊMIO <Zap className="h-5 w-5 fill-current" />
                           </Button>
                         </motion.div>
                       </Link>
-                        <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-border hover:bg-secondary font-black uppercase italic tracking-widest text-foreground backdrop-blur-md border-light-path">
+                        <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-[#22c55e]/30 hover:bg-[#22c55e]/10 font-black uppercase italic tracking-widest text-foreground backdrop-blur-md border-light-path shadow-[0_0_15px_rgba(34,197,94,0.2)]">
                         CONFERIR CHANCES
                       </Button>
+
 
                    </div>
                  </motion.div>
