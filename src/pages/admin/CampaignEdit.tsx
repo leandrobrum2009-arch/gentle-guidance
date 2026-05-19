@@ -129,18 +129,56 @@ export default function AdminCampaignEdit() {
                  <Label>Total de Bilhetes</Label>
                  <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} className="mt-2" />
                </div>
-               <div className="md:col-span-2">
-                 <Label>Tipo de Seleção de Números</Label>
-                 <Select value={form.ticket_generation_type} onValueChange={(v: any) => set("ticket_generation_type", v)}>
-                   <SelectTrigger className="mt-2 h-12 rounded-xl">
-                     <SelectValue placeholder="Selecione o tipo" />
-                   </SelectTrigger>
-                   <SelectContent>
-                     <SelectItem value="auto">Aleatória (Números atribuídos após o pagamento)</SelectItem>
-                     <SelectItem value="manual">Manual (Cliente escolhe os números na grade)</SelectItem>
-                   </SelectContent>
-                 </Select>
-                 <p className="text-[11px] text-slate-500 mt-2">Na seleção aleatória, os números são gerados automaticamente pelo sistema somente após a confirmação do pagamento.</p>
+               <div className="md:col-span-2 space-y-4 pt-4 border-t">
+                 <div className="flex items-center gap-2">
+                   <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                     <Dices className="h-5 w-5" />
+                   </div>
+                   <div className="flex-1">
+                     <Label className="text-base font-bold">Modo de Operação</Label>
+                     <p className="text-xs text-slate-500">Defina como os números serão entregues ao cliente.</p>
+                   </div>
+                 </div>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <button 
+                     type="button"
+                     onClick={() => set("ticket_generation_type", 'auto')}
+                     className={cn(
+                       "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
+                       form.ticket_generation_type === 'auto' 
+                        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
+                        : "border-slate-100 bg-white hover:border-primary/30"
+                     )}
+                   >
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                       <Zap className="h-5 w-5" />
+                     </div>
+                     <div>
+                       <p className="font-bold text-sm">Sorteio Aleatório (Automático)</p>
+                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Os números são gerados pelo sistema apenas **após a confirmação do pagamento**. Ideal para grandes volumes de bilhetes.</p>
+                     </div>
+                   </button>
+
+                   <button 
+                     type="button"
+                     onClick={() => set("ticket_generation_type", 'manual')}
+                     className={cn(
+                       "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
+                       form.ticket_generation_type === 'manual' 
+                        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
+                        : "border-slate-100 bg-white hover:border-primary/30"
+                     )}
+                   >
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                       <MousePointer2 className="h-5 w-5" />
+                     </div>
+                     <div>
+                       <p className="font-bold text-sm">Seleção Manual (Grade)</p>
+                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
+                     </div>
+                   </button>
+                 </div>
                </div>
             </Card>
             
