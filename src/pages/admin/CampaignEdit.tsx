@@ -362,7 +362,7 @@ export default function AdminCampaignEdit() {
                        {uploading === 'gallery' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
                        Adicionar Foto
                      </div>
-                     <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
+                     <input type="file" className="hidden" accept="image/*" multiple onChange={(e) => handleUpload(e, 'gallery')} disabled={!!uploading} />
                    </Label>
                  </div>
                  
