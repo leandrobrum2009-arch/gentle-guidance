@@ -502,7 +502,7 @@ import { useAuth } from "@/contexts/AuthContext";
                   <Activity className="h-3.5 w-3.5 text-primary" /> Live <span className="text-primary">Stats</span>
                 </h2>
               </div>
-              <span className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Atualizado agora</span>
+              <span className="text-[9px] font-black text-foreground/70 uppercase tracking-widest">Atualizado agora</span>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -534,9 +534,9 @@ import { useAuth } from "@/contexts/AuthContext";
                           {activity.profiles?.name?.[0] || "?"}
                         </AvatarFallback>
                       </Avatar>
-                      <p className="text-[11px] font-medium text-muted-foreground whitespace-nowrap">
+                      <p className="text-[11px] font-bold text-foreground/80 whitespace-nowrap">
                         <span className="font-bold text-foreground">{activity.profiles?.name?.split(' ')[0] || "Usuário"}</span>
-                        <span className="mx-1.5 text-muted-foreground">ganhou</span>
+                        <span className="mx-1.5 text-foreground/60">ganhou</span>
                         <span className="text-primary font-black uppercase italic text-[10px]">{(activity as any).prize_label || (activity as any).prize_title}</span>
                       </p>
                     </div>
@@ -560,7 +560,7 @@ import { useAuth } from "@/contexts/AuthContext";
        <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
          <div className="flex items-center gap-4">
            <div className="flex-1">
-             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Valor cota</p>
+             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
              <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
            </div>
            <Button 

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { runContrastAudit } from "@/lib/accessibility";
+import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import Roulette from "./pages/Roulette";
 import MysteryBox from "./pages/MysteryBox";
@@ -44,6 +44,7 @@ const queryClient = new QueryClient();
 const App = () => {
   useEffect(() => {
     runContrastAudit();
+    initContrastShortcut();
     
     // Add small delay to catch dynamic content
     const timeout = setTimeout(runContrastAudit, 2000);

@@ -1,10 +1,10 @@
 
 /**
  * Automated Contrast Audit Utility
- * This utility runs in the browser and logs elements with low contrast ratios.
+ * This utility runs in the browser and highlights elements with low contrast ratios.
  */
 
-export const runContrastAudit = () => {
+export const runContrastAudit = (visual = false) => {
   if (process.env.NODE_ENV !== 'development') return;
 
   function getLuminance(r: number, g: number, b: number) {
@@ -38,10 +38,12 @@ export const runContrastAudit = () => {
   console.group('🔍 Contrast Audit');
   let issuesCount = 0;
   
+  // Remove existing highlights
+  document.querySelectorAll('.contrast-audit-highlight').forEach(el => el.remove());
+
   document.querySelectorAll('*').forEach(el => {
     const htmlEl = el as HTMLElement;
     if (htmlEl.children.length > 0) {
-      // Check if it has direct text nodes
       const hasDirectText = Array.from(htmlEl.childNodes).some(node => node.nodeType === 3 && node.textContent?.trim());
       if (!hasDirectText) return;
     }
@@ -73,6 +75,25 @@ export const runContrastAudit = () => {
           ratio: ratio.toFixed(2)
         }
       );
+
+      if (visual) {
+        const rect = htmlEl.getBoundingClientRect();
+        const highlight = document.createElement('div');
+        highlight.className = 'contrast-audit-highlight';
+        Object.assign(highlight.style, {
+          position: 'absolute',
+          top: `${rect.top + window.scrollY}px`,
+          left: `${rect.left + window.scrollX}px`,
+          width: `${rect.width}px`,
+          height: `${rect.height}px`,
+          border: '2px dashed red',
+          backgroundColor: 'rgba(255, 0, 0, 0.1)',
+          pointerEvents: 'none',
+          zIndex: '9999',
+          title: `Contrast: ${ratio.toFixed(2)}:1`
+        });
+        document.body.appendChild(highlight);
+      }
     }
   });
 
@@ -80,6 +101,17 @@ export const runContrastAudit = () => {
     console.log('✅ No contrast issues found on this page!');
   } else {
     console.log(`⚠️ Found ${issuesCount} contrast issues.`);
+    if (!visual) console.log('Tip: Call runContrastAudit(true) for visual highlights.');
   }
   console.groupEnd();
+};
+
+export const initContrastShortcut = () => {
+  if (process.env.NODE_ENV !== 'development') return;
+
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.altKey && e.key === 'a') {
+      runContrastAudit(true);
+    }
+  });
 };
