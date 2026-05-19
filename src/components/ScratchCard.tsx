@@ -5,9 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { History, Clock, User } from "lucide-react";
+import { History, Clock, User, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ScratchCardProps {
   prizeLabel?: string;
@@ -17,6 +20,7 @@ interface ScratchCardProps {
   cost?: number;
   potentialPrizes?: string[];
   isSimulation?: boolean;
+  campaignId?: string;
 }
 
 const ScratchCard = ({ 
@@ -26,8 +30,13 @@ const ScratchCard = ({
   onComplete, 
   cost = 0,
   potentialPrizes = [],
-  isSimulation = false
+  isSimulation = false,
+  campaignId
 }: ScratchCardProps) => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
@@ -42,7 +51,7 @@ const ScratchCard = ({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
-    // Generate some initial mock history
+    // Fetch global history if needed or just use mock for initial
     const names = ["Marcos S.", "Ana Paula", "Ricardo T.", "Juliana M.", "Felipe G."];
     const initialHistory = Array.from({ length: 3 }).map((_, i) => ({
       name: names[Math.floor(Math.random() * names.length)],
@@ -51,19 +60,7 @@ const ScratchCard = ({
       isWinner: true
     }));
     setHistory(initialHistory);
-
-    if (!initialPrizeLabel && potentialPrizes.length > 0) {
-
-      const winner = Math.random() > 0.6; // 40% win chance for simulation
-      setIsWinner(winner);
-      if (winner) {
-        const randomPrize = potentialPrizes[Math.floor(Math.random() * potentialPrizes.length)];
-        setPrizeLabel(randomPrize);
-      } else {
-        setPrizeLabel("Tente novamente");
-      }
-    }
-  }, [potentialPrizes, initialPrizeLabel]);
+  }, []);
 
   useEffect(() => {
 
@@ -118,8 +115,14 @@ const ScratchCard = ({
     };
   };
 
-  const scratch = (x: number, y: number) => {
-    if (!canvasRef.current || isScratched) return;
+  const scratch = async (x: number, y: number) => {
+    if (!canvasRef.current || isScratched || isProcessing) return;
+
+    if (!hasStarted) {
+      setHasStarted(true);
+      await startScratch();
+    }
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
