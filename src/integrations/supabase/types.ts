@@ -1015,6 +1015,7 @@ export type Database = {
       }
       winners: {
         Row: {
+          avatar_url: string | null
           campaign_id: string
           created_at: string
           draw_date: string
@@ -1027,6 +1028,7 @@ export type Database = {
           winner_name: string
         }
         Insert: {
+          avatar_url?: string | null
           campaign_id: string
           created_at?: string
           draw_date: string
@@ -1039,6 +1041,7 @@ export type Database = {
           winner_name: string
         }
         Update: {
+          avatar_url?: string | null
           campaign_id?: string
           created_at?: string
           draw_date?: string
