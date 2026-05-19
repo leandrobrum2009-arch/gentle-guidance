@@ -88,17 +88,21 @@ export default function AdminCampaignEdit() {
           throw new Error(`O arquivo ${file.name} não é uma imagem válida (JPG, PNG, WebP ou GIF).`);
         }
 
-        // Validate size
-        if (file.size > MAX_FILE_SIZE) {
-          throw new Error(`O arquivo ${file.name} é muito grande. O tamanho máximo permitido é 5MB.`);
+        // Compress image before upload
+        const processedFile = await compressImage(file);
+
+        // Validate size of processed file
+        if (processedFile.size > MAX_FILE_SIZE) {
+          throw new Error(`O arquivo ${processedFile.name} é muito grande mesmo após compressão. O tamanho máximo permitido é 5MB.`);
         }
 
-        const fileExt = file.name.split('.').pop();
+        const fileExt = processedFile.name.split('.').pop();
         const filePath = `${crypto.randomUUID()}.${fileExt}`;
         
         const { error: uploadError } = await supabase.storage
           .from('campaigns')
-          .upload(filePath, file);
+          .upload(filePath, processedFile);
+
 
         if (uploadError) throw uploadError;
 
