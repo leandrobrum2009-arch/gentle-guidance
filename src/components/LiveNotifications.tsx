@@ -41,36 +41,24 @@ const LiveNotifications = () => {
       .order('created_at', { ascending: false })
       .limit(3);
 
-    if (recentOrders) {
-      recentOrders.forEach((order: any) => {
-        addNotification({
-          type: 'purchase',
-          userName: order.profiles?.name || 'Alguém',
-          avatarUrl: order.profiles?.avatar_url,
-          message: `acabou de comprar ${order.quantity} cotas`,
-          campaignTitle: order.campaigns?.title,
-        });
-      });
-    }
+    const allRecent = [
+      ...(recentOrders?.map(o => ({ ...o, type: 'purchase' as const })) || []),
+      ...(recentWinners?.map(w => ({ ...w, type: 'winner' as const })) || [])
+    ].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
-    // Get last 2 winners
-    const { data: recentWinners } = await supabase
-      .from('winners')
-      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
-      .order('created_at', { ascending: false })
-      .limit(2);
-
-    if (recentWinners) {
-      recentWinners.forEach((winner: any) => {
+    allRecent.forEach((item, index) => {
+      setTimeout(() => {
         addNotification({
-          type: 'winner',
-          userName: winner.profiles?.name || 'Alguém',
-          avatarUrl: winner.profiles?.avatar_url,
-          message: `foi premiado(a) na cota ${winner.winning_ticket} e ganhou ${winner.prize_description}`,
-          campaignTitle: winner.campaigns?.title,
+          type: item.type,
+          userName: (item as any).profiles?.name || 'Alguém',
+          avatarUrl: (item as any).profiles?.avatar_url,
+          message: item.type === 'purchase' 
+            ? `acabou de comprar ${(item as any).quantity} cotas` 
+            : `ganhou ${(item as any).prize_description} na cota ${(item as any).winning_ticket}`,
+          campaignTitle: (item as any).campaigns?.title,
         });
-      });
-    }
+      }, index * 3000);
+    });
   };
 
   useEffect(() => {
