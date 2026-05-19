@@ -4,7 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
-    ChevronDown, ChevronUp, Clock
+    ChevronDown, ChevronUp, Clock, Info
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
