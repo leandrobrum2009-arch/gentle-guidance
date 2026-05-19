@@ -36,6 +36,20 @@ const ScratchCard = ({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
+    if (!initialPrizeLabel && potentialPrizes.length > 0) {
+      const winner = Math.random() > 0.6; // 40% win chance for simulation
+      setIsWinner(winner);
+      if (winner) {
+        const randomPrize = potentialPrizes[Math.floor(Math.random() * potentialPrizes.length)];
+        setPrizeLabel(randomPrize);
+      } else {
+        setPrizeLabel("Tente novamente");
+      }
+    }
+  }, [potentialPrizes, initialPrizeLabel]);
+
+  useEffect(() => {
+
     if (containerRef.current) {
       const { width, height } = containerRef.current.getBoundingClientRect();
       setCanvasSize({ width, height });
