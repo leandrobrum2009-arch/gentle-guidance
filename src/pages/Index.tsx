@@ -29,12 +29,13 @@ import { Button } from "@/components/ui/button";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
- import RaffleCarousel from "@/components/RaffleCarousel";
+import RaffleCarousel from "@/components/RaffleCarousel";
 import CampaignCard from "@/components/CampaignCard";
- import WinnerCard from "@/components/WinnerCard";
-  import LiveActivityFeed from "@/components/LiveActivityFeed";
- import Roulette from "@/components/Roulette";
+import WinnerCard from "@/components/WinnerCard";
+import LiveActivityFeed from "@/components/LiveActivityFeed";
+import Roulette from "@/components/Roulette";
 import CountdownTimer from "@/components/CountdownTimer";
+import GoogleReviews from "@/components/GoogleReviews";
 import { useCampaigns, useWinners } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
@@ -149,25 +150,45 @@ const Index = () => {
                     <LiveActivityFeed />
                   </div>
  
-                 {/* Small Featured Roulette */}
+                 {/* Small Featured Roulette - Redesigned */}
                  {featuredCampaign?.roulette_enabled && (
-                    <div className="rounded-3xl border border-primary/20 bg-card p-6 shadow-xl relative overflow-hidden group">
+                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card to-primary/5 p-6 shadow-xl relative overflow-hidden group">
                      <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
-                     <h3 className="text-sm font-black uppercase tracking-widest italic mb-4 flex items-center gap-2">
-                       <Gamepad2 className="h-4 w-4 text-primary" /> Tente a <span className="text-primary">Sorte</span>
-                     </h3>
-                     <div className="scale-75 -my-10 origin-center">
-                       {/* We need to fetch prizes for this campaign, but for the home page we can use a generic set or the first campaign's prizes */}
-                       <Link to={`/campaign/${featuredCampaign.id}`}>
-                         <Button className="w-full h-32 rounded-3xl border-2 border-dashed border-primary/30 bg-primary/5 hover:bg-primary/10 transition-all flex flex-col gap-2 group">
-                           <RotateCw className="h-8 w-8 text-primary group-hover:rotate-180 transition-transform duration-500" />
-                           <span className="text-[10px] font-black uppercase tracking-widest">Ver Roleta da Campanha</span>
-                         </Button>
-                       </Link>
+                     <div className="absolute -left-10 -bottom-10 h-40 w-40 bg-secondary/20 blur-3xl rounded-full" />
+                     
+                     <div className="relative z-10">
+                        <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-[0.2em] mb-3">
+                          Giro Premiado
+                        </Badge>
+                        <h3 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter leading-tight mb-4">
+                          Tente a <span className="text-primary neon-text-primary">Sorte</span> Agora!
+                        </h3>
+                        
+                        <div className="relative flex justify-center py-6">
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                            className="relative h-32 w-32 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-2"
+                          >
+                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/10 via-background to-secondary/10 border border-primary/20 flex items-center justify-center">
+                               <RotateCw className="h-10 w-10 text-primary opacity-50" />
+                             </div>
+                          </motion.div>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Gamepad2 className="h-10 w-10 text-primary animate-bounce" />
+                          </div>
+                        </div>
+
+                        <Link to={`/campaign/${featuredCampaign.id}`}>
+                          <Button className="w-full h-12 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-lg">
+                            Girar Roleta <Sparkles className="ml-2 h-4 w-4" />
+                          </Button>
+                        </Link>
+                        
+                        <p className="text-[10px] text-center text-muted-foreground uppercase font-bold tracking-widest mt-4">
+                          Prêmios instantâneos em todos os sorteios ativos
+                        </p>
                      </div>
-                     <p className="text-[9px] text-center text-muted-foreground uppercase font-bold tracking-tighter mt-4">
-                       Prêmios instantâneos em todos os sorteios ativos
-                     </p>
                    </div>
                  )}
                </div>
@@ -191,22 +212,39 @@ const Index = () => {
                   Esses sorteios já venderam mais de 80% dos bilhetes. Sua chance de ganhar pode ser o próximo clique.
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {endingSoon.slice(0, 2).map((campaign, i) => (
-                    <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                  {endingSoon.slice(0, 4).map((campaign, i) => (
+                    <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm group hover:border-primary/50 transition-all duration-300">
                        <div className="relative h-16 w-16 flex-shrink-0">
-                         <img src={campaign.image_url || ""} className="h-full w-full rounded-xl object-cover" alt="" />
-                         <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse" />
+                         <img src={campaign.image_url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=256&h=256&auto=format&fit=crop"} className="h-full w-full rounded-xl object-cover" alt="" />
+                         <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse group-hover:bg-primary/40" />
                        </div>
                       <div className="min-w-0 flex-1">
-                         <div className="flex items-center justify-between mb-1 text-foreground">
-                           <h4 className="font-bold text-xs truncate">{campaign.title}</h4>
-                           {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
-                         </div>
+                          <div className="flex items-center justify-between mb-1 text-foreground">
+                            <h4 className="font-bold text-xs truncate uppercase tracking-tighter">{campaign.title}</h4>
+                            {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
+                          </div>
                         <div className="flex items-center gap-2 mt-1">
-                      <div className="h-1 flex-1 bg-slate-200 rounded-full overflow-hidden">
-                            <div className="h-full bg-primary" style={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }} />
+                          <div className="h-1.5 flex-1 bg-secondary rounded-full overflow-hidden">
+                            <motion.div 
+                              initial={{ width: 0 }}
+                              whileInView={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }}
+                              className="h-full bg-primary" 
+                            />
                           </div>
                           <span className="text-[8px] font-black text-primary">{(campaign.sold_tickets/campaign.total_tickets*100).toFixed(0)}%</span>
+                        </div>
+                        {/* Participants faces */}
+                        <div className="flex items-center gap-1.5 mt-2">
+                          <div className="flex -space-x-2">
+                            {[
+                              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=32&h=32&auto=format&fit=crop",
+                              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=32&h=32&auto=format&fit=crop",
+                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=32&h=32&auto=format&fit=crop"
+                            ].map((img, idx) => (
+                              <img key={idx} src={img} className="h-5 w-5 rounded-full border-2 border-card object-cover" alt="User" />
+                            ))}
+                          </div>
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">+ {Math.floor(Math.random() * 500)} participando</span>
                         </div>
                       </div>
                     </div>
@@ -223,25 +261,49 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Ganhadores Cinematic Section */}
-          <section className="container py-20">
+          {/* Ganhadores Cinematic Section - Enhanced with speech bubbles */}
+          <section className="container py-20 relative">
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 h-64 w-64 bg-primary/10 blur-[100px] rounded-full" />
+            
             <SectionHeading 
               icon={Trophy} 
               title="Hall da Fama" 
               subtitle="Conheça os mais novos sortudos da plataforma"
+              badge="Inspire-se"
             />
+            
             {loadingWinners ? (
               <div className="flex justify-center py-10">
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-                {winners?.slice(0, 4).map((winner, i) => (
-                  <WinnerCard key={winner.id} winner={winner} index={i} />
+              <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+                {(winners && winners.length > 0 ? winners : [
+                  { id: "1", winner_name: "Ricardo Silva", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&auto=format&fit=crop" },
+                  { id: "2", winner_name: "Juliana Costa", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&h=256&auto=format&fit=crop" },
+                  { id: "3", winner_name: "Fernando Souza", prize_description: "PlayStation 5", ticket_number: "4421", campaigns: { title: "Gamer Week" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop" },
+                  { id: "4", winner_name: "Mariana Alves", prize_description: "Viagem para Porto", ticket_number: "0392", campaigns: { title: "Férias Inesquecíveis" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop" }
+                ]).slice(0, 4).map((winner, i) => (
+                  <div key={winner.id} className="relative group">
+                    {/* Speech Bubble / Balloon Effect */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20, scale: 0.8 }}
+                      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                      transition={{ delay: i * 0.2 }}
+                      className="absolute -top-12 left-6 right-6 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-lg z-20 hidden group-hover:block animate-bounce"
+                    >
+                      "Acreditei e ganhei!"
+                      <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 border-t-8 border-t-primary border-x-8 border-x-transparent" />
+                    </motion.div>
+                    
+                    <WinnerCard winner={winner as any} index={i} />
+                  </div>
                 ))}
               </div>
             )}
           </section>
+
+          <GoogleReviews />
 
           {/* Social Proof / Security */}
           <section className="border-y border-border bg-secondary/30 py-16">

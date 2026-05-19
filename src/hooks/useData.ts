@@ -103,6 +103,7 @@ export interface Notification {
    prize_description: string;
    phone_masked: string | null;
    video_url: string | null;
+   avatar_url?: string | null;
    draw_date: string;
    campaigns?: { title: string } | null;
  }
