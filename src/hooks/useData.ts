@@ -721,3 +721,20 @@ export const useUserOrders = (userId: string) => {
       enabled: !!userId,
     });
   };
+
+export const useSiteSettings = () =>
+  useQuery({
+    queryKey: ["site-settings"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("site_settings")
+        .select("*");
+      if (error) throw error;
+      
+      const settingsMap: Record<string, string> = {};
+      data.forEach(s => {
+        settingsMap[s.key] = s.value;
+      });
+      return settingsMap;
+    },
+  });
