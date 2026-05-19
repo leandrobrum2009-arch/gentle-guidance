@@ -118,6 +118,44 @@ const ScratchCard = ({
   const scratch = async (x: number, y: number) => {
     if (!canvasRef.current || isScratched || isProcessing) return;
 
+  const startScratch = async () => {
+    if (isSimulation) {
+      const winner = Math.random() > 0.7;
+      setIsWinner(winner);
+      setPrizeLabel(winner ? "R$ 10,00 Simulado" : "Tente novamente");
+      return;
+    }
+
+    if (!user) {
+      toast.error("Entre para jogar e ganhar prêmios reais!");
+      return;
+    }
+
+    setIsProcessing(true);
+    try {
+      const { data, error } = await supabase.rpc('process_scratch_card_play', {
+        p_campaign_id: campaignId || null,
+        p_cost: cost
+      });
+
+      if (error) throw error;
+
+      const res = data as any;
+      setIsWinner(res.is_winner);
+      setPrizeLabel(res.is_winner ? res.prize.label : "Tente novamente");
+      
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    } catch (error: any) {
+      toast.error("Erro ao processar: " + error.message);
+      setIsScratched(true);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const scratch = async (x: number, y: number) => {
+    if (!canvasRef.current || isScratched || isProcessing) return;
+
     if (!hasStarted) {
       setHasStarted(true);
       await startScratch();
