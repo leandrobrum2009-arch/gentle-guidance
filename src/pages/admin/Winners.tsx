@@ -94,6 +94,7 @@ export default function AdminWinners() {
       prize_description: form.prize_description,
       phone_masked: form.phone_masked || null,
       video_url: form.video_url || null,
+      avatar_url: form.avatar_url || null,
       draw_date: form.draw_date,
     });
     setSaving(false);
