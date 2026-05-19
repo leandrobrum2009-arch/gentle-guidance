@@ -273,7 +273,7 @@ import { useAuth } from "@/contexts/AuthContext";
                {isActive ? "Sorteio Ativo" : "Concluído"}
              </Badge>
              {drawDate && (
-               <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-white">
+               <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-card">
                  <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
                </Badge>
              )}
@@ -510,7 +510,7 @@ import { useAuth } from "@/contexts/AuthContext";
               <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 px-2">
                 {/* Priority Ranking Info */}
                 {campaign.ranking_enabled && campaignRanking?.slice(0, 3).map((rank: any, i: number) => (
-                  <div key={`rank-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-white px-3 py-2 rounded-full border border-border shadow-sm">
+                  <div key={`rank-${i}`} className="flex-shrink-0 flex items-center gap-2 bg-card px-3 py-2 rounded-full border border-border shadow-sm">
                     <div className={cn(
                       "h-6 w-6 rounded-full flex items-center justify-center text-[10px] font-black",
                       i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-secondary text-muted-foreground'
@@ -557,7 +557,7 @@ import { useAuth } from "@/contexts/AuthContext";
        <Footer />
        
        {/* Sticky Mobile Purchase Bar */}
-       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-white/80 backdrop-blur-lg border-t lg:hidden">
+       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
          <div className="flex items-center gap-4">
            <div className="flex-1">
              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Valor cota</p>

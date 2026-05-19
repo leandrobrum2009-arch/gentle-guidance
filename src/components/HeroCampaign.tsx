@@ -120,7 +120,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
                   Participar Agora
                 </Button>
               </Link>
-              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-border bg-white/50 hover:bg-white font-bold uppercase tracking-widest text-xs">
+              <Button variant="outline" size="lg" className="h-16 rounded-2xl px-8 border-border bg-card/50 hover:bg-card font-bold uppercase tracking-widest text-xs">
                 Ver Prêmios <Star className="ml-2 h-4 w-4 text-primary" />
               </Button>
             </div>
@@ -129,7 +129,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute bottom-6 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-border shadow-lg">
+      <div className="absolute bottom-6 left-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-card/80 backdrop-blur-md border border-border shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Trophy className="h-6 w-6 text-primary" />
         </div>
@@ -139,7 +139,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
         </div>
       </div>
 
-      <div className="absolute bottom-6 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-white/80 backdrop-blur-md border border-border shadow-lg">
+      <div className="absolute bottom-6 right-10 hidden lg:flex items-center gap-4 p-4 rounded-2xl bg-card/80 backdrop-blur-md border border-border shadow-lg">
         <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center">
           <Clock className="h-6 w-6 text-primary" />
         </div>
