@@ -80,6 +80,21 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   <div className="h-1 w-1 rounded-full bg-white animate-ping" /> Ao Vivo
                 </Badge>
               )}
+              {campaign.status === 'paused' && (
+                <Badge className="bg-amber-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest">
+                  Pausada
+                </Badge>
+              )}
+              {campaign.status === 'completed' && (
+                <Badge className="bg-blue-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest">
+                  Finalizada
+                </Badge>
+              )}
+              {campaign.status === 'audit' && (
+                <Badge className="bg-purple-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest animate-pulse">
+                  Em Auditoria
+                </Badge>
+              )}
             </div>
 
             <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
