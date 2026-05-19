@@ -52,7 +52,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
             {title.split(' ')[0]} <span className="text-primary neon-text-primary">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 italic">{subtitle}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
       </div>
       <Button variant="ghost" size="sm" className="hidden sm:flex text-[10px] font-black uppercase tracking-widest gap-1 hover:text-primary">
         Ver Todos <ArrowRight className="h-3 w-3" />
@@ -119,7 +119,7 @@ const Index = () => {
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
                     <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
-                    <p className="relative z-10 text-[10px] text-slate-600 uppercase font-bold tracking-tighter">{item.desc}</p>
+                    <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>
               ))}
@@ -258,7 +258,7 @@ const Index = () => {
                     </div>
                     <div className="space-y-1">
                       <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{item.title}</h4>
-                      <p className="text-[11px] font-medium leading-relaxed text-slate-500 uppercase tracking-widest">{item.desc}</p>
+                      <p className="text-[11px] font-medium leading-relaxed text-muted-foreground uppercase tracking-widest">{item.desc}</p>
                     </div>
                   </div>
                 ))}

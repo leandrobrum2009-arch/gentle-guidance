@@ -103,7 +103,7 @@ const Header = () => {
                <Link
                  key={link.href}
                  to={link.href}
-                  className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-slate-500' : 'text-slate-600'}`}
+                   className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-muted-foreground' : 'text-muted-foreground'}`}
                >
                  {link.label}
                </Link>
