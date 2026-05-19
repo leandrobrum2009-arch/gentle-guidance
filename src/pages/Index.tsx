@@ -114,20 +114,22 @@ const Index = () => {
         <>
            {campaigns && campaigns.length > 0 && (
              <div className="relative group">
-                {/* Style Selector for Dev/User testing - Can be moved to admin later */}
-                <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                   {[1, 2, 3, 4].map(i => (
-                     <Button 
-                       key={i} 
-                       size="sm" 
-                       variant={heroStyle === i ? "default" : "outline"}
-                       className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
-                       onClick={() => changeHeroStyle(i)}
-                     >
-                       M{i}
-                     </Button>
-                   ))}
-                </div>
+                 {/* Style Selector - Only visible for admins to test visually */}
+                 {isAdmin && (
+                   <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {[1, 2, 3, 4].map(i => (
+                        <Button 
+                          key={i} 
+                          size="sm" 
+                          variant={heroStyle === i ? "default" : "outline"}
+                          className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
+                          onClick={() => changeHeroStyle(i)}
+                        >
+                          M{i}
+                        </Button>
+                      ))}
+                   </div>
+                 )}
 
                 {heroStyle === 1 && (
                   <HeroModel1 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
