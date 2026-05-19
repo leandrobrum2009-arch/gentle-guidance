@@ -228,7 +228,7 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-6">
             <div className="space-y-1">
-              <h1 className="text-2xl font-black text-foreground leading-tight">{campaign.title}</h1>
+              <h1 className="text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
               <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
@@ -313,7 +313,7 @@ const CampaignDetail = () => {
                         luckyNumbers={luckyNumbersList}
                       />
                       <Button 
-                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide"
+                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
                         disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
                         onClick={() => handleBuy(selectedTickets)}
                       >
@@ -496,7 +496,7 @@ const CampaignDetail = () => {
           <div key={section} className="mt-12 mb-12">
             <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-primary neon-text-primary">Roleta</span></h2>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-animate-gradient">Roleta</span></h2>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na versão real!</p>
             </div>
             <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
@@ -508,7 +508,7 @@ const CampaignDetail = () => {
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-amber-500 neon-text-amber">Premiada</span></h2>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Experimente nossa nova raspadinha digital e sinta a emoção!</p>
             </div>
             <ScratchCard 
@@ -560,7 +560,7 @@ const CampaignDetail = () => {
             <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
           </div>
           <Button 
-            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20"
+            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
             disabled={campaign.status !== "active"}
             onClick={() => {
               const element = document.getElementById('purchase-tabs');

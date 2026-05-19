@@ -99,7 +99,7 @@ const Header = () => {
                   <Ticket className="h-5 w-5 text-primary-foreground" />
                 </div>
               )}
-              <span className={`font-display text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'}`}>
+              <span className={`font-display text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient`}>
                 {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
               </span>
             </Link>
@@ -129,10 +129,10 @@ const Header = () => {
             <div className="flex items-center gap-3">
               <motion.div 
                 whileHover={{ scale: 1.02 }}
-                className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex"
+                className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex border-light-path border-[#22c55e]/40"
               >
                 <Wallet className="h-4 w-4 text-primary" />
-                <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
+                <span className="text-[10px] font-black italic text-animate-gradient">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
               </motion.div>
               
                 <button
@@ -170,7 +170,7 @@ const Header = () => {
                 </Button>
               </Link>
               <Link to="/cadastrar">
-                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20">
+                <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30">
                   Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                 </Button>
               </Link>

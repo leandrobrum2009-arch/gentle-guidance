@@ -165,7 +165,7 @@ const Index = () => {
                       whileHover={{ y: -12, scale: 1.05, boxShadow: "0 20px 40px -10px rgba(var(--primary-rgb), 0.3)" }}
                       onMouseEnter={() => playSound('hover')}
                       whileTap={{ scale: 0.95 }}
-                       className={`group relative overflow-hidden h-full rounded-3xl border border-border bg-card p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50`}
+                       className={`group relative overflow-hidden h-full rounded-3xl border border-border bg-card p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50 border-light-path border-[#22c55e]/20 hover:border-[#22c55e]/50`}
                     >
                     <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-20`} />
                     {item.badge && (
@@ -173,10 +173,10 @@ const Index = () => {
                         {item.badge}
                       </Badge>
                     )}
-                    <div className="h-12 w-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
+                    <div className="h-12 w-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all border-light-path border-[#22c55e]/30">
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
-                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
+                    <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2 group-hover:text-animate-gradient transition-all">{item.title}</h3>
                     <p className="relative z-10 text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>

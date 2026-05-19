@@ -36,7 +36,7 @@ const ScratchCardPage = () => {
                 Prêmios Instantâneos
               </Badge>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
-                Raspadinha <span className="text-primary neon-text-primary">Premiada</span>
+                Raspadinha <span className="text-animate-gradient">Premiada</span>
               </h1>
               <p className="text-sm md:text-base text-muted-foreground uppercase font-bold tracking-[0.2em] max-w-2xl mx-auto italic">
                 A emoção de ganhar prêmios reais na palma da sua mão. Escolha um cartão e raspe agora!
@@ -73,9 +73,9 @@ const ScratchCardPage = () => {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 + i * 0.1 }}
-                className="bg-card/50 backdrop-blur-md border border-border rounded-3xl p-6 text-center space-y-3 group hover:border-primary/50 transition-all"
+                className="bg-card/50 backdrop-blur-md border border-border rounded-3xl p-6 text-center space-y-3 group hover:border-primary/50 transition-all border-light-path border-[#22c55e]/20 hover:border-[#22c55e]/50"
               >
-                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+                <div className="h-12 w-12 rounded-2xl bg-secondary flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform border-light-path border-[#22c55e]/30">
                   <item.icon className="h-6 w-6 text-primary" />
                 </div>
                 <h3 className="text-sm font-black uppercase tracking-widest text-foreground">{item.title}</h3>
@@ -91,7 +91,7 @@ const ScratchCardPage = () => {
                    <div className="h-10 w-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                       <Sparkles className="h-5 w-5 text-amber-500" />
                    </div>
-                   <h2 className="text-xl font-black uppercase italic tracking-tighter">Últimos Ganhadores</h2>
+                   <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Últimos Ganhadores</h2>
                 </div>
                 <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest bg-secondary">Tempo Real</Badge>
              </div>
