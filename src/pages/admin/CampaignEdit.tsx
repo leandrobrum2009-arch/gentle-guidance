@@ -49,7 +49,7 @@ const empty: CampaignForm = {
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
-  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"],
+  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
   timer_end_date: "",
 };
 
@@ -80,7 +80,7 @@ export default function AdminCampaignEdit() {
       lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], 
       main_prizes: (data.main_prizes as any[]) ?? [], 
       roulette_rules: (data.roulette_rules as any[]) ?? [],
-      sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"]
+      sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as CampaignForm);
     setLoading(false);
   };
@@ -267,8 +267,27 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="general" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
-               <Label>Título da Campanha</Label>
-               <Input value={form.title} onChange={(e) => set("title", e.target.value)} className="mt-2" />
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label>Título da Campanha</Label>
+                   <Input value={form.title} onChange={(e) => set("title", e.target.value)} />
+                 </div>
+                 <div className="space-y-2">
+                   <Label>Status da Campanha</Label>
+                   <Select value={form.status} onValueChange={(v) => set("status", v)}>
+                     <SelectTrigger>
+                       <SelectValue placeholder="Selecione o status" />
+                     </SelectTrigger>
+                     <SelectContent>
+                       <SelectItem value="active">Ativa (Aberta para vendas)</SelectItem>
+                       <SelectItem value="paused">Pausada (Vendas suspensas)</SelectItem>
+                       <SelectItem value="audit">Em Auditoria (Verificação final)</SelectItem>
+                       <SelectItem value="completed">Finalizada (Sorteio realizado)</SelectItem>
+                       <SelectItem value="draft">Rascunho (Privada)</SelectItem>
+                     </SelectContent>
+                   </Select>
+                 </div>
+               </div>
                <Label className="mt-4 block">Subtítulo</Label>
                <Input value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} className="mt-2" />
                <Label className="mt-4 block">Descrição</Label>
@@ -728,6 +747,8 @@ export default function AdminCampaignEdit() {
                                section === 'purchase' ? 'Área de Compra' :
                                section === 'description' ? 'Descrição da Rifa' :
                                section === 'prizes' ? 'Cotas Premiadas' :
+                               section === 'roulette_footer' ? 'Simulador de Roleta (Final)' :
+                               section === 'scratch_footer' ? 'Simulador de Raspadinha (Final)' :
                                section === 'winners' ? 'Histórico de Ganhadores' :
                                section === 'ranking' ? 'Ranking de Compradores' : section}
                             </p>

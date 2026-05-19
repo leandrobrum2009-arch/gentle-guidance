@@ -66,8 +66,8 @@ const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
 
-  const featuredCampaign = campaigns?.find((c) => c.featured && c.status === "active") || campaigns?.find(c => c.status === "active");
-  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && c.status === 'active') ?? [];
+  const featuredCampaign = campaigns?.find((c) => c.featured && (c.status === "active" || c.status === "paused")) || campaigns?.find(c => c.status === "active");
+  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && (c.status === 'active' || c.status === 'paused' || c.status === 'completed' || c.status === 'audit')) ?? [];
   const endingSoon = campaigns?.filter(c => c.status === 'active' && c.sold_tickets / c.total_tickets > 0.8) ?? [];
 
    return (
@@ -87,7 +87,7 @@ const Index = () => {
       ) : (
         <>
            {campaigns && campaigns.length > 0 && (
-             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active").slice(0, 5)} />
+             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
@@ -138,11 +138,11 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                 <div className="grid gap-6 sm:grid-cols-2">
-                   {otherCampaigns.slice(0, 4).map((campaign, i) => (
-                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                   ))}
-                 </div>
+                  <div className="grid gap-6 sm:grid-cols-2">
+                    {otherCampaigns.map((campaign, i) => (
+                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                    ))}
+                  </div>
                </div>
  
                 <div className="space-y-6">

@@ -49,7 +49,9 @@ export default function AdminCampaigns() {
   const statusInfo = (s: string) => {
     switch(s) {
       case "active": return { label: "Ativa", color: "bg-emerald-500/10 text-emerald-500 border-emerald-500/20" };
+      case "paused": return { label: "Pausada", color: "bg-amber-500/10 text-amber-500 border-amber-500/20" };
       case "completed": return { label: "Finalizada", color: "bg-blue-500/10 text-blue-500 border-blue-500/20" };
+      case "audit": return { label: "Em Auditoria", color: "bg-purple-500/10 text-purple-500 border-purple-500/20" };
       case "draft": return { label: "Rascunho", color: "bg-slate-500/10 text-muted-foreground border-slate-500/20" };
       default: return { label: s, color: "bg-slate-500/10 text-muted-foreground border-slate-500/20" };
     }
@@ -117,6 +119,20 @@ export default function AdminCampaigns() {
                 onClick={() => setFilter("active")}
               >
                 Ativos
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "paused" ? "bg-amber-500/20 border-amber-500/50 text-amber-500" : "border-border text-muted-foreground hover:bg-secondary/20"}`}
+                onClick={() => setFilter("paused")}
+              >
+                Pausados
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "audit" ? "bg-purple-500/20 border-purple-500/50 text-purple-500" : "border-border text-muted-foreground hover:bg-secondary/20"}`}
+                onClick={() => setFilter("audit")}
+              >
+                Em Auditoria
               </Badge>
               <Badge 
                 variant="outline" 
