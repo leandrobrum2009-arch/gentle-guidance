@@ -89,14 +89,14 @@
     --ring: 142.1 76.2% 36.3%;
     --radius: 0.75rem;
 
-    --sidebar-background: 220 28% 9%;
-    --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 68 96% 53%;
-    --sidebar-primary-foreground: 220 30% 8%;
-    --sidebar-accent: 220 25% 14%;
-    --sidebar-accent-foreground: 210 40% 96%;
-    --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 68 96% 53%;
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 142.1 76.2% 30.3%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 6% 85%;
+    --sidebar-ring: 142.1 76.2% 36.3%;
 
     --success: 142 72% 50%;
     --warning: 38 92% 50%;
@@ -123,6 +123,15 @@
     --border: 240 5% 18%;
     --input: 240 5% 18%;
     --ring: 142.1 70.6% 45.3%;
+
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 142.1 70.6% 45.3%;
+    --sidebar-primary-foreground: 144.4 96.6% 11.4%;
+    --sidebar-accent: 240 5% 15%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 5% 18%;
+    --sidebar-ring: 142.1 70.6% 45.3%;
   }
 }
 
@@ -159,7 +168,7 @@
   }
 
   .glass-morphism {
-    @apply bg-background/40 backdrop-blur-xl border border-white/10;
+    @apply bg-background/40 backdrop-blur-xl border border-foreground/10;
   }
 
   .cinematic-vignette {
