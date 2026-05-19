@@ -83,6 +83,43 @@ export const useAdminCampaigns = () =>
        if (error) throw error;
        return data;
      },
+  });
+ 
+ export const useAdminScratchCards = () =>
+   useQuery({
+     queryKey: ["admin-scratch-card-prizes"],
+     queryFn: async () => {
+       const { data, error } = await supabase
+         .from("scratch_card_prizes")
+         .select("*")
+         .order("created_at", { ascending: false });
+       if (error) throw error;
+       return data;
+     },
+   });
+ 
+ export const useAdminScratchCardStats = () =>
+   useQuery({
+     queryKey: ["admin-scratch-card-stats"],
+     queryFn: async () => {
+       const { data: scratches, error } = await supabase
+         .from("scratch_card_scratches")
+         .select("*");
+ 
+       if (error) throw error;
+ 
+       const totalScratches = scratches.length;
+       const totalPrizesValue = scratches.reduce((acc, scratch) => acc + (Number(scratch.prize_value) || 0), 0);
+       const winnersCount = scratches.filter(scratch => scratch.is_winner).length;
+       const losersCount = totalScratches - winnersCount;
+ 
+       return {
+         totalScratches,
+         totalPrizesValue,
+         winnersCount,
+         losersCount
+       };
+     },
    });
  
  export const useAdminCoupons = () =>

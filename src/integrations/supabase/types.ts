@@ -830,6 +830,114 @@ export type Database = {
           },
         ]
       }
+      scratch_card_prizes: {
+        Row: {
+          campaign_id: string | null
+          chance_percent: number
+          created_at: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          label: string
+          prize_type: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          campaign_id?: string | null
+          chance_percent?: number
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          label: string
+          prize_type?: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          campaign_id?: string | null
+          chance_percent?: number
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          label?: string
+          prize_type?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scratch_card_prizes_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      scratch_card_scratches: {
+        Row: {
+          campaign_id: string | null
+          cost: number
+          created_at: string
+          id: string
+          is_winner: boolean
+          prize_id: string | null
+          prize_label: string | null
+          prize_type: string | null
+          prize_value: number | null
+          user_id: string
+        }
+        Insert: {
+          campaign_id?: string | null
+          cost?: number
+          created_at?: string
+          id?: string
+          is_winner?: boolean
+          prize_id?: string | null
+          prize_label?: string | null
+          prize_type?: string | null
+          prize_value?: number | null
+          user_id: string
+        }
+        Update: {
+          campaign_id?: string | null
+          cost?: number
+          created_at?: string
+          id?: string
+          is_winner?: boolean
+          prize_id?: string | null
+          prize_label?: string | null
+          prize_type?: string | null
+          prize_value?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scratch_card_scratches_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scratch_card_scratches_prize_id_fkey"
+            columns: ["prize_id"]
+            isOneToOne: false
+            referencedRelation: "scratch_card_prizes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "scratch_card_scratches_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       site_settings: {
         Row: {
           description: string | null
@@ -1103,6 +1211,10 @@ export type Database = {
       perform_draw: { Args: { p_campaign_id: string }; Returns: string }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
+        Returns: Json
+      }
+      process_scratch_card_play: {
+        Args: { p_campaign_id?: string; p_cost?: number }
         Returns: Json
       }
       reserve_tickets: {

@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
-  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu
+  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -22,8 +22,9 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
    ]},
    { category: "Jogos", items: [
      { title: "Roletas", url: "/admin/roletas", icon: Dices },
-     { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
-     { title: "Federal", url: "/admin/federal", icon: Star },
+      { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
+      { title: "Raspadinhas", url: "/admin/raspadinhas", icon: Zap },
+      { title: "Federal", url: "/admin/federal", icon: Star },
    ]},
    { category: "Marketing", items: [
      { title: "Banners", url: "/admin/banners", icon: ImageIcon },

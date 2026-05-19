@@ -4,12 +4,16 @@ import Footer from "@/components/Footer";
 import ScratchCard from "@/components/ScratchCard";
 import Particles from "@/components/Particles";
 import { motion } from "framer-motion";
-import { Gift, Sparkles, TrendingUp, Users, Award } from "lucide-react";
+import { Gift, Sparkles, TrendingUp, Users, Award, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useScratchCardPrizes, useGlobalScratchCardScratches, useCampaigns } from "@/hooks/useData";
 
 const ScratchCardPage = () => {
-  const [isWinner] = useState(Math.random() > 0.7);
-  const [prizeLabel] = useState(isWinner ? "R$ 50,00 no Saldo" : "Tente novamente");
+  const { data: campaigns } = useCampaigns();
+  // For now, we use a global scratch card or find an active campaign that has it enabled
+  // But since we don't have a 'scratch_card_enabled' boolean in campaigns yet, let's assume global
+  const { data: prizes, isLoading: isLoadingPrizes } = useScratchCardPrizes();
+  const { data: recentScratches, isLoading: isLoadingScratches } = useGlobalScratchCardScratches(5);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -29,13 +33,13 @@ const ScratchCardPage = () => {
               animate={{ opacity: 1, y: 0 }}
             >
               <Badge className="bg-primary/20 text-primary border-none px-4 py-1 text-xs font-black uppercase tracking-widest mb-4">
-                Exclusivo para Membros
+                Prêmios Instantâneos
               </Badge>
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none mb-4">
                 Raspadinha <span className="text-primary neon-text-primary">Premiada</span>
               </h1>
               <p className="text-sm md:text-base text-muted-foreground uppercase font-bold tracking-[0.2em] max-w-2xl mx-auto italic">
-                A emoção de ganhar prêmios instantâneos na palma da sua mão. Escolha um cartão e raspe agora!
+                A emoção de ganhar prêmios reais na palma da sua mão. Escolha um cartão e raspe agora!
               </p>
             </motion.div>
           </div>
@@ -47,19 +51,22 @@ const ScratchCardPage = () => {
             transition={{ delay: 0.2 }}
             className="flex justify-center"
           >
-            <ScratchCard 
-              isWinner={isWinner}
-              prizeLabel={prizeLabel}
-              cost={2.50}
-            />
+            {isLoadingPrizes ? (
+              <div className="flex justify-center py-20"><Loader2 className="h-12 w-12 animate-spin text-primary" /></div>
+            ) : (
+              <ScratchCard 
+                cost={0} // Configurable later
+                potentialPrizes={prizes?.map(p => p.label)}
+              />
+            )}
           </motion.div>
 
           {/* Stats/Info Section */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-12">
             {[
-              { icon: TrendingUp, title: "Altas Chances", desc: "1 em cada 4 cartões é premiado" },
+              { icon: TrendingUp, title: "Altas Chances", desc: "Prêmios distribuídos aleatoriamente" },
               { icon: Users, title: "+5k Jogadores", desc: "Milhares de pessoas jogando agora" },
-              { icon: Award, title: "Prêmios VIP", desc: "Até R$ 10.000 em prêmios reais" },
+              { icon: Award, title: "Prêmios Reais", desc: "Saldo instantâneo e prêmios VIP" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -90,25 +97,38 @@ const ScratchCardPage = () => {
              </div>
 
              <div className="space-y-4">
-                {[1, 2, 3].map((_, i) => (
+                {isLoadingScratches ? (
+                   <div className="flex justify-center py-4"><Loader2 className="h-6 w-6 animate-spin text-primary" /></div>
+                ) : recentScratches?.filter(s => s.is_winner).map((scratch, i) => (
                    <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
                       <div className="flex items-center gap-4">
                          <div className="h-10 w-10 rounded-full bg-gradient-to-br from-primary to-secondary p-[2px]">
                             <div className="h-full w-full rounded-full bg-card flex items-center justify-center overflow-hidden">
-                               <img src={`https://i.pravatar.cc/100?img=${i+20}`} alt="User" className="h-full w-full object-cover" />
+                               {scratch.profiles?.avatar_url ? (
+                                  <img src={scratch.profiles.avatar_url} alt="User" className="h-full w-full object-cover" />
+                               ) : (
+                                  <div className="h-full w-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+                                     {scratch.profiles?.name?.substring(0, 1)}
+                                  </div>
+                               )}
                             </div>
                          </div>
                          <div>
-                            <p className="text-sm font-black text-foreground">Usuário #{Math.floor(Math.random() * 9999)}</p>
+                            <p className="text-sm font-black text-foreground">{scratch.profiles?.name || "Usuário"}</p>
                             <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Raspou e ganhou agora mesmo</p>
                          </div>
                       </div>
                       <div className="text-right">
-                         <p className="text-sm font-black text-primary">R$ {(Math.random() * 100 + 10).toFixed(2)}</p>
-                         <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">Saldo Instantâneo</p>
+                         <p className="text-sm font-black text-primary uppercase">{scratch.prize_label}</p>
+                         <p className="text-[8px] text-muted-foreground font-bold uppercase tracking-widest">
+                            {scratch.prize_type === 'balance' ? 'Saldo Instantâneo' : 'Prêmio Especial'}
+                         </p>
                       </div>
                    </div>
                 ))}
+                {(!recentScratches || recentScratches.filter(s => s.is_winner).length === 0) && (
+                   <p className="text-center text-muted-foreground text-xs italic py-4">Aguardando novos ganhadores...</p>
+                )}
              </div>
           </div>
         </div>

@@ -156,6 +156,28 @@ export interface RouletteSpin {
   campaigns?: { title: string } | null;
 }
 
+export interface ScratchCardPrize {
+  id: string;
+  campaign_id?: string;
+  label: string;
+  prize_type: string;
+  value: number;
+  chance_percent: number;
+  image_url?: string;
+}
+
+export interface ScratchCardScratch {
+  id: string;
+  user_id: string;
+  campaign_id?: string;
+  prize_label: string;
+  prize_type: string;
+  prize_value: number | null;
+  is_winner: boolean;
+  created_at: string;
+  profiles?: { name: string; avatar_url: string | null } | null;
+}
+
 export interface Announcement {
   id: string;
   title: string;
@@ -411,6 +433,51 @@ export const useGlobalRouletteSpins = (limit = 20) =>
         .limit(limit);
       if (error) throw error;
       return (data as any) as (RouletteSpin & { campaigns: { title: string } })[];
+    },
+  });
+
+export const useScratchCardPrizes = (campaignId?: string) =>
+  useQuery({
+    queryKey: ["scratch_card_prizes", campaignId],
+    queryFn: async () => {
+      let query = supabase
+        .from("scratch_card_prizes")
+        .select("*")
+        .eq("is_active", true);
+      
+      if (campaignId) {
+        query = query.eq("campaign_id", campaignId);
+      } else {
+        query = query.is("campaign_id", null);
+      }
+      
+      const { data, error } = await supabase
+        .from("scratch_card_prizes")
+        .select("*")
+        .eq("is_active", true);
+        
+      if (error) throw error;
+      return data as ScratchCardPrize[];
+    },
+  });
+
+export const useGlobalScratchCardScratches = (limit = 20) =>
+  useQuery({
+    queryKey: ["global-scratch-card-scratches", limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("scratch_card_scratches")
+        .select(`
+          *,
+          profiles!user_id (
+            name,
+            avatar_url
+          )
+        `)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as ScratchCardScratch[];
     },
   });
 
