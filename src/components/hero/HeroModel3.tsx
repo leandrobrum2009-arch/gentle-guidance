@@ -66,9 +66,9 @@ const HeroModel3 = ({ campaigns }: HeroModel3Props) => {
                       </Badge>
                     </div>
                     
-                    <h1 className="text-4xl md:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter text-foreground">
+                    <h1 className="text-4xl md:text-6xl font-black uppercase italic leading-[0.9] tracking-tighter text-foreground pr-6">
                       {campaign.title.split(' ')[0]} <br />
-                      <span className="text-primary neon-text-primary">
+                      <span className="text-primary neon-text-primary inline-block pr-6">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
                     </h1>
