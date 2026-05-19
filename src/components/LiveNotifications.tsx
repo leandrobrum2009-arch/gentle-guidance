@@ -32,7 +32,50 @@ const LiveNotifications = () => {
     }, 5000);
   };
 
+  const fetchInitialData = async () => {
+    // Get last 3 paid orders
+    const { data: recentOrders } = await supabase
+      .from('orders')
+      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .eq('payment_status', 'paid')
+      .order('created_at', { ascending: false })
+      .limit(3);
+
+    if (recentOrders) {
+      recentOrders.forEach((order: any) => {
+        addNotification({
+          type: 'purchase',
+          userName: order.profiles?.name || 'Alguém',
+          avatarUrl: order.profiles?.avatar_url,
+          message: `acabou de comprar ${order.quantity} cotas`,
+          campaignTitle: order.campaigns?.title,
+        });
+      });
+    }
+
+    // Get last 2 winners
+    const { data: recentWinners } = await supabase
+      .from('winners')
+      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .order('created_at', { ascending: false })
+      .limit(2);
+
+    if (recentWinners) {
+      recentWinners.forEach((winner: any) => {
+        addNotification({
+          type: 'winner',
+          userName: winner.profiles?.name || 'Alguém',
+          avatarUrl: winner.profiles?.avatar_url,
+          message: `foi premiado(a) na cota ${winner.winning_ticket} e ganhou ${winner.prize_description}`,
+          campaignTitle: winner.campaigns?.title,
+        });
+      });
+    }
+  };
+
   useEffect(() => {
+    fetchInitialData();
+
     // Subscribe to new orders (purchases)
     const ordersChannel = supabase
       .channel('live-orders')
