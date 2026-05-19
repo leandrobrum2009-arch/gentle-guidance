@@ -15,6 +15,7 @@ interface ScratchCardProps {
   onComplete?: () => void;
   cost?: number;
   potentialPrizes?: string[];
+  isSimulation?: boolean;
 }
 
 const ScratchCard = ({ 
@@ -23,8 +24,10 @@ const ScratchCard = ({
   isWinner: initialIsWinner, 
   onComplete, 
   cost = 0,
-  potentialPrizes = []
+  potentialPrizes = [],
+  isSimulation = false
 }: ScratchCardProps) => {
+
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
 
