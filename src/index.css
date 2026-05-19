@@ -120,6 +120,9 @@ aside:has(a[href*="lovable.dev"]) {
     --border-shimmer-opacity: 0.8;
     --button-glow-speed: 4s;
     --title-shimmer-speed: 10s;
+    --hover-scale: 1.02;
+    --hover-translate: -2px;
+  }
   }
 
   .dark {
@@ -185,7 +188,7 @@ aside:has(a[href*="lovable.dev"]) {
   }
 
   .glow-primary:hover {
-    box-shadow: 0 0 30px hsl(var(--primary) / 0.3), 0 0 80px hsl(var(--primary) / 0.1);
+    transform: translateY(var(--hover-translate)) scale(var(--hover-scale));
   }
 
   .neon-glow-primary {
