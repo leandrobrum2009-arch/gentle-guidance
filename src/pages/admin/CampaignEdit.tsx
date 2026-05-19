@@ -3,6 +3,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -100,12 +101,12 @@ export default function AdminCampaignEdit() {
 
         <Tabs defaultValue="general">
           <TabsList className="w-full justify-start bg-white border h-14 rounded-2xl p-1 overflow-x-auto">
-            <TabsTrigger value="general" className="rounded-xl px-6">Geral</TabsTrigger>
-            <TabsTrigger value="pricing" className="rounded-xl px-6">Valores</TabsTrigger>
-            <TabsTrigger value="media" className="rounded-xl px-6">Mídia</TabsTrigger>
-            <TabsTrigger value="prizes" className="rounded-xl px-6">Prêmios</TabsTrigger>
-            <TabsTrigger value="engagement" className="rounded-xl px-6">Engajamento</TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl px-6">Avançado</TabsTrigger>
+            <TabsTrigger value="general" className="rounded-xl px-6 gap-2"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
+            <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
+            <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
+            <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
+            <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="mt-6 space-y-6">
@@ -129,18 +130,56 @@ export default function AdminCampaignEdit() {
                  <Label>Total de Bilhetes</Label>
                  <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} className="mt-2" />
                </div>
-               <div className="md:col-span-2">
-                 <Label>Tipo de Seleção de Números</Label>
-                 <Select value={form.ticket_generation_type} onValueChange={(v: any) => set("ticket_generation_type", v)}>
-                   <SelectTrigger className="mt-2 h-12 rounded-xl">
-                     <SelectValue placeholder="Selecione o tipo" />
-                   </SelectTrigger>
-                   <SelectContent>
-                     <SelectItem value="auto">Aleatória (Números atribuídos após o pagamento)</SelectItem>
-                     <SelectItem value="manual">Manual (Cliente escolhe os números na grade)</SelectItem>
-                   </SelectContent>
-                 </Select>
-                 <p className="text-[11px] text-slate-500 mt-2">Na seleção aleatória, os números são gerados automaticamente pelo sistema somente após a confirmação do pagamento.</p>
+               <div className="md:col-span-2 space-y-4 pt-4 border-t">
+                 <div className="flex items-center gap-2">
+                   <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
+                     <Dices className="h-5 w-5" />
+                   </div>
+                   <div className="flex-1">
+                     <Label className="text-base font-bold">Modo de Operação</Label>
+                     <p className="text-xs text-slate-500">Defina como os números serão entregues ao cliente.</p>
+                   </div>
+                 </div>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <button 
+                     type="button"
+                     onClick={() => set("ticket_generation_type", 'auto')}
+                     className={cn(
+                       "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
+                       form.ticket_generation_type === 'auto' 
+                        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
+                        : "border-slate-100 bg-white hover:border-primary/30"
+                     )}
+                   >
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                       <Zap className="h-5 w-5" />
+                     </div>
+                     <div>
+                       <p className="font-bold text-sm">Sorteio Aleatório (Automático)</p>
+                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">Os números são gerados pelo sistema apenas **após a confirmação do pagamento**. Ideal para grandes volumes de bilhetes.</p>
+                     </div>
+                   </button>
+
+                   <button 
+                     type="button"
+                     onClick={() => set("ticket_generation_type", 'manual')}
+                     className={cn(
+                       "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
+                       form.ticket_generation_type === 'manual' 
+                        ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
+                        : "border-slate-100 bg-white hover:border-primary/30"
+                     )}
+                   >
+                     <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-white" : "bg-slate-100 text-slate-500")}>
+                       <MousePointer2 className="h-5 w-5" />
+                     </div>
+                     <div>
+                       <p className="font-bold text-sm">Seleção Manual (Grade)</p>
+                       <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
+                     </div>
+                   </button>
+                 </div>
                </div>
             </Card>
             
@@ -205,39 +244,87 @@ export default function AdminCampaignEdit() {
                 </div>
              </Card>
 
-             <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <Label className="text-lg font-bold">Cotas Premiadas (Instantâneas)</Label>
-                  <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: ""}])}><Plus className="h-4 w-4 mr-2" /> Nova Cota</Button>
-                </div>
-                <div className="space-y-3">
-                  {form.lucky_numbers_prizes.map((p, i) => (
-                    <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl">
-                      <div className="w-32">
-                        <Label className="text-[10px] uppercase font-bold text-slate-400">Número</Label>
-                        <Input value={p.number} onChange={(e) => {
-                          const n = [...form.lucky_numbers_prizes];
-                          n[i].number = e.target.value;
-                          set("lucky_numbers_prizes", n);
-                        }} />
-                      </div>
-                      <div className="flex-1">
-                        <Label className="text-[10px] uppercase font-bold text-slate-400">Prêmio</Label>
-                        <Input value={p.prize} onChange={(e) => {
-                          const n = [...form.lucky_numbers_prizes];
-                          n[i].prize = e.target.value;
-                          set("lucky_numbers_prizes", n);
-                        }} />
-                      </div>
-                      <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
-                        const n = [...form.lucky_numbers_prizes];
-                        n.splice(i, 1);
-                        set("lucky_numbers_prizes", n);
-                      }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                    </div>
-                  ))}
-                </div>
-             </Card>
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+               <div className="flex justify-between items-center mb-6">
+                 <div className="space-y-1">
+                   <Label className="text-lg font-bold flex items-center gap-2">
+                     <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+                     Cotas Premiadas (Instantâneas)
+                   </Label>
+                   <p className="text-xs text-slate-500">Números que ganham prêmios no momento da compra.</p>
+                 </div>
+                 <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: "", protected: true}])}>
+                   <Plus className="h-4 w-4 mr-2" /> Nova Cota
+                 </Button>
+               </div>
+               
+               <div className="grid gap-3">
+                 {form.lucky_numbers_prizes.map((p, i) => (
+                   <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100 transition-all hover:border-amber-200">
+                     <div className="w-32">
+                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Nº da Cota</Label>
+                       <Input 
+                         placeholder="Ex: 5485" 
+                         className="bg-white font-mono font-bold text-center"
+                         value={p.number} 
+                         onChange={(e) => {
+                           const n = [...form.lucky_numbers_prizes];
+                           n[i].number = e.target.value;
+                           set("lucky_numbers_prizes", n);
+                         }} 
+                       />
+                     </div>
+                     <div className="flex-1">
+                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Descrição do Prêmio</Label>
+                       <Input 
+                         placeholder="Ex: iPhone 16 Pro Max" 
+                         className="bg-white"
+                         value={p.prize} 
+                         onChange={(e) => {
+                           const n = [...form.lucky_numbers_prizes];
+                           n[i].prize = e.target.value;
+                           set("lucky_numbers_prizes", n);
+                         }} 
+                       />
+                     </div>
+                     <div className="flex flex-col items-center gap-1.5 pt-5">
+                       <TooltipProvider>
+                         <Tooltip>
+                           <TooltipTrigger asChild>
+                             <div className="flex flex-col items-center gap-1">
+                               <Label className="text-[9px] uppercase font-bold text-slate-400">Protegida</Label>
+                               <Switch 
+                                 checked={p.protected !== false} 
+                                 onCheckedChange={(v) => {
+                                   const n = [...form.lucky_numbers_prizes];
+                                   n[i].protected = v;
+                                   set("lucky_numbers_prizes", n);
+                                 }} 
+                               />
+                             </div>
+                           </TooltipTrigger>
+                           <TooltipContent>
+                             <p className="w-48 text-[10px]">Cotas protegidas não são sorteadas aleatoriamente para compradores comuns. Elas ficam reservadas exclusivamente para ganhadores instantâneos.</p>
+                           </TooltipContent>
+                         </Tooltip>
+                       </TooltipProvider>
+                     </div>
+                     <Button variant="ghost" size="icon" className="mt-5 text-slate-300 hover:text-destructive hover:bg-destructive/5" onClick={() => {
+                       const n = [...form.lucky_numbers_prizes];
+                       n.splice(i, 1);
+                       set("lucky_numbers_prizes", n);
+                     }}><Trash2 className="h-4 w-4" /></Button>
+                   </div>
+                 ))}
+                 {form.lucky_numbers_prizes.length === 0 && (
+                   <div className="text-center py-12 border-2 border-dashed rounded-3xl text-slate-400 bg-slate-50/50">
+                     <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                     <p className="text-sm font-medium">Nenhuma cota premiada configurada.</p>
+                     <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>
+                   </div>
+                 )}
+               </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">

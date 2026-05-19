@@ -159,9 +159,16 @@ export default function AdminCampaigns() {
                          <div className="flex flex-col">
                            <span className="text-sm font-bold text-white group-hover:text-primary transition-colors">{c.title}</span>
                            <span className="text-[10px] text-slate-500 font-medium font-mono">/{c.slug}</span>
-                        {c.federal_lottery_draw && (
-                             <Badge variant="outline" className="mt-1 w-fit text-[9px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Loteria Federal</Badge>
-                        )}
+                         <div className="flex items-center gap-1.5 mt-1">
+                           {c.ticket_generation_type === 'auto' ? (
+                             <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-400 bg-blue-500/5 uppercase tracking-tighter">Aleatória</Badge>
+                           ) : (
+                             <Badge variant="outline" className="text-[8px] py-0 h-4 border-amber-500/30 text-amber-400 bg-amber-500/5 uppercase tracking-tighter">Manual</Badge>
+                           )}
+                           {c.federal_lottery_draw && (
+                                <Badge variant="outline" className="text-[8px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Federal</Badge>
+                           )}
+                         </div>
                          </div>
                       </div>
                     </TableCell>
