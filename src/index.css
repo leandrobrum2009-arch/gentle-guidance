@@ -111,7 +111,10 @@ aside:has(a[href*="lovable.dev"]) {
     --warning: 38 92% 50%;
     --info: 217 91% 60%;
 
-    /* Effects variables */
+    /* Rules for custom themes (Gold, Silver, etc.):
+       - In light themes, shimmer effects should use dark colors (black/dark green)
+       - In dark themes, shimmer effects should use light colors (white/neon)
+    */
     --text-gradient-shimmer: #000;
     --border-shimmer-color: #22c55e;
     --border-shimmer-opacity: 0.8;
