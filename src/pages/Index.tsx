@@ -52,7 +52,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
             {title.split(' ')[0]} <span className="text-primary neon-text-primary">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-600 italic">{subtitle}</p>
       </div>
       <Button variant="ghost" size="sm" className="hidden sm:flex text-[10px] font-black uppercase tracking-widest gap-1 hover:text-primary">
         Ver Todos <ArrowRight className="h-3 w-3" />
@@ -203,7 +203,7 @@ const Index = () => {
                            {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
                          </div>
                         <div className="flex items-center gap-2 mt-1">
-                          <div className="h-1 flex-1 bg-white/10 rounded-full overflow-hidden">
+                      <div className="h-1 flex-1 bg-slate-200 rounded-full overflow-hidden">
                             <div className="h-full bg-primary" style={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }} />
                           </div>
                           <span className="text-[8px] font-black text-primary">{(campaign.sold_tickets/campaign.total_tickets*100).toFixed(0)}%</span>

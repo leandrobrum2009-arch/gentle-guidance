@@ -282,7 +282,7 @@ import { useAuth } from "@/contexts/AuthContext";
          {/* Progress Bar Section */}
          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
            <div className="flex items-center justify-between">
-              <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-500 not-italic font-bold">concluído</span></span>
+              <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-600 not-italic font-bold">concluído</span></span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
            </div>
            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
@@ -373,7 +373,7 @@ import { useAuth } from "@/contexts/AuthContext";
                            #{p.number}
                          </div>
                          <div className="text-left">
-                           <p className={cn("text-xs font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-slate-400" : "text-slate-900")}>
+                           <p className={cn("text-xs font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-slate-500" : "text-slate-900")}>
                              {p.prize}
                            </p>
                            <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">
