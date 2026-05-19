@@ -12,6 +12,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { compressImage } from "@/lib/image-upload";
+
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -39,11 +41,12 @@ const Register = () => {
       if (user) {
         // Handle Avatar Upload
         if (avatar) {
-          const fileExt = avatar.name.split('.').pop();
+          const processedFile = await compressImage(avatar);
+          const fileExt = processedFile.name.split('.').pop();
           const filePath = `${user.id}/${Math.random()}.${fileExt}`;
           const { error: uploadError } = await supabase.storage
             .from('avatars')
-            .upload(filePath, avatar);
+            .upload(filePath, processedFile);
           
           if (!uploadError) {
             const { data: { publicUrl } } = supabase.storage
@@ -52,6 +55,7 @@ const Register = () => {
             await supabase.from("profiles").update({ avatar_url: publicUrl }).eq("user_id", user.id);
           }
         }
+
 
         const referredBy = localStorage.getItem('referred_by');
         if (referredBy) {
