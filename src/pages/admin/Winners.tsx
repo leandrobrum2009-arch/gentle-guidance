@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Search, Trophy, ExternalLink, Calendar, User, Gift } from "lucide-react";
+import { Loader2, Plus, Trash2, Search, Trophy, ExternalLink, Calendar, User, Gift, Camera } from "lucide-react";
 import { format } from "date-fns";
 
 interface WinnerForm {
