@@ -551,12 +551,13 @@ const CampaignDetail = () => {
           </div>
           <Button 
             className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20"
+            disabled={campaign.status !== "active"}
             onClick={() => {
               const element = document.getElementById('purchase-tabs');
               element?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            QUERO MEUS BILHETES
+            {campaign.status === "active" ? "QUERO MEUS BILHETES" : "VENDAS SUSPENSAS"}
           </Button>
         </div>
       </div>
