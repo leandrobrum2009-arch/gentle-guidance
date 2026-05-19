@@ -2,7 +2,7 @@
   import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2,
+    Calendar, ArrowLeft, Shield, Trophy, Users, Share2, Loader2, CheckCircle2,
      Gift, Award, TrendingUp, Info, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity
  } from "lucide-react";
  import { cn } from "@/lib/utils";
