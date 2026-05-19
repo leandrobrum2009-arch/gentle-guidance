@@ -31,7 +31,6 @@ import { toast } from "sonner";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import RaffleCarousel from "@/components/RaffleCarousel";
 import HeroModel1 from "@/components/hero/HeroModel1";
 import HeroModel2 from "@/components/hero/HeroModel2";
 import HeroModel3 from "@/components/hero/HeroModel3";
