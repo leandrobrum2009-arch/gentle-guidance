@@ -49,7 +49,7 @@ const empty: CampaignForm = {
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
-  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"],
+  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
   timer_end_date: "",
 };
 
