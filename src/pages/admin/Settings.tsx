@@ -259,17 +259,45 @@ export default function AdminSettings() {
           <p className="text-muted-foreground mt-1">Personalize a identidade visual e comportamento do site.</p>
         </div>
         <div className="flex flex-wrap gap-3">
-          <Button 
-            variant="outline"
-            onClick={restoreDefaults}
-            className="border-border hover:bg-secondary/20 font-bold"
-          >
-            <RotateCcw className="mr-2 h-4 w-4" />
-            Restaurar Padrão
-          </Button>
+          {hasChanges && (
+            <Button 
+              variant="outline"
+              onClick={discardChanges}
+              className="border-destructive/30 text-destructive hover:bg-destructive/10 font-bold"
+            >
+              <X className="mr-2 h-4 w-4" />
+              Descartar
+            </Button>
+          )}
+          
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button 
+                variant="outline"
+                className="border-border hover:bg-secondary/20 font-bold"
+              >
+                <RotateCcw className="mr-2 h-4 w-4" />
+                Restaurar Padrão
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="bg-card border-border backdrop-blur-xl">
+              <AlertDialogHeader>
+                <AlertDialogTitle className="text-foreground">Confirmar Restauração</AlertDialogTitle>
+                <AlertDialogDescription className="text-muted-foreground">
+                  Isso substituirá suas configurações atuais pelos valores padrão de fábrica. 
+                  Você ainda precisará clicar em "Salvar" para tornar as mudanças permanentes.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="border-border text-foreground hover:bg-secondary/20">Cancelar</AlertDialogCancel>
+                <AlertDialogAction onClick={restoreDefaults} className="bg-primary hover:bg-primary/90 text-foreground">Restaurar Agora</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
           <Button 
             onClick={saveSettings} 
-            disabled={saving}
+            disabled={saving || !hasChanges}
             className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
           >
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
