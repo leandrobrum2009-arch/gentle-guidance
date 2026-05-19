@@ -179,11 +179,14 @@ import { cn } from "@/lib/utils";
             <Card className="bg-card border-border backdrop-blur-xl">
               <CardContent className="pt-6">
                 <div className="flex flex-col items-center text-center">
-                  <div className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)]">
-                     <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
-                        <User className="h-10 w-10 text-foreground" />
-                     </div>
-                  </div>
+                  <motion.div 
+                    whileHover={{ scale: 1.05 }}
+                    className="h-24 w-24 rounded-full bg-gradient-to-tr from-primary to-purple-500 p-1 mb-4 shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] cursor-pointer focus-within:ring-2 focus-within:ring-primary"
+                  >
+                    <div className="h-full w-full rounded-full bg-card flex items-center justify-center">
+                      <User className="h-10 w-10 text-foreground" />
+                    </div>
+                  </motion.div>
                   <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
                   <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
@@ -239,7 +242,7 @@ import { cn } from "@/lib/utils";
                     onClick={() => setActiveTab(item.id)}
                     className={cn(
                         "w-full justify-start gap-3 rounded-xl transition-all duration-300",
-                        activeTab === item.id ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:text-white"
+                        activeTab === item.id ? "bg-primary/10 text-primary border border-primary/20" : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
                     )}
                 >
                   <item.icon className="h-4 w-4" /> {item.label}
@@ -519,8 +522,8 @@ import { cn } from "@/lib/utils";
                         </div>
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Depositar via PIX</h3>
-                            <p className="text-sm text-white/60 font-medium">Crédito instantâneo na sua carteira.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-white text-black font-black uppercase italic tracking-widest hover:bg-slate-200">Depositar Agora</Button>
+                            <p className="text-sm text-foreground/60 font-medium">Crédito instantâneo na sua carteira.</p>
+                            <Button className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 active:scale-95 transition-all">Depositar Agora</Button>
                         </div>
                      </Card>
 
@@ -530,8 +533,8 @@ import { cn } from "@/lib/utils";
                         </div>
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Solicitar Saque</h3>
-                            <p className="text-sm text-white/60 font-medium">Resgate seu saldo para seu banco.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald">Efetuar Saque</Button>
+                            <p className="text-sm text-foreground/60 font-medium">Resgate seu saldo para seu banco.</p>
+                            <Button className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald active:scale-95 transition-all">Efetuar Saque</Button>
                         </div>
                      </Card>
                   </div>
@@ -628,7 +631,7 @@ import { cn } from "@/lib/utils";
                           
                           return (
                             <div key={cat} className="space-y-4">
-                              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-white/40 flex items-center gap-2">
+                              <h3 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-2">
                                  <div className="h-px w-8 bg-border" /> {cat}
                               </h3>
                               <div className="grid gap-4 sm:grid-cols-2">
