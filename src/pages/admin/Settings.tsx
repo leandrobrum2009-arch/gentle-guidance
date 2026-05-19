@@ -163,7 +163,7 @@ export default function AdminSettings() {
                     />
                     <span className="text-sm font-medium">{s.value === 'true' ? 'Ativado' : 'Desativado'}</span>
                   </div>
-                ) : s.key === 'border_shimmer_opacity' ? (
+                ) : s.key === 'border_shimmer_opacity' || s.key === 'button_glow_intensity' ? (
                   <div className="space-y-4 pt-2">
                     <Slider 
                       min={0} 
@@ -173,9 +173,9 @@ export default function AdminSettings() {
                       onValueChange={(val) => handleUpdate(s.key, val[0].toString())}
                     />
                     <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                      <span>Invisível</span>
-                      <span>{Math.round(parseFloat(s.value) * 100)}% de Opacidade</span>
-                      <span>Visível</span>
+                      <span>{s.key.includes('opacity') ? 'Invisível' : 'Sutil'}</span>
+                      <span>{Math.round(parseFloat(s.value) * 100)}% de {s.key.includes('opacity') ? 'Opacidade' : 'Intensidade'}</span>
+                      <span>{s.key.includes('opacity') ? 'Visível' : 'Forte'}</span>
                     </div>
                   </div>
                 ) : (
