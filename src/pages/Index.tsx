@@ -131,6 +131,9 @@ const Index = () => {
       if (siteSettings.animation_easing) {
         root.style.setProperty('--animation-easing', siteSettings.animation_easing);
       }
+      if (siteSettings.button_glow_intensity) {
+        root.style.setProperty('--button-glow-intensity', siteSettings.button_glow_intensity);
+      }
       if (siteSettings.primary_color) {
         root.style.setProperty('--primary', hexToHsl(siteSettings.primary_color));
       }
