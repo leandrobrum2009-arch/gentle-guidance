@@ -232,9 +232,26 @@ const CampaignDetail = () => {
               <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
-              <Badge variant={isActive ? "default" : "secondary"} className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider">
-                {isActive ? "Sorteio Ativo" : "Concluído"}
-              </Badge>
+              {campaign.status === "active" && (
+                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
+                  Sorteio Ativo
+                </Badge>
+              )}
+              {campaign.status === "paused" && (
+                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
+                  Vendas Pausadas
+                </Badge>
+              )}
+              {campaign.status === "audit" && (
+                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse">
+                  Em Auditoria
+                </Badge>
+              )}
+              {campaign.status === "completed" && (
+                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-blue-500 text-white">
+                  Concluído
+                </Badge>
+              )}
               {drawDate && (
                 <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-card">
                   <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
