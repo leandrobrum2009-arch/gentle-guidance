@@ -34,6 +34,7 @@ import Footer from "@/components/Footer";
 import HeroModel1 from "@/components/hero/HeroModel1";
 import HeroModel2 from "@/components/hero/HeroModel2";
 import HeroModel3 from "@/components/hero/HeroModel3";
+import HeroModel4 from "@/components/hero/HeroModel4";
 import CampaignCard from "@/components/CampaignCard";
 import WinnerCard from "@/components/WinnerCard";
 import LiveActivityFeed from "@/components/LiveActivityFeed";
