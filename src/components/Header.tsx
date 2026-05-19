@@ -27,6 +27,7 @@ const Header = () => {
   const [profile, setProfile] = useState<any>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
+  const { data: siteSettings } = useSiteSettings();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
