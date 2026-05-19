@@ -107,7 +107,7 @@ const Index = () => {
                       whileHover={{ y: -12, scale: 1.05, boxShadow: "0 20px 40px -10px rgba(var(--primary-rgb), 0.3)" }}
                       onMouseEnter={() => playSound('hover')}
                       whileTap={{ scale: 0.95 }}
-                       className={`group relative overflow-hidden h-full rounded-3xl border border-slate-200 bg-white p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50`}
+                       className={`group relative overflow-hidden h-full rounded-3xl border border-border bg-card p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50`}
                     >
                     <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-20`} />
                     {item.badge && (
@@ -115,7 +115,7 @@ const Index = () => {
                         {item.badge}
                       </Badge>
                     )}
-                    <div className="h-12 w-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
+                    <div className="h-12 w-12 rounded-2xl bg-secondary border border-border flex items-center justify-center mb-5 group-hover:bg-primary/20 group-hover:border-primary/50 transition-all">
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
                     <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
@@ -145,13 +145,13 @@ const Index = () => {
  
                 <div className="space-y-6">
                   {/* Live Activity Feed */}
-                  <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-xl">
+                  <div className="rounded-3xl border border-border bg-card p-6 shadow-xl">
                     <LiveActivityFeed />
                   </div>
  
                  {/* Small Featured Roulette */}
                  {featuredCampaign?.roulette_enabled && (
-                    <div className="rounded-3xl border border-primary/20 bg-white p-6 shadow-xl relative overflow-hidden group">
+                    <div className="rounded-3xl border border-primary/20 bg-card p-6 shadow-xl relative overflow-hidden group">
                      <div className="absolute -right-10 -top-10 h-40 w-40 bg-primary/20 blur-3xl rounded-full group-hover:bg-primary/30 transition-all" />
                      <h3 className="text-sm font-black uppercase tracking-widest italic mb-4 flex items-center gap-2">
                        <Gamepad2 className="h-4 w-4 text-primary" /> Tente a <span className="text-primary">Sorte</span>
@@ -192,7 +192,7 @@ const Index = () => {
                 </p>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {endingSoon.slice(0, 2).map((campaign, i) => (
-                    <div key={i} className="bg-white/60 backdrop-blur-sm border border-slate-100 rounded-2xl p-4 flex items-center gap-4 shadow-sm">
+                    <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm">
                        <div className="relative h-16 w-16 flex-shrink-0">
                          <img src={campaign.image_url || ""} className="h-full w-full rounded-xl object-cover" alt="" />
                          <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse" />
@@ -244,7 +244,7 @@ const Index = () => {
           </section>
 
           {/* Social Proof / Security */}
-          <section className="border-y border-slate-100 bg-slate-50 py-16">
+          <section className="border-y border-border bg-secondary/30 py-16">
             <div className="container">
               <div className="grid gap-12 lg:grid-cols-3">
                 {[
