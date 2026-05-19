@@ -86,7 +86,7 @@ const Header = () => {
   };
 
   return (
-      <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-white/90 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
+      <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-background/90 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
        <div className="container flex items-center justify-between">
          <div className="flex items-center gap-8">
            <Link to="/" className="flex items-center gap-2">
@@ -129,10 +129,10 @@ const Header = () => {
                 <span className="text-[10px] font-black italic text-primary">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
               </motion.div>
               
-               <button
-                  onClick={() => navigate("/conta")}
-                  className="relative rounded-full bg-slate-50 p-2 text-slate-500 hover:bg-slate-100 hover:text-primary transition-all border border-slate-100 shadow-sm"
-               >
+                <button
+                   onClick={() => navigate("/conta")}
+                   className="relative rounded-full bg-secondary/50 p-2 text-muted-foreground hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
+                >
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
                   <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
@@ -149,7 +149,7 @@ const Header = () => {
                   </Link>
                 )}
                  <Link to="/conta">
-                   <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-slate-100 bg-white hover:bg-slate-50 font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-border bg-card hover:bg-secondary font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
                      <User className="h-4 w-4 text-primary" />
                      <span className="hidden lg:inline">{user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
                    </Button>
@@ -171,10 +171,10 @@ const Header = () => {
             </div>
           )}
 
-          <button
-            onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 text-slate-500 lg:hidden border border-slate-100 shadow-sm"
-          >
+           <button
+             onClick={() => setMobileOpen(!mobileOpen)}
+             className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-muted-foreground lg:hidden border border-border shadow-sm"
+           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
@@ -186,7 +186,7 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-slate-100 bg-white shadow-xl md:hidden"
+            className="overflow-hidden border-t border-border bg-card shadow-xl md:hidden"
           >
             <nav className="container flex flex-col gap-1 py-4">
               {navLinks.map((link) => (
