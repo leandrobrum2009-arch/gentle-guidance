@@ -119,7 +119,7 @@ const Index = () => {
                       <item.icon className="relative z-10 h-6 w-6 text-primary" />
                     </div>
                     <h3 className="relative z-10 text-sm font-black uppercase tracking-widest text-foreground leading-none mb-2">{item.title}</h3>
-                    <p className="relative z-10 text-[10px] text-slate-400 uppercase font-bold tracking-tighter">{item.desc}</p>
+                    <p className="relative z-10 text-[10px] text-slate-600 uppercase font-bold tracking-tighter">{item.desc}</p>
                   </motion.div>
                 </Link>
               ))}
