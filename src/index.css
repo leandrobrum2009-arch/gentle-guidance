@@ -265,11 +265,11 @@ aside:has(a[href*="lovable.dev"]) {
      z-index: 1;
    }
 
-    .border-light-path::before {
-      content: "";
-      position: absolute;
-      inset: -2px;
-      padding: 2px;
+   .border-light-path::before {
+     content: "";
+     position: absolute;
+     inset: -2px;
+     padding: 2px;
      border-radius: inherit;
      background: linear-gradient(
        90deg, 
@@ -282,11 +282,6 @@ aside:has(a[href*="lovable.dev"]) {
      opacity: 0;
      background-size: 200% 100%;
      transition: opacity 0.5s ease;
-   }
-
-   .border-light-path:hover::before {
-     opacity: var(--border-shimmer-opacity);
-   }
      mask: 
        linear-gradient(#fff 0 0) content-box, 
        linear-gradient(#fff 0 0);
@@ -294,6 +289,10 @@ aside:has(a[href*="lovable.dev"]) {
      -webkit-mask-composite: destination-out;
      animation: border-shimmer 3s infinite linear;
      pointer-events: none;
+   }
+
+   .border-light-path:hover::before {
+     opacity: var(--border-shimmer-opacity);
    }
 
    @keyframes border-shimmer {
@@ -316,4 +315,4 @@ aside:has(a[href*="lovable.dev"]) {
      }
    }
 
-  }
+}
