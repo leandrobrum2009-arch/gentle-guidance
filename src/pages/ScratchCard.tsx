@@ -91,7 +91,7 @@ const ScratchCardPage = () => {
                    <div className="h-10 w-10 rounded-xl bg-amber-500/20 flex items-center justify-center">
                       <Sparkles className="h-5 w-5 text-amber-500" />
                    </div>
-                   <h2 className="text-xl font-black uppercase italic tracking-tighter">Últimos Ganhadores</h2>
+                   <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Últimos Ganhadores</h2>
                 </div>
                 <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest bg-secondary">Tempo Real</Badge>
              </div>
