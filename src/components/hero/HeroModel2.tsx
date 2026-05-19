@@ -57,7 +57,7 @@ const HeroModel2 = ({ campaigns }: HeroModel2Props) => {
 
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8">
                   <Link to={`/campanha/${campaign.id}`}>
-                    <Button size="lg" className="h-20 rounded-[2rem] px-12 gap-4 text-xl font-black uppercase italic tracking-widest glow-primary hover:scale-105 transition-transform shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)]">
+                    <Button size="lg" className="h-20 rounded-[2rem] px-12 gap-4 text-xl font-black uppercase italic tracking-widest glow-primary hover:scale-105 transition-transform shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)] border-light-path border-[#22c55e]/30">
                       RESGATAR MEU PRÊMIO <ArrowRight className="h-6 w-6" />
                     </Button>
                   </Link>
