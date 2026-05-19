@@ -241,7 +241,7 @@ export default function AdminCampaignEdit() {
         </div>
 
         <Tabs defaultValue="general">
-          <TabsList className="w-full justify-start bg-white border h-14 rounded-2xl p-1 overflow-x-auto">
+          <TabsList className="w-full justify-start bg-card border h-14 rounded-2xl p-1 overflow-x-auto">
             <TabsTrigger value="general" className="rounded-xl px-6 gap-2"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
             <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
@@ -290,7 +290,7 @@ export default function AdminCampaignEdit() {
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'auto' 
                         ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
-                        : "border-border bg-white hover:border-primary/30"
+                        : "border-border bg-card hover:border-primary/30"
                      )}
                    >
                      <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'auto' ? "bg-primary text-foreground" : "bg-secondary text-muted-foreground")}>
@@ -309,7 +309,7 @@ export default function AdminCampaignEdit() {
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'manual' 
                         ? "border-primary bg-primary/5 shadow-md ring-1 ring-primary/20" 
-                        : "border-border bg-white hover:border-primary/30"
+                        : "border-border bg-card hover:border-primary/30"
                      )}
                    >
                      <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center transition-colors", form.ticket_generation_type === 'manual' ? "bg-primary text-foreground" : "bg-secondary text-muted-foreground")}>
@@ -485,7 +485,7 @@ export default function AdminCampaignEdit() {
                        <Label className="text-[10px] uppercase font-bold text-muted-foreground mb-1.5 block">Nº da Cota</Label>
                        <Input 
                          placeholder="Ex: 5485" 
-                         className="bg-white font-mono font-bold text-center"
+                         className="bg-card font-mono font-bold text-center"
                          value={p.number} 
                          onChange={(e) => {
                            const n = [...form.lucky_numbers_prizes];
@@ -498,7 +498,7 @@ export default function AdminCampaignEdit() {
                        <Label className="text-[10px] uppercase font-bold text-muted-foreground mb-1.5 block">Descrição do Prêmio</Label>
                        <Input 
                          placeholder="Ex: iPhone 16 Pro Max" 
-                         className="bg-white"
+                         className="bg-card"
                          value={p.prize} 
                          onChange={(e) => {
                            const n = [...form.lucky_numbers_prizes];

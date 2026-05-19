@@ -68,7 +68,7 @@ export default function AdminUsers() {
                       </div>
                     </TableCell>
                      <TableCell className="text-foreground font-medium">{u.phone || "-"}</TableCell>
-                     <TableCell className="text-emerald-400 font-bold font-mono text-xs">
+                     <TableCell className="text-emerald-500 font-bold font-mono text-xs">
                        R$ {Number(u.balance || 0).toFixed(2)}
                      </TableCell>
                     <TableCell className="text-muted-foreground text-sm">

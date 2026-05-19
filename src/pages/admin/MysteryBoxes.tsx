@@ -38,7 +38,7 @@ export default function AdminMysteryBoxes() {
               </div>
               <Box className={`h-8 w-8 ${
                 rarity === 'Comum' ? 'text-muted-foreground' :
-                rarity === 'Raro' ? 'text-blue-400' :
+                rarity === 'Raro' ? 'text-blue-600' :
                 rarity === 'Épico' ? 'text-purple-400' : 'text-amber-400'
               } opacity-20`} />
             </CardContent>
@@ -73,16 +73,16 @@ export default function AdminMysteryBoxes() {
                     <TableCell className="text-foreground font-bold font-mono text-xs">
                       R$ {Number(b.cost_to_open || 0).toFixed(2)}
                     </TableCell>
-                    <TableCell className="text-emerald-400 font-bold font-mono text-xs">
+                    <TableCell className="text-emerald-500 font-bold font-mono text-xs">
                       R$ {Number(b.prize_value || 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
-                      <Badge className={`text-[10px] font-bold tracking-widest ${b.is_active ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/20' : 'bg-secondary/500/20 text-muted-foreground border-slate-500/20'}`}>
+                      <Badge className={`text-[10px] font-bold tracking-widest ${b.is_active ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/20' : 'bg-secondary/500/20 text-muted-foreground border-slate-500/20'}`}>
                         {b.is_active ? 'ATIVA' : 'INATIVA'}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">

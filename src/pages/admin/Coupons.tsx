@@ -71,12 +71,12 @@ export default function AdminCoupons() {
                       ) : 'Nunca'}
                     </TableCell>
                     <TableCell>
-                      <Badge className={c.is_active ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20" : "bg-secondary/500/20 text-muted-foreground border-slate-500/20"}>
+                      <Badge className={c.is_active ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/20" : "bg-secondary/500/20 text-muted-foreground border-slate-500/20"}>
                         {c.is_active ? "ATIVO" : "INATIVO"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">

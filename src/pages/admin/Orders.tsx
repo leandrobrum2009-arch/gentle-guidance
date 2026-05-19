@@ -31,7 +31,7 @@ import { Input } from "@/components/ui/input";
  
    const statusIcon = (s: string) => {
      switch (s) {
-       case "paid": return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />;
+       case "paid": return <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />;
        case "pending": return <Clock className="h-3.5 w-3.5 text-amber-400" />;
        case "cancelled": return <XCircle className="h-3.5 w-3.5 text-rose-400" />;
        default: return <Clock className="h-3.5 w-3.5 text-muted-foreground" />;
@@ -40,7 +40,7 @@ import { Input } from "@/components/ui/input";
  
    const statusBg = (s: string) => {
      switch (s) {
-       case "paid": return "bg-emerald-500/10 text-emerald-400 border-emerald-500/20";
+       case "paid": return "bg-emerald-500/10 text-emerald-500 border-emerald-500/20";
        case "pending": return "bg-amber-500/10 text-amber-400 border-amber-500/20";
        case "cancelled": return "bg-rose-500/10 text-rose-400 border-rose-500/20";
        default: return "bg-secondary/500/10 text-muted-foreground border-slate-500/20";
@@ -79,7 +79,7 @@ import { Input } from "@/components/ui/input";
         <div className="flex items-center gap-3">
           {[
             { label: "Pendentes", value: stats.pending, color: "text-amber-400", bg: "bg-amber-500/10" },
-            { label: "Pagos", value: stats.paid, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+            { label: "Pagos", value: stats.paid, color: "text-emerald-500", bg: "bg-emerald-500/10" },
             { label: "Total", value: stats.total, color: "text-primary", bg: "bg-primary/10" },
           ].map((s, i) => (
             <div key={i} className="flex flex-col items-end">
@@ -138,7 +138,7 @@ import { Input } from "@/components/ui/input";
            ) : (
              <Table>
                <TableHeader>
-                  <TableRow className="border-border hover:bg-transparent bg-white/[0.02]">
+                  <TableRow className="border-border hover:bg-transparent bg-card/[0.02]">
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Identificação</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Cliente</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Campanha</TableHead>
@@ -150,7 +150,7 @@ import { Input } from "@/components/ui/input";
                </TableHeader>
                <TableBody>
                   {filteredOrders.map((o: any) => (
-                    <TableRow key={o.id} className="border-border hover:bg-white/[0.02] transition-colors group">
+                    <TableRow key={o.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                       <TableCell className="pl-8 py-4">
                         <div className="flex flex-col gap-0.5">
                           <span className="font-mono text-[10px] text-primary font-bold tracking-tighter">ORD-{o.id.substring(0, 8).toUpperCase()}</span>
@@ -194,7 +194,7 @@ import { Input } from "@/components/ui/input";
                       <TableCell className="text-right pr-8">
                        <DropdownMenu>
                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-white/10 rounded-xl transition-all">
+                            <Button variant="ghost" size="icon" className="h-10 w-10 text-muted-foreground hover:text-foreground hover:bg-card/10 rounded-xl transition-all">
                               <MoreVertical className="h-5 w-5" />
                            </Button>
                          </DropdownMenuTrigger>
@@ -203,7 +203,7 @@ import { Input } from "@/components/ui/input";
                             <div className="space-y-1">
                               {o.payment_status !== 'paid' && (
                                 <DropdownMenuItem 
-                                  className="flex items-center gap-3 focus:bg-emerald-500/10 focus:text-emerald-400 cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                  className="flex items-center gap-3 focus:bg-emerald-500/10 focus:text-emerald-500 cursor-pointer py-3 rounded-lg font-bold text-xs"
                                   onClick={() => updateStatus({ orderId: o.id, status: 'paid' })}
                                 >
                                   <CheckCircle2 className="h-4 w-4" />

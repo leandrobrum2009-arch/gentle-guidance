@@ -108,8 +108,8 @@ export default function AdminDashboard() {
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-2.5 border border-emerald-500/20">
-            <Activity className="h-4 w-4 text-emerald-400 animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-400">Sistema Online</span>
+            <Activity className="h-4 w-4 text-emerald-500 animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Sistema Online</span>
           </div>
           <div className="flex items-center gap-2 rounded-xl bg-primary/10 px-4 py-2.5 border border-primary/20">
             <ShieldCheck className="h-4 w-4 text-primary" />
@@ -135,7 +135,7 @@ export default function AdminDashboard() {
               <button
                 key={i}
                 onClick={() => window.location.href = action.url}
-                className="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-white p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98]"
+                className="group relative flex flex-col items-center justify-center gap-3 rounded-2xl border border-border bg-card p-6 shadow-sm transition-all hover:scale-[1.02] hover:border-primary/30 hover:bg-primary/5 active:scale-[0.98]"
               >
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${action.color} text-foreground shadow-lg transition-transform group-hover:scale-110`}>
                   <action.icon className="h-6 w-6" />
@@ -151,7 +151,7 @@ export default function AdminDashboard() {
           {/* Stats Grid */}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {stats.map((s) => (
-              <Card key={s.label} className="relative overflow-hidden border-border bg-white shadow-sm transition-all hover:border-primary/30 group cursor-default">
+              <Card key={s.label} className="relative overflow-hidden border-border bg-card shadow-sm transition-all hover:border-primary/30 group cursor-default">
                 <div className={`absolute -right-4 -top-4 h-24 w-24 rounded-full bg-gradient-to-br ${s.color} opacity-10 blur-2xl transition-all group-hover:opacity-20`}></div>
                 <CardHeader className="flex flex-row items-center justify-between pb-2">
                   <CardTitle className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{s.label}</CardTitle>
@@ -162,7 +162,7 @@ export default function AdminDashboard() {
                 <CardContent>
                   <div className="flex items-baseline gap-2">
                     <p className="text-2xl font-bold tracking-tight text-foreground">{s.value}</p>
-                    <span className={`text-[10px] font-bold ${s.trendUp ? "text-emerald-400" : "text-rose-400"} flex items-center`}>
+                    <span className={`text-[10px] font-bold ${s.trendUp ? "text-emerald-500" : "text-rose-400"} flex items-center`}>
                       {s.trendUp ? <TrendingUp className="mr-0.5 h-3 w-3" /> : <TrendingDown className="mr-0.5 h-3 w-3" />}
                       {s.trend}
                     </span>
@@ -174,14 +174,14 @@ export default function AdminDashboard() {
 
           {/* Charts Section */}
           <div className="grid gap-6 lg:grid-cols-7">
-            <Card className="border-border bg-white shadow-sm lg:col-span-4 overflow-hidden group">
+            <Card className="border-border bg-card shadow-sm lg:col-span-4 overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-bold text-foreground tracking-tight">Análise de Receita</CardTitle>
                   <p className="text-xs text-muted-foreground font-medium">Performance financeira dos últimos 7 dias</p>
                 </div>
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/20 transition-all hover:bg-white/10 hover:scale-110 group-hover:text-primary">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-secondary/20 transition-all hover:bg-card/10 hover:scale-110 group-hover:text-primary">
                   <TrendingUp className="h-5 w-5 text-muted-foreground" />
                 </div>
               </CardHeader>
@@ -234,7 +234,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-white shadow-sm lg:col-span-3 overflow-hidden group">
+            <Card className="border-border bg-card shadow-sm lg:col-span-3 overflow-hidden group">
               <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <CardHeader>
                 <CardTitle className="text-lg font-bold text-foreground tracking-tight">Distribuição de Vendas</CardTitle>
@@ -271,7 +271,7 @@ export default function AdminDashboard() {
 
           {/* Bottom Section */}
           <div className="grid gap-6 lg:grid-cols-2">
-            <Card className="border-border bg-white shadow-sm group overflow-hidden">
+            <Card className="border-border bg-card shadow-sm group overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-bold text-foreground tracking-tight">Campanhas em Alta</CardTitle>
@@ -286,7 +286,7 @@ export default function AdminDashboard() {
                   {campaigns?.slice(0, 4).map((c) => {
                     const progress = Math.min(Math.round((c.sold_tickets / (c.total_tickets || 1)) * 100), 100);
                     return (
-                      <div key={c.id} className="group/item flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-primary/30 hover:bg-white transition-all shadow-sm">
+                      <div key={c.id} className="group/item flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-primary/30 hover:bg-card transition-all shadow-sm">
                         <div className="flex items-center gap-4">
                           <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/10 to-purple-600/10 border border-border flex items-center justify-center text-primary font-bold shadow-inner group-hover/item:scale-105 transition-transform">
                             {c.image_url ? <img src={c.image_url} className="h-full w-full object-cover rounded-xl" /> : c.title.substring(0, 1)}
@@ -302,7 +302,7 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-black text-emerald-400">R$ {((Number(c.ticket_price) * c.sold_tickets) || 0).toFixed(2)}</p>
+                          <p className="text-sm font-black text-emerald-500">R$ {((Number(c.ticket_price) * c.sold_tickets) || 0).toFixed(2)}</p>
                           <p className="text-[10px] text-muted-foreground font-bold">{c.sold_tickets} bilhetes</p>
                         </div>
                       </div>
@@ -312,7 +312,7 @@ export default function AdminDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-white shadow-sm overflow-hidden">
+            <Card className="border-border bg-card shadow-sm overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-bold text-foreground tracking-tight">Live Activity</CardTitle>
@@ -326,13 +326,13 @@ export default function AdminDashboard() {
               <CardContent>
                 <div className="space-y-1">
                   {[
-                    { action: "Pagamento Aprovado", user: "LEANDRO BRUM", target: "ORD-75AC71", time: "2 min atrás", icon: CheckCircle2, color: "text-emerald-400", bg: "bg-emerald-500/10" },
-                    { action: "Nova Campanha", user: "Administrador", target: "iPhone 16 Pro Max", time: "15 min atrás", icon: Plus, color: "text-blue-400", bg: "bg-blue-500/10" },
-                    { action: "Sorteio Federal", user: "Sistema", target: "Concurso 5864", time: "1h atrás", icon: Target, color: "text-emerald-400", bg: "bg-emerald-500/10" },
+                    { action: "Pagamento Aprovado", user: "LEANDRO BRUM", target: "ORD-75AC71", time: "2 min atrás", icon: CheckCircle2, color: "text-emerald-500", bg: "bg-emerald-500/10" },
+                    { action: "Nova Campanha", user: "Administrador", target: "iPhone 16 Pro Max", time: "15 min atrás", icon: Plus, color: "text-blue-600", bg: "bg-blue-500/10" },
+                    { action: "Sorteio Federal", user: "Sistema", target: "Concurso 5864", time: "1h atrás", icon: Target, color: "text-emerald-500", bg: "bg-emerald-500/10" },
                     { action: "Cupom Criado", user: "Administrador", target: "DROP50", time: "2h atrás", icon: Percent, color: "text-purple-400", bg: "bg-purple-500/10" },
                     { action: "Novo Vencedor", user: "Sistema", target: "Rifa Toyota Hilux", time: "3h atrás", icon: Trophy, color: "text-amber-500", bg: "bg-amber-500/10" },
                   ].map((log, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-white/[0.03] transition-colors group/log">
+                    <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-card/[0.03] transition-colors group/log">
                       <div className="flex items-center gap-4">
                         <div className={`h-10 w-10 rounded-xl ${log.bg} flex items-center justify-center ${log.color} transition-transform group-hover/log:scale-110`}>
                           <log.icon className="h-5 w-5" />

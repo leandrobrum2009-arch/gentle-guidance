@@ -166,7 +166,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
               </div>
             ) : (
               <Table>
-                <TableHeader className="bg-white/[0.02]">
+                <TableHeader className="bg-card/[0.02]">
                   <TableRow className="border-border hover:bg-transparent">
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Concurso</TableHead>
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest py-5">Data do Sorteio</TableHead>
@@ -176,7 +176,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                 </TableHeader>
                 <TableBody>
                   {results?.map((r: any) => (
-                    <TableRow key={r.id} className="border-border hover:bg-white/[0.02] transition-colors group">
+                    <TableRow key={r.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                       <TableCell className="pl-8 py-4">
                         <div className="flex items-center gap-2">
                           <Hash className="h-3.5 w-3.5 text-primary" />

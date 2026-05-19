@@ -33,7 +33,7 @@ export default function AdminBanners() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-[#0d0d0f] to-transparent opacity-60" />
               <div className="absolute top-2 right-2">
-                <Badge className={banner.is_active ? "bg-emerald-500/20 text-emerald-400 border-emerald-500/20" : "bg-secondary/500/20 text-muted-foreground border-slate-500/20"}>
+                <Badge className={banner.is_active ? "bg-emerald-500/20 text-emerald-500 border-emerald-500/20" : "bg-secondary/500/20 text-muted-foreground border-slate-500/20"}>
                   {banner.is_active ? "ATIVO" : "INATIVO"}
                 </Badge>
               </div>
@@ -45,7 +45,7 @@ export default function AdminBanners() {
                   <p className="text-xs text-muted-foreground mt-1 line-clamp-1">{banner.subtitle || "Sem subtítulo"}</p>
                 </div>
                 <div className="flex gap-1">
-                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/10">
+                  <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                     <Pencil className="h-4 w-4" />
                   </Button>
                   <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">

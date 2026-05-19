@@ -47,7 +47,7 @@ export default function AdminNotifications() {
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-1.5">
-                        {n.target_type === 'all' ? <Users className="h-3.5 w-3.5 text-blue-400" /> : <User className="h-3.5 w-3.5 text-purple-400" />}
+                        {n.target_type === 'all' ? <Users className="h-3.5 w-3.5 text-blue-600" /> : <User className="h-3.5 w-3.5 text-purple-400" />}
                         <Badge variant="outline" className="text-[10px] uppercase font-bold tracking-widest border-border text-foreground">
                           {n.target_type === 'all' ? 'Todos os Usuários' : 'Usuário Específico'}
                         </Badge>

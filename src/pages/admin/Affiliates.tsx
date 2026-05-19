@@ -96,9 +96,9 @@ export default function AdminAffiliates() {
                       <code className="bg-secondary/20 px-2 py-1 rounded text-primary text-xs font-bold">{a.referral_code}</code>
                     </TableCell>
                     <TableCell className="text-foreground font-medium">{Number(a.commission_rate * 100).toFixed(0)}%</TableCell>
-                    <TableCell className="text-emerald-400 font-bold tracking-tight">R$ 0,00</TableCell>
+                    <TableCell className="text-emerald-500 font-bold tracking-tight">R$ 0,00</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1 text-emerald-400 font-bold text-[10px] uppercase tracking-widest">
+                      <div className="flex items-center gap-1 text-emerald-500 font-bold text-[10px] uppercase tracking-widest">
                         <ShieldCheck className="h-3 w-3" />
                         Verificado
                       </div>

@@ -36,7 +36,7 @@ import { Badge } from "@/components/ui/badge";
          <Card className="border-border bg-card/50 backdrop-blur-xl">
            <CardContent className="p-6">
              <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest mb-1">Prêmios Distribuídos</p>
-             <h3 className="text-2xl font-black text-emerald-400">R$ {stats?.totalPrizesValue.toFixed(2) || "0.00"}</h3>
+             <h3 className="text-2xl font-black text-emerald-500">R$ {stats?.totalPrizesValue.toFixed(2) || "0.00"}</h3>
            </CardContent>
          </Card>
          <Card className="border-border bg-card/50 backdrop-blur-xl">
@@ -83,7 +83,7 @@ import { Badge } from "@/components/ui/badge";
                         {p.prize_type}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-emerald-400 font-bold font-mono text-xs">
+                    <TableCell className="text-emerald-500 font-bold font-mono text-xs">
                       R$ {Number(p.value).toFixed(2)}
                     </TableCell>
                     <TableCell>
@@ -104,7 +104,7 @@ import { Badge } from "@/components/ui/badge";
                       </div>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-white/10">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">

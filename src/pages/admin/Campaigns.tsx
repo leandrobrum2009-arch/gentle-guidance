@@ -136,7 +136,7 @@ export default function AdminCampaigns() {
              </div>
           ) : (
             <Table>
-               <TableHeader className="bg-white/[0.02]">
+               <TableHeader className="bg-card/[0.02]">
                  <TableRow className="hover:bg-transparent border-border">
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
@@ -150,7 +150,7 @@ export default function AdminCampaigns() {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
                    return (
-                   <TableRow key={c.id} className="border-border hover:bg-white/[0.02] transition-colors group">
+                   <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                      <TableCell className="pl-6 py-4">
                        <div className="flex items-center gap-4">
                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
@@ -161,7 +161,7 @@ export default function AdminCampaigns() {
                            <span className="text-[10px] text-muted-foreground font-medium font-mono">/{c.slug}</span>
                          <div className="flex items-center gap-1.5 mt-1">
                            {c.ticket_generation_type === 'auto' ? (
-                             <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-400 bg-blue-500/5 uppercase tracking-tighter">Aleatória</Badge>
+                             <Badge variant="outline" className="text-[8px] py-0 h-4 border-blue-500/30 text-blue-600 bg-blue-500/5 uppercase tracking-tighter">Aleatória</Badge>
                            ) : (
                              <Badge variant="outline" className="text-[8px] py-0 h-4 border-amber-500/30 text-amber-400 bg-amber-500/5 uppercase tracking-tighter">Manual</Badge>
                            )}
