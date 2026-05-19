@@ -7,7 +7,7 @@ const footerLinks = [
   { label: "Ganhadores", href: "/ganhadores" },
   { label: "Federal", href: "/federal" },
   { label: "Comunicados", href: "/comunicados" },
-  { label: "Meus Bilhetes", href: "/meus-numeros" },
+  { label: "Meus Títulos", href: "/conta#tickets" },
   { label: "Afiliados", href: "/afiliados" },
   { label: "Filantropia", href: "/filantropia" },
   { label: "Termos de Uso", href: "/termos-de-uso" },
