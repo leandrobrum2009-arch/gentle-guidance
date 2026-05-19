@@ -87,7 +87,7 @@ const Index = () => {
       ) : (
         <>
            {campaigns && campaigns.length > 0 && (
-             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active").slice(0, 5)} />
+             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
