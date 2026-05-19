@@ -179,7 +179,10 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("site_settings").select("*");
-    if (!error) setSettings(data);
+    if (!error) {
+      setSettings(data);
+      setInitialSettings(JSON.parse(JSON.stringify(data)));
+    }
     setLoading(false);
   };
 
