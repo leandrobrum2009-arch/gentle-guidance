@@ -265,7 +265,7 @@ import { useAuth } from "@/contexts/AuthContext";
          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
            <div className="space-y-1">
              <h1 className="text-2xl font-black text-slate-900 leading-tight">{campaign.title}</h1>
-             <p className="text-sm text-slate-500 font-medium">{campaign.subtitle}</p>
+              <p className="text-sm text-slate-600 font-medium">{campaign.subtitle}</p>
            </div>
            <div className="flex items-center gap-2">
              <Badge variant={isActive ? "default" : "secondary"} className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider">
@@ -282,8 +282,8 @@ import { useAuth } from "@/contexts/AuthContext";
          {/* Progress Bar Section */}
          <div className="bg-white rounded-3xl p-6 shadow-sm border border-slate-100 space-y-4">
            <div className="flex items-center justify-between">
-             <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-400 not-italic font-bold">concluído</span></span>
-             <span className="text-[10px] font-bold uppercase tracking-widest text-slate-500">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
+              <span className="text-sm font-black text-slate-900 italic">{progress}% <span className="text-slate-500 not-italic font-bold">concluído</span></span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-slate-600">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
            </div>
            <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
              <motion.div 
@@ -319,7 +319,7 @@ import { useAuth } from "@/contexts/AuthContext";
  
                  <TabsContent value="manual" className="p-6">
                    <div className="space-y-6">
-                     <p className="text-xs text-slate-500 text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
+                      <p className="text-xs text-slate-600 text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
                      <TicketGrid 
                        totalTickets={campaign.total_tickets}
                        soldTickets={[...soldTickets, ...protectedNumbers]}
