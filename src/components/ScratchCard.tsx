@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { History, Clock, User } from "lucide-react";
 import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 
@@ -30,6 +31,8 @@ const ScratchCard = ({
 
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
+  const [history, setHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
+
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -39,7 +42,18 @@ const ScratchCard = ({
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
+    // Generate some initial mock history
+    const names = ["Marcos S.", "Ana Paula", "Ricardo T.", "Juliana M.", "Felipe G."];
+    const initialHistory = Array.from({ length: 3 }).map((_, i) => ({
+      name: names[Math.floor(Math.random() * names.length)],
+      prize: Math.random() > 0.5 ? "Cota Premiada" : "Giro Grátis",
+      time: `${Math.floor(Math.random() * 10) + 1}m atrás`,
+      isWinner: true
+    }));
+    setHistory(initialHistory);
+
     if (!initialPrizeLabel && potentialPrizes.length > 0) {
+
       const winner = Math.random() > 0.6; // 40% win chance for simulation
       setIsWinner(winner);
       if (winner) {
@@ -139,6 +153,23 @@ const ScratchCard = ({
         spread: 70,
         origin: { y: 0.6 }
       });
+      
+      // Add to history
+      const newEntry = {
+        name: "Você",
+        prize: prizeLabel,
+        time: "Agora",
+        isWinner: true
+      };
+      setHistory(prev => [newEntry, ...prev].slice(0, 5));
+    } else {
+      const newEntry = {
+        name: "Você",
+        prize: "Tente novamente",
+        time: "Agora",
+        isWinner: false
+      };
+      setHistory(prev => [newEntry, ...prev].slice(0, 5));
     }
     if (onComplete) onComplete();
   };
@@ -290,6 +321,50 @@ const ScratchCard = ({
         <div className="flex flex-col items-center gap-1">
           <Gift className="h-4 w-4 text-secondary opacity-50" />
           <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
+        </div>
+      </div>
+
+      {/* History Section */}
+      <div className="w-full mt-4 space-y-3 z-10">
+        <div className="flex items-center gap-2 px-1">
+          <History className="h-3 w-3 text-primary" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Histórico Recente</span>
+        </div>
+        <div className="space-y-2 max-h-40 overflow-y-auto no-scrollbar pr-1">
+          <AnimatePresence>
+            {history.map((item, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                    <User className="h-4 w-4 text-primary opacity-60" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black text-white">{item.name}</p>
+                    <div className="flex items-center gap-1">
+                      <Clock className="h-2 w-2 text-white/40" />
+                      <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">{item.time}</span>
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className={cn(
+                    "text-[10px] font-black uppercase tracking-tighter",
+                    item.isWinner ? "text-primary" : "text-white/40"
+                  )}>
+                    {item.prize}
+                  </p>
+                  <p className="text-[8px] font-bold text-white/20 uppercase tracking-widest">
+                    {item.isWinner ? "Ganhador" : "Participou"}
+                  </p>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       </div>
     </div>
