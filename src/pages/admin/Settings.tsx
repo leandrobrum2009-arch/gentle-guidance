@@ -121,6 +121,27 @@ export default function AdminSettings() {
                     <SelectContent>
                       <SelectItem value="slide">Deslizar (Slide)</SelectItem>
                       <SelectItem value="fade">Esmaecer (Fade)</SelectItem>
+                    <SelectContent>
+                      <SelectItem value="slide">Deslizar (Slide)</SelectItem>
+                      <SelectItem value="fade">Esmaecer (Fade)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                ) : s.key === 'animation_easing' ? (
+                  <Select 
+                    value={s.value} 
+                    onValueChange={(val) => handleUpdate(s.key, val)}
+                  >
+                    <SelectTrigger className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold">
+                      <SelectValue placeholder="Selecione a suavização" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="cubic-bezier(0.4, 0, 0.2, 1)">Elegante (Material Design)</SelectItem>
+                      <SelectItem value="ease">Suave (Padrão)</SelectItem>
+                      <SelectItem value="linear">Linear (Rígido)</SelectItem>
+                      <SelectItem value="ease-in">Entrada Suave</SelectItem>
+                      <SelectItem value="ease-out">Saída Suave</SelectItem>
+                      <SelectItem value="ease-in-out">Entrada e Saída</SelectItem>
+                      <SelectItem value="cubic-bezier(0.34, 1.56, 0.64, 1)">Elástico (Divertido)</SelectItem>
                     </SelectContent>
                   </Select>
                 ) : s.key.includes('color') ? (
