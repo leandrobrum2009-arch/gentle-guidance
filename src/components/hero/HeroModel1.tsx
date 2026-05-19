@@ -1,0 +1,101 @@
+import React, { useCallback } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight, Zap, Trophy, Users, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Campaign } from "@/hooks/useData";
+import { Link } from "react-router-dom";
+import CountdownTimer from "../CountdownTimer";
+import { playSound, hapticFeedback } from "@/lib/sounds";
+
+interface HeroModel1Props {
+  campaigns: Campaign[];
+}
+
+const HeroModel1 = ({ campaigns }: HeroModel1Props) => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })]);
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+
+  return (
+    <section className="relative overflow-hidden group">
+      <div className="overflow-hidden" ref={emblaRef}>
+        <div className="flex">
+          {campaigns.map((campaign) => (
+            <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[450px] md:h-[550px] lg:h-[650px]">
+              <div className="absolute inset-0 overflow-hidden">
+                <motion.img 
+                  src={campaign.image_url || "/placeholder.svg"} 
+                  className="h-full w-full object-cover" 
+                  alt={campaign.title}
+                  animate={{ scale: [1, 1.05, 1] }}
+                  transition={{ duration: 15, repeat: Infinity }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent z-10" />
+              </div>
+
+              <div className="container relative z-30 h-full flex items-center">
+                <motion.div 
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                  className="max-w-2xl space-y-6"
+                >
+                  <div className="flex items-center gap-3">
+                    <Badge className="bg-primary text-primary-foreground font-black italic px-3 py-1">
+                      🔥 DESTAQUE
+                    </Badge>
+                  </div>
+
+                  <div className="space-y-4">
+                    {campaign.draw_date && (
+                      <CountdownTimer targetDate={campaign.draw_date} className="scale-110 origin-left" />
+                    )}
+                    <h1 className="text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[0.85] tracking-tighter text-foreground filter drop-shadow-2xl">
+                      {campaign.title.split(' ')[0]} <br />
+                      <span className="text-primary neon-text-primary">
+                        {campaign.title.split(' ').slice(1).join(' ')}
+                      </span>
+                    </h1>
+                    <p className="text-sm md:text-lg text-foreground/80 font-bold max-w-xl leading-relaxed">
+                      {campaign.subtitle || campaign.description?.slice(0, 120)}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-4 pt-4">
+                    <Link to={`/campanha/${campaign.id}`}>
+                      <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg border-light-path border-[#22c55e]/30">
+                        PARTICIPAR AGORA <Zap className="h-6 w-6 fill-current" />
+                      </Button>
+                    </Link>
+                  </div>
+                </motion.div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      <Button 
+        variant="ghost" size="icon" 
+        className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-white/5 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+        onClick={scrollPrev}
+      >
+        <ChevronLeft className="h-8 w-8" />
+      </Button>
+      <Button 
+        variant="ghost" size="icon" 
+        className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-white/5 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+        onClick={scrollNext}
+      >
+        <ChevronRight className="h-8 w-8" />
+      </Button>
+    </section>
+  );
+};
+
+export default HeroModel1;

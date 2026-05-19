@@ -1,12 +1,14 @@
+import { useState, useEffect } from "react";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
    ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
 } from "lucide-react";
 import { motion } from "framer-motion";
- import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
       {/* Gamification Teaser */}
       <section className="container py-6">
         <div className="grid grid-cols-2 gap-3">
@@ -29,7 +31,9 @@ import { Button } from "@/components/ui/button";
 
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import RaffleCarousel from "@/components/RaffleCarousel";
+import HeroModel1 from "@/components/hero/HeroModel1";
+import HeroModel2 from "@/components/hero/HeroModel2";
+import HeroModel3 from "@/components/hero/HeroModel3";
 import CampaignCard from "@/components/CampaignCard";
 import WinnerCard from "@/components/WinnerCard";
 import LiveActivityFeed from "@/components/LiveActivityFeed";
@@ -65,6 +69,19 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
 const Index = () => {
   const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
+  const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
+  
+  // Try to load style from localStorage or site settings later
+  useEffect(() => {
+    const savedStyle = localStorage.getItem('home_hero_style');
+    if (savedStyle) setHeroStyle(parseInt(savedStyle));
+  }, []);
+
+  const changeHeroStyle = (style: number) => {
+    setHeroStyle(style);
+    localStorage.setItem('home_hero_style', style.toString());
+    toast.success(`Estilo do slide alterado para Modelo ${style}!`);
+  };
 
   const featuredCampaign = campaigns?.find((c) => c.featured && (c.status === "active" || c.status === "paused")) || campaigns?.find(c => c.status === "active");
   const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && (c.status === 'active' || c.status === 'paused' || c.status === 'completed' || c.status === 'audit')) ?? [];
@@ -87,7 +104,32 @@ const Index = () => {
       ) : (
         <>
            {campaigns && campaigns.length > 0 && (
-             <RaffleCarousel campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
+             <div className="relative group">
+                {/* Style Selector for Dev/User testing - Can be moved to admin later */}
+                <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                   {[1, 2, 3].map(i => (
+                     <Button 
+                       key={i} 
+                       size="sm" 
+                       variant={heroStyle === i ? "default" : "outline"}
+                       className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest backdrop-blur-md"
+                       onClick={() => changeHeroStyle(i)}
+                     >
+                       Modelo {i}
+                     </Button>
+                   ))}
+                </div>
+
+                {heroStyle === 1 && (
+                  <HeroModel1 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
+                )}
+                {heroStyle === 2 && (
+                  <HeroModel2 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
+                )}
+                {heroStyle === 3 && (
+                  <HeroModel3 campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} />
+                )}
+             </div>
            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
