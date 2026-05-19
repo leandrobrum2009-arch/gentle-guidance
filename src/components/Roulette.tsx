@@ -76,13 +76,8 @@ const SOUND_URLS = {
     const isUsingFreeSpins = availableSpins >= multiplier;
     const totalCost = isUsingFreeSpins ? 0 : spinCost * multiplier;
 
-    if (!isUsingFreeSpins && spinCost === 0 && availableSpins < multiplier) {
-      toast.error(`Você não possui giros suficientes! Compre mais cotas para ganhar giros.`);
-      return;
-    }
-
-    if (totalCost > 0 && (userProfile?.balance || 0) < totalCost) {
-      toast.error(`Saldo insuficiente! O giro custa R$ ${totalCost.toFixed(2)}`);
+    if (!isUsingFreeSpins) {
+      toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
       return;
     }
 
@@ -253,30 +248,23 @@ const SOUND_URLS = {
         </div>
         
         <div className="flex flex-col items-center gap-4">
-          <div className="flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl">
-            <div className="flex flex-col items-center gap-1 px-4 border-r border-white/10">
-              <span className="text-[10px] font-bold text-white/40 uppercase tracking-tighter">Seu Saldo</span>
-              <span className="text-lg font-black text-white flex items-center gap-2">
-                <Coins className="h-4 w-4 text-yellow-400" />
-                R$ {Number(userProfile?.balance || 0).toFixed(2)}
-              </span>
-            </div>
-            <div className="flex flex-col items-center gap-1 px-4">
+          <div className="flex items-center gap-6 p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl shadow-2xl justify-center">
+            <div className="flex flex-col items-center gap-1 px-8">
               <div className="flex items-center gap-1">
-                <span className="text-[10px] font-bold text-white/40 uppercase tracking-tighter">Giros Grátis</span>
+                <span className="text-[10px] font-bold text-white/40 uppercase tracking-tighter">Giros Disponíveis</span>
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
                       <Info className="h-3 w-3 text-white/20 hover:text-white/40" />
                     </TooltipTrigger>
                     <TooltipContent className="bg-zinc-900 border-white/10 text-[10px] max-w-[200px]">
-                      <p>Você ganha 1 giro grátis para cada {campaign.roulette_free_tickets} cotas pagas nesta campanha.</p>
+                      <p>Compre cotas para ganhar giros grátis nesta campanha.</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               </div>
               <span className="text-lg font-black text-primary flex items-center gap-2">
-                <Gift className="h-4 w-4" />
+                <RotateCw className="h-4 w-4" />
                 {availableSpins}
               </span>
             </div>
