@@ -122,6 +122,20 @@ export default function AdminCampaigns() {
               </Badge>
               <Badge 
                 variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "paused" ? "bg-amber-500/20 border-amber-500/50 text-amber-500" : "border-border text-muted-foreground hover:bg-secondary/20"}`}
+                onClick={() => setFilter("paused")}
+              >
+                Pausados
+              </Badge>
+              <Badge 
+                variant="outline" 
+                className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "audit" ? "bg-purple-500/20 border-purple-500/50 text-purple-500" : "border-border text-muted-foreground hover:bg-secondary/20"}`}
+                onClick={() => setFilter("audit")}
+              >
+                Em Auditoria
+              </Badge>
+              <Badge 
+                variant="outline" 
                 className={`cursor-pointer px-3 py-1 rounded-full transition-colors ${filter === "completed" ? "bg-blue-500/20 border-blue-500/50 text-blue-500" : "border-border text-muted-foreground hover:bg-secondary/20"}`}
                 onClick={() => setFilter("completed")}
               >
