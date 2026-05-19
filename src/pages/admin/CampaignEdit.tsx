@@ -341,7 +341,7 @@ export default function AdminCampaignEdit() {
                          {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                          Fazer Upload
                        </div>
-                       <input type="file" className="hidden" accept="image/*" onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
+                       <input type="file" className="hidden" accept="image/*" multiple onChange={(e) => handleUpload(e, 'cover')} disabled={!!uploading} />
                      </Label>
                    </div>
                  </div>
