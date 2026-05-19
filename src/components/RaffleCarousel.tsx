@@ -57,7 +57,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                         🔥 DESTAQUE
                      </Badge>
                      {campaign.urgency_tag && (
-                        <Badge variant="outline" className="border-primary/50 text-primary uppercase font-bold text-[9px] bg-white/50 backdrop-blur-sm">
+                        <Badge variant="outline" className="border-primary/50 text-primary uppercase font-bold text-[9px] bg-secondary/50 backdrop-blur-sm">
                          {campaign.urgency_tag}
                        </Badge>
                      )}
@@ -81,25 +81,25 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                       </h1>
                     </div>
  
-                    <p className="text-base md:text-lg text-slate-700 font-medium max-w-md leading-tight">
+                    <p className="text-base md:text-lg text-muted-foreground font-medium max-w-md leading-tight">
                       {campaign.subtitle || campaign.description?.slice(0, 100) + '...'}
                     </p>
  
                      <div className="flex flex-wrap items-center gap-6 py-2">
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Valor do Prêmio</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Valor do Prêmio</span>
                          <span className="text-xl font-black text-foreground">
                           R$ {((campaign as any).prize_value || 50000).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Números Disponíveis</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Números Disponíveis</span>
                          <span className="text-xl font-black text-foreground">
                           {(campaign.total_tickets - campaign.sold_tickets).toLocaleString('pt-BR')}
                         </span>
                       </div>
                       <div className="flex flex-col gap-1">
-                         <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">Sorteio em</span>
+                          <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Sorteio em</span>
                          <span className="text-xl font-black text-primary">
                           {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : 'Em breve'}
                         </span>
@@ -117,7 +117,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
                          </Button>
                        </motion.div>
                      </Link>
-                      <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-slate-200 hover:bg-slate-50 font-black uppercase italic tracking-widest text-foreground backdrop-blur-md">
+                       <Button variant="outline" size="lg" className="h-14 rounded-2xl px-6 border-border hover:bg-secondary font-black uppercase italic tracking-widest text-foreground backdrop-blur-md">
                        Ver Detalhes
                      </Button>
                    </div>
@@ -132,7 +132,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
         <Button 
           variant="ghost" 
           size="icon" 
-          className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-background/20 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-card/20 backdrop-blur-md border border-border opacity-0 group-hover:opacity-100 transition-opacity"
           onClick={() => { scrollPrev(); playSound('click'); }}
         >
          <ChevronLeft className="h-8 w-8 text-white" />
@@ -140,7 +140,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
        <Button 
          variant="ghost" 
          size="icon" 
-         className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-background/20 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
+          className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-card/20 backdrop-blur-md border border-border opacity-0 group-hover:opacity-100 transition-opacity"
          onClick={scrollNext}
        >
          <ChevronRight className="h-8 w-8 text-white" />
