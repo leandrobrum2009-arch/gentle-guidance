@@ -307,13 +307,13 @@ aside:has(a[href*="lovable.dev"]) {
      color: transparent;
      -webkit-background-clip: text;
      background-clip: text;
-     animation: text-shimmer 5s linear infinite;
+     animation: text-shimmer 12s linear infinite;
      @apply transition-all duration-300;
    }
 
    .text-animate-gradient:hover {
-     animation-duration: 2.5s;
-     filter: brightness(1.2);
+      animation-duration: 8s;
+      filter: brightness(1.1);
    }
 
    @keyframes text-shimmer {
