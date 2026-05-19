@@ -176,6 +176,14 @@ aside:has(a[href*="lovable.dev"]) {
     text-shadow: 0 0 10px hsl(var(--primary) / 0.5), 0 0 20px hsl(var(--primary) / 0.3);
   }
 
+  .neon-text-amber {
+    text-shadow: 0 0 10px rgba(245, 158, 11, 0.5), 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+
+  .neon-text-secondary {
+    text-shadow: 0 0 10px hsl(var(--secondary) / 0.5), 0 0 20px hsl(var(--secondary) / 0.3);
+  }
+
   .glass-morphism {
     @apply bg-background/40 backdrop-blur-xl border border-foreground/10;
   }

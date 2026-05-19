@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import Roulette from "./pages/Roulette";
+import ScratchCard from "./pages/ScratchCard";
 import MysteryBox from "./pages/MysteryBox";
 import Ranking from "./pages/Ranking";
 import Affiliates from "./pages/Affiliates";
@@ -74,6 +75,7 @@ const App = () => {
               <Route path="/preview" element={<Preview />} />
                 <Route path="/roleta" element={<Roulette />} />
                 <Route path="/caixa-misteriosa" element={<MysteryBox />} />
+                <Route path="/raspadinha" element={<ScratchCard />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/afiliados" element={<Affiliates />} />
                 <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
