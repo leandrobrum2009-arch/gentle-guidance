@@ -463,12 +463,24 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'roulette_footer':
+        return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+          <div key={section} className="mt-12 mb-20">
+            <div className="flex flex-col items-center text-center mb-8">
+              <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-primary neon-text-primary">Roleta</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na versão real!</p>
+            </div>
+            <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "prizes", "winners", "ranking", "roulette_footer"];
 
   return (
     <div className="min-h-screen bg-background pb-24 lg:pb-0">
