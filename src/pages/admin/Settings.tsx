@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -22,6 +22,85 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
+  const presets = [
+    {
+      name: "Clássico Verde",
+      icon: <Box className="h-4 w-4" />,
+      colors: ["#16a34a", "#22c55e", "#ffffff"],
+      values: {
+        primary_color: "#16a34a",
+        title_shimmer_primary: "#22c55e",
+        title_shimmer_secondary: "#ffffff",
+        title_shimmer_secondary_light: "#000000",
+        border_shimmer_color: "#22c55e"
+      }
+    },
+    {
+      name: "Ouro Premium",
+      icon: <Palette className="h-4 w-4 text-amber-500" />,
+      colors: ["#d4af37", "#ffd700", "#ffffff"],
+      values: {
+        primary_color: "#d4af37",
+        title_shimmer_primary: "#ffd700",
+        title_shimmer_secondary: "#ffffff",
+        title_shimmer_secondary_light: "#1a1a1a",
+        border_shimmer_color: "#ffd700"
+      }
+    },
+    {
+      name: "Prata Elegante",
+      icon: <Palette className="h-4 w-4 text-gray-400" />,
+      colors: ["#94a3b8", "#f8fafc", "#ffffff"],
+      values: {
+        primary_color: "#94a3b8",
+        title_shimmer_primary: "#f8fafc",
+        title_shimmer_secondary: "#ffffff",
+        title_shimmer_secondary_light: "#334155",
+        border_shimmer_color: "#cbd5e1"
+      }
+    },
+    {
+      name: "Pink Neon",
+      icon: <Palette className="h-4 w-4 text-pink-500" />,
+      colors: ["#db2777", "#f472b6", "#ffffff"],
+      values: {
+        primary_color: "#db2777",
+        title_shimmer_primary: "#f472b6",
+        title_shimmer_secondary: "#ffffff",
+        title_shimmer_secondary_light: "#000000",
+        border_shimmer_color: "#f472b6"
+      }
+    },
+    {
+      name: "Azul Profundo",
+      icon: <Palette className="h-4 w-4 text-blue-600" />,
+      colors: ["#2563eb", "#60a5fa", "#ffffff"],
+      values: {
+        primary_color: "#2563eb",
+        title_shimmer_primary: "#60a5fa",
+        title_shimmer_secondary: "#ffffff",
+        title_shimmer_secondary_light: "#000000",
+        border_shimmer_color: "#60a5fa"
+      }
+    }
+  ];
+
+  const defaultValues = {
+    hero_transition_speed: "5000",
+    button_glow_speed: "4",
+    title_shimmer_speed: "10",
+    button_hover_effect: "true",
+    border_shimmer_opacity: "0.8",
+    animation_easing: "cubic-bezier(0.4, 0, 0.2, 1)",
+    button_glow_intensity: "0.2",
+    primary_color: "#16a34a",
+    title_shimmer_primary: "#22c55e",
+    title_shimmer_secondary: "#ffffff",
+    title_shimmer_secondary_light: "#000000",
+    home_hero_style: "1",
+    hero_transition_type: "slide"
+  };
+
   useEffect(() => {
     fetchSettings();
   }, []);
@@ -37,13 +116,38 @@ export default function AdminSettings() {
     setSettings(prev => prev.map(s => s.key === key ? { ...s, value } : s));
   };
 
+  const applyPreset = (presetValues: any) => {
+    setSettings(prev => prev.map(s => {
+      if (presetValues[s.key]) {
+        return { ...s, value: presetValues[s.key] };
+      }
+      return s;
+    }));
+    toast.success("Preset aplicado! Lembre-se de salvar as alterações.");
+  };
+
+  const restoreDefaults = () => {
+    setSettings(prev => prev.map(s => {
+      if (defaultValues[s.key as keyof typeof defaultValues]) {
+        return { ...s, value: defaultValues[s.key as keyof typeof defaultValues] };
+      }
+      return s;
+    }));
+    toast.info("Configurações restauradas para o padrão. Clique em salvar para confirmar.");
+  };
+
   const saveSettings = async () => {
     setSaving(true);
-    for (const s of settings) {
-      await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+    try {
+      for (const s of settings) {
+        await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+      }
+      toast.success("Configurações salvas com sucesso!");
+    } catch (error) {
+      toast.error("Erro ao salvar configurações.");
+    } finally {
+      setSaving(false);
     }
-    setSaving(false);
-    toast.success("Configurações salvas com sucesso!");
   };
 
   const getIcon = (key: string) => {
@@ -63,19 +167,55 @@ export default function AdminSettings() {
 
   return (
     <AdminLayout>
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Configurações do Sistema</h1>
-          <p className="text-muted-foreground mt-1">Ajuste taxas, limites e informações de contato.</p>
+          <p className="text-muted-foreground mt-1">Personalize a identidade visual e comportamento do site.</p>
         </div>
-        <Button 
-          onClick={saveSettings} 
-          disabled={saving}
-          className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
-        >
-          {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-          Salvar Alterações
-        </Button>
+        <div className="flex flex-wrap gap-3">
+          <Button 
+            variant="outline"
+            onClick={restoreDefaults}
+            className="border-border hover:bg-secondary/20 font-bold"
+          >
+            <RotateCcw className="mr-2 h-4 w-4" />
+            Restaurar Padrão
+          </Button>
+          <Button 
+            onClick={saveSettings} 
+            disabled={saving}
+            className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+          >
+            {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+            Salvar Alterações
+          </Button>
+        </div>
+      </div>
+
+      {/* Presets Section */}
+      <div className="mb-8">
+        <h2 className="text-xs font-black uppercase tracking-[0.2em] text-primary mb-4">Presets Visuais Sugeridos</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          {presets.map((preset, idx) => (
+            <button
+              key={idx}
+              onClick={() => applyPreset(preset.values)}
+              className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-card/50 border border-border hover:border-primary/40 hover:bg-primary/5 transition-all group text-left"
+            >
+              <div className="w-full flex justify-between items-center">
+                <div className="p-2 rounded-lg bg-secondary/50 group-hover:text-primary transition-colors">
+                  {preset.icon}
+                </div>
+                <div className="flex -space-x-1">
+                  {preset.colors.map((c, i) => (
+                    <div key={i} className="w-4 h-4 rounded-full border border-card shadow-sm" style={{ backgroundColor: c }} />
+                  ))}
+                </div>
+              </div>
+              <span className="w-full text-xs font-black uppercase tracking-widest">{preset.name}</span>
+            </button>
+          ))}
+        </div>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
