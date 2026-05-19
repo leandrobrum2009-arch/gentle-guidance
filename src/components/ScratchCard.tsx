@@ -9,14 +9,28 @@ import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 
 interface ScratchCardProps {
-  prizeLabel: string;
+  prizeLabel?: string;
   prizeImage?: string;
-  isWinner: boolean;
+  isWinner?: boolean;
   onComplete?: () => void;
   cost?: number;
+  potentialPrizes?: string[];
+  isSimulation?: boolean;
 }
 
-const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }: ScratchCardProps) => {
+const ScratchCard = ({ 
+  prizeLabel: initialPrizeLabel, 
+  prizeImage, 
+  isWinner: initialIsWinner, 
+  onComplete, 
+  cost = 0,
+  potentialPrizes = [],
+  isSimulation = false
+}: ScratchCardProps) => {
+
+  const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
+  const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScratched, setIsScratched] = useState(false);
@@ -25,6 +39,20 @@ const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }:
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
+    if (!initialPrizeLabel && potentialPrizes.length > 0) {
+      const winner = Math.random() > 0.6; // 40% win chance for simulation
+      setIsWinner(winner);
+      if (winner) {
+        const randomPrize = potentialPrizes[Math.floor(Math.random() * potentialPrizes.length)];
+        setPrizeLabel(randomPrize);
+      } else {
+        setPrizeLabel("Tente novamente");
+      }
+    }
+  }, [potentialPrizes, initialPrizeLabel]);
+
+  useEffect(() => {
+
     if (containerRef.current) {
       const { width, height } = containerRef.current.getBoundingClientRect();
       setCanvasSize({ width, height });
@@ -139,10 +167,14 @@ const ScratchCard = ({ prizeLabel, prizeImage, isWinner, onComplete, cost = 0 }:
       <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-[80px] rounded-full" />
 
       <div className="w-full flex justify-between items-center z-10">
-        <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest">Raspadinha Premiada</Badge>
+        <Badge className={cn("bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest", isSimulation && "bg-amber-500/20 text-amber-500")}>
+          {isSimulation ? "Simulador de Sorte" : "Raspadinha Premiada"}
+        </Badge>
         <div className="flex items-center gap-2">
-           <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
-           <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Ativo Agora</span>
+           <div className={cn("h-2 w-2 rounded-full animate-pulse", isSimulation ? "bg-amber-500" : "bg-green-500")} />
+           <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
+             {isSimulation ? "Versão de Teste" : "Ativo Agora"}
+           </span>
         </div>
       </div>
 
