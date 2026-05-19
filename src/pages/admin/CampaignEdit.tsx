@@ -342,7 +342,12 @@ export default function AdminCampaignEdit() {
 
                <div className="space-y-4">
                  <div className="flex items-center justify-between">
-                   <Label className="text-base font-bold">Galeria de Fotos (Slide)</Label>
+                   <div className="flex flex-col gap-0.5">
+                     <Label className="text-base font-bold">Galeria de Fotos (Slide)</Label>
+                     <p className="text-[10px] text-primary font-bold flex items-center gap-1">
+                       <Sparkles className="h-3 w-3" /> Slide criado automaticamente
+                     </p>
+                   </div>
                    <Label className="cursor-pointer">
                      <div className="flex items-center gap-2 px-4 h-9 rounded-lg bg-secondary text-foreground font-bold text-xs transition-all hover:bg-secondary/80">
                        {uploading === 'gallery' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Plus className="h-4 w-4" />}
