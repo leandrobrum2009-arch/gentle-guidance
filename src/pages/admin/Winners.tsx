@@ -40,9 +40,50 @@ export default function AdminWinners() {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState<WinnerForm>(empty);
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [search, setSearch] = useState("");
 
   const set = (k: keyof WinnerForm, v: string) => setForm((p) => ({ ...p, [k]: v }));
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+    const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
+
+    try {
+      setUploading(true);
+
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        throw new Error("O arquivo não é uma imagem válida (JPG, PNG, WebP ou GIF).");
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        throw new Error("O arquivo é muito grande. O tamanho máximo permitido é 5MB.");
+      }
+
+      const fileExt = file.name.split('.').pop();
+      const filePath = `${crypto.randomUUID()}.${fileExt}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      set("avatar_url", publicUrl);
+      toast({ title: "Sucesso", description: "Foto enviada com sucesso!" });
+    } catch (error: any) {
+      toast({ title: "Erro no upload", description: error.message, variant: "destructive" });
+    } finally {
+      setUploading(false);
+      e.target.value = '';
+    }
+  };
 
   const save = async () => {
     setSaving(true);
