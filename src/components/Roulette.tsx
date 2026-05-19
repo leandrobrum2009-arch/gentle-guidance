@@ -196,10 +196,21 @@ const SOUND_URLS = {
               <div className="space-y-6 py-4">
                 <div className="space-y-3">
                   <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Giros Grátis</h4>
-                  <p className="text-sm text-white/70 leading-relaxed">
-                    Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente a cada <span className="text-white font-bold">{campaign.roulette_free_tickets} cotas pagas</span> nesta campanha.
-                    Os giros grátis são consumidos prioritariamente antes do seu saldo.
-                  </p>
+                  {campaign.roulette_rules && campaign.roulette_rules.length > 0 ? (
+                    <div className="space-y-2">
+                      {campaign.roulette_rules.map((rule, i) => (
+                        <p key={i} className="text-sm text-white/70 leading-relaxed flex items-center gap-2">
+                          <Zap className="h-3 w-3 text-primary" />
+                          Compre acima de <span className="text-white font-bold">{rule.min_tickets} cotas</span> e ganhe <span className="text-white font-bold">{rule.spins} {rule.spins > 1 ? 'giros' : 'giro'}</span>.
+                        </p>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-sm text-white/70 leading-relaxed">
+                      Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente a cada <span className="text-white font-bold">{campaign.roulette_free_tickets} cotas pagas</span> nesta campanha.
+                    </p>
+                  )}
+                  <p className="text-[11px] text-white/40 italic mt-2">Os giros grátis são consumidos prioritariamente antes do seu saldo.</p>
                 </div>
                 
                 <div className="space-y-3">
@@ -270,8 +281,15 @@ const SOUND_URLS = {
               </span>
             </div>
           </div>
-          
-          {campaign.roulette_free_tickets > 0 && (
+
+          {campaign.roulette_rules && campaign.roulette_rules.length > 0 ? (
+            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
+              <Zap className="h-3 w-3 text-primary" />
+              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+                Compre e ganhe giros grátis!
+              </span>
+            </div>
+          ) : campaign.roulette_free_tickets > 0 && (
             <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
               <Zap className="h-3 w-3 text-primary" />
               <span className="text-[10px] font-black text-primary uppercase tracking-widest">
