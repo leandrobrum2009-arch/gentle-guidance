@@ -100,12 +100,12 @@ export default function AdminCampaignEdit() {
 
         <Tabs defaultValue="general">
           <TabsList className="w-full justify-start bg-white border h-14 rounded-2xl p-1 overflow-x-auto">
-            <TabsTrigger value="general" className="rounded-xl px-6">Geral</TabsTrigger>
-            <TabsTrigger value="pricing" className="rounded-xl px-6">Valores</TabsTrigger>
-            <TabsTrigger value="media" className="rounded-xl px-6">Mídia</TabsTrigger>
-            <TabsTrigger value="prizes" className="rounded-xl px-6">Prêmios</TabsTrigger>
-            <TabsTrigger value="engagement" className="rounded-xl px-6">Engajamento</TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl px-6">Avançado</TabsTrigger>
+            <TabsTrigger value="general" className="rounded-xl px-6 gap-2"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
+            <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
+            <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
+            <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
+            <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
           </TabsList>
 
           <TabsContent value="general" className="mt-6 space-y-6">
@@ -205,39 +205,87 @@ export default function AdminCampaignEdit() {
                 </div>
              </Card>
 
-             <Card className="p-6 rounded-2xl border-slate-100 shadow-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <Label className="text-lg font-bold">Cotas Premiadas (Instantâneas)</Label>
-                  <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: ""}])}><Plus className="h-4 w-4 mr-2" /> Nova Cota</Button>
-                </div>
-                <div className="space-y-3">
-                  {form.lucky_numbers_prizes.map((p, i) => (
-                    <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-xl">
-                      <div className="w-32">
-                        <Label className="text-[10px] uppercase font-bold text-slate-400">Número</Label>
-                        <Input value={p.number} onChange={(e) => {
-                          const n = [...form.lucky_numbers_prizes];
-                          n[i].number = e.target.value;
-                          set("lucky_numbers_prizes", n);
-                        }} />
-                      </div>
-                      <div className="flex-1">
-                        <Label className="text-[10px] uppercase font-bold text-slate-400">Prêmio</Label>
-                        <Input value={p.prize} onChange={(e) => {
-                          const n = [...form.lucky_numbers_prizes];
-                          n[i].prize = e.target.value;
-                          set("lucky_numbers_prizes", n);
-                        }} />
-                      </div>
-                      <Button variant="ghost" size="icon" className="mt-5" onClick={() => {
-                        const n = [...form.lucky_numbers_prizes];
-                        n.splice(i, 1);
-                        set("lucky_numbers_prizes", n);
-                      }}><Trash2 className="h-4 w-4 text-destructive" /></Button>
-                    </div>
-                  ))}
-                </div>
-             </Card>
+            <Card className="p-6 rounded-2xl border-slate-100 shadow-sm overflow-hidden">
+               <div className="flex justify-between items-center mb-6">
+                 <div className="space-y-1">
+                   <Label className="text-lg font-bold flex items-center gap-2">
+                     <Star className="h-5 w-5 text-amber-500 fill-amber-500" />
+                     Cotas Premiadas (Instantâneas)
+                   </Label>
+                   <p className="text-xs text-slate-500">Números que ganham prêmios no momento da compra.</p>
+                 </div>
+                 <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: "", protected: true}])}>
+                   <Plus className="h-4 w-4 mr-2" /> Nova Cota
+                 </Button>
+               </div>
+               
+               <div className="grid gap-3">
+                 {form.lucky_numbers_prizes.map((p, i) => (
+                   <div key={i} className="flex gap-4 items-center bg-slate-50 p-4 rounded-2xl border border-slate-100 transition-all hover:border-amber-200">
+                     <div className="w-32">
+                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Nº da Cota</Label>
+                       <Input 
+                         placeholder="Ex: 5485" 
+                         className="bg-white font-mono font-bold text-center"
+                         value={p.number} 
+                         onChange={(e) => {
+                           const n = [...form.lucky_numbers_prizes];
+                           n[i].number = e.target.value;
+                           set("lucky_numbers_prizes", n);
+                         }} 
+                       />
+                     </div>
+                     <div className="flex-1">
+                       <Label className="text-[10px] uppercase font-bold text-slate-400 mb-1.5 block">Descrição do Prêmio</Label>
+                       <Input 
+                         placeholder="Ex: iPhone 16 Pro Max" 
+                         className="bg-white"
+                         value={p.prize} 
+                         onChange={(e) => {
+                           const n = [...form.lucky_numbers_prizes];
+                           n[i].prize = e.target.value;
+                           set("lucky_numbers_prizes", n);
+                         }} 
+                       />
+                     </div>
+                     <div className="flex flex-col items-center gap-1.5 pt-5">
+                       <TooltipProvider>
+                         <Tooltip>
+                           <TooltipTrigger asChild>
+                             <div className="flex flex-col items-center gap-1">
+                               <Label className="text-[9px] uppercase font-bold text-slate-400">Protegida</Label>
+                               <Switch 
+                                 checked={p.protected !== false} 
+                                 onCheckedChange={(v) => {
+                                   const n = [...form.lucky_numbers_prizes];
+                                   n[i].protected = v;
+                                   set("lucky_numbers_prizes", n);
+                                 }} 
+                               />
+                             </div>
+                           </TooltipTrigger>
+                           <TooltipContent>
+                             <p className="w-48 text-[10px]">Cotas protegidas não são sorteadas aleatoriamente para compradores comuns. Elas ficam reservadas exclusivamente para ganhadores instantâneos.</p>
+                           </TooltipContent>
+                         </Tooltip>
+                       </TooltipProvider>
+                     </div>
+                     <Button variant="ghost" size="icon" className="mt-5 text-slate-300 hover:text-destructive hover:bg-destructive/5" onClick={() => {
+                       const n = [...form.lucky_numbers_prizes];
+                       n.splice(i, 1);
+                       set("lucky_numbers_prizes", n);
+                     }}><Trash2 className="h-4 w-4" /></Button>
+                   </div>
+                 ))}
+                 {form.lucky_numbers_prizes.length === 0 && (
+                   <div className="text-center py-12 border-2 border-dashed rounded-3xl text-slate-400 bg-slate-50/50">
+                     <Sparkles className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                     <p className="text-sm font-medium">Nenhuma cota premiada configurada.</p>
+                     <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>
+                   </div>
+                 )}
+               </div>
+            </Card>
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
