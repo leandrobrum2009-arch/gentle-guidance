@@ -29,9 +29,9 @@ const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
            const progress = Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
            return (
             <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] container">
-              <div className="grid lg:grid-cols-2 gap-12 items-center bg-card/30 backdrop-blur-xl border border-white/5 rounded-[3rem] p-8 md:p-12 overflow-hidden relative group">
+              <div className="grid lg:grid-cols-2 gap-6 md:gap-12 items-center bg-card/30 backdrop-blur-xl border border-white/5 rounded-3xl md:rounded-[3rem] p-5 md:p-12 overflow-hidden relative group">
                 {/* Visual side */}
-                <div className="order-1 lg:order-2 relative h-[300px] md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <div className="order-1 lg:order-2 relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
                   <motion.img 
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.8 }}
@@ -72,7 +72,7 @@ const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                       </Badge>
                     </div>
                     
-                    <h1 className="text-2xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground md:pr-8 py-2">
+                    <h1 className="text-xl sm:text-2xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground md:pr-8 py-2">
                       <span className="block mb-1">{campaign.title.split(' ')[0]}</span>
                       <span className="text-primary neon-text-primary inline-block md:pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
