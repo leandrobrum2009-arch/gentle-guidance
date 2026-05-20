@@ -33,6 +33,7 @@ import UserRanking from "@/components/UserRanking";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import ScratchCard from "@/components/ScratchCard";
+import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 
 const CampaignDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -100,6 +101,8 @@ const CampaignDetail = () => {
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [isQuickRegisterOpen, setIsQuickRegisterOpen] = useState(false);
+  const [pendingPurchase, setPendingPurchase] = useState<number | string[] | null>(null);
 
   const soldTickets = useMemo(() => {
     return tickets?.filter(t => t.status === "confirmed" || t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
@@ -131,8 +134,8 @@ const CampaignDetail = () => {
 
   const handleBuy = async (quantityOrNumbers: number | string[]) => {
     if (!user) {
-      toast.error("Você precisa estar logado para comprar!");
-      navigate("/entrar");
+      setPendingPurchase(quantityOrNumbers);
+      setIsQuickRegisterOpen(true);
       return;
     }
     
@@ -550,6 +553,19 @@ const CampaignDetail = () => {
         }} 
       />
 
+      <QuickRegisterDialog 
+        isOpen={isQuickRegisterOpen} 
+        onOpenChange={setIsQuickRegisterOpen} 
+        onSuccess={() => {
+          if (pendingPurchase !== null) {
+            // Give a bit of time for auth state to propagate
+            setTimeout(() => {
+              handleBuy(pendingPurchase);
+              setPendingPurchase(null);
+            }, 500);
+          }
+        }} 
+      />
       <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
