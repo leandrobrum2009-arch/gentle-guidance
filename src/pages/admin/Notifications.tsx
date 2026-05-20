@@ -27,7 +27,7 @@ export default function AdminNotifications() {
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
           ) : (
-            <Table>
+            <Table className="min-w-[500px]">
               <TableHeader>
                 <TableRow className="border-border hover:bg-transparent">
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Mensagem</TableHead>
