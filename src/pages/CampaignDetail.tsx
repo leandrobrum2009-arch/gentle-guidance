@@ -228,7 +228,7 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-6">
             <div className="space-y-1">
-              <h1 className="text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
+              <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
               <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
             </div>
             <div className="flex items-center gap-2">
