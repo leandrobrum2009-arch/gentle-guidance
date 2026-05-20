@@ -150,7 +150,7 @@ const LiveNotifications = () => {
             initial={{ opacity: 0, x: -50, scale: 0.8 }}
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -50, scale: 0.8 }}
-            className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border shadow-2xl min-w-[300px] max-w-sm"
+            className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border shadow-2xl min-w-[260px] md:min-w-[300px] max-w-[calc(100vw-32px)] md:max-w-sm"
           >
             <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${notif.type === 'winner' ? 'bg-amber-500/10 text-amber-500' : 'bg-primary/10 text-primary'}`}>
               <Avatar className="h-full w-full border-2 border-background shadow-sm">

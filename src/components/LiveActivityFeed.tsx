@@ -59,7 +59,7 @@
          </Badge>
        </div>
  
-      <div className="flex flex-col md:grid gap-3 overflow-x-auto md:overflow-visible no-scrollbar -mx-2 px-2 md:mx-0 md:px-0 scroll-smooth">
+      <div className="flex flex-col md:grid gap-3 overflow-x-auto md:overflow-visible no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth">
         <div className="flex md:flex-col gap-3 min-w-max md:min-w-0">
           <AnimatePresence mode="popLayout">
             {activities.map((activity) => (
