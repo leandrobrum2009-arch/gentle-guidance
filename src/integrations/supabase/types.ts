@@ -1232,6 +1232,10 @@ export type Database = {
         Args: { amount: number; user_uuid: string }
         Returns: undefined
       }
+      manual_perform_draw: {
+        Args: { p_campaign_id: string; p_ticket_number: string }
+        Returns: string
+      }
       perform_draw: { Args: { p_campaign_id: string }; Returns: string }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
