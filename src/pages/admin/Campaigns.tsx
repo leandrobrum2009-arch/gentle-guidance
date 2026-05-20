@@ -151,7 +151,7 @@ export default function AdminCampaigns() {
                <p className="text-muted-foreground text-sm font-medium animate-pulse">Carregando campanhas...</p>
              </div>
           ) : (
-            <Table>
+            <Table className="min-w-[800px]">
                <TableHeader className="bg-card/[0.02]">
                  <TableRow className="hover:bg-transparent border-border">
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>

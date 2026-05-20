@@ -269,7 +269,7 @@ export default function AdminWinners() {
               <p className="text-muted-foreground text-xs mt-2">Os grandes vencedores aparecerão aqui.</p>
             </div>
           ) : (
-            <Table>
+            <Table className="min-w-[800px]">
               <TableHeader className="bg-secondary/30">
                 <TableRow className="border-border hover:bg-transparent">
                   <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Ganhador</TableHead>
