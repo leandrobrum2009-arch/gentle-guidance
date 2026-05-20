@@ -152,25 +152,6 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
           <ChevronRight className="h-8 w-8 text-foreground" />
        </Button>
  
-       {/* Moving Text Strip (Marquee Effect) */}
-       <div className="absolute bottom-6 left-0 w-full overflow-hidden bg-primary/20 backdrop-blur-sm border-y border-primary/30 py-2 z-20 pointer-events-none">
-         <motion.div 
-           animate={{ x: ["0%", "-50%"] }}
-           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-           className="flex whitespace-nowrap gap-8 items-center"
-         >
-           {[...Array(10)].map((_, i) => (
-             <div key={i} className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
-               <span>ÚLTIMAS COTAS DISPONÍVEIS</span>
-               <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>PRÊMIOS INSTANTÂNEOS NO PIX</span>
-               <div className="h-1 w-1 rounded-full bg-primary" />
-               <span>SORTEIO 100% GARANTIDO</span>
-               <div className="h-1 w-1 rounded-full bg-primary" />
-             </div>
-           ))}
-         </motion.div>
-       </div>
 
        {/* Progress Bar (Simulated for each slide) */}
        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/5 overflow-hidden z-20">
