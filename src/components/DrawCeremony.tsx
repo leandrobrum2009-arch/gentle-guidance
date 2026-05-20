@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trophy, Clock, Zap, Star, ShieldCheck, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { playSound, hapticFeedback } from "@/lib/sounds";
@@ -58,7 +59,7 @@ export const DrawCeremony = ({ isOpen, onOpenChange, campaign, manualNumber, onF
 
   const startRolling = () => {
     setStatus('rolling');
-    playSound('roulette_spin');
+    playSound('hover');
     
     let iterations = 0;
     const maxIterations = 40;
