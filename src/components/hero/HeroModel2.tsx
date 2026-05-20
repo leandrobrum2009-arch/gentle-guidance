@@ -23,7 +23,7 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
   );
 
   return (
-    <section className="relative min-h-[500px] md:min-h-[600px] bg-zinc-950 flex items-center overflow-hidden" ref={emblaRef}>
+    <section className="relative aspect-video md:aspect-[21/9] bg-zinc-950 flex items-center overflow-hidden min-h-[400px] md:min-h-[600px]" ref={emblaRef}>
       <div className="flex w-full h-full">
         {campaigns.map((campaign) => (
           <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] flex items-center justify-center py-20">

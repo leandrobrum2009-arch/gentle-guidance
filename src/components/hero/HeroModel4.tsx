@@ -20,7 +20,7 @@ const HeroModel4 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
   );
 
   return (
-    <section className="relative overflow-hidden w-full h-[400px] md:h-[500px] lg:h-[600px]">
+    <section className="relative overflow-hidden w-full aspect-video md:aspect-[21/9] lg:aspect-[25/9] min-h-[250px] md:min-h-[500px] lg:min-h-[600px]">
       <div className="overflow-hidden h-full" ref={emblaRef}>
         <div className="flex h-full">
           {campaigns.map((campaign) => (

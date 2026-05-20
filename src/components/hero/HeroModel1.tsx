@@ -31,7 +31,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
       <div className="overflow-hidden" ref={emblaRef}>
         <div className="flex">
           {campaigns.map((campaign) => (
-            <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] h-[450px] md:h-[550px] lg:h-[650px]">
+            <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] aspect-video md:aspect-[21/9] lg:aspect-[25/9] min-h-[300px] md:min-h-[500px] lg:min-h-[600px]">
               <div className="absolute inset-0 overflow-hidden">
                 <motion.img 
                   src={campaign.image_url || "/placeholder.svg"} 

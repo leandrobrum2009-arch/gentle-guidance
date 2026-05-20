@@ -240,8 +240,8 @@ const Index = () => {
            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
-          <section className="container relative z-30 -mt-8 md:-mt-12 py-8">
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-3 md:gap-6">
+          <section className="container relative z-30 -mt-6 md:-mt-12 py-6 md:py-8">
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-6">
                 {[
                   { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
                   { icon: Sparkles, title: "Raspadinha", desc: "Prêmios Instantâneos", color: "from-amber-500/40", href: "/raspadinha", badge: "NOVO" },

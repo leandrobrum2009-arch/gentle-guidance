@@ -31,7 +31,7 @@ const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
             <div key={campaign.id} className="relative min-w-full flex-[0_0_100%] container">
               <div className="grid lg:grid-cols-2 gap-12 items-center bg-card/30 backdrop-blur-xl border border-white/5 rounded-[3rem] p-8 md:p-12 overflow-hidden relative group">
                 {/* Visual side */}
-                <div className="order-1 lg:order-2 relative h-[300px] md:h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl">
+                <div className="order-1 lg:order-2 relative aspect-video rounded-[2.5rem] overflow-hidden shadow-2xl">
                   <motion.img 
                     whileHover={{ scale: 1.05 }}
                     transition={{ duration: 0.8 }}
