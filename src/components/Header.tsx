@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -88,18 +88,18 @@ const Header = () => {
   };
 
   return (
-      <header className={`fixed top-0 z-50 w-full transition-all duration-300 ${scrolled ? 'border-b bg-background/90 backdrop-blur-md py-2 shadow-sm' : 'bg-transparent py-4'}`}>
-       <div className="container flex items-center justify-between">
-         <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-4'}`}>
+       <div className="container flex items-center justify-between gap-4">
+         <div className="flex items-center gap-4 md:gap-8 min-w-0">
+            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
               {siteSettings?.site_logo_url ? (
-                <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-9 w-auto object-contain" />
+                <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-8 md:h-9 w-auto object-contain" />
               ) : (
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
-                  <Ticket className="h-5 w-5 text-primary-foreground" />
+                <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
+                  <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
                 </div>
               )}
-              <span className={`font-display text-sm sm:text-base md:text-lg font-black uppercase tracking-tight md:tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient`}>
+              <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient truncate`}>
                 {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
               </span>
             </Link>
@@ -192,42 +192,44 @@ const Header = () => {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: "auto", opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-border bg-card shadow-xl md:hidden"
+            className="overflow-hidden border-t border-border bg-card/95 backdrop-blur-xl shadow-2xl lg:hidden"
           >
-            <nav className="container flex flex-col gap-1 py-4">
+            <nav className="container flex flex-col gap-1 py-6">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   to={link.href}
                   onClick={() => setMobileOpen(false)}
-                   className="rounded-md px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-secondary hover:text-primary"
+                   className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-foreground transition-all hover:bg-primary/10 hover:text-primary active:scale-[0.98]"
                 >
                   {link.label}
+                  <ArrowRight className="h-3.5 w-3.5 opacity-50" />
                 </Link>
               ))}
               {user && (
                 <Link
                   to="/conta#tickets"
                   onClick={() => setMobileOpen(false)}
-                  className="rounded-md px-3 py-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-muted-foreground transition-all hover:bg-primary/10 hover:text-primary"
                 >
                   Meus Títulos
+                  <Ticket className="h-3.5 w-3.5 opacity-50" />
                 </Link>
               )}
-              <div className="mt-2 flex gap-2 border-t border-border pt-3">
+              <div className="mt-4 flex flex-col gap-2 border-t border-border pt-6">
                 {user ? (
-                  <Button size="sm" variant="ghost" className="flex-1" onClick={handleSignOut}>
-                    <LogOut className="mr-1.5 h-4 w-4" /> Sair
+                  <Button size="lg" variant="ghost" className="h-12 rounded-xl font-black uppercase tracking-widest text-[10px] w-full justify-center gap-2 text-rose-500 hover:bg-rose-500/10 hover:text-rose-500" onClick={handleSignOut}>
+                    <LogOut className="h-4 w-4" /> Sair da Conta
                   </Button>
                 ) : (
-                  <>
+                  <div className="grid grid-cols-2 gap-3">
                     <Link to="/entrar" className="flex-1" onClick={() => setMobileOpen(false)}>
-                      <Button size="sm" variant="ghost" className="w-full">Entrar</Button>
+                      <Button size="lg" variant="outline" className="h-12 rounded-xl font-black uppercase tracking-widest text-[10px] w-full border-border">Entrar</Button>
                     </Link>
                     <Link to="/cadastrar" className="flex-1" onClick={() => setMobileOpen(false)}>
-                      <Button size="sm" className="w-full">Cadastrar</Button>
+                      <Button size="lg" className="h-12 rounded-xl font-black uppercase tracking-widest text-[10px] w-full glow-primary">Cadastrar</Button>
                     </Link>
-                  </>
+                  </div>
                 )}
               </div>
             </nav>
