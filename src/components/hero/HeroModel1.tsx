@@ -61,7 +61,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                     {campaign.draw_date && (
                       <CountdownTimer targetDate={campaign.draw_date} className="scale-110 origin-left" />
                     )}
-                    <h1 className="text-2xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
+                    <h1 className="text-xl sm:text-2xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
                       <span className="block mb-2">{campaign.title.split(' ')[0]}</span>
                       <span className="text-animate-gradient inline-block md:pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
@@ -74,7 +74,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
 
                   <div className="flex items-center gap-4 pt-4">
                     <Link to={`/campanha/${campaign.id}`}>
-                      <Button size="lg" className="h-16 rounded-2xl px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-lg border-light-path border-light-always border-[#22c55e]/30 relative z-10">
+                      <Button size="lg" className="h-12 md:h-16 rounded-xl md:rounded-2xl px-6 md:px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-sm md:text-lg border-light-path border-light-always border-[#22c55e]/30 relative z-10">
                         PARTICIPAR AGORA <Zap className="h-6 w-6 fill-current" />
                       </Button>
                     </Link>
