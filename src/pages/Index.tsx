@@ -279,15 +279,15 @@ const Index = () => {
 
            {/* Premium Draws & Live Activity */}
            <section className="container py-12 md:py-20">
-             <div className="grid gap-12 lg:grid-cols-3">
-               <div className="lg:col-span-2 space-y-8">
+             <div className="flex flex-col gap-12">
+               <div className="space-y-8">
                  <SectionHeading 
                    icon={Zap} 
                    title="Sorteios Premium" 
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                  <div className="grid gap-4 md:gap-6 sm:grid-cols-2">
+                  <div className="grid gap-6">
                     {otherCampaigns.length > 0 ? (
                       otherCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
@@ -309,7 +309,7 @@ const Index = () => {
                   </div>
                </div>
  
-                <div className="space-y-6">
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {/* Live Activity Feed */}
                   <div className="rounded-3xl border border-border bg-card p-6 shadow-xl">
                     <LiveActivityFeed />
@@ -394,7 +394,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm md:text-lg font-medium">
                   Esses sorteios já venderam mais de 80% dos bilhetes. Sua chance de ganhar pode ser o próximo clique.
                 </p>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4">
                   {endingSoon.slice(0, 4).map((campaign, i) => (
                     <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm group hover:border-primary/50 transition-all duration-300">
                        <div className="relative h-16 w-16 flex-shrink-0">
