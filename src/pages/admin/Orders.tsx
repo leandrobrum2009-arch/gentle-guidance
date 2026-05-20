@@ -136,7 +136,7 @@ import { Input } from "@/components/ui/input";
                <p className="text-muted-foreground font-medium">Nenhum pedido encontrado no sistema.</p>
              </div>
            ) : (
-             <Table>
+             <Table className="min-w-[900px]">
                <TableHeader>
                   <TableRow className="border-border hover:bg-transparent bg-card/[0.02]">
                     <TableHead className="text-muted-foreground font-bold uppercase text-[9px] tracking-widest pl-8 py-5">Identificação</TableHead>
