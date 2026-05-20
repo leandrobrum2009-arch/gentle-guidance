@@ -34,6 +34,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import ScratchCard from "@/components/ScratchCard";
 import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
+import { PaymentModal } from "@/components/PaymentModal";
 
 const CampaignDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -103,6 +104,8 @@ const CampaignDetail = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [isQuickRegisterOpen, setIsQuickRegisterOpen] = useState(false);
   const [pendingPurchase, setPendingPurchase] = useState<number | string[] | null>(null);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+  const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
   const soldTickets = useMemo(() => {
     return tickets?.filter(t => t.status === "confirmed" || t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
@@ -156,9 +159,10 @@ const CampaignDetail = () => {
 
       setIsPurchasing(false);
       setShowSuccess(true);
+      setCurrentOrderId(orderId);
       
       setTimeout(() => {
-        navigate(`/checkout/${orderId}`);
+        setIsPaymentModalOpen(true);
       }, 3000);
 
     } catch (error: any) {
@@ -566,7 +570,15 @@ const CampaignDetail = () => {
           }
         }} 
       />
-      <Footer />
+        <PaymentModal 
+          isOpen={isPaymentModalOpen} 
+          onOpenChange={setIsPaymentModalOpen} 
+          orderId={currentOrderId} 
+          onPaymentSuccess={() => {
+            navigate("/conta#tickets");
+          }} 
+        />
+        <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
