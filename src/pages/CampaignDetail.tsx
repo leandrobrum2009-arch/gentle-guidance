@@ -553,6 +553,19 @@ const CampaignDetail = () => {
         }} 
       />
 
+      <QuickRegisterDialog 
+        isOpen={isQuickRegisterOpen} 
+        onOpenChange={setIsQuickRegisterOpen} 
+        onSuccess={() => {
+          if (pendingPurchase !== null) {
+            // Give a bit of time for auth state to propagate
+            setTimeout(() => {
+              handleBuy(pendingPurchase);
+              setPendingPurchase(null);
+            }, 500);
+          }
+        }} 
+      />
       <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
