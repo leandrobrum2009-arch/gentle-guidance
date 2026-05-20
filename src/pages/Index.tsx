@@ -235,9 +235,31 @@ const Index = () => {
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
-                 )}
-             </div>
-           )}
+                  )}
+              </div>
+            )}
+
+            {/* Configurable Marquee Strip */}
+            {siteSettings?.home_marquee_enabled === 'true' && (
+              <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-y border-primary/30 py-2.5 pointer-events-none">
+                <motion.div 
+                  animate={{ x: ["0%", "-50%"] }}
+                  transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+                  className="flex whitespace-nowrap gap-12 items-center"
+                >
+                  {[...Array(6)].map((_, i) => (
+                    <div key={i} className="flex items-center gap-12 text-[11px] font-black uppercase tracking-[0.3em] text-primary italic">
+                      {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
+                        <React.Fragment key={idx}>
+                          <span>{text}</span>
+                          <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                        </React.Fragment>
+                      ))}
+                    </div>
+                  ))}
+                </motion.div>
+              </div>
+            )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
           <section className="container relative z-30 -mt-6 md:-mt-12 py-6 md:py-8">
