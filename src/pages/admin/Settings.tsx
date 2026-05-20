@@ -180,7 +180,9 @@ export default function AdminSettings() {
     title_shimmer_secondary: "#ffffff",
     title_shimmer_secondary_light: "#000000",
     home_hero_style: "1",
-    hero_transition_type: "slide"
+    hero_transition_type: "slide",
+    home_marquee_enabled: "true",
+    home_marquee_text: "ÚLTIMAS COTAS DISPONÍVEIS • PRÊMIOS INSTANTÂNEOS NO PIX • SORTEIO 100% GARANTIDO"
   };
 
   useEffect(() => {
