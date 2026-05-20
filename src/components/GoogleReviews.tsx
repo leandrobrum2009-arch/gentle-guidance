@@ -69,7 +69,7 @@ const GoogleReviews = () => {
   const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
 
   return (
-    <section className="container py-20 relative overflow-hidden">
+    <section className="container py-24 md:py-32 relative overflow-hidden border-t border-border/50">
       <div className="flex flex-col items-center text-center gap-4 mb-12">
         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-card border border-border shadow-sm">
           <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" className="h-4" />
