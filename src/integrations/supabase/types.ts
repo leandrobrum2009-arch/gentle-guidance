@@ -1241,6 +1241,7 @@ export type Database = {
         Args: { p_campaign_id?: string; p_cost?: number }
         Returns: Json
       }
+      release_expired_tickets: { Args: never; Returns: undefined }
       reserve_tickets: {
         Args: {
           p_campaign_id: string
