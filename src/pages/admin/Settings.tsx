@@ -72,7 +72,9 @@ export default function AdminSettings() {
     company_cnpj: "CNPJ",
     company_address: "Endereço da Empresa",
     company_phone: "Telefone Corporativo",
-    company_email: "E-mail Corporativo"
+    company_email: "E-mail Corporativo",
+    home_marquee_enabled: "Habilitar Faixa de Texto",
+    home_marquee_text: "Texto da Faixa (Marquee)"
   };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
