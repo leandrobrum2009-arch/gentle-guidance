@@ -10,9 +10,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2 } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2, Ticket } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { DrawCeremony } from "@/components/DrawCeremony";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 
 export default function AdminCampaigns() {
   const navigate = useNavigate();
