@@ -2,11 +2,17 @@ import AdminLayout from "@/components/AdminLayout";
 import { useAdminUsers } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, Mail, User as UserIcon } from "lucide-react";
+import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
