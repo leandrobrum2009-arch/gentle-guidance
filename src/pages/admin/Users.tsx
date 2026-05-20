@@ -2,7 +2,7 @@ import AdminLayout from "@/components/AdminLayout";
 import { useAdminUsers } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone } from "lucide-react";
+import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -54,8 +54,7 @@ export default function AdminUsers() {
 
    const filtered = users?.filter(u => 
      u.name?.toLowerCase().includes(search.toLowerCase()) || 
-     u.phone?.includes(search) ||
-     u.email?.toLowerCase().includes(search.toLowerCase())
+     u.phone?.includes(search)
    );
 
   return (
@@ -89,6 +88,7 @@ export default function AdminUsers() {
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Telefone</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Saldo</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Membro desde</TableHead>
+                   <TableHead className="text-right text-muted-foreground font-bold uppercase text-[10px]">Ações</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -115,11 +115,21 @@ export default function AdminUsers() {
                     <TableCell className="text-muted-foreground text-sm">
                       {format(new Date(u.created_at), 'dd MMM yyyy')}
                     </TableCell>
+                    <TableCell className="text-right">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        onClick={() => handleEdit(u)}
+                        className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
                   </TableRow>
                 ))}
                 {filtered?.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center py-10 text-muted-foreground font-medium italic">
+                    <TableCell colSpan={5} className="text-center py-10 text-muted-foreground font-medium italic">
                       Nenhum usuário encontrado.
                     </TableCell>
                   </TableRow>
@@ -129,6 +139,80 @@ export default function AdminUsers() {
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[450px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+          <div className="bg-primary/10 p-6 flex flex-col items-center text-center gap-2 border-b border-primary/10">
+            <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 mb-2">
+              <UserIcon className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+              Editar <span className="text-primary">Usuário</span>
+            </DialogTitle>
+            <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              Atualize as informações e o saldo do cliente
+            </DialogDescription>
+          </div>
+
+          <div className="p-6 space-y-4">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nome Completo</Label>
+              <Input
+                value={editingUser?.name || ""}
+                onChange={(e) => setEditingUser({ ...editingUser, name: e.target.value })}
+                className="h-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Telefone / WhatsApp</Label>
+              <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input
+                  value={editingUser?.phone || ""}
+                  onChange={(e) => setEditingUser({ ...editingUser, phone: e.target.value })}
+                  className="h-12 pl-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold"
+                />
+              </div>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Saldo em Conta (R$)</Label>
+                <div className="relative">
+                  <DollarSign className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-emerald-500" />
+                  <Input
+                    type="number"
+                    value={editingUser?.balance || 0}
+                    onChange={(e) => setEditingUser({ ...editingUser, balance: e.target.value })}
+                    className="h-12 pl-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold text-emerald-500"
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Saldo Cashback (R$)</Label>
+                <div className="relative">
+                  <ShieldCheck className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary" />
+                  <Input
+                    type="number"
+                    value={editingUser?.cashback_balance || 0}
+                    onChange={(e) => setEditingUser({ ...editingUser, cashback_balance: e.target.value })}
+                    className="h-12 pl-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold text-primary"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleSave} 
+              className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest gap-2 glow-primary border-none shadow-lg shadow-primary/20 mt-4"
+              disabled={saving}
+            >
+              {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
+              SALVAR ALTERAÇÕES
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 }
