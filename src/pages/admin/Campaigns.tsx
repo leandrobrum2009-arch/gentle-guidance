@@ -25,6 +25,12 @@ export default function AdminCampaigns() {
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  
+  // Draw Ceremony States
+  const [isCeremonyOpen, setIsCeremonyOpen] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
+  const [isManualDrawDialogOpen, setIsManualDrawDialogOpen] = useState(false);
+  const [manualTicketNumber, setManualTicketNumber] = useState("");
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esta campanha?")) return;
@@ -60,15 +66,25 @@ export default function AdminCampaigns() {
     }
   };
 
-  const performDraw = async (id: string) => {
-    if (!confirm("Realizar o sorteio desta campanha agora? Esta ação é irreversível.")) return;
-    setSaving(true);
-    const { error } = await supabase.rpc('perform_draw', { p_campaign_id: id });
-    setSaving(false);
-    if (error) { toast({ title: "Erro", description: error.message, variant: "destructive" }); return; }
-    toast({ title: "Sorteio concluído com sucesso!" });
-    queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
-    queryClient.invalidateQueries({ queryKey: ["winners"] });
+  const startAutoDraw = (campaign: any) => {
+    setSelectedCampaign(campaign);
+    setManualTicketNumber("");
+    setIsCeremonyOpen(true);
+  };
+
+  const openManualDrawDialog = (campaign: any) => {
+    setSelectedCampaign(campaign);
+    setManualTicketNumber("");
+    setIsManualDrawDialogOpen(true);
+  };
+
+  const startManualDraw = () => {
+    if (!manualTicketNumber) {
+      toast({ title: "Erro", description: "Informe o número do bilhete.", variant: "destructive" });
+      return;
+    }
+    setIsManualDrawDialogOpen(false);
+    setIsCeremonyOpen(true);
   };
 
   const filteredCampaigns = useMemo(() => {
@@ -213,17 +229,29 @@ export default function AdminCampaigns() {
                      </TableCell>
                      <TableCell className="text-right pr-6 py-4">
                        <div className="flex items-center justify-end gap-1">
-                         {c.status === "active" && (
-                           <Button 
-                             variant="ghost" 
-                             size="icon" 
-                             className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg" 
-                             onClick={() => performDraw(c.id)}
-                             title="Realizar Sorteio"
-                           >
-                             <Trophy className="h-4.5 w-4.5" />
-                           </Button>
-                         )}
+                          {c.status === "active" && (
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  size="icon" 
+                                  className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg" 
+                                  title="Realizar Sorteio"
+                                >
+                                  <Trophy className="h-4.5 w-4.5" />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+                                <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Escolha o Modo</DropdownMenuLabel>
+                                <DropdownMenuItem onClick={() => startAutoDraw(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                  <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                  <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          )}
                          <Button 
                            variant="ghost" 
                            size="icon" 
@@ -278,6 +306,53 @@ export default function AdminCampaigns() {
           )}
         </CardContent>
       </Card>
+      
+      <Dialog open={isManualDrawDialogOpen} onOpenChange={setIsManualDrawDialogOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+          <div className="bg-amber-500/10 p-6 flex flex-col items-center text-center gap-2 border-b border-amber-500/10">
+            <div className="h-12 w-12 rounded-2xl bg-amber-500 flex items-center justify-center shadow-lg shadow-amber-500/20 mb-2">
+              <Trophy className="h-6 w-6 text-white" />
+            </div>
+            <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+              Sorteio <span className="text-amber-500">Manual</span>
+            </DialogTitle>
+            <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
+              Defina o bilhete vencedor da campanha
+            </DialogDescription>
+          </div>
+
+          <div className="p-6 space-y-6">
+            <div className="space-y-2">
+              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Número do Bilhete Premiado</Label>
+              <Input
+                placeholder="Ex: 123456"
+                value={manualTicketNumber}
+                onChange={(e) => setManualTicketNumber(e.target.value)}
+                className="h-14 rounded-xl bg-secondary/50 border-border focus:border-amber-500/50 font-mono text-center text-2xl font-black text-amber-500 tracking-tighter"
+              />
+              <p className="text-[10px] text-muted-foreground font-medium italic text-center">* O bilhete deve pertencer a uma compra confirmada.</p>
+            </div>
+
+            <Button 
+              onClick={startManualDraw} 
+              className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest gap-2 bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20"
+            >
+              INICIAR CERIMÔNIA <Trophy className="h-5 w-5" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      <DrawCeremony 
+        isOpen={isCeremonyOpen}
+        onOpenChange={setIsCeremonyOpen}
+        campaign={selectedCampaign}
+        manualNumber={manualTicketNumber}
+        onFinished={() => {
+          queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+          queryClient.invalidateQueries({ queryKey: ["winners"] });
+        }}
+      />
     </AdminLayout>
   );
 }
