@@ -48,7 +48,7 @@ import Particles from "@/components/Particles";
 import { useTheme } from "@/components/ThemeProvider";
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
-  <div className="flex flex-col gap-2 mb-8">
+  <div className="flex flex-col gap-2 mb-10">
     <div className="flex items-center gap-2">
       {badge && <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-widest">{badge}</Badge>}
     </div>
@@ -60,7 +60,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
             {title.split(' ')[0]} <span className="text-animate-gradient">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
+        <p className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
       </div>
       <Button variant="ghost" size="sm" className="hidden sm:flex text-[10px] font-black uppercase tracking-widest gap-1 hover:text-primary">
         Ver Todos <ArrowRight className="h-3 w-3" />
@@ -278,7 +278,7 @@ const Index = () => {
           </section>
 
            {/* Premium Draws & Live Activity */}
-           <section className="container py-10">
+           <section className="container py-12 md:py-20">
              <div className="grid gap-12 lg:grid-cols-3">
                <div className="lg:col-span-2 space-y-8">
                  <SectionHeading 

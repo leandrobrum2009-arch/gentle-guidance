@@ -61,21 +61,21 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
           </div>
         </div>
 
-        <div className="space-y-1">
-          <h3 className="font-display text-lg font-black uppercase italic tracking-tighter italic leading-none group-hover:text-primary transition-colors">
+        <div className="space-y-1.5 mt-2">
+          <h3 className="font-display text-lg md:text-xl font-black uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
             {winner.winner_name}
           </h3>
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
+          <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
         </div>
 
-        <div className="mt-6 p-4 rounded-xl bg-secondary/50 border border-border space-y-3">
+        <div className="mt-5 p-4 md:p-5 rounded-2xl bg-secondary/50 border border-border space-y-4">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Prêmio</span>
-            <span className="text-primary neon-text-primary italic">{winner.prize_description}</span>
+            <span className="text-primary neon-text-primary italic font-black">{winner.prize_description}</span>
           </div>
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Nº da sorte</span>
-            <span className="font-mono text-xs font-black text-foreground px-2 py-0.5 rounded bg-card border border-border">{winner.ticket_number}</span>
+            <span className="font-mono text-xs font-black text-foreground px-2.5 py-1 rounded-lg bg-card border border-border shadow-sm">{winner.ticket_number}</span>
           </div>
         </div>
 

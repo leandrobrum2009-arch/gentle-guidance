@@ -108,22 +108,22 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             </div>
           </div>
 
-          <div className="mt-4 space-y-3">
+          <div className="mt-5 space-y-4">
             <div>
-              <h3 className="font-display text-base font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
+              <h3 className="font-display text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
               </h3>
-              <p className="text-[10px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
+              <p className="text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
             </div>
 
-            <div className="space-y-1.5">
+            <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <span className="text-muted-foreground flex items-center gap-1">
-                  <TrendingUp className="h-3 w-3" /> {campaign.sold_tickets.toLocaleString()} vendidos
+                  <TrendingUp className="h-3.5 w-3.5" /> {campaign.sold_tickets.toLocaleString()} vendidos
                 </span>
-                <span className="text-primary">{progress}%</span>
+                <span className="text-primary font-black">{progress}%</span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden border border-border">
                 <motion.div
