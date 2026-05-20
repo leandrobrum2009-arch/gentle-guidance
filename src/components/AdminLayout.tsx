@@ -136,26 +136,35 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <SidebarContent />
       </aside>
 
-      {/* Mobile Menu Trigger */}
-      <div className="fixed bottom-6 right-6 z-50 lg:hidden">
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button size="icon" className="h-14 w-14 rounded-full bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] active:scale-95">
-              <Menu className="h-6 w-6 text-primary-foreground" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
-            <SidebarContent />
-          </SheetContent>
-        </Sheet>
-      </div>
+      <div className="flex flex-1 flex-col">
+        {/* Mobile Header */}
+        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
+          <div className="flex items-center gap-3">
+             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-purple-600">
+               <ShieldAlert className="h-5 w-5 text-primary-foreground" />
+             </div>
+             <span className="font-display text-sm font-bold tracking-tight">Admin</span>
+          </div>
+          
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-10 w-10 text-sidebar-foreground">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
+              <SidebarContent />
+            </SheetContent>
+          </Sheet>
+        </header>
 
-      {/* Main */}
-      <main className="flex-1 overflow-y-auto bg-background p-4 lg:p-8 custom-scrollbar">
-        <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
-          {children}
-        </div>
-      </main>
+        {/* Main */}
+        <main className="flex-1 overflow-y-auto bg-background p-3 sm:p-4 lg:p-8 custom-scrollbar">
+          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+            {children}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
