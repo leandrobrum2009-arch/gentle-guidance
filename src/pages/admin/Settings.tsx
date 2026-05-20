@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box, Plus, Trash2, Eye, X, Undo2 } from "lucide-react";
+import { Loader2, Settings, Save, ShieldCheck, Percent, DollarSign, MessageSquare, Layout, Globe, Image, Zap, Sparkles, MousePointer2, Palette, Sliders, RotateCcw, Box, Plus, Trash2, Eye, X, Undo2, Camera } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Slider } from "@/components/ui/slider";
@@ -236,9 +236,9 @@ export default function AdminSettings() {
   const getIcon = (key: string) => {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
     if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
-    if (key.includes('whatsapp') || key.includes('support')) return <MessageSquare className="h-4 w-4" />;
+    if (key.includes('whatsapp') || key.includes('support') || key.includes('phone')) return <MessageSquare className="h-4 w-4" />;
     if (key.includes('hero_style')) return <Layout className="h-4 w-4" />;
-    if (key.includes('site_name')) return <Globe className="h-4 w-4" />;
+    if (key.includes('site_name') || key.includes('company_name')) return <Globe className="h-4 w-4" />;
     if (key.includes('logo')) return <Image className="h-4 w-4" />;
     if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
     if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;

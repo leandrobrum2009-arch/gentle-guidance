@@ -76,7 +76,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           <ShieldAlert className="h-6 w-6 text-primary-foreground" />
         </div>
         <div>
-          <span className="block font-display text-base font-bold tracking-tight">Admin Panel</span>
+          <span className="block font-display text-base font-bold tracking-tight">Painel Administrativo</span>
           <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Premium</span>
         </div>
       </div>
