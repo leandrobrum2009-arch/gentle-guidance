@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
