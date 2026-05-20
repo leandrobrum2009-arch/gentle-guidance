@@ -37,6 +37,10 @@ import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 
 const CampaignDetail = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -206,7 +210,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mt-14 rounded-b-3xl shadow-xl">
+          <div key={section} className="w-full bg-black relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl">
             <RaffleGallery 
               images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
               videoUrl={campaign.video_url} 
