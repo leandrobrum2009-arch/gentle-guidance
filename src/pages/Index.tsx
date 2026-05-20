@@ -258,7 +258,7 @@ const Index = () => {
                       whileHover={{ y: -12, scale: 1.05, boxShadow: "0 20px 40px -10px rgba(var(--primary-rgb), 0.3)" }}
                       onMouseEnter={() => playSound('hover')}
                       whileTap={{ scale: 0.95 }}
-                       className={`group relative overflow-hidden h-full rounded-3xl border border-border bg-card p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50 border-light-path border-[#22c55e]/20 hover:border-[#22c55e]/50`}
+                       className={`group relative overflow-hidden h-full rounded-3xl border border-border bg-card p-4 md:p-6 shadow-xl cursor-pointer transition-all duration-500 hover:border-primary/50 border-light-path border-[#22c55e]/20 hover:border-[#22c55e]/50`}
                     >
                     <div className={`absolute -right-8 -top-8 h-32 w-32 bg-gradient-to-br ${item.color} to-transparent blur-3xl transition-opacity group-hover:opacity-100 opacity-20`} />
                     {item.badge && (
@@ -287,7 +287,7 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                  <div className="grid gap-6 sm:grid-cols-2">
+                  <div className="grid gap-4 md:gap-6 sm:grid-cols-2">
                     {otherCampaigns.length > 0 ? (
                       otherCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
