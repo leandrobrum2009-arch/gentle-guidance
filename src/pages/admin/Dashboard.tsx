@@ -101,7 +101,7 @@ export default function AdminDashboard() {
               <Sparkles className="h-6 w-6 text-primary" />
             </div>
             <h1 className="font-display text-4xl font-bold tracking-tight text-foreground">
-              Dashboard
+              Painel de Controle
             </h1>
           </div>
           <p className="text-muted-foreground text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de rifas.</p>
@@ -315,7 +315,7 @@ export default function AdminDashboard() {
             <Card className="border-border bg-card shadow-sm overflow-hidden">
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg font-bold text-foreground tracking-tight">Live Activity</CardTitle>
+                  <CardTitle className="text-lg font-bold text-foreground tracking-tight">Atividades Recentes</CardTitle>
                   <CardDescription className="text-xs text-muted-foreground">Últimas interações do sistema</CardDescription>
                 </div>
                 <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-1 border border-emerald-500/20">
