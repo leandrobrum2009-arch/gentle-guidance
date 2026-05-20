@@ -1,9 +1,10 @@
 import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
-import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp } from "lucide-react";
+import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import type { Campaign } from "@/hooks/useData";
+import CountdownTimer from "./CountdownTimer";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -97,13 +98,18 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               )}
             </div>
 
-            <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-xs font-black italic text-primary neon-text-primary">
-                <Zap className="h-3 w-3 fill-current" />
-                R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}
-              </div>
-              <div className="flex items-center gap-1 text-[10px] font-bold text-white/70">
-                <Clock className="h-3 w-3" /> 2d 14h
+            <div className="absolute bottom-3 left-3 right-3 flex flex-col gap-2">
+              {campaign.draw_date && (
+                <CountdownTimer targetDate={campaign.draw_date} className="scale-90 origin-left" />
+              )}
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-1.5 text-xs font-black italic text-primary neon-text-primary">
+                  <Zap className="h-3 w-3 fill-current" />
+                  R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}
+                </div>
+                <div className="flex items-center gap-1 text-[10px] font-bold text-white/70">
+                  <Clock className="h-3 w-3" /> {campaign.draw_date ? "Sorteio em breve" : "Em breve"}
+                </div>
               </div>
             </div>
           </div>
@@ -116,6 +122,27 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               <p className="text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
+            </div>
+
+            <div className="flex flex-wrap gap-2 py-1">
+              {campaign.lucky_numbers_prizes && campaign.lucky_numbers_prizes.length > 0 && (
+                <div className="flex items-center gap-1 bg-secondary/50 px-2 py-0.5 rounded-full border border-border">
+                  <Star className="h-2.5 w-2.5 text-amber-500 fill-amber-500" />
+                  <span className="text-[8px] font-black uppercase text-foreground">{campaign.lucky_numbers_prizes.length} Premiados</span>
+                </div>
+              )}
+              {campaign.roulette_enabled && (
+                <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
+                  <RotateCw className="h-2.5 w-2.5 text-primary" />
+                  <span className="text-[8px] font-black uppercase text-primary">Roleta Ativa</span>
+                </div>
+              )}
+              {campaign.mystery_box_enabled && (
+                <div className="flex items-center gap-1 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
+                  <Sparkles className="h-2.5 w-2.5 text-purple-500" />
+                  <span className="text-[8px] font-black uppercase text-purple-500">Raspadinha</span>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">
