@@ -612,7 +612,7 @@ export default function AdminSettings() {
                       className="flex-1 border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
                     />
                   </div>
-                ) : s.key === 'button_hover_effect' ? (
+                ) : (s.key === 'button_hover_effect' || s.key === 'home_marquee_enabled') ? (
                   <div className="flex items-center gap-3">
                     <Switch 
                       checked={s.value === 'true'} 
