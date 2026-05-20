@@ -17,10 +17,45 @@ import { useQueryClient } from "@tanstack/react-query";
 export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
   const [search, setSearch] = useState("");
+  const [editingUser, setEditingUser] = useState<any>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleEdit = (user: any) => {
+    setEditingUser({ ...user });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleSave = async () => {
+    if (!editingUser) return;
+    setSaving(true);
+    try {
+      const { error } = await supabase
+        .from("profiles")
+        .update({
+          name: editingUser.name,
+          phone: editingUser.phone,
+          balance: Number(editingUser.balance),
+          cashback_balance: Number(editingUser.cashback_balance),
+        })
+        .eq("id", editingUser.id);
+
+      if (error) throw error;
+      toast.success("Usuário atualizado com sucesso!");
+      setIsEditDialogOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    } catch (error: any) {
+      toast.error("Erro ao salvar: " + error.message);
+    } finally {
+      setSaving(false);
+    }
+  };
 
    const filtered = users?.filter(u => 
      u.name?.toLowerCase().includes(search.toLowerCase()) || 
-     u.phone?.includes(search)
+     u.phone?.includes(search) ||
+     u.email?.toLowerCase().includes(search.toLowerCase())
    );
 
   return (
