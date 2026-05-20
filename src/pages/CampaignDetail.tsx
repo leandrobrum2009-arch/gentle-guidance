@@ -144,6 +144,9 @@ const CampaignDetail = () => {
     
     setIsPurchasing(true);
     
+    // Release any expired tickets before trying to reserve new ones
+    await supabase.rpc('release_expired_tickets');
+    
     try {
       const quantity = typeof quantityOrNumbers === 'number' ? quantityOrNumbers : quantityOrNumbers.length;
       const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
