@@ -72,7 +72,9 @@ export default function AdminSettings() {
     company_cnpj: "CNPJ",
     company_address: "Endereço da Empresa",
     company_phone: "Telefone Corporativo",
-    company_email: "E-mail Corporativo"
+    company_email: "E-mail Corporativo",
+    home_marquee_enabled: "Habilitar Faixa de Texto",
+    home_marquee_text: "Texto da Faixa (Marquee)"
   };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,7 +182,9 @@ export default function AdminSettings() {
     title_shimmer_secondary: "#ffffff",
     title_shimmer_secondary_light: "#000000",
     home_hero_style: "1",
-    hero_transition_type: "slide"
+    hero_transition_type: "slide",
+    home_marquee_enabled: "true",
+    home_marquee_text: "ÚLTIMAS COTAS DISPONÍVEIS • PRÊMIOS INSTANTÂNEOS NO PIX • SORTEIO 100% GARANTIDO"
   };
 
   useEffect(() => {
@@ -294,7 +298,7 @@ export default function AdminSettings() {
     if (key.includes('cashback') || key.includes('percent')) return <Percent className="h-4 w-4" />;
     if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
     if (key.includes('whatsapp') || key.includes('support') || key.includes('phone')) return <MessageSquare className="h-4 w-4" />;
-    if (key.includes('hero_style')) return <Layout className="h-4 w-4" />;
+    if (key.includes('hero_style') || key.includes('marquee')) return <Layout className="h-4 w-4" />;
     if (key.includes('site_name') || key.includes('company_name')) return <Globe className="h-4 w-4" />;
     if (key.includes('logo')) return <Image className="h-4 w-4" />;
     if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
@@ -608,7 +612,7 @@ export default function AdminSettings() {
                       className="flex-1 border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
                     />
                   </div>
-                ) : s.key === 'button_hover_effect' ? (
+                ) : (s.key === 'button_hover_effect' || s.key === 'home_marquee_enabled') ? (
                   <div className="flex items-center gap-3">
                     <Switch 
                       checked={s.value === 'true'} 
