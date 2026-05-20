@@ -67,7 +67,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
             <Badge className="bg-primary px-4 py-1 text-[10px] font-black uppercase tracking-[0.3em] glow-primary animate-pulse italic">
               Sorteio Premium
             </Badge>
-            <h1 className="font-display text-4xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none text-foreground">
+            <h1 className="font-display text-3xl md:text-6xl lg:text-7xl font-black uppercase italic tracking-tighter leading-none text-foreground">
               {campaign.title.split(' ')[0]} <span className="text-primary neon-text-primary">{campaign.title.split(' ').slice(1).join(' ')}</span>
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground font-medium max-w-2xl">
@@ -115,8 +115,8 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
 
             <div className="flex flex-wrap items-center justify-center gap-4">
               <Link to={`/campanha/${campaign.id}`}>
-                <Button size="lg" className="h-16 rounded-2xl px-10 gap-3 text-lg font-black uppercase italic tracking-tight glow-primary group">
-                  <Zap className="h-6 w-6 fill-current group-hover:scale-125 transition-transform" />
+                <Button size="lg" className="h-14 md:h-16 rounded-2xl px-6 md:px-10 gap-2 md:gap-3 text-base md:text-lg font-black uppercase italic tracking-tight glow-primary group">
+                  <Zap className="h-5 w-5 md:h-6 md:w-6 fill-current group-hover:scale-125 transition-transform" />
                   Participar Agora
                 </Button>
               </Link>

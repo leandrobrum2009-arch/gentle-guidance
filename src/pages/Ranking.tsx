@@ -28,7 +28,7 @@ export default function Ranking() {
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Hall da Fama</span>
             </div>
             
-            <h1 className="text-5xl md:text-8xl font-black uppercase italic leading-none tracking-tighter">
+            <h1 className="text-3xl md:text-8xl font-black uppercase italic leading-none tracking-tighter">
               Ranking <span className="text-primary neon-text-primary">Global</span>
             </h1>
             

@@ -77,7 +77,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
            <div className="space-y-1">
              <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Total a pagar</p>
              <div className="flex items-baseline gap-2">
-               <span className="text-3xl font-black text-foreground">
+               <span className="text-2xl md:text-3xl font-black text-foreground">
                  R$ {totalPrice.toFixed(2).replace(".", ",")}
                </span>
              </div>
@@ -90,7 +90,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
  
          <Button
            size="lg"
-            className="w-full h-14 gap-3 text-lg font-black uppercase rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
+            className="w-full h-12 md:h-14 gap-2 md:gap-3 text-base md:text-lg font-black uppercase rounded-2xl bg-primary hover:bg-primary/90 shadow-lg shadow-primary/20"
            disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
            onClick={() => onBuy(quantity)}
          >

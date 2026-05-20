@@ -72,9 +72,9 @@ const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                       </Badge>
                     </div>
                     
-                    <h1 className="text-4xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground pr-8 py-2">
+                    <h1 className="text-2xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground md:pr-8 py-2">
                       <span className="block mb-1">{campaign.title.split(' ')[0]}</span>
-                      <span className="text-primary neon-text-primary inline-block pr-8 pb-1">
+                      <span className="text-primary neon-text-primary inline-block md:pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
                     </h1>
@@ -107,12 +107,12 @@ const HeroModel3 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
 
                   <div className="flex gap-4 pt-4">
                     <Link to={`/campanha/${campaign.id}`} className="flex-1">
-                      <Button size="lg" className="w-full h-16 rounded-2xl font-black uppercase italic tracking-widest gap-2 glow-primary border-light-path border-light-always text-base border-[#22c55e]/30 relative z-10">
+                      <Button size="lg" className="w-full h-14 md:h-16 rounded-2xl font-black uppercase italic tracking-widest gap-2 glow-primary border-light-path border-light-always text-sm md:text-base border-[#22c55e]/30 relative z-10">
                         COMPRAR AGORA <Zap className="h-5 w-5 fill-current" />
                       </Button>
                     </Link>
-                    <Button variant="outline" size="icon" className="h-16 w-16 rounded-2xl border-white/10 hover:bg-primary/10 group">
-                       <Trophy className="h-6 w-6 text-primary group-hover:scale-110 transition-transform" />
+                    <Button variant="outline" size="icon" className="h-14 w-14 md:h-16 md:w-16 rounded-2xl border-white/10 hover:bg-primary/10 group">
+                       <Trophy className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:scale-110 transition-transform" />
                     </Button>
                   </div>
                 </div>

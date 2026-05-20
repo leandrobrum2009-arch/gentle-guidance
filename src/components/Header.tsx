@@ -99,7 +99,7 @@ const Header = () => {
                   <Ticket className="h-5 w-5 text-primary-foreground" />
                 </div>
               )}
-              <span className={`font-display text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient`}>
+              <span className={`font-display text-base md:text-lg font-black uppercase tracking-tight md:tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient`}>
                 {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
               </span>
             </Link>
@@ -163,7 +163,7 @@ const Header = () => {
               </div>
             </div>
           ) : (
-            <div className="flex items-center gap-2">
+            <div className="hidden sm:flex items-center gap-2">
               <Link to="/entrar">
                 <Button size="sm" variant="ghost" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6">
                   Entrar

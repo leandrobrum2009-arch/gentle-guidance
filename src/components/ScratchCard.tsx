@@ -228,7 +228,7 @@ const ScratchCard = ({
   };
 
   return (
-    <div className="flex flex-col items-center gap-6 w-full max-w-md mx-auto p-6 rounded-3xl bg-zinc-900/50 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden relative">
+    <div className="flex flex-col items-center gap-6 w-full max-w-md mx-auto p-4 md:p-6 rounded-3xl bg-zinc-900/50 border border-white/10 backdrop-blur-xl shadow-2xl overflow-hidden relative">
       <div className="absolute -top-24 -left-24 w-48 h-48 bg-primary/20 blur-[80px] rounded-full" />
       <div className="absolute -bottom-24 -right-24 w-48 h-48 bg-secondary/20 blur-[80px] rounded-full" />
 
