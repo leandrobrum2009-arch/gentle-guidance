@@ -46,6 +46,63 @@ export default function AdminSettings() {
   const [isSavingPreset, setIsSavingPreset] = useState(false);
   const [newPresetName, setNewPresetName] = useState("");
   const [presetToPreview, setPresetToPreview] = useState<any>(null);
+  const [uploading, setUploading] = useState(false);
+
+  const settingNames: Record<string, string> = {
+    hero_transition_speed: "Velocidade do Slide",
+    button_glow_speed: "Velocidade do Brilho do Botão",
+    title_shimmer_speed: "Velocidade do Brilho do Título",
+    button_hover_effect: "Efeito ao passar o mouse",
+    border_shimmer_opacity: "Opacidade da Borda",
+    animation_easing: "Curva de Animação",
+    button_glow_intensity: "Intensidade do Brilho",
+    primary_color: "Cor Primária",
+    title_shimmer_primary: "Cor de Destaque do Título",
+    title_shimmer_secondary: "Cor de Borda do Título (Escuro)",
+    title_shimmer_secondary_light: "Cor de Borda do Título (Claro)",
+    home_hero_style: "Estilo do Carrossel",
+    hero_transition_type: "Tipo de Transição",
+    site_name: "Nome do Site",
+    site_logo_url: "Logotipo do Site",
+    support_whatsapp: "WhatsApp de Suporte",
+    cashback_percent: "Porcentagem de Cashback",
+    affiliate_commission_percent: "Comissão de Afiliados",
+    min_withdrawal_amount: "Valor Mínimo de Saque",
+    company_name: "Razão Social / Nome da Empresa",
+    company_cnpj: "CNPJ",
+    company_address: "Endereço da Empresa",
+    company_phone: "Telefone Corporativo",
+    company_email: "E-mail Corporativo"
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `logo-${Math.random()}.${fileExt}`;
+      const filePath = `site/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('campaigns')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('campaigns')
+        .getPublicUrl(filePath);
+
+      handleUpdate('site_logo_url', publicUrl);
+      toast.success("Logotipo enviado com sucesso! Não esqueça de salvar.");
+    } catch (error: any) {
+      toast.error("Erro ao enviar logotipo: " + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
 
   const presets = [
     {
@@ -485,7 +542,7 @@ export default function AdminSettings() {
                   {getIcon(s.key)}
                 </div>
                 <CardTitle className="text-sm font-bold uppercase tracking-widest text-foreground">
-                  {s.key.replace(/_/g, ' ')}
+                  {settingNames[s.key] || s.key.replace(/_/g, ' ')}
                 </CardTitle>
               </div>
             </CardHeader>
@@ -573,6 +630,38 @@ export default function AdminSettings() {
                       <span>{Math.round(parseFloat(s.value) * 100)}% de {s.key.includes('opacity') ? 'Opacidade' : 'Intensidade'}</span>
                       <span>{s.key.includes('opacity') ? 'Visível' : 'Forte'}</span>
                     </div>
+                  </div>
+                ) : s.key === 'site_logo_url' ? (
+                  <div className="space-y-4">
+                    <div className="flex gap-4 items-center">
+                      {s.value && (
+                        <div className="h-16 w-16 rounded-xl border border-border bg-secondary/20 flex items-center justify-center overflow-hidden">
+                          <img src={s.value} alt="Logo" className="max-h-full max-w-full object-contain" />
+                        </div>
+                      )}
+                      <div className="flex-1">
+                        <Label htmlFor="logo-upload" className="cursor-pointer">
+                          <div className="h-12 rounded-xl bg-secondary/50 border border-border border-dashed hover:border-primary/50 transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest text-muted-foreground">
+                            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
+                            {s.value ? "Alterar Logotipo" : "Subir Logotipo"}
+                          </div>
+                          <input 
+                            id="logo-upload" 
+                            type="file" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={handleLogoUpload}
+                            disabled={uploading}
+                          />
+                        </Label>
+                      </div>
+                    </div>
+                    <Input 
+                      value={s.value} 
+                      onChange={(e) => handleUpdate(s.key, e.target.value)}
+                      placeholder="Ou cole a URL da imagem aqui..."
+                      className="border-border bg-secondary/20 text-foreground focus:border-primary/50 font-bold"
+                    />
                   </div>
                 ) : (
                   <Input 
