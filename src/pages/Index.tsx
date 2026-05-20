@@ -394,7 +394,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-sm md:text-lg font-medium">
                   Esses sorteios já venderam mais de 80% dos bilhetes. Sua chance de ganhar pode ser o próximo clique.
                 </p>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-4">
                   {endingSoon.slice(0, 4).map((campaign, i) => (
                     <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm group hover:border-primary/50 transition-all duration-300">
                        <div className="relative h-16 w-16 flex-shrink-0">
