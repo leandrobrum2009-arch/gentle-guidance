@@ -11,9 +11,14 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 interface UserRankingProps {
   users?: any[];
   title?: string;
+  stats?: {
+    highest: any;
+    lowest: any;
+  } | null;
 }
 
-const UserRanking = ({ users, title }: UserRankingProps) => {
+const UserRanking = ({ users, title, stats }: UserRankingProps) => {
+
   const [category, setCategory] = useState<'points' | 'xp'>('points');
   const { data: globalRanking, isLoading } = useRanking(15, category);
 
