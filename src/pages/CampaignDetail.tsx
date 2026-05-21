@@ -369,22 +369,59 @@ const CampaignDetail = () => {
                   </h3>
 
                   <div className="grid grid-cols-1 gap-3">
-                    {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                    <div className="space-y-4">
+                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios da roleta</p>
+                          <div className="flex flex-wrap gap-2">
+                            {roulettePrizes.slice(0, 5).map((p, idx) => (
+                              <Badge key={idx} variant="secondary" className="text-[9px] font-bold bg-secondary/50">
+                                {p.label}
+                              </Badge>
+                            ))}
+                            {roulettePrizes.length > 5 && <Badge variant="secondary" className="text-[9px] font-bold bg-secondary/50">+{roulettePrizes.length - 5}</Badge>}
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas premiadas disponíveis</p>
+                        <Badge className="bg-amber-500/10 text-amber-500 border-none text-[10px] font-black">
+                          {availableInstantPrizes} de {luckyNumbers.length} Prêmios
+                        </Badge>
+                      </div>
+
+                      {luckyWinners && luckyWinners.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios que já saíram</p>
+                          <div className="space-y-1">
+                            {luckyWinners.slice(0, 3).map((w, idx) => (
+                              <div key={idx} className="flex items-center gap-2 text-[10px] font-medium text-foreground">
+                                <Trophy className="h-3 w-3 text-primary" />
+                                <span>Cota #{w.number} - {w.profiles?.name}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    {campaign.roulette_enabled && (
                       <Dialog>
                         <DialogTrigger asChild>
-                          <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary border border-border hover:border-primary/50 hover:bg-card transition-all group">
+                          <button className="w-full mt-4 flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all group">
                             <div className="flex items-center gap-3">
                               <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-180 transition-transform duration-500">
                                 <RotateCw className="h-5 w-5" />
                               </div>
                               <div className="text-left">
-                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Roleta Premiada</p>
-                                <p className="text-[10px] font-medium text-muted-foreground">Gire e ganhe prêmios agora</p>
+                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Girar Roleta</p>
+                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte agora</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Badge className="bg-primary/10 text-primary border-none text-[9px] font-black">{userSpinsAvailable} Giros</Badge>
-                              <ArrowLeft className="h-4 w-4 text-muted-foreground rotate-180" />
+                              <Badge className="bg-primary text-white border-none text-[9px] font-black">{userSpinsAvailable} Giros</Badge>
+                              <ArrowLeft className="h-4 w-4 text-primary rotate-180" />
                             </div>
                           </button>
                         </DialogTrigger>
@@ -393,10 +430,8 @@ const CampaignDetail = () => {
                         </DialogContent>
                       </Dialog>
                     )}
-                    {campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
-                      <MysteryBox boxes={mysteryBoxes} isCompact />
-                    )}
                   </div>
+
                 </div>
               )}
             </div>
