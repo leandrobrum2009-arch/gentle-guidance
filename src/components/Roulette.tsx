@@ -315,11 +315,11 @@ const SOUND_URLS = {
        </div>
  
        {/* Live Win Feed */}
-       <div className="w-full px-6 mb-4">
-         <div className="bg-white/5 border border-white/10 rounded-2xl p-3 backdrop-blur-md overflow-hidden relative">
-           <div className="flex items-center gap-2 mb-2">
-             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-             <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Ganhadores em Tempo Real</span>
+       <div className="w-full px-4 md:px-6 mb-2 md:mb-4">
+         <div className="bg-white/5 border border-white/10 rounded-2xl p-2 md:p-3 backdrop-blur-md overflow-hidden relative">
+           <div className="flex items-center gap-2 mb-1 md:mb-2">
+             <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-primary animate-pulse" />
+             <span className="text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">Ganhadores em Tempo Real</span>
            </div>
            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
              {globalSpins?.map((spin, i) => (
