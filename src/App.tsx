@@ -35,6 +35,7 @@ import Winners from "./pages/Winners";
 import Preview from "./pages/Preview";
 import Announcements from "./pages/Announcements";
 import Support from "./pages/Support";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminCampaigns from "./pages/admin/Campaigns";
