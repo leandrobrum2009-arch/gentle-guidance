@@ -520,33 +520,36 @@ const CampaignDetail = () => {
 
       case 'description':
         return (
-          <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-4">
-            <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
-              <Info className="h-5 w-5 text-primary" /> Descrição
+          <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+            <h3 className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
+              <Info className="h-4 w-4 text-primary" /> Descrição e Regras
             </h3>
             <div className={cn(
-              "text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap relative",
-              !isDescriptionExpanded && "max-h-[150px] overflow-hidden"
+              "text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap relative transition-all duration-300",
+              !isDescriptionExpanded && "line-clamp-2 overflow-hidden"
             )}>
               {campaign.description}
-              {!isDescriptionExpanded && campaign.description && campaign.description.length > 300 && (
-                <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+              {isDescriptionExpanded && campaign.regulations && (
+                <div className="mt-6 pt-6 border-t border-border">
+                  <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground mb-3 flex items-center gap-2">
+                    <BookOpen className="h-3 w-3 text-primary" /> Regulamento da Rifa
+                  </h4>
+                  <p className="text-xs whitespace-pre-wrap">{campaign.regulations}</p>
+                </div>
               )}
             </div>
-            {campaign.description && campaign.description.length > 300 && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="w-full font-bold uppercase tracking-widest text-[10px] gap-2 h-10 rounded-xl"
-                onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
-              >
-                {isDescriptionExpanded ? (
-                  <>Ver menos <ChevronUp className="h-4 w-4" /></>
-                ) : (
-                  <>Ver descrição completa <ChevronDown className="h-4 w-4" /></>
-                )}
-              </Button>
-            )}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="w-full font-bold uppercase tracking-widest text-[10px] gap-2 h-9 rounded-xl border border-border/50"
+              onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+            >
+              {isDescriptionExpanded ? (
+                <>Ver menos <ChevronUp className="h-3 w-3" /></>
+              ) : (
+                <>Ver descrição completa e regras <ChevronDown className="h-3 w-3" /></>
+              )}
+            </Button>
           </div>
         );
 
