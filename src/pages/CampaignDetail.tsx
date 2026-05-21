@@ -356,12 +356,22 @@ const CampaignDetail = () => {
                     <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                       <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
                     </h3>
-                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary">
-                      PRÊMIOS INSTANTÂNEOS
-                    </Badge>
+                    <div className="flex gap-1.5">
+                      <Badge className="bg-green-500 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
+                        {luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES
+                      </Badge>
+                      <Badge className="bg-amber-400 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
+                        {luckyNumbers.filter(p => luckyNumbersStatus[p.number]).length} PREMIADAS
+                      </Badge>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {luckyNumbers.map((p: any, i: number) => {
+                    {[...luckyNumbers].sort((a, b) => {
+                      const aWon = luckyNumbersStatus[a.number];
+                      const bWon = luckyNumbersStatus[b.number];
+                      if (aWon === bWon) return 0;
+                      return aWon ? 1 : -1;
+                    }).map((p: any, i: number) => {
                       const isWon = luckyNumbersStatus[p.number];
                       const winner = luckyWinners?.find(w => w.number === p.number);
                       return (
@@ -370,29 +380,36 @@ const CampaignDetail = () => {
                           className={cn(
                             "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
                             isWon 
-                              ? "bg-amber-400/10 border-amber-400/20" 
+                              ? "bg-amber-400/5 border-amber-400/10 grayscale-[0.5]" 
                               : "bg-green-500/5 border-green-500/10"
                           )}
                         >
-                          <div className="flex flex-col overflow-hidden">
-                            <span className={cn(
-                              "text-[10px] font-black uppercase tracking-tight truncate max-w-[140px] md:max-w-none",
-                              isWon ? "text-muted-foreground" : "text-foreground"
+                          <div className="flex items-center gap-2.5 overflow-hidden">
+                            <div className={cn(
+                              "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px]",
+                              isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
                             )}>
-                              {p.prize}
-                            </span>
-                            {isWon && (
-                              <span className="text-[8px] font-bold text-primary uppercase tracking-tighter truncate">
-                                 {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                              #{p.number}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className={cn(
+                                "text-[10px] font-black uppercase tracking-tight truncate max-w-[100px]",
+                                isWon ? "text-muted-foreground" : "text-foreground"
+                              )}>
+                                {p.prize}
                               </span>
-                            )}
+                              {isWon && (
+                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
+                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <Badge className={cn(
-                            "text-[10px] font-black uppercase tracking-widest px-3 h-7 border-none",
-                            isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
-                          )}>
-                            #{p.number}
-                          </Badge>
+                          {isWon ? (
+                            <Badge variant="outline" className="text-[8px] font-black uppercase border-amber-500/20 text-amber-600 h-5 px-1.5">Ganhador</Badge>
+                          ) : (
+                            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                          )}
                         </div>
                       );
                     })}
