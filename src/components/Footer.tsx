@@ -15,6 +15,8 @@ const footerLinks = [
 ];
 
 const Footer = () => {
+  const { data: siteSettings } = useSiteSettings();
+
   return (
     <footer className="relative border-t border-border bg-background pt-20 pb-10 overflow-hidden">
       {/* Background Glow */}
