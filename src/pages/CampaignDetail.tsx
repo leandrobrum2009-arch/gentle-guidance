@@ -594,7 +594,7 @@ const CampaignDetail = () => {
                           className="group flex items-center justify-between p-4 rounded-3xl border border-amber-500/10 bg-amber-500/5 transition-all duration-300 shadow-sm overflow-hidden relative"
                         >
                           <div className="flex items-center gap-4 overflow-hidden relative z-10">
-                            <div className="h-12 w-12 shrink-0 rounded-2xl bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-base">
+                            <div className="px-5 h-10 shrink-0 rounded-full bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-sm">
                               #{p.number}
                             </div>
                             <div className="flex flex-col overflow-hidden">
