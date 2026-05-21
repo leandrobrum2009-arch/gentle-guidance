@@ -177,7 +177,7 @@ const Index = () => {
      <div className="min-h-screen bg-background relative overflow-hidden">
        {/* Global Background Particles */}
        <div className="fixed inset-0 z-0">
-         <Particles count={50} />
+         <Particles count={25} />
        </div>
 
        <Header />
