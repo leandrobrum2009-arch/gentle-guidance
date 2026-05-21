@@ -682,22 +682,23 @@ const CampaignDetail = () => {
                     {availablePrizes.map((p: any, i: number) => (
                       <div 
                         key={i} 
-                        className="group flex items-center justify-between p-3.5 rounded-2xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm"
+                        className="group flex items-center justify-between p-4 rounded-3xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm"
                       >
-                        <div className="flex items-center gap-3 overflow-hidden">
-                          <div className="h-11 w-11 shrink-0 rounded-xl bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-sm group-hover:scale-110 transition-transform duration-500">
+                        <div className="flex items-center gap-4 overflow-hidden">
+                          <div className="h-12 w-12 shrink-0 rounded-2xl bg-green-500 text-white shadow-[0_5px_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-base group-hover:scale-110 transition-transform duration-500">
                             #{p.number}
                           </div>
                           <div className="flex flex-col overflow-hidden">
-                            <span className="text-[11px] font-black uppercase tracking-tight text-foreground truncate">
+                            <span className="text-xs font-black uppercase tracking-tight text-foreground truncate max-w-[150px]">
                               {p.prize}
                             </span>
-                            <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter">
-                              Disponível
+                            <span className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-1">
+                              <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                              LIVRE / DISPONÍVEL
                             </span>
                           </div>
                         </div>
-                        <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                        <Badge className="bg-green-500 text-white border-none text-[9px] font-black px-3 h-6 rounded-full shadow-sm">PARTICIPAR</Badge>
                       </div>
                     ))}
                   </div>
