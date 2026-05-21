@@ -367,13 +367,13 @@ const CampaignDetail = () => {
               {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Prêmios e Jogos
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Disponíveis Agora
                   </h3>
                   <div className="grid grid-cols-1 gap-3">
                     <div className="space-y-4">
                       {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios da roleta</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Roletas disponíveis</p>
                           <div className="flex flex-wrap gap-2">
                             {roulettePrizes.map((p, idx) => (
                               <Badge key={idx} variant="secondary" className="text-[9px] font-bold bg-secondary/50">
@@ -386,9 +386,9 @@ const CampaignDetail = () => {
 
                       {campaign.scratch_cards_enabled && (
                         <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinha disponível</p>
-                          <Badge className="bg-amber-500 text-white border-none text-[10px] font-black uppercase tracking-wider">
-                            Ativada para esta rifa
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas disponíveis</p>
+                          <Badge className="bg-amber-500 text-white border-none text-[10px] font-black uppercase tracking-wider px-3 py-1">
+                            {roulettePrizes.length + luckyNumbers.length} Prêmios Possíveis
                           </Badge>
                         </div>
                       )}
