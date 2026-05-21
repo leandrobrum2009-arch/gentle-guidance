@@ -12,8 +12,8 @@ interface UserRankingProps {
   users?: any[];
   title?: string;
   stats?: {
-    highest: any;
-    lowest: any;
+    highestTickets: any[];
+    lowestTickets: any[];
   } | null;
 }
 
@@ -69,35 +69,60 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {stats.highest && (
-            <div className="bg-primary/10 border border-primary/20 p-6 rounded-3xl space-y-3">
-              <div className="flex items-center gap-2">
-                <Crown className="h-5 w-5 text-primary" />
-                <h3 className="text-xs font-black uppercase tracking-widest">Maior cota vendida</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Crown className="h-4 w-4 text-primary" />
               </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-2xl font-black italic text-primary">#{stats.highest.number}</p>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comprador: {stats.highest.profiles?.name || "Usuário"}</p>
-                </div>
-              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest italic">Maiores números sorteados</h3>
             </div>
-          )}
-          {stats.lowest && (
-            <div className="bg-secondary/50 border border-border p-6 rounded-3xl space-y-3">
-              <div className="flex items-center gap-2">
-                <TrendingUp className="h-5 w-5 text-muted-foreground rotate-180" />
-                <h3 className="text-xs font-black uppercase tracking-widest">Menor cota vendida</h3>
-              </div>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-2xl font-black italic text-foreground/80">#{stats.lowest.number}</p>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comprador: {stats.lowest.profiles?.name || "Usuário"}</p>
+            <div className="grid gap-3">
+              {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => (
+                <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase text-foreground leading-tight">{ticket.profiles?.name || "Usuário"}</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
+                    </div>
+                  </div>
+                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
                 </div>
-              </div>
+              )) : (
+                <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando sorteio...</p>
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center">
+                <TrendingUp className="h-4 w-4 text-muted-foreground rotate-180" />
+              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest italic">Menores números sorteados</h3>
+            </div>
+            <div className="grid gap-3">
+              {stats.lowestTickets.length > 0 ? stats.lowestTickets.map((ticket, idx) => (
+                <div key={idx} className="bg-secondary/30 border border-border p-4 rounded-2xl flex items-center justify-between group hover:bg-secondary/50 transition-all">
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-black italic text-foreground/80">#{ticket.number}</span>
+                    <div className="flex flex-col">
+                      <span className="text-[10px] font-black uppercase text-foreground leading-tight">{ticket.profiles?.name || "Usuário"}</span>
+                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
+                    </div>
+                  </div>
+                  <Badge variant="outline" className="border-border text-muted-foreground text-[8px] font-black">MIN {idx + 1}</Badge>
+                </div>
+              )) : (
+                <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando sorteio...</p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       )}
 

@@ -617,7 +617,7 @@ const CampaignDetail = () => {
       case 'ranking':
         return campaign.ranking_enabled && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
-            <UserRanking users={campaignRanking || []} title="Maiores e menores cotas" stats={ticketStats} />
+            <UserRanking title="Maiores e menores cotas" stats={ticketStats} />
           </div>
         );
 

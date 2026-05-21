@@ -258,20 +258,31 @@ export const useCampaignTicketStats = (campaignId: string) =>
   useQuery({
     queryKey: ["campaign-ticket-stats", campaignId],
     queryFn: async () => {
-      const { data: tickets, error } = await supabase
+      // Get highest 3 tickets
+      const { data: highest, error: hError } = await supabase
         .from('tickets')
         .select('number, status, profiles!user_id(name)')
         .eq('campaign_id', campaignId)
-        .in('status', ['confirmed', 'paid']);
+        .in('status', ['confirmed', 'paid'])
+        .order('number', { ascending: false })
+        .limit(3);
       
-      if (error) throw error;
-      if (!tickets || tickets.length === 0) return { highest: null, lowest: null };
+      if (hError) throw hError;
 
-      const sorted = [...tickets].sort((a, b) => Number(a.number) - Number(b.number));
+      // Get lowest 3 tickets
+      const { data: lowest, error: lError } = await supabase
+        .from('tickets')
+        .select('number, status, profiles!user_id(name)')
+        .eq('campaign_id', campaignId)
+        .in('status', ['confirmed', 'paid'])
+        .order('number', { ascending: true })
+        .limit(3);
+      
+      if (lError) throw lError;
       
       return {
-        highest: sorted[sorted.length - 1],
-        lowest: sorted[0]
+        highestTickets: highest || [],
+        lowestTickets: lowest || []
       };
     },
     enabled: !!campaignId
