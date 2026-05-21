@@ -1,4 +1,5 @@
 # Welcome to your Lovable project
+<!-- Deploy test: 2026-05-21 -->
 
 ## Project info
 
