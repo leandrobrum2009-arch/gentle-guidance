@@ -512,7 +512,7 @@ const CampaignDetail = () => {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl p-0 bg-transparent border-none">
+                        <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar">
                           <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
                         </DialogContent>
                       </Dialog>
