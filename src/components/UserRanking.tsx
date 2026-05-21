@@ -14,6 +14,7 @@ interface UserRankingProps {
   stats?: {
     highestTickets: any[];
     lowestTickets: any[];
+    userTickets?: any[];
   } | null;
 }
 
@@ -69,7 +70,26 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
       </div>
 
       {stats && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-8">
+          {stats.userTickets && stats.userTickets.length > 0 && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
+                  <Star className="h-4 w-4 text-green-500" />
+                </div>
+                <h3 className="text-xs font-black uppercase tracking-widest italic">Meus números comprados</h3>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {stats.userTickets.map((ticket, idx) => (
+                  <Badge key={idx} variant="outline" className="h-8 px-4 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic">
+                    #{ticket.number}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-4">
             <div className="flex items-center gap-2 mb-2">
               <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
@@ -130,6 +150,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {!stats && (

@@ -317,6 +317,23 @@ export const useWinners = () =>
     },
   });
 
+export const useUserTickets = (userId: string, campaignId: string) =>
+  useQuery({
+    queryKey: ["user-tickets", userId, campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('tickets')
+        .select('number, status')
+        .eq('user_id', userId)
+        .eq('campaign_id', campaignId)
+        .in('status', ['confirmed', 'paid'])
+        .order('number', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId && !!campaignId,
+  });
+
 export const useAnnouncements = () =>
   useQuery({
     queryKey: ["announcements"],

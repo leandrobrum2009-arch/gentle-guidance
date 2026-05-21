@@ -15,7 +15,8 @@ import Footer from "@/components/Footer";
 import { 
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
-  useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats
+  useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
+  useUserTickets
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -105,6 +106,8 @@ const CampaignDetail = () => {
   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
   const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
   const { data: ticketStats } = useCampaignTicketStats(id || "");
+  const { data: userTickets } = useUserTickets(user?.id || "", id || "");
+
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
   const [isPurchasing, setIsPurchasing] = useState(false);
@@ -300,60 +303,6 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
-              {luckyNumbers.length > 0 && (
-                <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                      <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
-                    </h3>
-                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary">
-                      PRÊMIOS INSTANTÂNEOS
-                    </Badge>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {luckyNumbers.map((p: any, i: number) => {
-                      const isWon = luckyNumbersStatus[p.number];
-                      const winner = luckyWinners?.find(w => w.number === p.number);
-                      return (
-                        <div 
-                          key={i} 
-                          className={cn(
-                            "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
-                            isWon 
-                              ? "bg-amber-400/10 border-amber-400/20" 
-                              : "bg-green-500/5 border-green-500/10"
-                          )}
-                        >
-                          <div className="flex items-center gap-2 overflow-hidden">
-                            <div className={cn(
-                              "h-7 w-7 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px]",
-                              isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
-                            )}>
-                              #{p.number}
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className="text-[10px] font-black uppercase tracking-tight truncate">
-                                {p.prize}
-                              </span>
-                              {isWon && (
-                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
-                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
-                                </span>
-                              )}
-                            </div>
-                          </div>
-                          <Badge className={cn(
-                            "text-[7px] font-black uppercase tracking-widest px-1.5 h-4",
-                            isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
-                          )}>
-                            {isWon ? "SORTEADA" : "ATIVA"}
-                          </Badge>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
               <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
                 <Tabs defaultValue="auto" className="w-full">
@@ -398,6 +347,56 @@ const CampaignDetail = () => {
               </div>
 
 
+               {luckyNumbers.length > 0 && (
+                <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
+                    </h3>
+                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary">
+                      PRÊMIOS INSTANTÂNEOS
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {luckyNumbers.map((p: any, i: number) => {
+                      const isWon = luckyNumbersStatus[p.number];
+                      const winner = luckyWinners?.find(w => w.number === p.number);
+                      return (
+                        <div 
+                          key={i} 
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
+                            isWon 
+                              ? "bg-amber-400/10 border-amber-400/20" 
+                              : "bg-green-500/5 border-green-500/10"
+                          )}
+                        >
+                          <div className="flex flex-col overflow-hidden">
+                            <span className={cn(
+                              "text-[10px] font-black uppercase tracking-tight truncate max-w-[140px] md:max-w-none",
+                              isWon ? "text-muted-foreground" : "text-foreground"
+                            )}>
+                              {p.prize}
+                            </span>
+                            {isWon && (
+                              <span className="text-[8px] font-bold text-primary uppercase tracking-tighter truncate">
+                                 {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                              </span>
+                            )}
+                          </div>
+                          <Badge className={cn(
+                            "text-[10px] font-black uppercase tracking-widest px-3 h-7 border-none",
+                            isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
+                          )}>
+                            #{p.number}
+                          </Badge>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -439,8 +438,44 @@ const CampaignDetail = () => {
                                   <span className="text-xs font-bold text-primary italic">{p.prize}</span>
                                 </div>
                               </div>
+                              <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEIO</Badge>
                             </div>
                           ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {luckyNumbers && luckyNumbers.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cotas Premiadas</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          {luckyNumbers.slice(0, 5).map((p: any, idx: number) => {
+                            const isWon = luckyNumbersStatus[p.number];
+                            return (
+                              <div key={idx} className={cn(
+                                "flex items-center justify-between p-2.5 rounded-xl border transition-all duration-300",
+                                isWon ? "bg-amber-400/5 border-amber-400/10" : "bg-green-500/5 border-green-500/10"
+                              )}>
+                                <span className={cn(
+                                  "text-[10px] font-bold uppercase tracking-tight truncate max-w-[120px]",
+                                  isWon ? "text-muted-foreground" : "text-foreground"
+                                )}>
+                                  {p.prize}
+                                </span>
+                                <Badge className={cn(
+                                  "text-[9px] font-black uppercase border-none px-2 h-5",
+                                  isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
+                                )}>
+                                  #{p.number}
+                                </Badge>
+                              </div>
+                            );
+                          })}
+                          {luckyNumbers.length > 5 && (
+                            <p className="text-[9px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-1">
+                              + {luckyNumbers.length - 5} outras cotas
+                            </p>
+                          )}
                         </div>
                       </div>
                     )}
@@ -467,13 +502,6 @@ const CampaignDetail = () => {
                           </Badge>
                         </div>
                       )}
-                      
-                      <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</span>
-                        <Badge className="bg-amber-500/10 text-amber-500 border-none text-[9px] font-black uppercase tracking-wider">
-                          {availableInstantPrizes} / {luckyNumbers.length}
-                        </Badge>
-                      </div>
 
                       {luckyWinners && luckyWinners.length > 0 && (
                         <div className="space-y-2 mt-2">
@@ -633,7 +661,10 @@ const CampaignDetail = () => {
       case 'ranking':
         return campaign.ranking_enabled && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
-            <UserRanking title="Maiores e menores cotas" stats={ticketStats} />
+            <UserRanking 
+              title="Maiores e menores cotas" 
+              stats={ticketStats ? { ...ticketStats, userTickets } : null} 
+            />
           </div>
         );
 
