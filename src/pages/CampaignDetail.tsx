@@ -350,78 +350,6 @@ const CampaignDetail = () => {
               </div>
 
 
-               {luckyNumbers.length > 0 && (
-                <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                      <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
-                    </h3>
-                    <div className="flex gap-1.5">
-                      <Badge className="bg-green-500 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
-                        {luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES
-                      </Badge>
-                      <Badge className="bg-amber-400 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
-                        {luckyNumbers.filter(p => luckyNumbersStatus[p.number]).length} PREMIADAS
-                      </Badge>
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {[...luckyNumbers].sort((a, b) => {
-                      const aWon = luckyNumbersStatus[a.number];
-                      const bWon = luckyNumbersStatus[b.number];
-                      if (aWon === bWon) return 0;
-                      return aWon ? 1 : -1;
-                    }).map((p: any, i: number) => {
-                      const isWon = luckyNumbersStatus[p.number];
-                      const winner = luckyWinners?.find(w => w.number === p.number);
-                      return (
-                        <div 
-                          key={i} 
-                          className={cn(
-                            "flex items-center justify-between p-3.5 rounded-2xl border transition-all duration-300 shadow-sm",
-                            isWon 
-                              ? "bg-amber-400/5 border-amber-400/10 grayscale-[0.5]" 
-                              : "bg-green-500/5 border-green-500/10"
-                          )}
-                        >
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <div className={cn(
-                              "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center font-black italic text-xs shadow-sm",
-                              isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
-                            )}>
-                              #{p.number}
-                            </div>
-                            <div className="flex flex-col overflow-hidden">
-                              <span className={cn(
-                                "text-[11px] font-black uppercase tracking-tight truncate max-w-[120px]",
-                                isWon ? "text-muted-foreground" : "text-foreground"
-                              )}>
-                                {p.prize}
-                              </span>
-                              <div className="flex items-center gap-1.5">
-                                {isWon ? (
-                                  <span className="text-[9px] font-black text-amber-600 uppercase tracking-tighter truncate">
-                                    🏆 {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
-                                  </span>
-                                ) : (
-                                  <span className="text-[9px] font-bold text-green-600 uppercase tracking-tighter">
-                                    🍀 Disponível
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                          {isWon ? (
-                            <Badge variant="outline" className="text-[8px] font-black uppercase border-amber-500/20 text-amber-600 h-5 px-2 bg-amber-500/5">Sorteada</Badge>
-                          ) : (
-                            <Badge className="text-[8px] font-black uppercase bg-green-500 text-white border-none h-5 px-2 shadow-sm">Livre</Badge>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
 
               {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
@@ -471,66 +399,10 @@ const CampaignDetail = () => {
                       </div>
                     )}
 
-                    {luckyNumbers && luckyNumbers.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between ml-1">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</p>
-                          <span className="text-[8px] font-bold text-green-500 uppercase">{luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES</span>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                          {[...luckyNumbers].sort((a, b) => {
-                            const aWon = luckyNumbersStatus[a.number];
-                            const bWon = luckyNumbersStatus[b.number];
-                            if (aWon === bWon) return 0;
-                            return aWon ? 1 : -1;
-                          }).slice(0, 5).map((p: any, idx: number) => {
-                            const isWon = luckyNumbersStatus[p.number];
-                             return (
-                               <div key={idx} className={cn(
-                                 "flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 shadow-sm",
-                                 isWon ? "bg-amber-400/5 border-amber-400/10 opacity-70" : "bg-green-500/5 border-green-500/10"
-                               )}>
-                                 <div className="flex items-center gap-2.5 overflow-hidden">
-                                   <div className={cn(
-                                     "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px] shadow-sm",
-                                     isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
-                                   )}>
-                                     #{p.number}
-                                   </div>
-                                   <div className="flex flex-col overflow-hidden">
-                                     <span className={cn(
-                                       "text-[10px] font-black uppercase tracking-tight truncate max-w-[110px]",
-                                       isWon ? "text-muted-foreground" : "text-foreground"
-                                     )}>
-                                       {p.prize}
-                                     </span>
-                                     <span className={cn(
-                                       "text-[8px] font-bold uppercase tracking-tighter",
-                                       isWon ? "text-amber-600" : "text-green-500"
-                                     )}>
-                                       {isWon ? "Sorteada" : "Livre"}
-                                     </span>
-                                   </div>
-                                 </div>
-                                 <div className={cn(
-                                   "h-1.5 w-1.5 rounded-full shrink-0",
-                                   isWon ? "bg-amber-400" : "bg-green-500 animate-pulse"
-                                 )} />
-                               </div>
-                             );
-                           })}
-                           {luckyNumbers.length > 5 && (
-                             <p className="text-[9px] text-center text-muted-foreground font-black uppercase italic tracking-widest mt-1">
-                               + {luckyNumbers.length - 5} outras cotas
-                             </p>
-                           )}
-                         </div>
-                       </div>
-                     )}
  
                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                        <div className="space-y-2">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Benefícios da Roleta</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
                          <div className="grid grid-cols-2 gap-2">
                            {roulettePrizes.map((p, idx) => (
                              <div key={idx} className="flex flex-col items-center justify-center p-2 rounded-xl bg-primary/5 border border-primary/10 text-center gap-1">
@@ -685,7 +557,7 @@ const CampaignDetail = () => {
                         className="group flex items-center justify-between p-4 rounded-3xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm"
                       >
                         <div className="flex items-center gap-4 overflow-hidden">
-                          <div className="h-12 w-12 shrink-0 rounded-2xl bg-green-500 text-white shadow-[0_5px_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-base group-hover:scale-110 transition-transform duration-500">
+                          <div className="px-5 h-10 shrink-0 rounded-full bg-green-500 text-white shadow-[0_5px_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-sm group-hover:scale-105 transition-transform duration-500">
                             #{p.number}
                           </div>
                           <div className="flex flex-col overflow-hidden">
@@ -722,7 +594,7 @@ const CampaignDetail = () => {
                           className="group flex items-center justify-between p-4 rounded-3xl border border-amber-500/10 bg-amber-500/5 transition-all duration-300 shadow-sm overflow-hidden relative"
                         >
                           <div className="flex items-center gap-4 overflow-hidden relative z-10">
-                            <div className="h-12 w-12 shrink-0 rounded-2xl bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-base">
+                            <div className="px-5 h-10 shrink-0 rounded-full bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-sm">
                               #{p.number}
                             </div>
                             <div className="flex flex-col overflow-hidden">
@@ -776,7 +648,7 @@ const CampaignDetail = () => {
             <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Prêmios da <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Veja os prêmios que você pode ganhar girando a roleta!</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Benefícios exclusivos para quem adquire cotas desta ação!</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -791,7 +663,7 @@ const CampaignDetail = () => {
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
                     </div>
                   </div>
-                  <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEÁVEL</Badge>
+                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase">BENEFÍCIO</Badge>
                 </div>
               ))}
             </div>
@@ -831,7 +703,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "roulette_footer", "scratch_footer", "ranking"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
     <div className="min-h-screen bg-background pb-24 lg:pb-0">
