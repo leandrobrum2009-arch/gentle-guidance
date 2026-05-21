@@ -78,18 +78,21 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
               <h3 className="text-xs font-black uppercase tracking-widest italic">Maiores números sorteados</h3>
             </div>
             <div className="grid gap-3">
-              {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => (
-                <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
-                    <div className="flex flex-col">
-                      <span className="text-[10px] font-black uppercase text-foreground leading-tight">{ticket.profiles?.name || "Usuário"}</span>
-                      <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
+              {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => {
+                const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
+                return (
+                  <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
+                      <div className="flex flex-col">
+                        <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
+                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
+                      </div>
                     </div>
+                    <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
                   </div>
-                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
-                </div>
-              )) : (
+                );
+              }) : (
                 <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
                   <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando sorteio...</p>
                 </div>
