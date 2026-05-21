@@ -347,12 +347,12 @@ const CampaignDetail = () => {
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                     <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
                   </h3>
-                  <div className="space-y-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {(campaign.roulette_rules as any[]).map((rule, i) => (
                       <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/10">
-                        <span className="text-[11px] font-bold text-muted-foreground">Compre +{rule.min_tickets} cotas</span>
-                        <Badge className="bg-primary text-white border-none text-[10px] font-black uppercase tracking-wider">
-                          Ganha {rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-tight">Compre +{rule.min_tickets}</span>
+                        <Badge className="bg-primary text-white border-none text-[9px] font-black uppercase tracking-wider">
+                          +{rule.spins} {rule.spins > 1 ? 'Giros' : 'Giro'}
                         </Badge>
                       </div>
                     ))}
@@ -365,53 +365,55 @@ const CampaignDetail = () => {
               {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Disponíveis Agora
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa rifa
                   </h3>
-                  <div className="grid grid-cols-1 gap-3">
-                    <div className="space-y-4">
-                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Roletas disponíveis</p>
-                          <div className="flex flex-wrap gap-2">
-                            {roulettePrizes.map((p, idx) => (
-                              <Badge key={idx} variant="secondary" className="text-[9px] font-bold bg-secondary/50">
-                                {p.label}
-                              </Badge>
-                            ))}
-                          </div>
+                  <div className="grid grid-cols-1 gap-2">
+                    {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                      <div className="flex flex-col gap-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Roletas disponíveis</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {roulettePrizes.map((p, idx) => (
+                            <div key={idx} className="flex items-center justify-center p-2 rounded-xl bg-secondary/50 border border-border/50">
+                              <span className="text-[9px] font-bold text-foreground text-center truncate">{p.label}</span>
+                            </div>
+                          ))}
                         </div>
-                      )}
+                      </div>
+                    )}
 
-                      {campaign.scratch_cards_enabled && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas disponíveis</p>
-                          <Badge className="bg-amber-500 text-white border-none text-[10px] font-black uppercase tracking-wider px-3 py-1">
-                            {roulettePrizes.length + luckyNumbers.length} Prêmios Possíveis
-                          </Badge>
-                        </div>
-                      )}
-                      
-                      <div className="space-y-2">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas premiadas disponíveis</p>
-                        <Badge className="bg-amber-500/10 text-amber-500 border-none text-[10px] font-black">
-                          {availableInstantPrizes} de {luckyNumbers.length} Prêmios
+                    {campaign.scratch_cards_enabled && (
+                      <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 mt-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas</span>
+                        <Badge className="bg-amber-500 text-white border-none text-[9px] font-black uppercase tracking-wider">
+                          {roulettePrizes.length + luckyNumbers.length} Prêmios
                         </Badge>
                       </div>
-
-                      {luckyWinners && luckyWinners.length > 0 && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios que já saíram</p>
-                          <div className="space-y-1">
-                            {luckyWinners.slice(0, 3).map((w, idx) => (
-                              <div key={idx} className="flex items-center gap-2 text-[10px] font-medium text-foreground">
-                                <Trophy className="h-3 w-3 text-primary" />
-                                <span>Cota #{w.number} - {w.profiles?.name}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                    )}
+                    
+                    <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</span>
+                      <Badge className="bg-amber-500/10 text-amber-500 border-none text-[9px] font-black uppercase tracking-wider">
+                        {availableInstantPrizes} / {luckyNumbers.length}
+                      </Badge>
                     </div>
+
+                    {luckyWinners && luckyWinners.length > 0 && (
+                      <div className="space-y-2 mt-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prêmios que já saíram</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          {luckyWinners.slice(0, 3).map((w, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-primary/5 border border-primary/10">
+                              <div className="flex items-center gap-2 overflow-hidden">
+                                <Trophy className="h-3 w-3 text-primary shrink-0" />
+                                <span className="text-[10px] font-black uppercase tracking-tighter truncate">#{w.number}</span>
+                              </div>
+                              <span className="text-[10px] font-medium text-muted-foreground truncate">{w.profiles?.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
 
                     {campaign.roulette_enabled && (
                       <Dialog>
