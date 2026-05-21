@@ -663,7 +663,7 @@ const CampaignDetail = () => {
                       <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
                     </div>
                   </div>
-                  <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEÁVEL</Badge>
+                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase">BENEFÍCIO</Badge>
                 </div>
               ))}
             </div>
