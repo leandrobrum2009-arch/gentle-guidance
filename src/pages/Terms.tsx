@@ -27,7 +27,7 @@ const Terms = () => {
               Termos de Uso
             </h1>
             <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">
-              GF Customizados • Última atualização: Maio 2026
+              {siteSettings?.site_name || "RifasPro"} • Última atualização: Maio 2026
             </p>
           </div>
 
