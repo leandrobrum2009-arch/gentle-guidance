@@ -28,12 +28,12 @@ const Footer = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
                 <Ticket className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="font-display text-2xl font-black italic uppercase italic tracking-tighter">
-                Rifas<span className="text-primary neon-text-primary">Pro</span>
+              <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
+                GF<span className="text-primary neon-text-primary"> Customizados</span>
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
-              A maior e mais segura plataforma de rifas online do Brasil. Prêmios cinematográficos toda semana.
+              A maior e mais segura plataforma de ações online da GF Customizados. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
@@ -93,7 +93,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-              © {new Date().getFullYear()} RifasPro. Desenvolvido com <span className="text-primary">❤</span> para vencedores.
+              © {new Date().getFullYear()} GF Customizados. Todos os direitos reservados.
             </p>
             <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
               <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
@@ -105,9 +105,8 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Privacidade</a>
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos</a>
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Cookies</a>
+            <a href="/termos-de-uso" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos de Uso</a>
+            <a href="/contato" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Suporte</a>
           </div>
         </div>
       </div>

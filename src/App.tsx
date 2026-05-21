@@ -35,6 +35,7 @@ import Winners from "./pages/Winners";
 import Preview from "./pages/Preview";
 import Announcements from "./pages/Announcements";
 import Support from "./pages/Support";
+import Terms from "./pages/Terms";
 import NotFound from "./pages/NotFound";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminCampaigns from "./pages/admin/Campaigns";
@@ -79,6 +80,7 @@ const App = () => {
                 <Route path="/raspadinha" element={<ScratchCard />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/afiliados" element={<Affiliates />} />
+                <Route path="/termos-de-uso" element={<Terms />} />
                 <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
                 
                 {/* Protected Routes */}
