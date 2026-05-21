@@ -105,7 +105,6 @@ const CampaignDetail = () => {
   const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
   const { data: ticketStats } = useCampaignTicketStats(id || "");
 
-
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
@@ -219,12 +218,6 @@ const CampaignDetail = () => {
               videoUrl={campaign.video_url} 
             />
             
-            {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
-              <div className="absolute top-4 left-4 z-10">
-                <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} />
-              </div>
-            )}
-
             {campaign.featured && (
               <div className="absolute top-4 right-4 z-10 animate-blink">
                 <Badge className="bg-primary text-white font-black italic uppercase tracking-wider px-4 py-1.5 shadow-lg shadow-primary/40 border-none rounded-full flex items-center gap-2">
@@ -251,42 +244,38 @@ const CampaignDetail = () => {
               </div>
             )}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-
-            <div className="space-y-1">
-              <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
-              <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
+              <div className="space-y-1">
+                <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
+                <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                {campaign.status === "active" && (
+                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
+                    Sorteio Ativo
+                  </Badge>
+                )}
+                {campaign.status === "paused" && (
+                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
+                    Vendas Pausadas
+                  </Badge>
+                )}
+                {campaign.status === "audit" && (
+                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse">
+                    Em Auditoria
+                  </Badge>
+                )}
+                {campaign.status === "completed" && (
+                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-blue-500 text-white">
+                    Concluído
+                  </Badge>
+                )}
+                {drawDate && (
+                  <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-card">
+                    <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
+                  </Badge>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              {campaign.status === "active" && (
-                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
-                  Sorteio Ativo
-                </Badge>
-              )}
-              {campaign.status === "paused" && (
-                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
-                  Vendas Pausadas
-                </Badge>
-              )}
-              {campaign.status === "audit" && (
-                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse">
-                  Em Auditoria
-                </Badge>
-              )}
-              {campaign.status === "completed" && (
-                <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-blue-500 text-white">
-                  Concluído
-                </Badge>
-              )}
-              {drawDate && (
-                <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-card">
-                  <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-        );
-
           </div>
         );
 
@@ -379,7 +368,6 @@ const CampaignDetail = () => {
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                     <Gamepad2 className="h-4 w-4 text-primary" /> Roletas disponíveis
                   </h3>
-
                   <div className="grid grid-cols-1 gap-3">
                     <div className="space-y-4">
                       {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
@@ -443,7 +431,6 @@ const CampaignDetail = () => {
                       </Dialog>
                     )}
                   </div>
-
                 </div>
               )}
             </div>
@@ -542,13 +529,6 @@ const CampaignDetail = () => {
           </div>
         );
 
-      case 'winners':
-        return (
-          <div key={section}>
-            <CampaignPublicInfo campaign={campaign} />
-          </div>
-        );
-
       case 'ranking':
         return campaign.ranking_enabled && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
@@ -556,14 +536,13 @@ const CampaignDetail = () => {
           </div>
         );
 
-
       case 'roulette_footer':
         return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
           <div key={section} className="mt-12 mb-12">
             <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na versão real!</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na version real!</p>
             </div>
             <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
           </div>
@@ -629,15 +608,15 @@ const CampaignDetail = () => {
           }
         }} 
       />
-        <PaymentModal 
-          isOpen={isPaymentModalOpen} 
-          onOpenChange={setIsPaymentModalOpen} 
-          orderId={currentOrderId} 
-          onPaymentSuccess={() => {
-            navigate("/conta#tickets");
-          }} 
-        />
-        <Footer />
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onOpenChange={setIsPaymentModalOpen} 
+        orderId={currentOrderId} 
+        onPaymentSuccess={() => {
+          navigate("/conta#tickets");
+        }} 
+      />
+      <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
       <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
