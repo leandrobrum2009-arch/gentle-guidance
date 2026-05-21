@@ -15,7 +15,8 @@ import Footer from "@/components/Footer";
 import { 
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
-  useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats
+  useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
+  useUserTickets
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
