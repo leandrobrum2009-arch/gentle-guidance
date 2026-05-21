@@ -47,6 +47,9 @@ export interface Campaign {
   show_instant_prizes?: boolean;
   show_roulette_status?: boolean;
   roulette_rules?: { min_tickets: number; spins: number }[];
+  scratch_cards_enabled?: boolean;
+  scratch_card_cost?: number;
+  scratch_card_rules?: any[];
   main_prizes?: { position: number, prize: string }[];
   sections_order?: string[];
   show_timer?: boolean;
