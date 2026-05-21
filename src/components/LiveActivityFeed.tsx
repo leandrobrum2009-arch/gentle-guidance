@@ -15,7 +15,8 @@
    const { data: rouletteSpins } = useRouletteSpins(5);
    const { data: boxWins } = useMysteryBoxWins(5);
    const [activities, setActivities] = useState<Activity[]>([]);
-   const queryClient = useQueryClient();
+  const { data: stats } = useGlobalStats();
+  const queryClient = useQueryClient();
  
    useEffect(() => {
      const combined: Activity[] = [
