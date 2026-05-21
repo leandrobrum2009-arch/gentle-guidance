@@ -55,8 +55,9 @@ const CampaignDetail = () => {
     return campaign?.lucky_numbers_prizes || [];
   }, [campaign]);
 
+  // We show all lucky numbers in the list as requested by the user
   const luckyNumbers = useMemo(() => {
-    return allLuckyNumbers.filter((p: any) => !p.protected);
+    return allLuckyNumbers;
   }, [allLuckyNumbers]);
 
   const protectedNumbers = useMemo(() => {
@@ -64,8 +65,8 @@ const CampaignDetail = () => {
   }, [allLuckyNumbers]);
 
   const luckyNumbersList = useMemo(() => {
-    return luckyNumbers.map((p: any) => p.number) || [];
-  }, [luckyNumbers]);
+    return allLuckyNumbers.map((p: any) => p.number) || [];
+  }, [allLuckyNumbers]);
 
   const canManualSelect = useMemo(() => {
     return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
