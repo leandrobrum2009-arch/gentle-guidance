@@ -11,6 +11,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
+import { useMysteryBoxWins } from "@/hooks/useData";
 
 interface ScratchCardProps {
   prizeLabel?: string;
