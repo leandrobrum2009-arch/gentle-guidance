@@ -502,8 +502,8 @@ const CampaignDetail = () => {
                                 <RotateCw className="h-5 w-5" />
                               </div>
                               <div className="text-left">
-                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Girar Roleta</p>
-                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte</p>
+                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Compre cotas e ganhe giros na roleta</p>
+                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte agora</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
