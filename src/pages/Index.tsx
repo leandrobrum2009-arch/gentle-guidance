@@ -484,7 +484,7 @@ const Index = () => {
                               <img key={idx} src={img} className="h-5 w-5 rounded-full border-2 border-card object-cover" alt="User" />
                             ))}
                           </div>
-                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">+ {Math.floor(Math.random() * 500)} participando</span>
+                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">+ {Math.floor(campaign.sold_tickets / 100) + 1} participando</span>
                         </div>
                       </div>
                     </div>
