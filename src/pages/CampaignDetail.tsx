@@ -365,8 +365,9 @@ const CampaignDetail = () => {
               {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Jogos Instantâneos
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Roletas disponíveis
                   </h3>
+
                   <div className="grid grid-cols-1 gap-3">
                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                       <Dialog>
