@@ -122,7 +122,7 @@ const Terms = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed pl-13">
                     <p>
-                      A GF Customizados não se responsabiliza por interpretações equivocadas relacionadas ao percentual exibido no site, tampouco garante que compras de alto valor resultarão no encerramento da ação ou em aumento imediato da porcentagem apresentada.
+                      A {siteSettings?.site_name || "RifasPro"} não se responsabiliza por interpretações equivocadas relacionadas ao percentual exibido no site, tampouco garante que compras de alto valor resultarão no encerramento da ação ou em aumento imediato da porcentagem apresentada.
                     </p>
                     <div className="p-4 rounded-2xl bg-secondary/50 border border-border text-foreground flex gap-3 items-center">
                       <UserCheck className="h-5 w-5 text-primary" />
