@@ -435,6 +435,7 @@ const CampaignDetail = () => {
                                   <span className="text-xs font-bold text-primary italic">{p.prize}</span>
                                 </div>
                               </div>
+                              <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEIO</Badge>
                             </div>
                           ))}
                         </div>
