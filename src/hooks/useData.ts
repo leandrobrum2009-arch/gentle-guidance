@@ -98,8 +98,36 @@ export interface Notification {
   message: string;
   type: string;
   is_read: boolean;
-  created_at: string;
-}
+   created_at: string;
+ }
+
+export const useCampaignStats = (campaignId: string) =>
+  useQuery({
+    queryKey: ["campaign-stats", campaignId],
+    queryFn: async () => {
+      const { count, error } = await supabase
+        .from("orders")
+        .select("*", { count: 'exact', head: true })
+        .eq("campaign_id", campaignId)
+        .eq("payment_status", "paid");
+      
+      if (error) throw error;
+      
+      const { data: uniqueUsers } = await supabase
+        .from("orders")
+        .select("user_id")
+        .eq("campaign_id", campaignId)
+        .eq("payment_status", "paid");
+        
+      const uniqueCount = new Set(uniqueUsers?.map(o => o.user_id)).size;
+
+      return {
+        ordersCount: count || 0,
+        participantsCount: uniqueCount || 0
+      };
+    },
+    enabled: !!campaignId,
+  });
 
  export interface Winner {
    id: string;
