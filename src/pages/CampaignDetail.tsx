@@ -337,7 +337,7 @@ const CampaignDetail = () => {
                               </span>
                               {isWon && (
                                 <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
-                                   {winner?.profiles?.name || "Ganhador"}
+                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
                                 </span>
                               )}
                             </div>
