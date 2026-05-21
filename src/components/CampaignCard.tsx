@@ -100,7 +100,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               {campaign.lucky_numbers_prizes && campaign.lucky_numbers_prizes.length > 0 && (
                 <div className="flex items-center gap-1 bg-secondary/50 px-2 py-0.5 rounded-full border border-border">
                   <Star className="h-2.5 w-2.5 text-amber-500 fill-amber-500" />
-                  <span className="text-[8px] font-black uppercase text-foreground">{campaign.lucky_numbers_prizes.length} cotas premiadas</span>
+                  <span className="text-[8px] font-black uppercase text-foreground">{campaign.lucky_numbers_prizes.length} cotas premiadas disponíveis</span>
                 </div>
               )}
               {campaign.roulette_enabled && (
