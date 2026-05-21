@@ -342,10 +342,60 @@ const CampaignDetail = () => {
                 </Tabs>
               </div>
 
+              {luckyNumbers.length > 0 && (
+                <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+                  <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
+                    <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {luckyNumbers.map((p: any, i: number) => {
+                      const isWon = luckyNumbersStatus[p.number];
+                      const winner = luckyWinners?.find(w => w.number === p.number);
+                      return (
+                        <div 
+                          key={i} 
+                          className={cn(
+                            "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
+                            isWon 
+                              ? "bg-amber-400/10 border-amber-400/20" 
+                              : "bg-green-500/5 border-green-500/10"
+                          )}
+                        >
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <div className={cn(
+                              "h-7 w-7 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px]",
+                              isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
+                            )}>
+                              #{p.number}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="text-[10px] font-black uppercase tracking-tight truncate">
+                                {p.prize}
+                              </span>
+                              {isWon && (
+                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
+                                   {winner?.profiles?.name || "Ganhador"}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                          <Badge className={cn(
+                            "text-[7px] font-black uppercase tracking-widest px-1.5 h-4",
+                            isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
+                          )}>
+                            {isWon ? "SORTEADA" : "ATIVA"}
+                          </Badge>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
               {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <RotateCw className="h-4 w-4 text-primary" /> Promoção da Roleta
+                    <RotateCw className="h-4 w-4 text-primary" /> Compre cotas e ganhe giros na roleta
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {(campaign.roulette_rules as any[]).map((rule, i) => (
@@ -362,12 +412,33 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-6">
-              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
+              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled || (campaign.main_prizes && campaign.main_prizes.length > 0)) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                     <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa rifa
                   </h3>
                   <div className="flex flex-col gap-4">
+                    {campaign.main_prizes && campaign.main_prizes.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prêmios Principais</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          {campaign.main_prizes.sort((a, b) => a.position - b.position).map((p, idx) => (
+                            <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/20">
+                              <div className="flex items-center gap-3">
+                                <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                                  {idx === 0 ? <Crown className="h-4 w-4 text-primary" /> : <Trophy className="h-4 w-4 text-primary" />}
+                                </div>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black uppercase text-foreground">{p.position}º Prêmio</span>
+                                  <span className="text-xs font-bold text-primary italic">{p.prize}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                       <div className="space-y-2">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Roletas disponíveis</p>
@@ -435,7 +506,7 @@ const CampaignDetail = () => {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-4xl p-0 bg-transparent border-none">
+                        <DialogContent className="max-w-2xl p-0 bg-transparent border-none">
                           <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
                         </DialogContent>
                       </Dialog>
@@ -505,14 +576,14 @@ const CampaignDetail = () => {
                     className={cn(
                       "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
                       isWon 
-                        ? "bg-secondary/40 border-border opacity-75" 
-                        : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/30"
+                        ? "bg-amber-400/10 border-amber-400/20 opacity-75" 
+                        : "bg-green-500/5 border-green-500/10 hover:border-green-500/30"
                     )}
                   >
                     <div className="flex items-center gap-3 overflow-hidden">
                       <div className={cn(
                         "h-10 w-10 shrink-0 rounded-lg flex items-center justify-center font-black italic text-xs",
-                        isWon ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-sm"
+                        isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
                       )}>
                         #{p.number}
                       </div>
@@ -532,7 +603,7 @@ const CampaignDetail = () => {
                     </div>
                     <Badge className={cn(
                       "text-[8px] font-black uppercase tracking-widest px-2",
-                      isWon ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white"
+                      isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
                     )}>
                       {isWon ? "SORTEADA" : "ATIVA"}
                     </Badge>
@@ -611,7 +682,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "ranking"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
     <div className="min-h-screen bg-background pb-24 lg:pb-0">

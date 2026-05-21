@@ -355,7 +355,7 @@ const SOUND_URLS = {
         </div>
 
         {/* Wheel */}
-        <div className="relative h-72 w-72 md:h-[420px] md:w-[420px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
+        <div className="relative h-72 w-72 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
           <motion.div
             animate={controls}
             initial={{ rotate: 0 }}
