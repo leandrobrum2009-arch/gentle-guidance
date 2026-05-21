@@ -583,7 +583,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
     <div className="min-h-screen bg-background pb-24 lg:pb-0">
