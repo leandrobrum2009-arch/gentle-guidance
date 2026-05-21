@@ -34,7 +34,7 @@ const Terms = () => {
           <div className="bg-card border border-border rounded-[40px] p-8 md:p-12 shadow-sm space-y-12">
             <div className="prose prose-zinc dark:prose-invert max-w-none">
               <p className="text-lg font-bold text-foreground leading-relaxed italic border-l-4 border-primary pl-6 py-2 bg-primary/5 rounded-r-2xl">
-                Ao participar de qualquer ação realizada pelo site GF Customizados, o cliente declara estar ciente e de acordo com os termos abaixo:
+                Ao participar de qualquer ação realizada pelo site {siteSettings?.site_name || "RifasPro"}, o cliente declara estar ciente e de acordo com os termos abaixo:
               </p>
 
               <Separator className="my-10" />
