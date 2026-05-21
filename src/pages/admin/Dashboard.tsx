@@ -12,7 +12,8 @@ import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, 
   ResponsiveContainer, BarChart, Bar, Cell
 } from 'recharts';
-import { format, subDays, startOfDay, isSameDay } from 'date-fns';
+import { format, subDays, startOfDay, isSameDay, formatDistanceToNow } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import { Button } from "@/components/ui/button";
 
 export default function AdminDashboard() {
@@ -113,10 +114,7 @@ export default function AdminDashboard() {
       color: "text-blue-600",
       bg: "bg-blue-500/10"
     })) || [])
-  ].sort((a, b) => 0); // They are already mostly sorted by slice, but we could improve this.
-
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
+  ].sort((a, b) => 0);
 
   return (
     <AdminLayout>
@@ -351,26 +349,24 @@ import { ptBR } from "date-fns/locale";
               </CardHeader>
               <CardContent>
                 <div className="space-y-1">
-                  {[
-                    { action: "Pagamento Aprovado", user: "LEANDRO BRUM", target: "ORD-75AC71", time: "2 min atrás", icon: CheckCircle2, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-                    { action: "Nova Campanha", user: "Administrador", target: "iPhone 16 Pro Max", time: "15 min atrás", icon: Plus, color: "text-blue-600", bg: "bg-blue-500/10" },
-                    { action: "Sorteio Federal", user: "Sistema", target: "Concurso 5864", time: "1h atrás", icon: Target, color: "text-emerald-500", bg: "bg-emerald-500/10" },
-                    { action: "Cupom Criado", user: "Administrador", target: "DROP50", time: "2h atrás", icon: Percent, color: "text-purple-400", bg: "bg-purple-500/10" },
-                    { action: "Novo Vencedor", user: "Sistema", target: "Rifa Toyota Hilux", time: "3h atrás", icon: Trophy, color: "text-amber-500", bg: "bg-amber-500/10" },
-                  ].map((log, i) => (
-                    <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-card/[0.03] transition-colors group/log">
-                      <div className="flex items-center gap-4">
-                        <div className={`h-10 w-10 rounded-xl ${log.bg} flex items-center justify-center ${log.color} transition-transform group-hover/log:scale-110`}>
-                          <log.icon className="h-5 w-5" />
+                  {recentActivities.length > 0 ? (
+                    recentActivities.map((log, i) => (
+                      <div key={i} className="flex items-center justify-between p-3 rounded-xl hover:bg-card/[0.03] transition-colors group/log">
+                        <div className="flex items-center gap-4">
+                          <div className={`h-10 w-10 rounded-xl ${log.bg} flex items-center justify-center ${log.color} transition-transform group-hover/log:scale-110`}>
+                            <log.icon className="h-5 w-5" />
+                          </div>
+                          <div>
+                            <p className="text-xs font-bold text-foreground group-hover/log:text-foreground transition-colors">{log.action}</p>
+                            <p className="text-[10px] text-muted-foreground font-medium">{log.user} • <span className="text-muted-foreground">{log.target}</span></p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-xs font-bold text-foreground group-hover/log:text-foreground transition-colors">{log.action}</p>
-                          <p className="text-[10px] text-muted-foreground font-medium">{log.user} • <span className="text-muted-foreground">{log.target}</span></p>
-                        </div>
+                        <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">{log.time}</span>
                       </div>
-                      <span className="text-[9px] text-muted-foreground font-bold uppercase tracking-wider">{log.time}</span>
-                    </div>
-                  ))}
+                    ))
+                  ) : (
+                    <p className="text-center py-10 text-xs text-muted-foreground font-bold uppercase tracking-widest">Nenhuma atividade recente</p>
+                  )}
                 </div>
               </CardContent>
             </Card>
