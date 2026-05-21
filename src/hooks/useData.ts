@@ -251,6 +251,30 @@ export const useCampaignLuckyWinners = (campaignId: string) =>
     enabled: !!campaignId,
   });
 
+export const useCampaignTicketStats = (campaignId: string) =>
+  useQuery({
+    queryKey: ["campaign-ticket-stats", campaignId],
+    queryFn: async () => {
+      const { data: tickets, error } = await supabase
+        .from('tickets')
+        .select('number, status, profiles!user_id(name)')
+        .eq('campaign_id', campaignId)
+        .in('status', ['confirmed', 'paid']);
+      
+      if (error) throw error;
+      if (!tickets || tickets.length === 0) return { highest: null, lowest: null };
+
+      const sorted = [...tickets].sort((a, b) => Number(a.number) - Number(b.number));
+      
+      return {
+        highest: sorted[sorted.length - 1],
+        lowest: sorted[0]
+      };
+    },
+    enabled: !!campaignId
+  });
+
+
 export const useCampaign = (id: string) =>
   useQuery({
     queryKey: ["campaign", id],
