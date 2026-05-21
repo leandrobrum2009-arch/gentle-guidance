@@ -378,37 +378,43 @@ const CampaignDetail = () => {
                         <div 
                           key={i} 
                           className={cn(
-                            "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
+                            "flex items-center justify-between p-3.5 rounded-2xl border transition-all duration-300 shadow-sm",
                             isWon 
                               ? "bg-amber-400/5 border-amber-400/10 grayscale-[0.5]" 
                               : "bg-green-500/5 border-green-500/10"
                           )}
                         >
-                          <div className="flex items-center gap-2.5 overflow-hidden">
+                          <div className="flex items-center gap-3 overflow-hidden">
                             <div className={cn(
-                              "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px]",
+                              "h-10 w-10 shrink-0 rounded-xl flex items-center justify-center font-black italic text-xs shadow-sm",
                               isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
                             )}>
                               #{p.number}
                             </div>
                             <div className="flex flex-col overflow-hidden">
                               <span className={cn(
-                                "text-[10px] font-black uppercase tracking-tight truncate max-w-[100px]",
+                                "text-[11px] font-black uppercase tracking-tight truncate max-w-[120px]",
                                 isWon ? "text-muted-foreground" : "text-foreground"
                               )}>
                                 {p.prize}
                               </span>
-                              {isWon && (
-                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
-                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
-                                </span>
-                              )}
+                              <div className="flex items-center gap-1.5">
+                                {isWon ? (
+                                  <span className="text-[9px] font-black text-amber-600 uppercase tracking-tighter truncate">
+                                    🏆 {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] font-bold text-green-600 uppercase tracking-tighter">
+                                    🍀 Disponível
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                           {isWon ? (
-                            <Badge variant="outline" className="text-[8px] font-black uppercase border-amber-500/20 text-amber-600 h-5 px-1.5">Ganhador</Badge>
+                            <Badge variant="outline" className="text-[8px] font-black uppercase border-amber-500/20 text-amber-600 h-5 px-2 bg-amber-500/5">Sorteada</Badge>
                           ) : (
-                            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                            <Badge className="text-[8px] font-black uppercase bg-green-500 text-white border-none h-5 px-2 shadow-sm">Livre</Badge>
                           )}
                         </div>
                       );
