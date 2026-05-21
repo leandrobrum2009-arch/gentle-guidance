@@ -270,7 +270,7 @@ const SOUND_URLS = {
           </Dialog>
           <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
             <Users className="h-3.5 w-3.5 text-primary" /> 
-            <span className="text-white">{(Math.random() * 200 + 50).toFixed(0)}</span> online
+            <span className="text-white">{stats?.onlineUsers || 1}</span> online
           </div>
         </div>
         
