@@ -130,10 +130,12 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
     setIsPayingWithBalance(true);
     try {
-      const { data, error } = await supabase.rpc('pay_with_balance', {
+      const { data: response, error } = await supabase.rpc('pay_with_balance', {
         p_order_id: orderId,
         p_user_id: userData.user.id
       });
+
+      const data = response as any;
 
       if (error) throw error;
 
