@@ -33,7 +33,7 @@ const Footer = () => {
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
-              A maior e mais segura plataforma de rifas online do Brasil. Prêmios cinematográficos toda semana.
+              A maior e mais segura plataforma de ações online da GF Customizados. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
