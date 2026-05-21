@@ -1,4 +1,4 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -15,43 +15,15 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
   const isCompleted = campaign.status === "completed";
   const progress = Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
   
-  // 3D Tilt Effect
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["10deg", "-10deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-10deg", "10deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
   return (
     <motion.div
-      initial={{ opacity: 0, scale: 0.9 }}
-      animate={{ opacity: 1, scale: 1 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className="group relative h-full perspective-1000"
+      className="group relative h-full"
     >
       <Link to={`/campanha/${campaign.id}`} className="block h-full outline-none">
-        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/30 group-hover:shadow-2xl shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 border-light-path border-[#22c55e]/20">
+        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.2)] group-hover:scale-[1.02] shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 border-light-path border-[#22c55e]/20">
           
           {/* Reflection Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -128,19 +100,19 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               {campaign.lucky_numbers_prizes && campaign.lucky_numbers_prizes.length > 0 && (
                 <div className="flex items-center gap-1 bg-secondary/50 px-2 py-0.5 rounded-full border border-border">
                   <Star className="h-2.5 w-2.5 text-amber-500 fill-amber-500" />
-                  <span className="text-[8px] font-black uppercase text-foreground">{campaign.lucky_numbers_prizes.length} Premiados</span>
+                  <span className="text-[8px] font-black uppercase text-foreground">{campaign.lucky_numbers_prizes.length} cotas premiadas</span>
                 </div>
               )}
               {campaign.roulette_enabled && (
                 <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
                   <RotateCw className="h-2.5 w-2.5 text-primary" />
-                  <span className="text-[8px] font-black uppercase text-primary">Roleta Ativa</span>
+                  <span className="text-[8px] font-black uppercase text-primary">roleta disponíveis</span>
                 </div>
               )}
               {campaign.mystery_box_enabled && (
                 <div className="flex items-center gap-1 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
                   <Sparkles className="h-2.5 w-2.5 text-purple-500" />
-                  <span className="text-[8px] font-black uppercase text-purple-500">Raspadinha</span>
+                  <span className="text-[8px] font-black uppercase text-purple-500">raspadinhas disponíveis</span>
                 </div>
               )}
             </div>
