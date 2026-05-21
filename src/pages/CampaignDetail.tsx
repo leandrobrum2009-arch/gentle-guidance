@@ -103,6 +103,8 @@ const CampaignDetail = () => {
   const { data: campaignRanking } = useCampaignRanking(id || "", 10);
   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
   const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
+  const { data: ticketStats } = useCampaignTicketStats(id || "");
+
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
   const [isPurchasing, setIsPurchasing] = useState(false);
