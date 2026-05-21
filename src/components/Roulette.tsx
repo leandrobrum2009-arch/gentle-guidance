@@ -5,7 +5,7 @@ import { motion, useAnimation, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
  import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
- import { RoulettePrize, Campaign, useGlobalRouletteSpins } from "@/hooks/useData";
+ import { RoulettePrize, Campaign, useGlobalRouletteSpins, useGlobalStats } from "@/hooks/useData";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -29,7 +29,8 @@ const SOUND_URLS = {
 };
 
  const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
-   const { data: globalSpins } = useGlobalRouletteSpins(10);
+    const { data: globalSpins } = useGlobalRouletteSpins(10);
+    const { data: stats } = useGlobalStats();
    const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
@@ -269,7 +270,7 @@ const SOUND_URLS = {
           </Dialog>
           <div className="flex items-center gap-2 text-xs font-bold text-white/60 uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md">
             <Users className="h-3.5 w-3.5 text-primary" /> 
-            <span className="text-white">{(Math.random() * 200 + 50).toFixed(0)}</span> online
+            <span className="text-white">{stats?.onlineUsers || 1}</span> online
           </div>
         </div>
         
