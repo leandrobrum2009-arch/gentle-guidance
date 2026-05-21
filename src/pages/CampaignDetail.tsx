@@ -55,8 +55,9 @@ const CampaignDetail = () => {
     return campaign?.lucky_numbers_prizes || [];
   }, [campaign]);
 
+  // We show all lucky numbers in the list as requested by the user
   const luckyNumbers = useMemo(() => {
-    return allLuckyNumbers.filter((p: any) => !p.protected);
+    return allLuckyNumbers;
   }, [allLuckyNumbers]);
 
   const protectedNumbers = useMemo(() => {
@@ -64,8 +65,8 @@ const CampaignDetail = () => {
   }, [allLuckyNumbers]);
 
   const luckyNumbersList = useMemo(() => {
-    return luckyNumbers.map((p: any) => p.number) || [];
-  }, [luckyNumbers]);
+    return allLuckyNumbers.map((p: any) => p.number) || [];
+  }, [allLuckyNumbers]);
 
   const canManualSelect = useMemo(() => {
     return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
@@ -363,24 +364,32 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-6">
-              {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
+              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Roletas disponíveis
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Disponíveis Agora
                   </h3>
                   <div className="grid grid-cols-1 gap-3">
                     <div className="space-y-4">
                       {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                         <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios da roleta</p>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Roletas disponíveis</p>
                           <div className="flex flex-wrap gap-2">
-                            {roulettePrizes.slice(0, 5).map((p, idx) => (
+                            {roulettePrizes.map((p, idx) => (
                               <Badge key={idx} variant="secondary" className="text-[9px] font-bold bg-secondary/50">
                                 {p.label}
                               </Badge>
                             ))}
-                            {roulettePrizes.length > 5 && <Badge variant="secondary" className="text-[9px] font-bold bg-secondary/50">+{roulettePrizes.length - 5}</Badge>}
                           </div>
+                        </div>
+                      )}
+
+                      {campaign.scratch_cards_enabled && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas disponíveis</p>
+                          <Badge className="bg-amber-500 text-white border-none text-[10px] font-black uppercase tracking-wider px-3 py-1">
+                            {roulettePrizes.length + luckyNumbers.length} Prêmios Possíveis
+                          </Badge>
                         </div>
                       )}
                       
@@ -472,59 +481,87 @@ const CampaignDetail = () => {
       case 'prizes':
         return luckyNumbers.length > 0 && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6">
-            <div className="flex items-center justify-between">
-              <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
-              </h3>
-              <Badge variant="outline" className="rounded-full bg-secondary text-[10px] font-bold">
-                {availableInstantPrizes} disponíveis
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="space-y-1">
+                <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
+                </h3>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Números da sorte que valem prêmios instantâneos</p>
+              </div>
+              <Badge variant="outline" className="rounded-full bg-secondary text-[10px] font-black h-8 px-4 border-primary/20">
+                {availableInstantPrizes} DISPONÍVEIS
               </Badge>
             </div>
-            <div className="flex flex-col gap-3">
-              {luckyNumbers.map((p: any, i: number) => (
-                <div 
-                  key={i} 
-                  className={cn(
-                    "flex items-center justify-between p-4 rounded-2xl border transition-all",
-                    luckyNumbersStatus[p.number] 
-                      ? "bg-secondary/40 border-border opacity-60" 
-                      : "bg-amber-500/10 border-amber-500/20 hover:border-amber-500/40"
-                  )}
-                >
-                  <div className="flex items-center gap-4 flex-1">
-                    <div className={cn(
-                      "h-12 w-12 rounded-xl flex items-center justify-center font-black italic text-base",
-                      luckyNumbersStatus[p.number] ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
-                    )}>
-                      #{p.number}
-                    </div>
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between flex-1 gap-2">
-                      <div className="text-left">
-                        <p className={cn("text-sm font-black uppercase tracking-tight", luckyNumbersStatus[p.number] ? "text-muted-foreground" : "text-foreground")}>
+            
+            <div className="flex flex-col gap-4">
+              {luckyNumbers.map((p: any, i: number) => {
+                const isWon = luckyNumbersStatus[p.number];
+                const winner = luckyWinners?.find(w => w.number === p.number);
+                
+                return (
+                  <div 
+                    key={i} 
+                    className={cn(
+                      "group relative flex flex-col md:flex-row md:items-center justify-between p-5 rounded-3xl border transition-all duration-300",
+                      isWon 
+                        ? "bg-secondary/40 border-border opacity-75 grayscale-[0.5]" 
+                        : "bg-gradient-to-br from-amber-500/5 to-amber-500/10 border-amber-500/20 hover:border-amber-500/40 hover:shadow-lg hover:shadow-amber-500/5"
+                    )}
+                  >
+                    <div className="flex items-center gap-5 flex-1">
+                      <div className={cn(
+                        "h-14 w-14 rounded-2xl flex items-center justify-center font-black italic text-lg transition-transform group-hover:scale-105",
+                        isWon ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                      )}>
+                        #{p.number}
+                      </div>
+                      
+                      <div className="flex flex-col flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          {isWon ? (
+                            <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase tracking-tighter">PREMIADA E SORTEADA</Badge>
+                          ) : (
+                            <Badge className="bg-amber-500 text-white border-none text-[8px] font-black uppercase tracking-tighter">COTA PREMIADA ATIVA</Badge>
+                          )}
+                          {p.protected && <Badge variant="outline" className="text-[8px] font-black uppercase tracking-tighter">PRÊMIO PRINCIPAL</Badge>}
+                        </div>
+                        
+                        <h4 className={cn(
+                          "text-base md:text-lg font-black uppercase tracking-tight leading-none",
+                          isWon ? "text-muted-foreground" : "text-foreground"
+                        )}>
                           {p.prize}
-                        </p>
-                        {luckyNumbersStatus[p.number] ? (
-                          <div className="flex items-center gap-1.5 mt-0.5">
-                            <CheckCircle2 className="h-3 w-3 text-primary" />
-                            <p className="text-[10px] font-black text-primary uppercase tracking-tighter">
-                              Ganhador: {luckyWinners?.find(w => w.number === p.number)?.profiles?.name || "Sorteado"}
+                        </h4>
+                        
+                        {isWon ? (
+                          <div className="flex items-center gap-2 mt-2 p-2 bg-primary/5 rounded-xl border border-primary/10 w-fit">
+                            <CheckCircle2 className="h-3.5 w-3.5 text-primary" />
+                            <p className="text-[11px] font-black text-primary uppercase tracking-tighter">
+                              Ganhador: {winner?.profiles?.name || "Sorteado"}
                             </p>
                           </div>
                         ) : (
-                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-0.5">
-                            Disponível para quem comprar esta cota
+                          <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1.5 flex items-center gap-1.5">
+                            <Sparkles className="h-3 w-3 text-amber-500" />
+                            Ache esta cota e ganhe na hora!
                           </p>
                         )}
                       </div>
-                      <div className="flex items-center gap-2">
-                         <Badge variant={luckyNumbersStatus[p.number] ? "secondary" : "default"} className={cn("text-[8px] font-black uppercase tracking-widest", !luckyNumbersStatus[p.number] && "bg-amber-500 text-white border-none")}>
-                           {luckyNumbersStatus[p.number] ? "SORTEADO" : "DISPONÍVEL"}
-                         </Badge>
+                    </div>
+                    
+                    <div className="mt-4 md:mt-0 flex items-center justify-end">
+                      <div className={cn(
+                        "px-6 py-2 rounded-2xl text-[10px] font-black uppercase tracking-widest border transition-all",
+                        isWon 
+                          ? "bg-secondary text-muted-foreground border-border" 
+                          : "bg-amber-500 text-white border-none shadow-md shadow-amber-500/10 group-hover:bg-amber-600"
+                      )}>
+                        {isWon ? "ENCERRADA" : "DISPONÍVEL"}
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         );
@@ -538,23 +575,45 @@ const CampaignDetail = () => {
 
       case 'roulette_footer':
         return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-          <div key={section} className="mt-12 mb-12">
-            <div className="flex flex-col items-center text-center mb-8">
+          <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
+            <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na version real!</p>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Prêmios da <span className="text-animate-gradient">Roleta</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Veja os prêmios que você pode ganhar girando a roleta!</p>
             </div>
-            <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {roulettePrizes.map((p, i) => (
+                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border/50">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <RotateCw className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-black uppercase tracking-tight text-foreground">{p.label}</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEÁVEL</Badge>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 border-t border-border pt-8">
+              <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
+            </div>
           </div>
         );
 
       case 'scratch_footer':
-        return (
+        return (campaign.scratch_cards_enabled || !campaign.sections_order) && (
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Experimente nossa nova raspadinha digital e sinta a emoção!</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">
+                {campaign.scratch_cards_enabled ? "Tente ganhar prêmios reais raspando agora!" : "Experimente nossa nova raspadinha digital e sinta a emoção!"}
+              </p>
             </div>
             <ScratchCard 
               potentialPrizes={[
@@ -563,8 +622,9 @@ const CampaignDetail = () => {
                 "R$ 50,00 no PIX",
                 "Giro Grátis na Roleta"
               ]}
-              isSimulation={true}
-              cost={0}
+              isSimulation={!campaign.scratch_cards_enabled}
+              cost={campaign.scratch_card_cost || 0}
+              campaignId={campaign.id}
             />
           </div>
         );

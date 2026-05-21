@@ -170,6 +170,9 @@ export type Database = {
           roulette_rules: Json | null
           roulette_spin_cost: number | null
           sales_goal: number | null
+          scratch_card_cost: number | null
+          scratch_card_rules: Json | null
+          scratch_cards_enabled: boolean | null
           sections_order: Json | null
           show_instant_prizes: boolean | null
           show_roulette_status: boolean | null
@@ -216,6 +219,9 @@ export type Database = {
           roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          scratch_card_cost?: number | null
+          scratch_card_rules?: Json | null
+          scratch_cards_enabled?: boolean | null
           sections_order?: Json | null
           show_instant_prizes?: boolean | null
           show_roulette_status?: boolean | null
@@ -262,6 +268,9 @@ export type Database = {
           roulette_rules?: Json | null
           roulette_spin_cost?: number | null
           sales_goal?: number | null
+          scratch_card_cost?: number | null
+          scratch_card_rules?: Json | null
+          scratch_cards_enabled?: boolean | null
           sections_order?: Json | null
           show_instant_prizes?: boolean | null
           show_roulette_status?: boolean | null
