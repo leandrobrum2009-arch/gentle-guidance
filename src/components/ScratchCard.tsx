@@ -36,12 +36,28 @@ const ScratchCard = ({
 }: ScratchCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
+  const { data: globalWins } = useMysteryBoxWins(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
-  const [history, setHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
+  const [localHistory, setLocalHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
+
+  const history = useMemo(() => {
+    const apiHistory = globalWins?.map(win => ({
+      name: win.profiles?.name || "Usuário",
+      prize: win.prize_title || "Prêmio",
+      time: formatDistanceToNow(new Date(win.created_at), { addSuffix: true, locale: ptBR }),
+      isWinner: true
+    })) || [];
+    
+    return [...localHistory, ...apiHistory].slice(0, 10);
+  }, [globalWins, localHistory]);
+
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { useMemo } from "react";
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
