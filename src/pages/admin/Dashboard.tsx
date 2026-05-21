@@ -1,6 +1,7 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useAdminCampaigns, useAdminOrders, useAdminUsers, useAdminRouletteStats } from "@/hooks/useAdmin";
+import { useGlobalStats } from "@/hooks/useData";
 import { 
   Loader2, Megaphone, ShoppingCart, DollarSign, Users,
   TrendingUp, TrendingDown, ArrowUpRight, Activity, Zap,
