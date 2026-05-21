@@ -99,7 +99,7 @@ const Header = () => {
                 </div>
               )}
               <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient truncate`}>
-                {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
+                {siteSettings?.site_name?.split(' ')[0] || "GF"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || " Customizados"}</span>
               </span>
             </Link>
  
