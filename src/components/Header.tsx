@@ -17,7 +17,6 @@ const navLinks = [
   { label: "Ganhadores", href: "/ganhadores" },
   { label: "Federal", href: "/federal" },
   { label: "Comunicados", href: "/comunicados" },
-  { label: "Suporte", href: "/contato" },
 ];
 
 const Header = () => {
