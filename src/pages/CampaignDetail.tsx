@@ -300,53 +300,16 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
-              <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
-                <Tabs defaultValue="auto" className="w-full">
-                  {canManualSelect && (
-                    <div className="px-6 pt-6">
-                      <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary rounded-2xl p-1">
-                        <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                          <Zap className="h-4 w-4" /> Automático
-                        </TabsTrigger>
-                        <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                          <MousePointer2 className="h-4 w-4" /> Manual
-                        </TabsTrigger>
-                      </TabsList>
-                    </div>
-                  )}
-
-                  <TabsContent value="auto" className="p-6">
-                    <CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} />
-                  </TabsContent>
-
-                  <TabsContent value="manual" className="p-6">
-                    <div className="space-y-6">
-                      <p className="text-xs text-muted-foreground text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
-                      <TicketGrid 
-                        totalTickets={campaign.total_tickets}
-                        soldTickets={[...soldTickets, ...protectedNumbers]}
-                        selectedTickets={selectedTickets}
-                        onSelect={handleToggleTicket}
-                        luckyNumbers={luckyNumbersList}
-                      />
-                      <Button 
-                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
-                        disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
-                        onClick={() => handleBuy(selectedTickets)}
-                      >
-                        {isPurchasing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                        Reservar Números
-                      </Button>
-                    </div>
-                  </TabsContent>
-                </Tabs>
-              </div>
-
               {luckyNumbers.length > 0 && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
-                  <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
-                  </h3>
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
+                      <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
+                    </h3>
+                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary">
+                      PRÊMIOS INSTANTÂNEOS
+                    </Badge>
+                  </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     {luckyNumbers.map((p: any, i: number) => {
                       const isWon = luckyNumbersStatus[p.number];
@@ -391,6 +354,49 @@ const CampaignDetail = () => {
                   </div>
                 </div>
               )}
+
+              <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
+                <Tabs defaultValue="auto" className="w-full">
+                  {canManualSelect && (
+                    <div className="px-6 pt-6">
+                      <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary rounded-2xl p-1">
+                        <TabsTrigger value="auto" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                          <Zap className="h-4 w-4" /> Automático
+                        </TabsTrigger>
+                        <TabsTrigger value="manual" className="rounded-xl gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                          <MousePointer2 className="h-4 w-4" /> Manual
+                        </TabsTrigger>
+                      </TabsList>
+                    </div>
+                  )}
+
+                  <TabsContent value="auto" className="p-6">
+                    <CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} />
+                  </TabsContent>
+
+                  <TabsContent value="manual" className="p-6">
+                    <div className="space-y-6">
+                      <p className="text-xs text-muted-foreground text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
+                      <TicketGrid 
+                        totalTickets={campaign.total_tickets}
+                        soldTickets={[...soldTickets, ...protectedNumbers]}
+                        selectedTickets={selectedTickets}
+                        onSelect={handleToggleTicket}
+                        luckyNumbers={luckyNumbersList}
+                      />
+                      <Button 
+                        className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
+                        disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
+                        onClick={() => handleBuy(selectedTickets)}
+                      >
+                        {isPurchasing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
+                        Reservar Números
+                      </Button>
+                    </div>
+                  </TabsContent>
+                </Tabs>
+              </div>
+
 
               {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
@@ -521,33 +527,40 @@ const CampaignDetail = () => {
       case 'description':
         return (
           <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
-            <h3 className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
-              <Info className="h-4 w-4 text-primary" /> Descrição e Regras
-            </h3>
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> Descrição e Regras
+              </h3>
+            </div>
+            
             <div className={cn(
-              "text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap relative transition-all duration-300",
+              "text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap transition-all duration-500",
               !isDescriptionExpanded && "line-clamp-2 overflow-hidden"
             )}>
               {campaign.description}
+              
               {isDescriptionExpanded && campaign.regulations && (
-                <div className="mt-6 pt-6 border-t border-border">
+                <div className="mt-6 pt-6 border-t border-dashed border-border">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground mb-3 flex items-center gap-2">
-                    <BookOpen className="h-3 w-3 text-primary" /> Regulamento da Rifa
+                    <BookOpen className="h-3 w-3 text-primary" /> Regulamento e Regras
                   </h4>
-                  <p className="text-xs whitespace-pre-wrap">{campaign.regulations}</p>
+                  <div className="text-xs whitespace-pre-wrap bg-secondary/30 p-4 rounded-xl border border-border">
+                    {campaign.regulations}
+                  </div>
                 </div>
               )}
             </div>
+
             <Button 
-              variant="ghost" 
+              variant="outline" 
               size="sm" 
-              className="w-full font-bold uppercase tracking-widest text-[10px] gap-2 h-9 rounded-xl border border-border/50"
+              className="w-full font-black uppercase tracking-widest text-[9px] gap-2 h-10 rounded-xl bg-secondary/50 hover:bg-secondary border-border transition-all"
               onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
             >
               {isDescriptionExpanded ? (
-                <>Ver menos <ChevronUp className="h-3 w-3" /></>
+                <>RECOLHER DESCRIÇÃO <ChevronUp className="h-3 w-3" /></>
               ) : (
-                <>Ver descrição completa e regras <ChevronDown className="h-3 w-3" /></>
+                <>LER DESCRIÇÃO COMPLETA E REGRAS <ChevronDown className="h-3 w-3" /></>
               )}
             </Button>
           </div>
