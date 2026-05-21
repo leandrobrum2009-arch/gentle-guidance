@@ -263,9 +263,8 @@ const Index = () => {
                    </div>
                  )}
 
-                 {heroStyle === 1 && (
+                  {heroStyle === 1 && (
                    <HeroModel1 
-                    <HeroModel1 
                      campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
@@ -288,7 +287,6 @@ const Index = () => {
                  {heroStyle === 4 && (
                    <HeroModel4 
                      campaigns={activeCampaigns.slice(0, 5)} 
-
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
