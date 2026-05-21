@@ -77,8 +77,16 @@ const SOUND_URLS = {
     const isUsingFreeSpins = availableSpins >= multiplier;
     
     if (!isSimulation && !isUsingFreeSpins) {
-      toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
-      return;
+      if (spinCost > 0) {
+        if ((userProfile?.balance || 0) < spinCost * multiplier) {
+          toast.error(`Saldo insuficiente! O giro custa R$ ${(spinCost * multiplier).toFixed(2)}.`);
+          return;
+        }
+        // If they have balance, we proceed
+      } else {
+        toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
+        return;
+      }
     }
 
     setIsSpinning(true);

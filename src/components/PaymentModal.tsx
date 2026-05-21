@@ -16,12 +16,20 @@ interface PaymentModalProps {
 export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }: PaymentModalProps) => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [timeLeft, setTimeLeft] = useState(120); // 2 minutes in seconds
+  const [timeLeft, setTimeLeft] = useState(120); 
   const [status, setStatus] = useState<'pending' | 'paid' | 'expired'>('pending');
+  const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
+  const [userBalance, setUserBalance] = useState(0);
 
   const fetchOrder = useCallback(async () => {
     if (!orderId) return;
     
+    const { data: userData } = await supabase.auth.getUser();
+    if (userData.user) {
+      const { data: profile } = await supabase.from('profiles').select('balance').eq('user_id', userData.user.id).single();
+      if (profile) setUserBalance(Number(profile.balance));
+    }
+
     const { data, error } = await supabase
       .from("orders")
       .select("*, campaigns(title)")
@@ -115,6 +123,37 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       toast.success("Código PIX copiado!");
     }
   };
+
+  const handlePayWithBalance = async () => {
+    if (!orderId || !order) return;
+    
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) return;
+
+    setIsPayingWithBalance(true);
+    try {
+      const { data, error } = await supabase.rpc('pay_with_balance', {
+        p_order_id: orderId,
+        p_user_id: userData.user.id
+      });
+
+      if (error) throw error;
+
+      if (data.success) {
+        toast.success(data.message);
+        setStatus('paid');
+        setTimeout(() => {
+          onPaymentSuccess();
+          onOpenChange(false);
+        }, 3000);
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err: any) {
+      toast.error(err.message || "Erro ao processar pagamento com saldo");
+    } finally {
+      setIsPayingWithBalance(false);
+    }
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
