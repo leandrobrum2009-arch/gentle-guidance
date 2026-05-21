@@ -540,9 +540,10 @@ const CampaignDetail = () => {
       case 'ranking':
         return campaign.ranking_enabled && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
-            <UserRanking users={campaignRanking || []} title="Ranking de Compradores" />
+            <UserRanking users={campaignRanking || []} title="Maiores e menores cotas" stats={ticketStats} />
           </div>
         );
+
 
       case 'roulette_footer':
         return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
