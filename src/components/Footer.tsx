@@ -28,8 +28,8 @@ const Footer = () => {
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
                 <Ticket className="h-5 w-5 text-primary-foreground" />
               </div>
-              <span className="font-display text-2xl font-black italic uppercase italic tracking-tighter">
-                Rifas<span className="text-primary neon-text-primary">Pro</span>
+              <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
+                GF<span className="text-primary neon-text-primary"> Customizados</span>
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
