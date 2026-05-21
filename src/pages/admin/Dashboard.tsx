@@ -111,7 +111,7 @@ export default function AdminDashboard() {
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-2.5 border border-emerald-500/20">
             <Activity className="h-4 w-4 text-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Sistema Online</span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-500">Sistema Online: {globalStats?.onlineUsers || 1} ativos</span>
           </div>
           <div className="flex items-center gap-2 rounded-xl bg-primary/10 px-4 py-2.5 border border-primary/20">
             <ShieldCheck className="h-4 w-4 text-primary" />
