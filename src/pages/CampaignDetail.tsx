@@ -442,6 +442,41 @@ const CampaignDetail = () => {
                       </div>
                     )}
 
+                    {luckyNumbers && luckyNumbers.length > 0 && (
+                      <div className="space-y-2">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cotas Premiadas</p>
+                        <div className="grid grid-cols-1 gap-2">
+                          {luckyNumbers.slice(0, 5).map((p: any, idx: number) => {
+                            const isWon = luckyNumbersStatus[p.number];
+                            return (
+                              <div key={idx} className={cn(
+                                "flex items-center justify-between p-2.5 rounded-xl border transition-all duration-300",
+                                isWon ? "bg-amber-400/5 border-amber-400/10" : "bg-green-500/5 border-green-500/10"
+                              )}>
+                                <span className={cn(
+                                  "text-[10px] font-bold uppercase tracking-tight truncate max-w-[120px]",
+                                  isWon ? "text-muted-foreground" : "text-foreground"
+                                )}>
+                                  {p.prize}
+                                </span>
+                                <Badge className={cn(
+                                  "text-[9px] font-black uppercase border-none px-2 h-5",
+                                  isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
+                                )}>
+                                  #{p.number}
+                                </Badge>
+                              </div>
+                            );
+                          })}
+                          {luckyNumbers.length > 5 && (
+                            <p className="text-[9px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-1">
+                              + {luckyNumbers.length - 5} outras cotas
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                       <div className="space-y-2">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Roletas disponíveis</p>
@@ -464,13 +499,6 @@ const CampaignDetail = () => {
                           </Badge>
                         </div>
                       )}
-                      
-                      <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</span>
-                        <Badge className="bg-amber-500/10 text-amber-500 border-none text-[9px] font-black uppercase tracking-wider">
-                          {availableInstantPrizes} / {luckyNumbers.length}
-                        </Badge>
-                      </div>
 
                       {luckyWinners && luckyWinners.length > 0 && (
                         <div className="space-y-2 mt-2">
