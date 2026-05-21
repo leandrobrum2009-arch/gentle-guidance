@@ -169,9 +169,42 @@ const Index = () => {
     toast.success(`Estilo do slide alterado para Modelo ${style}!`);
   };
 
-  const featuredCampaign = campaigns?.find((c) => c.featured && (c.status === "active" || c.status === "paused")) || campaigns?.find(c => c.status === "active");
-  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && (c.status === 'active' || c.status === 'paused' || c.status === 'completed' || c.status === 'audit')) ?? [];
-  const endingSoon = campaigns?.filter(c => c.status === 'active' && c.sold_tickets / c.total_tickets > 0.8) ?? [];
+  const activeCampaigns = useMemo(() => {
+    if (!campaigns) return [];
+    return campaigns
+      .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
+      .sort((a, b) => {
+        // First priority: Featured
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        
+        // Second priority: Draw date (closest first)
+        if (a.draw_date && b.draw_date) {
+          return new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime();
+        }
+        if (a.draw_date) return -1;
+        if (b.draw_date) return 1;
+        
+        return 0;
+      });
+  }, [campaigns]);
+
+  const endedCampaigns = useMemo(() => {
+    if (!campaigns) return [];
+    return campaigns
+      .filter(c => c.status === "completed" || c.status === "finished")
+      .sort((a, b) => {
+        // Sort by draw date (most recent first)
+        if (a.draw_date && b.draw_date) {
+          return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
+        }
+        return 0;
+      });
+  }, [campaigns]);
+
+  const featuredCampaign = activeCampaigns[0];
+  const otherCampaigns = activeCampaigns.filter(c => c.id !== featuredCampaign?.id);
+  const endingSoon = activeCampaigns.filter(c => c.sold_tickets / c.total_tickets > 0.8);
 
    return (
      <div className="min-h-screen bg-background relative overflow-hidden">
@@ -230,30 +263,30 @@ const Index = () => {
                    </div>
                  )}
 
-                 {heroStyle === 1 && (
+                  {heroStyle === 1 && (
                    <HeroModel1 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 2 && (
                    <HeroModel2 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 3 && (
                    <HeroModel3 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 4 && (
                    <HeroModel4 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
@@ -467,6 +500,56 @@ const Index = () => {
               </div>
             </div>
           </section>
+
+          {/* Rifas Encerradas Section */}
+          {endedCampaigns.length > 0 && (
+            <section className="container py-12 md:py-20">
+              <SectionHeading 
+                icon={Clock} 
+                title="Rifas Encerradas" 
+                subtitle="Confira o que já rolou por aqui"
+                badge="Histórico"
+              />
+              
+              {/* Visual Cards (Top 5) */}
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
+                {endedCampaigns.slice(0, 5).map((campaign, i) => (
+                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                ))}
+              </div>
+
+              {/* List Format (Remaining) */}
+              {endedCampaigns.length > 5 && (
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                  {endedCampaigns.slice(5).map((campaign) => (
+                    <Link 
+                      key={campaign.id} 
+                      to={`/campanha/${campaign.slug}`} 
+                      className="flex items-center gap-3 p-3 rounded-2xl bg-card/50 border border-border hover:border-primary/50 transition-all group"
+                    >
+                      <div className="h-10 w-10 rounded-lg overflow-hidden flex-shrink-0 border border-border">
+                        <img 
+                          src={campaign.image_url || "/placeholder.svg"} 
+                          alt={campaign.title} 
+                          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" 
+                        />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h4 className="text-[10px] font-black uppercase tracking-tight truncate leading-none mb-1">{campaign.title}</h4>
+                        <div className="flex items-center gap-1.5">
+                          <Badge variant="outline" className="h-4 px-1.5 text-[7px] font-black uppercase tracking-widest border-muted-foreground/30 text-muted-foreground">ENCERRADO</Badge>
+                          <span className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest">
+                            {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : ''}
+                          </span>
+                        </div>
+                      </div>
+                      <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </section>
+          )}
 
           {/* Ganhadores Cinematic Section - Hall da Fama */}
           <section className="container py-24 md:py-32 relative">
