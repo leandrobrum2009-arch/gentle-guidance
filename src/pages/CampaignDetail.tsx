@@ -719,28 +719,37 @@ const CampaignDetail = () => {
                       return (
                         <div 
                           key={i} 
-                          className="group flex items-center justify-between p-3.5 rounded-2xl border border-amber-500/10 bg-amber-500/5 grayscale-[0.5] opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300 shadow-sm"
+                          className="group flex items-center justify-between p-4 rounded-3xl border border-amber-500/10 bg-amber-500/5 transition-all duration-300 shadow-sm overflow-hidden relative"
                         >
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <div className="h-11 w-11 shrink-0 rounded-xl bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-sm">
+                          <div className="flex items-center gap-4 overflow-hidden relative z-10">
+                            <div className="h-12 w-12 shrink-0 rounded-2xl bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-base">
                               #{p.number}
                             </div>
                             <div className="flex flex-col overflow-hidden">
-                              <span className="text-[11px] font-black uppercase tracking-tight text-muted-foreground truncate">
+                              <span className="text-xs font-black uppercase tracking-tight text-muted-foreground truncate max-w-[150px]">
                                 {p.prize}
                               </span>
-                              <div className="flex items-center gap-1.5 mt-0.5">
-                                <Avatar className="h-4 w-4 border border-amber-500/20">
+                              <div className="flex items-center gap-2 mt-1">
+                                <Avatar className="h-5 w-5 border-2 border-amber-500/20 shadow-sm">
                                   <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${p.number}`} />
-                                  <AvatarFallback className="text-[8px] bg-amber-500/10 text-amber-600 font-bold">W</AvatarFallback>
+                                  <AvatarFallback className="text-[8px] bg-amber-500/10 text-amber-600 font-black">W</AvatarFallback>
                                 </Avatar>
-                                <span className="text-[9px] font-black text-amber-600 uppercase tracking-tighter truncate">
-                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
-                                </span>
+                                <div className="flex flex-col">
+                                  <span className="text-[10px] font-black text-amber-600 uppercase tracking-tighter truncate max-w-[100px]">
+                                    {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                                  </span>
+                                  <span className="text-[8px] font-bold text-muted-foreground uppercase leading-none">LEVOU O PRÊMIO</span>
+                                </div>
                               </div>
                             </div>
                           </div>
-                          <Badge className="bg-amber-500/10 text-amber-600 border-none text-[8px] font-black px-2 uppercase">Ganhador</Badge>
+                          <div className="flex flex-col items-end gap-1 relative z-10">
+                            <Badge className="bg-amber-500/20 text-amber-600 border-none text-[8px] font-black px-2.5 h-6 rounded-full uppercase">Sorteada</Badge>
+                            <Trophy className="h-4 w-4 text-amber-500/30 -rotate-12" />
+                          </div>
+                          
+                          {/* Decorative background element */}
+                          <div className="absolute top-0 right-0 w-16 h-16 bg-amber-500/5 rounded-bl-full -mr-8 -mt-8" />
                         </div>
                       );
                     })}
