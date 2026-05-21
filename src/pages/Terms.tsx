@@ -4,8 +4,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { FileText, ShieldCheck, Video, Scale, AlertTriangle, UserCheck } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSiteSettings } from "@/hooks/useData";
 
 const Terms = () => {
+  const { data: siteSettings } = useSiteSettings();
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
