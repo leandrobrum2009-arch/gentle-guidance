@@ -150,6 +150,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
             </div>
           </div>
         </div>
+      </div>
       )}
 
       {!stats && (
