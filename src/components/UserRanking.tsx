@@ -18,7 +18,6 @@ interface UserRankingProps {
 }
 
 const UserRanking = ({ users, title, stats }: UserRankingProps) => {
-
   const [category, setCategory] = useState<'points' | 'xp'>('points');
   const { data: globalRanking, isLoading } = useRanking(15, category);
 
@@ -26,7 +25,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
   const podium = ranking.slice(0, 3) || [];
   const rest = ranking.slice(3) || [];
 
-  if (isLoading && !users) {
+  if (isLoading && !users && !stats) {
     return (
       <div className="space-y-4">
         <div className="grid grid-cols-3 gap-4 h-64 mb-8">
@@ -55,7 +54,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
           </div>
         </div>
 
-        {!users && (
+        {!users && !stats && (
           <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
             <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
               <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
@@ -69,93 +68,130 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
         )}
       </div>
 
-      {/* Podium View */}
-      <div className="grid grid-cols-3 gap-2 md:gap-6 items-end pt-10 pb-4">
-        {/* Second Place */}
-        <PodiumPlace 
-          user={podium[1]} 
-          rank={2} 
-          category={users ? 'tickets' : category}
-          className="order-1"
-        />
-        
-        {/* First Place */}
-        <PodiumPlace 
-          user={podium[0]} 
-          rank={1} 
-          category={users ? 'tickets' : category}
-          className="order-2"
-        />
-
-        {/* Third Place */}
-        <PodiumPlace 
-          user={podium[2]} 
-          rank={3} 
-          category={users ? 'tickets' : category}
-          className="order-3"
-        />
-      </div>
-
-      {/* List View */}
-      <div className="grid gap-3">
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={users ? 'campaign' : category}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="space-y-3"
-          >
-            {rest.map((user, index) => (
-              <motion.div
-                key={user.name + index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="group flex items-center justify-between p-4 bg-card border border-border rounded-3xl hover:bg-secondary/50 hover:border-primary/30 transition-all duration-300 shadow-sm"
-              >
-                <div className="flex items-center gap-4">
-                  <span className="w-6 text-sm font-black italic text-foreground group-hover:text-primary transition-colors">
-                    #{index + 4}
-                  </span>
-                  <div className="relative">
-                    <Avatar className="h-12 w-12 border-2 border-border group-hover:border-primary/30 transition-all">
-                      <AvatarImage src={user.avatar_url || ""} />
-                      <AvatarFallback className="bg-secondary text-foreground font-black uppercase text-xs">
-                        {user.name.substring(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-card border border-border flex items-center justify-center">
-                      <span className="text-[8px] font-black text-primary">{user.vip_level || 1}</span>
-                    </div>
-                  </div>
-                  <div>
-                    <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
-                    <div className="flex items-center gap-3 mt-0.5">
-                      <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
-                        {users ? `${user.total_tickets} COTAS` : `${user.xp} XP`}
-                      </Badge>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="text-right">
-                  <p className="text-lg font-black italic text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]">
-                    {users ? user.total_tickets : (category === 'points' ? user.points : user.xp)}
-                    <span className="text-[10px] uppercase ml-1 opacity-50">{users ? 'cotas' : (category === 'points' ? 'pts' : 'xp')}</span>
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-            
-            {rest.length === 0 && (
-              <div className="text-center py-10 opacity-20 italic uppercase font-black text-xs tracking-widest">
-                Fim da lista
+      {stats && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {stats.highest && (
+            <div className="bg-primary/10 border border-primary/20 p-6 rounded-3xl space-y-3">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <h3 className="text-xs font-black uppercase tracking-widest">Maior cota vendida</h3>
               </div>
-            )}
-          </motion.div>
-        </AnimatePresence>
-      </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-black italic text-primary">#{stats.highest.number}</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comprador: {stats.highest.profiles?.name || "Usuário"}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {stats.lowest && (
+            <div className="bg-secondary/50 border border-border p-6 rounded-3xl space-y-3">
+              <div className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-muted-foreground rotate-180" />
+                <h3 className="text-xs font-black uppercase tracking-widest">Menor cota vendida</h3>
+              </div>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-black italic text-foreground/80">#{stats.lowest.number}</p>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Comprador: {stats.lowest.profiles?.name || "Usuário"}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {!stats && (
+        <>
+          {/* Podium View */}
+          <div className="grid grid-cols-3 gap-2 md:gap-6 items-end pt-10 pb-4">
+            {/* Second Place */}
+            <PodiumPlace 
+              user={podium[1]} 
+              rank={2} 
+              category={users ? 'tickets' : category}
+              className="order-1"
+            />
+            
+            {/* First Place */}
+            <PodiumPlace 
+              user={podium[0]} 
+              rank={1} 
+              category={users ? 'tickets' : category}
+              className="order-2"
+            />
+
+            {/* Third Place */}
+            <PodiumPlace 
+              user={podium[2]} 
+              rank={3} 
+              category={users ? 'tickets' : category}
+              className="order-3"
+            />
+          </div>
+
+          {/* List View */}
+          <div className="grid gap-3">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={users ? 'campaign' : category}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                className="space-y-3"
+              >
+                {rest.map((user, index) => (
+                  <motion.div
+                    key={user.name + index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    className="group flex items-center justify-between p-4 bg-card border border-border rounded-3xl hover:bg-secondary/50 hover:border-primary/30 transition-all duration-300 shadow-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <span className="w-6 text-sm font-black italic text-foreground group-hover:text-primary transition-colors">
+                        #{index + 4}
+                      </span>
+                      <div className="relative">
+                        <Avatar className="h-12 w-12 border-2 border-border group-hover:border-primary/30 transition-all">
+                          <AvatarImage src={user.avatar_url || ""} />
+                          <AvatarFallback className="bg-secondary text-foreground font-black uppercase text-xs">
+                            {user.name.substring(0, 2)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-card border border-border flex items-center justify-center">
+                          <span className="text-[8px] font-black text-primary">{user.vip_level || 1}</span>
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
+                        <div className="flex items-center gap-3 mt-0.5">
+                          <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
+                            {users ? `${user.total_tickets} COTAS` : `${user.xp} XP`}
+                          </Badge>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right">
+                      <p className="text-lg font-black italic text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]">
+                        {users ? user.total_tickets : (category === 'points' ? user.points : user.xp)}
+                        <span className="text-[10px] uppercase ml-1 opacity-50">{users ? 'cotas' : (category === 'points' ? 'pts' : 'xp')}</span>
+                      </p>
+                    </div>
+                  </motion.div>
+                ))}
+                
+                {rest.length === 0 && (
+                  <div className="text-center py-10 opacity-20 italic uppercase font-black text-xs tracking-widest">
+                    Fim da lista
+                  </div>
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </>
+      )}
     </div>
   );
 };
