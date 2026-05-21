@@ -33,7 +33,7 @@ const Footer = () => {
                 <Ticket className="h-5 w-5 text-primary-foreground" />
               </div>
               <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
-                GF<span className="text-primary neon-text-primary"> Customizados</span>
+                {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary neon-text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
