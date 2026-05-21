@@ -214,7 +214,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative min-h-[300px] md:min-h-[450px] overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl flex items-center justify-center">
+          <div key={section} className="w-full bg-black relative overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl">
             <RaffleGallery 
               images={Array.from(new Set([
                 campaign.image_url || "",
@@ -231,7 +231,7 @@ const CampaignDetail = () => {
               </div>
             )}
 
-            <Link to="/conta#tickets" className="absolute bottom-4 right-4 z-10">
+            <Link to="/conta#tickets" className="absolute bottom-20 right-4 z-10">
               <Button size="sm" variant="secondary" className="bg-black/60 text-white backdrop-blur-md border-white/20 rounded-full text-[10px] font-bold uppercase tracking-wider px-4 hover:bg-black/80 shadow-lg">
                 <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
               </Button>
