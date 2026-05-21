@@ -284,6 +284,10 @@ const CampaignDetail = () => {
               )}
             </div>
           </div>
+        </div>
+        );
+
+          </div>
         );
 
       case 'progress':
