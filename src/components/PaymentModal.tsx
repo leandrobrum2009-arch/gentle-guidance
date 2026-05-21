@@ -45,7 +45,6 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
     setOrder(data);
     setLoading(false);
 
-    // If not paid and doesn't have pix code, generate it
     if (data.payment_status === 'pending' && !data.pix_code) {
       try {
         const { data: pixData, error: pixError } = await supabase.functions.invoke('pix-payment', {
@@ -104,7 +103,6 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         if (prev <= 1) {
           clearInterval(timer);
           setStatus('expired');
-          // Call RPC to release tickets immediately
           supabase.rpc('release_expired_tickets').then(() => {
              toast.error("Tempo esgotado! Os números foram liberados.");
           });
@@ -154,6 +152,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
     } finally {
       setIsPayingWithBalance(false);
     }
+  };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
@@ -256,6 +255,18 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                     >
                       <Copy className="h-5 w-5" /> COPIAR CÓDIGO PIX
                     </Button>
+
+                    {userBalance >= Number(order?.total_amount) && (
+                      <Button 
+                        variant="outline"
+                        className="w-full h-14 rounded-2xl gap-2 font-black uppercase italic tracking-widest border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10" 
+                        onClick={handlePayWithBalance}
+                        disabled={isPayingWithBalance}
+                      >
+                        {isPayingWithBalance ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
+                        PAGAR COM MEU SALDO (R$ {userBalance.toFixed(2)})
+                      </Button>
+                    )}
                     
                     <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest py-2">
                       <ShieldCheck className="h-3.5 w-3.5 text-emerald-500" /> Transação 100% segura e criptografada
@@ -265,8 +276,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
                 <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/20">
                   <p className="text-[10px] font-bold text-amber-600 text-center leading-relaxed">
-                    NÃO FECHE ESTA JANELA APÓS PAGAR. <br />
-                    O SISTEMA DARÁ BAIXA AUTOMÁTICA EM ATÉ 30 SEGUNDOS.
+                    PAGUE VIA PIX OU USE SEU SALDO PARA APROVAÇÃO IMEDIATA.
                   </p>
                 </div>
               </div>
