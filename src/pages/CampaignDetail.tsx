@@ -106,7 +106,7 @@ const CampaignDetail = () => {
   const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
   const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
   const { data: ticketStats } = useCampaignTicketStats(id || "");
-  const { data: userTickets } = useTickets(user?.id || "", id || ""); // I'll use a new hook if needed, but wait.
+  const { data: userTickets } = useUserTickets(user?.id || "", id || "");
 
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
