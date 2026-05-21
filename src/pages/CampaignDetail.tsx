@@ -648,7 +648,7 @@ const CampaignDetail = () => {
             <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Prêmios da <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Veja os prêmios que você pode ganhar girando a roleta!</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Benefícios exclusivos para quem adquire cotas desta ação!</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
