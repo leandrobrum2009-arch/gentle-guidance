@@ -188,7 +188,7 @@ const SOUND_URLS = {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 py-10 relative overflow-hidden rounded-3xl bg-black/40 border border-white/5 backdrop-blur-xl">
+    <div className="flex flex-col items-center gap-4 md:gap-8 py-6 md:py-10 relative overflow-hidden rounded-3xl bg-black/40 border border-white/5 backdrop-blur-xl w-full">
       {/* Glow Effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden rounded-3xl">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[120px] rounded-full animate-pulse" />
