@@ -29,7 +29,8 @@ const SOUND_URLS = {
 };
 
  const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
-   const { data: globalSpins } = useGlobalRouletteSpins(10);
+    const { data: globalSpins } = useGlobalRouletteSpins(10);
+    const { data: stats } = useGlobalStats();
    const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
