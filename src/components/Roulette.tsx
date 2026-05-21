@@ -443,7 +443,7 @@ const SOUND_URLS = {
             onClick={spin}
             disabled={isSpinning}
             size="lg"
-            className="h-16 w-full md:w-72 gap-3 text-lg font-black uppercase italic tracking-tighter bg-gradient-to-r from-primary to-purple-600 hover:scale-105 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(var(--primary),0.5)] border-none group relative overflow-hidden"
+            className="h-14 md:h-16 w-full md:w-72 gap-3 text-base md:text-lg font-black uppercase italic tracking-tighter bg-gradient-to-r from-primary to-purple-600 hover:scale-105 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(var(--primary),0.5)] border-none group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             {isSpinning ? (
