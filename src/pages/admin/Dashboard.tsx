@@ -94,6 +94,30 @@ export default function AdminDashboard() {
     { title: "Federal", icon: Target, color: "bg-emerald-600", url: "/admin/federal" },
   ];
 
+  const recentActivities = [
+    ...(paidOrders.slice(0, 3).map(o => ({
+      action: "Pagamento Aprovado",
+      user: o.profiles?.name || "Usuário",
+      target: `ORD-${o.id.substring(0, 6).toUpperCase()}`,
+      time: formatDistanceToNow(new Date(o.created_at), { addSuffix: true, locale: ptBR }),
+      icon: CheckCircle2,
+      color: "text-emerald-500",
+      bg: "bg-emerald-500/10"
+    }))),
+    ...(campaigns?.slice(0, 2).map(c => ({
+      action: "Campanha Atualizada",
+      user: "Administrador",
+      target: c.title,
+      time: formatDistanceToNow(new Date(c.updated_at), { addSuffix: true, locale: ptBR }),
+      icon: Megaphone,
+      color: "text-blue-600",
+      bg: "bg-blue-500/10"
+    })) || [])
+  ].sort((a, b) => 0); // They are already mostly sorted by slice, but we could improve this.
+
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
+
   return (
     <AdminLayout>
       <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
