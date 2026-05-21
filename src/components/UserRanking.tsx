@@ -14,6 +14,7 @@ interface UserRankingProps {
   stats?: {
     highestTickets: any[];
     lowestTickets: any[];
+    userTickets?: any[];
   } | null;
 }
 
