@@ -364,10 +364,10 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-6">
-              {(campaign.roulette_enabled || campaign.mystery_box_enabled) && (
+              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Roletas disponíveis
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Prêmios e Jogos
                   </h3>
                   <div className="grid grid-cols-1 gap-3">
                     <div className="space-y-4">
@@ -375,13 +375,21 @@ const CampaignDetail = () => {
                         <div className="space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Prêmios da roleta</p>
                           <div className="flex flex-wrap gap-2">
-                            {roulettePrizes.slice(0, 5).map((p, idx) => (
+                            {roulettePrizes.map((p, idx) => (
                               <Badge key={idx} variant="secondary" className="text-[9px] font-bold bg-secondary/50">
                                 {p.label}
                               </Badge>
                             ))}
-                            {roulettePrizes.length > 5 && <Badge variant="secondary" className="text-[9px] font-bold bg-secondary/50">+{roulettePrizes.length - 5}</Badge>}
                           </div>
+                        </div>
+                      )}
+
+                      {campaign.scratch_cards_enabled && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinha disponível</p>
+                          <Badge className="bg-amber-500 text-white border-none text-[10px] font-black uppercase tracking-wider">
+                            Ativada para esta rifa
+                          </Badge>
                         </div>
                       )}
                       
@@ -539,23 +547,45 @@ const CampaignDetail = () => {
 
       case 'roulette_footer':
         return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-          <div key={section} className="mt-12 mb-12">
-            <div className="flex flex-col items-center text-center mb-8">
+          <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
+            <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Experimente a <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Gire agora e veja o que você pode ganhar na version real!</p>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Prêmios da <span className="text-animate-gradient">Roleta</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Veja os prêmios que você pode ganhar girando a roleta!</p>
             </div>
-            <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {roulettePrizes.map((p, i) => (
+                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border/50">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                      <RotateCw className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-black uppercase tracking-tight text-foreground">{p.label}</p>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
+                    </div>
+                  </div>
+                  <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEÁVEL</Badge>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 border-t border-border pt-8">
+              <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
+            </div>
           </div>
         );
 
       case 'scratch_footer':
-        return (
+        return (campaign.scratch_cards_enabled || !campaign.sections_order) && (
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Experimente nossa nova raspadinha digital e sinta a emoção!</p>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">
+                {campaign.scratch_cards_enabled ? "Tente ganhar prêmios reais raspando agora!" : "Experimente nossa nova raspadinha digital e sinta a emoção!"}
+              </p>
             </div>
             <ScratchCard 
               potentialPrizes={[
@@ -564,8 +594,9 @@ const CampaignDetail = () => {
                 "R$ 50,00 no PIX",
                 "Giro Grátis na Roleta"
               ]}
-              isSimulation={true}
-              cost={0}
+              isSimulation={!campaign.scratch_cards_enabled}
+              cost={campaign.scratch_card_cost || 0}
+              campaignId={campaign.id}
             />
           </div>
         );
