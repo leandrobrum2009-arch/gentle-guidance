@@ -188,7 +188,7 @@ const SOUND_URLS = {
   };
 
   return (
-    <div className="flex flex-col items-center gap-8 py-10 relative overflow-hidden rounded-3xl bg-black/40 border border-white/5 backdrop-blur-xl">
+    <div className="flex flex-col items-center gap-4 md:gap-8 pt-10 md:pt-12 pb-6 md:pb-10 relative overflow-hidden rounded-3xl bg-black/40 border border-white/5 backdrop-blur-xl w-full">
       {/* Glow Effects */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full pointer-events-none overflow-hidden rounded-3xl">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 blur-[120px] rounded-full animate-pulse" />
@@ -315,11 +315,11 @@ const SOUND_URLS = {
        </div>
  
        {/* Live Win Feed */}
-       <div className="w-full px-6 mb-4">
-         <div className="bg-white/5 border border-white/10 rounded-2xl p-3 backdrop-blur-md overflow-hidden relative">
-           <div className="flex items-center gap-2 mb-2">
-             <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-             <span className="text-[10px] font-black text-white/40 uppercase tracking-widest">Ganhadores em Tempo Real</span>
+       <div className="w-full px-4 md:px-6 mb-2 md:mb-4">
+         <div className="bg-white/5 border border-white/10 rounded-2xl p-2 md:p-3 backdrop-blur-md overflow-hidden relative">
+           <div className="flex items-center gap-2 mb-1 md:mb-2">
+             <div className="h-1.5 w-1.5 md:h-2 md:w-2 rounded-full bg-primary animate-pulse" />
+             <span className="text-[8px] md:text-[10px] font-black text-white/40 uppercase tracking-widest">Ganhadores em Tempo Real</span>
            </div>
            <div className="flex gap-4 overflow-x-auto no-scrollbar pb-1">
              {globalSpins?.map((spin, i) => (
@@ -339,23 +339,23 @@ const SOUND_URLS = {
          </div>
        </div>
  
-       <div className="relative group">
+       <div className="relative group scale-[0.85] md:scale-100 transition-transform duration-500">
         {/* Metallic Outer Ring */}
-        <div className="absolute -inset-10 rounded-full border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-        <div className="absolute -inset-6 rounded-full border-[2px] border-white/20 pointer-events-none" />
+        <div className="absolute -inset-6 md:-inset-10 rounded-full border-[8px] md:border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+        <div className="absolute -inset-4 md:-inset-6 rounded-full border-[1px] md:border-[2px] border-white/20 pointer-events-none" />
         
         {/* Neon Ring */}
-        <div className="absolute -inset-4 rounded-full border border-primary/30 shadow-[0_0_50px_rgba(var(--primary),0.2)] animate-pulse pointer-events-none" />
+        <div className="absolute -inset-3 md:-inset-4 rounded-full border border-primary/30 shadow-[0_0_50px_rgba(var(--primary),0.2)] animate-pulse pointer-events-none" />
 
         {/* Pointer (Premium Metallic) */}
-        <div className="absolute -top-8 left-1/2 z-20 -translate-x-1/2 transform drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-          <div className="w-10 h-14 bg-gradient-to-b from-white via-zinc-200 to-zinc-400 clip-path-triangle rotate-180 relative">
+        <div className="absolute -top-6 md:-top-8 left-1/2 z-20 -translate-x-1/2 transform drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+          <div className="w-8 h-12 md:w-10 md:h-14 bg-gradient-to-b from-white via-zinc-200 to-zinc-400 clip-path-triangle rotate-180 relative">
              <div className="absolute inset-[2px] bg-gradient-to-b from-zinc-100 to-zinc-500 clip-path-triangle" />
           </div>
         </div>
 
         {/* Wheel */}
-        <div className="relative h-72 w-72 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
+        <div className="relative h-64 w-64 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
           <motion.div
             animate={controls}
             initial={{ rotate: 0 }}
@@ -413,10 +413,10 @@ const SOUND_URLS = {
         </div>
       </div>
 
-      {/* Multipliers & Controls */}
-      <div className="text-center space-y-8 z-10 w-full px-6">
-        <div className="space-y-4">
-           <div className="flex flex-col items-center gap-3">
+       {/* Multipliers & Controls */}
+       <div className="text-center space-y-4 md:space-y-8 z-10 w-full px-6 pb-4">
+         <div className="space-y-2 md:space-y-4">
+            <div className="flex flex-col items-center gap-2 md:gap-3">
              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Escolha seu Multiplicador</span>
              <div className="flex items-center gap-2 bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-md">
                {[1, 2, 5, 10].map((m) => (
@@ -443,7 +443,7 @@ const SOUND_URLS = {
             onClick={spin}
             disabled={isSpinning}
             size="lg"
-            className="h-16 w-full md:w-72 gap-3 text-lg font-black uppercase italic tracking-tighter bg-gradient-to-r from-primary to-purple-600 hover:scale-105 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(var(--primary),0.5)] border-none group relative overflow-hidden"
+            className="h-14 md:h-16 w-full md:w-72 gap-3 text-base md:text-lg font-black uppercase italic tracking-tighter bg-gradient-to-r from-primary to-purple-600 hover:scale-105 transition-all duration-300 shadow-[0_20px_40px_-15px_rgba(var(--primary),0.5)] border-none group relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
             {isSpinning ? (
