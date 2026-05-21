@@ -1,17 +1,18 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift } from "lucide-react";
+import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
-import { History, Clock, User, Loader2 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
 import { useMysteryBoxWins } from "@/hooks/useData";
+import { formatDistanceToNow } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface ScratchCardProps {
   prizeLabel?: string;
@@ -55,28 +56,12 @@ const ScratchCard = ({
     return [...localHistory, ...apiHistory].slice(0, 10);
   }, [globalWins, localHistory]);
 
-import { formatDistanceToNow } from "date-fns";
-import { ptBR } from "date-fns/locale";
-import { useMemo } from "react";
-
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScratched, setIsScratched] = useState(false);
   const [scratchPercentage, setScratchPercentage] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-
-  useEffect(() => {
-    // Fetch global history if needed or just use mock for initial
-    const names = ["Marcos S.", "Ana Paula", "Ricardo T.", "Juliana M.", "Felipe G."];
-    const initialHistory = Array.from({ length: 3 }).map((_, i) => ({
-      name: names[Math.floor(Math.random() * names.length)],
-      prize: Math.random() > 0.5 ? "Cota Premiada" : "Giro Grátis",
-      time: `${Math.floor(Math.random() * 10) + 1}m atrás`,
-      isWinner: true
-    }));
-    setHistory(initialHistory);
-  }, []);
 
   useEffect(() => {
     if (containerRef.current) {
@@ -213,7 +198,7 @@ import { useMemo } from "react";
         time: "Agora",
         isWinner: true
       };
-      setHistory(prev => [newEntry, ...prev].slice(0, 5));
+      setLocalHistory(prev => [newEntry, ...prev].slice(0, 5));
     } else {
       const newEntry = {
         name: "Você",
@@ -221,7 +206,7 @@ import { useMemo } from "react";
         time: "Agora",
         isWinner: false
       };
-      setHistory(prev => [newEntry, ...prev].slice(0, 5));
+      setLocalHistory(prev => [newEntry, ...prev].slice(0, 5));
     }
     if (onComplete) onComplete();
     queryClient.invalidateQueries({ queryKey: ["global-scratch-card-scratches"] });
