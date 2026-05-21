@@ -74,7 +74,7 @@ const Terms = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed pl-13">
                     <p>
-                      A GF Customizados não recomenda a tentativa de aquisição de grandes volumes de cotas (por exemplo, acima de 100.000 unidades) com o objetivo de “encerrar a ação” ou “comprar o restante das cotas”.
+                      A {siteSettings?.site_name || "RifasPro"} não recomenda a tentativa de aquisição de grandes volumes de cotas (por exemplo, acima de 100.000 unidades) com o objetivo de “encerrar a ação” ou “comprar o restante das cotas”.
                     </p>
                     <p>Isso ocorre porque:</p>
                     <ul className="list-disc pl-5 space-y-2 text-sm font-medium">
