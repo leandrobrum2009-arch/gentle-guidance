@@ -367,11 +367,11 @@ const CampaignDetail = () => {
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                     <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa rifa
                   </h3>
-                  <div className="grid grid-cols-1 gap-2">
+                  <div className="flex flex-col gap-4">
                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-                      <div className="flex flex-col gap-2">
+                      <div className="space-y-2">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Roletas disponíveis</p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                           {roulettePrizes.map((p, idx) => (
                             <div key={idx} className="flex items-center justify-center p-2 rounded-xl bg-secondary/50 border border-border/50">
                               <span className="text-[9px] font-bold text-foreground text-center truncate">{p.label}</span>
@@ -381,55 +381,56 @@ const CampaignDetail = () => {
                       </div>
                     )}
 
-                    {campaign.scratch_cards_enabled && (
-                      <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 mt-2">
-                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas</span>
-                        <Badge className="bg-amber-500 text-white border-none text-[9px] font-black uppercase tracking-wider">
-                          {roulettePrizes.length + luckyNumbers.length} Prêmios
+                    <div className="grid grid-cols-1 gap-2">
+                      {campaign.scratch_cards_enabled && (
+                        <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                          <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Raspadinhas</span>
+                          <Badge className="bg-amber-500 text-white border-none text-[9px] font-black uppercase tracking-wider">
+                            Ativada
+                          </Badge>
+                        </div>
+                      )}
+                      
+                      <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</span>
+                        <Badge className="bg-amber-500/10 text-amber-500 border-none text-[9px] font-black uppercase tracking-wider">
+                          {availableInstantPrizes} / {luckyNumbers.length}
                         </Badge>
                       </div>
-                    )}
-                    
-                    <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/5 border border-amber-500/10">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</span>
-                      <Badge className="bg-amber-500/10 text-amber-500 border-none text-[9px] font-black uppercase tracking-wider">
-                        {availableInstantPrizes} / {luckyNumbers.length}
-                      </Badge>
-                    </div>
 
-                    {luckyWinners && luckyWinners.length > 0 && (
-                      <div className="space-y-2 mt-2">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prêmios que já saíram</p>
-                        <div className="grid grid-cols-1 gap-2">
-                          {luckyWinners.slice(0, 3).map((w, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-primary/5 border border-primary/10">
-                              <div className="flex items-center gap-2 overflow-hidden">
-                                <Trophy className="h-3 w-3 text-primary shrink-0" />
-                                <span className="text-[10px] font-black uppercase tracking-tighter truncate">#{w.number}</span>
+                      {luckyWinners && luckyWinners.length > 0 && (
+                        <div className="space-y-2 mt-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Ganhadores Instantâneos</p>
+                          <div className="grid grid-cols-1 gap-2">
+                            {luckyWinners.slice(0, 3).map((w, idx) => (
+                              <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl bg-primary/5 border border-primary/10">
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  <Trophy className="h-3 w-3 text-primary shrink-0" />
+                                  <span className="text-[10px] font-black uppercase tracking-tighter truncate">#{w.number}</span>
+                                </div>
+                                <span className="text-[10px] font-medium text-muted-foreground truncate">{w.profiles?.name}</span>
                               </div>
-                              <span className="text-[10px] font-medium text-muted-foreground truncate">{w.profiles?.name}</span>
-                            </div>
-                          ))}
+                            ))}
+                          </div>
                         </div>
-                      </div>
-                    )}
-                  </div>
+                      )}
+                    </div>
 
                     {campaign.roulette_enabled && (
                       <Dialog>
                         <DialogTrigger asChild>
-                          <button className="w-full mt-4 flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all group">
+                          <button className="w-full mt-2 flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all group">
                             <div className="flex items-center gap-3">
                               <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:rotate-180 transition-transform duration-500">
                                 <RotateCw className="h-5 w-5" />
                               </div>
                               <div className="text-left">
                                 <p className="text-xs font-black uppercase tracking-tight text-foreground">Girar Roleta</p>
-                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte agora</p>
+                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte</p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
-                              <Badge className="bg-primary text-white border-none text-[9px] font-black">{userSpinsAvailable} Giros</Badge>
+                              <Badge className="bg-primary text-white border-none text-[9px] font-black">{userSpinsAvailable}</Badge>
                               <ArrowLeft className="h-4 w-4 text-primary rotate-180" />
                             </div>
                           </button>
