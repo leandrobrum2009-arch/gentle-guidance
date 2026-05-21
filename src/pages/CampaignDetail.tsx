@@ -243,7 +243,15 @@ const CampaignDetail = () => {
       
       case 'header':
         return (
-          <div key={section} className="flex flex-col md:flex-row md:items-end justify-between gap-4 mt-6">
+          <div key={section} className="flex flex-col gap-6 mt-6">
+            {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
+              <div className="flex flex-col items-center justify-center p-6 bg-primary/5 border border-primary/20 rounded-3xl animate-pulse shadow-sm">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Tempo restante para o sorteio</p>
+                <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125" />
+              </div>
+            )}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+
             <div className="space-y-1">
               <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
               <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
