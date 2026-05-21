@@ -458,8 +458,8 @@ const SOUND_URLS = {
           </Button>
           
           <div className="flex items-center gap-2 text-white/40">
-             <ShoppingCart className="h-4 w-4" />
-             <span className="text-xs font-bold uppercase tracking-widest">Compra instantânea segura</span>
+             <Zap className="h-4 w-4" />
+             <span className="text-xs font-bold uppercase tracking-widest">Gire e ganhe prêmios instantâneos</span>
           </div>
         </div>
       </div>
