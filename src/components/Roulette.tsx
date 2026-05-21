@@ -452,14 +452,14 @@ const SOUND_URLS = {
             ) : (
               <>
                 <Zap className="h-6 w-6 fill-current" />
-                {isSimulation ? "Simular Giro Grátis" : (campaign.roulette_spin_cost > 0 ? `Girar por R$ ${(campaign.roulette_spin_cost * multiplier).toFixed(2)}` : "Girar Agora")}
+                {isSimulation ? "Simular Giro Grátis" : "Girar Agora"}
               </>
             )}
           </Button>
           
           <div className="flex items-center gap-2 text-white/40">
-             <ShoppingCart className="h-4 w-4" />
-             <span className="text-xs font-bold uppercase tracking-widest">Compra instantânea segura</span>
+             <Zap className="h-4 w-4" />
+             <span className="text-xs font-bold uppercase tracking-widest">Gire e ganhe prêmios instantâneos</span>
           </div>
         </div>
       </div>
