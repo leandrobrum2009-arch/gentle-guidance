@@ -467,32 +467,48 @@ const CampaignDetail = () => {
 
                     {luckyNumbers && luckyNumbers.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cotas Premiadas</p>
+                        <div className="flex items-center justify-between ml-1">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</p>
+                          <span className="text-[8px] font-bold text-green-500 uppercase">{luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES</span>
+                        </div>
                         <div className="grid grid-cols-1 gap-2">
-                          {luckyNumbers.slice(0, 5).map((p: any, idx: number) => {
+                          {[...luckyNumbers].sort((a, b) => {
+                            const aWon = luckyNumbersStatus[a.number];
+                            const bWon = luckyNumbersStatus[b.number];
+                            if (aWon === bWon) return 0;
+                            return aWon ? 1 : -1;
+                          }).slice(0, 5).map((p: any, idx: number) => {
                             const isWon = luckyNumbersStatus[p.number];
                             return (
                               <div key={idx} className={cn(
                                 "flex items-center justify-between p-2.5 rounded-xl border transition-all duration-300",
-                                isWon ? "bg-amber-400/5 border-amber-400/10" : "bg-green-500/5 border-green-500/10"
+                                isWon ? "bg-amber-400/5 border-amber-400/10 opacity-70" : "bg-green-500/5 border-green-500/10"
                               )}>
-                                <span className={cn(
-                                  "text-[10px] font-bold uppercase tracking-tight truncate max-w-[120px]",
-                                  isWon ? "text-muted-foreground" : "text-foreground"
-                                )}>
-                                  {p.prize}
-                                </span>
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  <div className={cn(
+                                    "h-6 w-6 shrink-0 rounded flex items-center justify-center font-black italic text-[8px]",
+                                    isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
+                                  )}>
+                                    #{p.number}
+                                  </div>
+                                  <span className={cn(
+                                    "text-[9px] font-bold uppercase tracking-tight truncate max-w-[100px]",
+                                    isWon ? "text-muted-foreground" : "text-foreground"
+                                  )}>
+                                    {p.prize}
+                                  </span>
+                                </div>
                                 <Badge className={cn(
-                                  "text-[9px] font-black uppercase border-none px-2 h-5",
+                                  "text-[8px] font-black uppercase border-none px-1.5 h-4",
                                   isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
                                 )}>
-                                  #{p.number}
+                                  {isWon ? "GANHA" : "LIVRE"}
                                 </Badge>
                               </div>
                             );
                           })}
                           {luckyNumbers.length > 5 && (
-                            <p className="text-[9px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-1">
+                            <p className="text-[8px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-0.5">
                               + {luckyNumbers.length - 5} outras cotas
                             </p>
                           )}
