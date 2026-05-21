@@ -337,7 +337,7 @@ const CampaignDetail = () => {
                               </span>
                               {isWon && (
                                 <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
-                                   {winner?.profiles?.name || "Ganhador"}
+                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
                                 </span>
                               )}
                             </div>
@@ -612,7 +612,7 @@ const CampaignDetail = () => {
                         </span>
                         {isWon && (
                           <span className="text-[9px] font-bold text-primary uppercase tracking-tighter truncate">
-                             {winner?.profiles?.name || "Ganhador"}
+                             {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
                           </span>
                         )}
                       </div>
@@ -670,7 +670,7 @@ const CampaignDetail = () => {
         );
 
       case 'scratch_footer':
-        return (campaign.scratch_cards_enabled || !campaign.sections_order) && (
+        return (campaign.scratch_cards_enabled || sectionsOrder.includes('scratch_footer')) && (
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
