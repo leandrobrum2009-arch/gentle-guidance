@@ -170,10 +170,8 @@ const CampaignDetail = () => {
       setIsPurchasing(false);
       setShowSuccess(true);
       setCurrentOrderId(orderId);
-      
-      setTimeout(() => {
-        setIsPaymentModalOpen(true);
-      }, 3000);
+      setIsPaymentModalOpen(true);
+      setShowSuccess(true);
 
     } catch (error: any) {
       setIsPurchasing(false);
@@ -213,7 +211,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative aspect-[16/9] md:aspect-[21/9] lg:aspect-[3/1] overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl">
+          <div key={section} className="w-full bg-black relative min-h-[300px] md:min-h-[450px] overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl flex items-center justify-center">
             <RaffleGallery 
               images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
               videoUrl={campaign.video_url} 

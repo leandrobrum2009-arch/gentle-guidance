@@ -20,18 +20,18 @@
  
    return (
      <div className="space-y-4">
-       <div className="group relative aspect-video overflow-hidden rounded-2xl border border-border/50 bg-black">
-         <AnimatePresence mode="wait">
-           <motion.img
-             key={currentIndex}
-             src={allMedia[currentIndex]}
-             initial={{ opacity: 0 }}
-             animate={{ opacity: 1 }}
-             exit={{ opacity: 0 }}
-             transition={{ duration: 0.3 }}
-             className="h-full w-full object-cover"
-           />
-         </AnimatePresence>
+        <div className="group relative w-full h-full overflow-hidden rounded-2xl border border-border/50 bg-black flex items-center justify-center">
+          <AnimatePresence mode="wait">
+            <motion.img
+              key={currentIndex}
+              src={allMedia[currentIndex]}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              className="max-h-full max-w-full object-contain"
+            />
+          </AnimatePresence>
  
          {videoUrl && (
            <Button

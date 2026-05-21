@@ -77,8 +77,16 @@ const SOUND_URLS = {
     const isUsingFreeSpins = availableSpins >= multiplier;
     
     if (!isSimulation && !isUsingFreeSpins) {
-      toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
-      return;
+      if (spinCost > 0) {
+        if ((userProfile?.balance || 0) < spinCost * multiplier) {
+          toast.error(`Saldo insuficiente! O giro custa R$ ${(spinCost * multiplier).toFixed(2)}.`);
+          return;
+        }
+        // If they have balance, we proceed
+      } else {
+        toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
+        return;
+      }
     }
 
     setIsSpinning(true);
@@ -116,6 +124,11 @@ const SOUND_URLS = {
       final_value = res.final_value;
       is_free = res.is_free;
       new_balance = res.new_balance;
+      
+      // If no new_balance was returned but we paid with balance, we should update it manually
+      if (new_balance === undefined && !is_free && spinCost > 0) {
+        new_balance = Number(userProfile.balance) - (spinCost * multiplier);
+      }
     }
 
     const prize = wonPrizeData as RoulettePrize;
