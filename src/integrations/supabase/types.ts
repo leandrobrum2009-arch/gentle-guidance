@@ -1245,6 +1245,10 @@ export type Database = {
         Args: { p_campaign_id: string; p_ticket_number: string }
         Returns: string
       }
+      pay_with_balance: {
+        Args: { p_order_id: string; p_user_id: string }
+        Returns: Json
+      }
       perform_draw: { Args: { p_campaign_id: string }; Returns: string }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
