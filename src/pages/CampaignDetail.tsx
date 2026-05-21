@@ -399,62 +399,6 @@ const CampaignDetail = () => {
                       </div>
                     )}
 
-                    {luckyNumbers && luckyNumbers.length > 0 && (
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between ml-1">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</p>
-                          <span className="text-[8px] font-bold text-green-500 uppercase">{luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES</span>
-                        </div>
-                        <div className="grid grid-cols-1 gap-2">
-                          {[...luckyNumbers].sort((a, b) => {
-                            const aWon = luckyNumbersStatus[a.number];
-                            const bWon = luckyNumbersStatus[b.number];
-                            if (aWon === bWon) return 0;
-                            return aWon ? 1 : -1;
-                          }).slice(0, 5).map((p: any, idx: number) => {
-                            const isWon = luckyNumbersStatus[p.number];
-                             return (
-                               <div key={idx} className={cn(
-                                 "flex items-center justify-between p-3 rounded-2xl border transition-all duration-300 shadow-sm",
-                                 isWon ? "bg-amber-400/5 border-amber-400/10 opacity-70" : "bg-green-500/5 border-green-500/10"
-                               )}>
-                                 <div className="flex items-center gap-2.5 overflow-hidden">
-                                   <div className={cn(
-                                     "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px] shadow-sm",
-                                     isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
-                                   )}>
-                                     #{p.number}
-                                   </div>
-                                   <div className="flex flex-col overflow-hidden">
-                                     <span className={cn(
-                                       "text-[10px] font-black uppercase tracking-tight truncate max-w-[110px]",
-                                       isWon ? "text-muted-foreground" : "text-foreground"
-                                     )}>
-                                       {p.prize}
-                                     </span>
-                                     <span className={cn(
-                                       "text-[8px] font-bold uppercase tracking-tighter",
-                                       isWon ? "text-amber-600" : "text-green-500"
-                                     )}>
-                                       {isWon ? "Sorteada" : "Livre"}
-                                     </span>
-                                   </div>
-                                 </div>
-                                 <div className={cn(
-                                   "h-1.5 w-1.5 rounded-full shrink-0",
-                                   isWon ? "bg-amber-400" : "bg-green-500 animate-pulse"
-                                 )} />
-                               </div>
-                             );
-                           })}
-                           {luckyNumbers.length > 5 && (
-                             <p className="text-[9px] text-center text-muted-foreground font-black uppercase italic tracking-widest mt-1">
-                               + {luckyNumbers.length - 5} outras cotas
-                             </p>
-                           )}
-                         </div>
-                       </div>
-                     )}
  
                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                        <div className="space-y-2">
