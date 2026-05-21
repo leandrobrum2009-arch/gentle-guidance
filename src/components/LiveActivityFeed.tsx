@@ -1,7 +1,7 @@
  import { useEffect, useState } from "react";
  import { motion, AnimatePresence } from "framer-motion";
  import { Trophy, Zap, Clock, Users, Gift, Gamepad2 } from "lucide-react";
- import { useRouletteSpins, useMysteryBoxWins, RouletteSpin, MysteryBoxWin } from "@/hooks/useData";
+ import { useRouletteSpins, useMysteryBoxWins, RouletteSpin, MysteryBoxWin, useGlobalStats } from "@/hooks/useData";
  import { supabase } from "@/integrations/supabase/client";
  import { useQueryClient } from "@tanstack/react-query";
  import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
