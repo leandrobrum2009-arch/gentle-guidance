@@ -216,7 +216,10 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="w-full bg-black relative min-h-[300px] md:min-h-[450px] overflow-hidden mt-20 md:mt-24 rounded-b-3xl shadow-xl flex items-center justify-center">
             <RaffleGallery 
-              images={campaign.gallery_urls && campaign.gallery_urls.length > 0 ? campaign.gallery_urls : [campaign.image_url || ""]} 
+              images={[
+                campaign.image_url || "",
+                ...(campaign.gallery_urls && Array.isArray(campaign.gallery_urls) ? campaign.gallery_urls : [])
+              ].filter(url => url !== "")} 
               videoUrl={campaign.video_url} 
             />
             
