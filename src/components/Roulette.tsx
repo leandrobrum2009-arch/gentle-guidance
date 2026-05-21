@@ -413,10 +413,10 @@ const SOUND_URLS = {
         </div>
       </div>
 
-      {/* Multipliers & Controls */}
-      <div className="text-center space-y-8 z-10 w-full px-6">
-        <div className="space-y-4">
-           <div className="flex flex-col items-center gap-3">
+       {/* Multipliers & Controls */}
+       <div className="text-center space-y-4 md:space-y-8 z-10 w-full px-6 pb-4">
+         <div className="space-y-2 md:space-y-4">
+            <div className="flex flex-col items-center gap-2 md:gap-3">
              <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Escolha seu Multiplicador</span>
              <div className="flex items-center gap-2 bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-md">
                {[1, 2, 5, 10].map((m) => (
