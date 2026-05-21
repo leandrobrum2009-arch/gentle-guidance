@@ -143,8 +143,8 @@ const Terms = () => {
                       <div className="text-[10px] font-bold text-muted-foreground uppercase leading-loose space-y-1">
                         <p>Este título de loteria está autorizado com base na Portaria/Termo de Autorização Nº 01157/2026</p>
                         <p>LTP-PRC-2026/01702</p>
-                        <p>Registrado por: Razor Consultoria LTDA</p>
-                        <p>CNPJ: 57.610.480/0001-20</p>
+                        <p>Registrado por: {siteSettings?.company_name || "Razor Consultoria LTDA"}</p>
+                        <p>CNPJ: {siteSettings?.company_cnpj || "57.610.480/0001-20"}</p>
                       </div>
                     </div>
                     <div className="space-y-4">
