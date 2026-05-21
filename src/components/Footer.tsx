@@ -105,9 +105,8 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex gap-6">
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Privacidade</a>
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos</a>
-            <a href="#" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Cookies</a>
+            <a href="/termos-de-uso" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Termos de Uso</a>
+            <a href="/contato" className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors">Suporte</a>
           </div>
         </div>
       </div>
