@@ -265,28 +265,30 @@ const Index = () => {
 
                  {heroStyle === 1 && (
                    <HeroModel1 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                    <HeroModel1 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 2 && (
                    <HeroModel2 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 3 && (
                    <HeroModel3 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
                  )}
                  {heroStyle === 4 && (
                    <HeroModel4 
-                     campaigns={campaigns.filter(c => c.featured || c.status === "active" || c.status === "paused" || c.status === "audit").slice(0, 5)} 
+                     campaigns={activeCampaigns.slice(0, 5)} 
+
                      delay={parseInt(siteSettings?.hero_transition_speed || '5000')}
                      transitionType={siteSettings?.hero_transition_type as any || 'slide'}
                    />
