@@ -169,9 +169,42 @@ const Index = () => {
     toast.success(`Estilo do slide alterado para Modelo ${style}!`);
   };
 
-  const featuredCampaign = campaigns?.find((c) => c.featured && (c.status === "active" || c.status === "paused")) || campaigns?.find(c => c.status === "active");
-  const otherCampaigns = campaigns?.filter((c) => c.id !== featuredCampaign?.id && (c.status === 'active' || c.status === 'paused' || c.status === 'completed' || c.status === 'audit')) ?? [];
-  const endingSoon = campaigns?.filter(c => c.status === 'active' && c.sold_tickets / c.total_tickets > 0.8) ?? [];
+  const activeCampaigns = useMemo(() => {
+    if (!campaigns) return [];
+    return campaigns
+      .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
+      .sort((a, b) => {
+        // First priority: Featured
+        if (a.featured && !b.featured) return -1;
+        if (!a.featured && b.featured) return 1;
+        
+        // Second priority: Draw date (closest first)
+        if (a.draw_date && b.draw_date) {
+          return new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime();
+        }
+        if (a.draw_date) return -1;
+        if (b.draw_date) return 1;
+        
+        return 0;
+      });
+  }, [campaigns]);
+
+  const endedCampaigns = useMemo(() => {
+    if (!campaigns) return [];
+    return campaigns
+      .filter(c => c.status === "completed" || c.status === "finished")
+      .sort((a, b) => {
+        // Sort by draw date (most recent first)
+        if (a.draw_date && b.draw_date) {
+          return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
+        }
+        return 0;
+      });
+  }, [campaigns]);
+
+  const featuredCampaign = activeCampaigns[0];
+  const otherCampaigns = activeCampaigns.filter(c => c.id !== featuredCampaign?.id);
+  const endingSoon = activeCampaigns.filter(c => c.sold_tickets / c.total_tickets > 0.8);
 
    return (
      <div className="min-h-screen bg-background relative overflow-hidden">
