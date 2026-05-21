@@ -339,23 +339,23 @@ const SOUND_URLS = {
          </div>
        </div>
  
-       <div className="relative group">
+       <div className="relative group scale-[0.85] md:scale-100 transition-transform duration-500">
         {/* Metallic Outer Ring */}
-        <div className="absolute -inset-10 rounded-full border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-        <div className="absolute -inset-6 rounded-full border-[2px] border-white/20 pointer-events-none" />
+        <div className="absolute -inset-6 md:-inset-10 rounded-full border-[8px] md:border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+        <div className="absolute -inset-4 md:-inset-6 rounded-full border-[1px] md:border-[2px] border-white/20 pointer-events-none" />
         
         {/* Neon Ring */}
-        <div className="absolute -inset-4 rounded-full border border-primary/30 shadow-[0_0_50px_rgba(var(--primary),0.2)] animate-pulse pointer-events-none" />
+        <div className="absolute -inset-3 md:-inset-4 rounded-full border border-primary/30 shadow-[0_0_50px_rgba(var(--primary),0.2)] animate-pulse pointer-events-none" />
 
         {/* Pointer (Premium Metallic) */}
-        <div className="absolute -top-8 left-1/2 z-20 -translate-x-1/2 transform drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
-          <div className="w-10 h-14 bg-gradient-to-b from-white via-zinc-200 to-zinc-400 clip-path-triangle rotate-180 relative">
+        <div className="absolute -top-6 md:-top-8 left-1/2 z-20 -translate-x-1/2 transform drop-shadow-[0_0_15px_rgba(255,255,255,0.5)]">
+          <div className="w-8 h-12 md:w-10 md:h-14 bg-gradient-to-b from-white via-zinc-200 to-zinc-400 clip-path-triangle rotate-180 relative">
              <div className="absolute inset-[2px] bg-gradient-to-b from-zinc-100 to-zinc-500 clip-path-triangle" />
           </div>
         </div>
 
         {/* Wheel */}
-        <div className="relative h-72 w-72 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
+        <div className="relative h-64 w-64 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
           <motion.div
             animate={controls}
             initial={{ rotate: 0 }}
