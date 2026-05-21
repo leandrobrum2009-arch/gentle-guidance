@@ -80,6 +80,7 @@ const App = () => {
                 <Route path="/raspadinha" element={<ScratchCard />} />
                 <Route path="/ranking" element={<Ranking />} />
                 <Route path="/afiliados" element={<Affiliates />} />
+                <Route path="/termos-de-uso" element={<Terms />} />
                 <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
                 
                 {/* Protected Routes */}
