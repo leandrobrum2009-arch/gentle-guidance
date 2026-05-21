@@ -80,55 +80,84 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
 
       {/* Instant Prizes (Lucky Numbers) */}
       {showInstant && luckyNumbers.length > 0 && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
+        <div className="space-y-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
                 <Star className="h-6 w-6 text-amber-500" />
               </div>
               <h2 className="text-xl font-black uppercase italic tracking-tighter">Cotas Premiadas</h2>
             </div>
-            <Badge variant="outline" className="border-amber-500/30 text-amber-500 uppercase font-black text-[10px] tracking-widest px-3">
-              Achou, Ganhou!
-            </Badge>
+            <div className="flex items-center gap-2">
+              <Badge variant="outline" className="border-green-500/30 text-green-500 uppercase font-black text-[10px] tracking-widest px-3">
+                {luckyNumbers.filter(p => !soldTickets.includes(p.number)).length} Disponíveis
+              </Badge>
+              <Badge variant="outline" className="border-amber-500/30 text-amber-500 uppercase font-black text-[10px] tracking-widest px-3">
+                {luckyNumbers.filter(p => soldTickets.includes(p.number)).length} Premiadas
+              </Badge>
+            </div>
           </div>
 
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {luckyNumbers.map((p, i) => {
-              const isWon = soldTickets.includes(p.number);
-              return (
-                <div 
-                  key={i} 
-                  className={cn(
-                    "group flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
-                    isWon 
-                      ? "bg-white/5 border-white/5 opacity-50 grayscale" 
-                      : "bg-[#0d0d0f]/50 border-white/10 hover:border-amber-500/50 hover:bg-white/5 shadow-lg"
-                  )}
-                >
-                  <div className="flex items-center gap-4">
-                    <div className={cn(
-                      "h-10 w-10 rounded-xl flex items-center justify-center font-mono font-black text-sm shadow-inner transition-all duration-300",
-                      isWon ? "bg-slate-800 text-muted-foreground" : "bg-amber-500 text-white group-hover:scale-110"
-                    )}>
-                      {p.number}
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Prêmio Instantâneo</p>
-                      <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.prize}</p>
-                    </div>
-                  </div>
-                  
-                  {isWon ? (
-                    <Badge variant="secondary" className="text-[8px] uppercase font-black px-2">Esgotada</Badge>
-                  ) : (
-                    <div className="h-6 w-6 rounded-full bg-amber-500/20 flex items-center justify-center animate-pulse">
-                      <Sparkles className="h-3 w-3 text-amber-500" />
-                    </div>
-                  )}
+          <div className="space-y-10">
+            {/* Disponíveis */}
+            {luckyNumbers.filter(p => !soldTickets.includes(p.number)).length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <Sparkles className="h-4 w-4 text-green-500" />
+                  <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Números Disponíveis</h4>
+                  <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                 </div>
-              );
-            })}
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {luckyNumbers.filter(p => !soldTickets.includes(p.number)).map((p, i) => (
+                    <div 
+                      key={i} 
+                      className="group flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-[#0d0d0f]/50 hover:border-green-500/50 hover:bg-white/5 shadow-lg transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-green-500 text-white flex items-center justify-center font-mono font-black text-sm shadow-inner group-hover:scale-110 transition-transform duration-300">
+                          {p.number}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Prêmio</p>
+                          <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.prize}</p>
+                        </div>
+                      </div>
+                      <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Premiadas */}
+            {luckyNumbers.filter(p => soldTickets.includes(p.number)).length > 0 && (
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 px-1">
+                  <Trophy className="h-4 w-4 text-amber-500" />
+                  <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Números Já Premiados</h4>
+                  <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                  {luckyNumbers.filter(p => soldTickets.includes(p.number)).map((p, i) => (
+                    <div 
+                      key={i} 
+                      className="group flex items-center justify-between p-4 rounded-2xl border border-white/5 bg-white/5 opacity-60 grayscale hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="h-10 w-10 rounded-xl bg-amber-500 text-white flex items-center justify-center font-mono font-black text-sm shadow-inner">
+                          {p.number}
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-0.5">Prêmio</p>
+                          <p className="text-xs font-black uppercase italic tracking-tighter text-white">{p.prize}</p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary" className="text-[8px] uppercase font-black px-2">Esgotada</Badge>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

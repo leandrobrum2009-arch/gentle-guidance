@@ -356,12 +356,22 @@ const CampaignDetail = () => {
                     <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                       <Trophy className="h-4 w-4 text-amber-500" /> Cotas Premiadas
                     </h3>
-                    <Badge variant="outline" className="text-[9px] font-black uppercase tracking-widest border-primary/20 bg-primary/5 text-primary">
-                      PRÊMIOS INSTANTÂNEOS
-                    </Badge>
+                    <div className="flex gap-1.5">
+                      <Badge className="bg-green-500 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
+                        {luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES
+                      </Badge>
+                      <Badge className="bg-amber-400 text-white border-none text-[8px] font-black uppercase tracking-widest px-2">
+                        {luckyNumbers.filter(p => luckyNumbersStatus[p.number]).length} PREMIADAS
+                      </Badge>
+                    </div>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {luckyNumbers.map((p: any, i: number) => {
+                    {[...luckyNumbers].sort((a, b) => {
+                      const aWon = luckyNumbersStatus[a.number];
+                      const bWon = luckyNumbersStatus[b.number];
+                      if (aWon === bWon) return 0;
+                      return aWon ? 1 : -1;
+                    }).map((p: any, i: number) => {
                       const isWon = luckyNumbersStatus[p.number];
                       const winner = luckyWinners?.find(w => w.number === p.number);
                       return (
@@ -370,29 +380,36 @@ const CampaignDetail = () => {
                           className={cn(
                             "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
                             isWon 
-                              ? "bg-amber-400/10 border-amber-400/20" 
+                              ? "bg-amber-400/5 border-amber-400/10 grayscale-[0.5]" 
                               : "bg-green-500/5 border-green-500/10"
                           )}
                         >
-                          <div className="flex flex-col overflow-hidden">
-                            <span className={cn(
-                              "text-[10px] font-black uppercase tracking-tight truncate max-w-[140px] md:max-w-none",
-                              isWon ? "text-muted-foreground" : "text-foreground"
+                          <div className="flex items-center gap-2.5 overflow-hidden">
+                            <div className={cn(
+                              "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center font-black italic text-[10px]",
+                              isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
                             )}>
-                              {p.prize}
-                            </span>
-                            {isWon && (
-                              <span className="text-[8px] font-bold text-primary uppercase tracking-tighter truncate">
-                                 {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                              #{p.number}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className={cn(
+                                "text-[10px] font-black uppercase tracking-tight truncate max-w-[100px]",
+                                isWon ? "text-muted-foreground" : "text-foreground"
+                              )}>
+                                {p.prize}
                               </span>
-                            )}
+                              {isWon && (
+                                <span className="text-[8px] font-bold text-amber-600 uppercase tracking-tighter truncate">
+                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                                </span>
+                              )}
+                            </div>
                           </div>
-                          <Badge className={cn(
-                            "text-[10px] font-black uppercase tracking-widest px-3 h-7 border-none",
-                            isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
-                          )}>
-                            #{p.number}
-                          </Badge>
+                          {isWon ? (
+                            <Badge variant="outline" className="text-[8px] font-black uppercase border-amber-500/20 text-amber-600 h-5 px-1.5">Ganhador</Badge>
+                          ) : (
+                            <div className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
+                          )}
                         </div>
                       );
                     })}
@@ -450,32 +467,48 @@ const CampaignDetail = () => {
 
                     {luckyNumbers && luckyNumbers.length > 0 && (
                       <div className="space-y-2">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cotas Premiadas</p>
+                        <div className="flex items-center justify-between ml-1">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Cotas Premiadas</p>
+                          <span className="text-[8px] font-bold text-green-500 uppercase">{luckyNumbers.filter(p => !luckyNumbersStatus[p.number]).length} LIVRES</span>
+                        </div>
                         <div className="grid grid-cols-1 gap-2">
-                          {luckyNumbers.slice(0, 5).map((p: any, idx: number) => {
+                          {[...luckyNumbers].sort((a, b) => {
+                            const aWon = luckyNumbersStatus[a.number];
+                            const bWon = luckyNumbersStatus[b.number];
+                            if (aWon === bWon) return 0;
+                            return aWon ? 1 : -1;
+                          }).slice(0, 5).map((p: any, idx: number) => {
                             const isWon = luckyNumbersStatus[p.number];
                             return (
                               <div key={idx} className={cn(
                                 "flex items-center justify-between p-2.5 rounded-xl border transition-all duration-300",
-                                isWon ? "bg-amber-400/5 border-amber-400/10" : "bg-green-500/5 border-green-500/10"
+                                isWon ? "bg-amber-400/5 border-amber-400/10 opacity-70" : "bg-green-500/5 border-green-500/10"
                               )}>
-                                <span className={cn(
-                                  "text-[10px] font-bold uppercase tracking-tight truncate max-w-[120px]",
-                                  isWon ? "text-muted-foreground" : "text-foreground"
-                                )}>
-                                  {p.prize}
-                                </span>
+                                <div className="flex items-center gap-2 overflow-hidden">
+                                  <div className={cn(
+                                    "h-6 w-6 shrink-0 rounded flex items-center justify-center font-black italic text-[8px]",
+                                    isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
+                                  )}>
+                                    #{p.number}
+                                  </div>
+                                  <span className={cn(
+                                    "text-[9px] font-bold uppercase tracking-tight truncate max-w-[100px]",
+                                    isWon ? "text-muted-foreground" : "text-foreground"
+                                  )}>
+                                    {p.prize}
+                                  </span>
+                                </div>
                                 <Badge className={cn(
-                                  "text-[9px] font-black uppercase border-none px-2 h-5",
+                                  "text-[8px] font-black uppercase border-none px-1.5 h-4",
                                   isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
                                 )}>
-                                  #{p.number}
+                                  {isWon ? "GANHA" : "LIVRE"}
                                 </Badge>
                               </div>
                             );
                           })}
                           {luckyNumbers.length > 5 && (
-                            <p className="text-[9px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-1">
+                            <p className="text-[8px] text-center text-muted-foreground font-bold uppercase italic tracking-widest mt-0.5">
                               + {luckyNumbers.length - 5} outras cotas
                             </p>
                           )}
@@ -598,65 +631,108 @@ const CampaignDetail = () => {
         );
 
       case 'prizes':
+        const availablePrizes = luckyNumbers.filter(p => !luckyNumbersStatus[p.number]);
+        const wonPrizes = luckyNumbers.filter(p => luckyNumbersStatus[p.number]);
+
         return luckyNumbers.length > 0 && (
-          <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6">
+          <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
-                <h3 className="text-lg font-black uppercase italic tracking-tighter flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-amber-500" /> Cotas Premiadas
+                <h3 className="text-xl font-black uppercase italic tracking-tighter flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-2xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                    <Trophy className="h-6 w-6 text-amber-500" />
+                  </div>
+                  Cotas Premiadas
                 </h3>
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Números da sorte que valem prêmios instantâneos</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest ml-1">Encontre estes números e ganhe na hora</p>
               </div>
-              <Badge variant="outline" className="rounded-full bg-secondary text-[10px] font-black h-8 px-4 border-primary/20">
-                {availableInstantPrizes} DISPONÍVEIS
-              </Badge>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className="rounded-full bg-secondary/50 text-[10px] font-black h-8 px-4 border-primary/10">
+                  {availablePrizes.length} DISPONÍVEIS
+                </Badge>
+                <Badge variant="outline" className="rounded-full bg-amber-500/5 text-amber-500 text-[10px] font-black h-8 px-4 border-amber-500/20">
+                  {wonPrizes.length} PREMIADAS
+                </Badge>
+              </div>
             </div>
             
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {luckyNumbers.map((p: any, i: number) => {
-                const isWon = luckyNumbersStatus[p.number];
-                const winner = luckyWinners?.find(w => w.number === p.number);
-                
-                return (
-                  <div 
-                    key={i} 
-                    className={cn(
-                      "flex items-center justify-between p-3 rounded-xl border transition-all duration-300",
-                      isWon 
-                        ? "bg-amber-400/10 border-amber-400/20 opacity-75" 
-                        : "bg-green-500/5 border-green-500/10 hover:border-green-500/30"
-                    )}
-                  >
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <div className={cn(
-                        "h-10 w-10 shrink-0 rounded-lg flex items-center justify-center font-black italic text-xs",
-                        isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white shadow-sm"
-                      )}>
-                        #{p.number}
-                      </div>
-                      <div className="flex flex-col overflow-hidden">
-                        <span className={cn(
-                          "text-[11px] font-black uppercase tracking-tight truncate",
-                          isWon ? "text-muted-foreground" : "text-foreground"
-                        )}>
-                          {p.prize}
-                        </span>
-                        {isWon && (
-                          <span className="text-[9px] font-bold text-primary uppercase tracking-tighter truncate">
-                             {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                    <Badge className={cn(
-                      "text-[8px] font-black uppercase tracking-widest px-2",
-                      isWon ? "bg-amber-400 text-white" : "bg-green-500 text-white"
-                    )}>
-                      {isWon ? "SORTEADA" : "ATIVA"}
-                    </Badge>
+            <div className="space-y-10">
+              {/* Disponíveis */}
+              {availablePrizes.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 px-1">
+                    <Sparkles className="h-4 w-4 text-green-500" />
+                    <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Cotas Disponíveis</h4>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                );
-              })}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {availablePrizes.map((p: any, i: number) => (
+                      <div 
+                        key={i} 
+                        className="group flex items-center justify-between p-3.5 rounded-2xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm"
+                      >
+                        <div className="flex items-center gap-3 overflow-hidden">
+                          <div className="h-11 w-11 shrink-0 rounded-xl bg-green-500 text-white shadow-[0_0_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-sm group-hover:scale-110 transition-transform duration-500">
+                            #{p.number}
+                          </div>
+                          <div className="flex flex-col overflow-hidden">
+                            <span className="text-[11px] font-black uppercase tracking-tight text-foreground truncate">
+                              {p.prize}
+                            </span>
+                            <span className="text-[9px] font-bold text-green-500 uppercase tracking-tighter">
+                              Disponível
+                            </span>
+                          </div>
+                        </div>
+                        <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Premiadas (Ganhadores) */}
+              {wonPrizes.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 px-1">
+                    <Trophy className="h-4 w-4 text-amber-500" />
+                    <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Cotas Já Premiadas</h4>
+                    <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {wonPrizes.map((p: any, i: number) => {
+                      const winner = luckyWinners?.find(w => w.number === p.number);
+                      return (
+                        <div 
+                          key={i} 
+                          className="group flex items-center justify-between p-3.5 rounded-2xl border border-amber-500/10 bg-amber-500/5 grayscale-[0.5] opacity-90 hover:grayscale-0 hover:opacity-100 transition-all duration-300 shadow-sm"
+                        >
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <div className="h-11 w-11 shrink-0 rounded-xl bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-sm">
+                              #{p.number}
+                            </div>
+                            <div className="flex flex-col overflow-hidden">
+                              <span className="text-[11px] font-black uppercase tracking-tight text-muted-foreground truncate">
+                                {p.prize}
+                              </span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <Avatar className="h-4 w-4 border border-amber-500/20">
+                                  <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${p.number}`} />
+                                  <AvatarFallback className="text-[8px] bg-amber-500/10 text-amber-600 font-bold">W</AvatarFallback>
+                                </Avatar>
+                                <span className="text-[9px] font-black text-amber-600 uppercase tracking-tighter truncate">
+                                   {(Array.isArray(winner?.profiles) ? winner?.profiles[0]?.name : winner?.profiles?.name) || "Ganhador"}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                          <Badge className="bg-amber-500/10 text-amber-600 border-none text-[8px] font-black px-2 uppercase">Ganhador</Badge>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         );
