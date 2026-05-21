@@ -402,7 +402,7 @@ const CampaignDetail = () => {
  
                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
                        <div className="space-y-2">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Benefícios da Roleta</p>
+                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
                          <div className="grid grid-cols-2 gap-2">
                            {roulettePrizes.map((p, idx) => (
                              <div key={idx} className="flex flex-col items-center justify-center p-2 rounded-xl bg-primary/5 border border-primary/10 text-center gap-1">
