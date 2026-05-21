@@ -55,9 +55,9 @@
            <div className="h-2 w-2 rounded-full bg-destructive animate-pulse" />
             <h3 className="text-sm font-black uppercase tracking-widest italic text-foreground">Atividade em <span className="text-primary">Tempo Real</span></h3>
          </div>
-         <Badge variant="outline" className="text-[8px] border-primary/30 text-primary uppercase gap-1">
-           <Users className="h-2 w-2" /> 2.4k Online
-         </Badge>
+          <Badge variant="outline" className="text-[8px] border-primary/30 text-primary uppercase gap-1">
+            <Users className="h-2 w-2" /> {stats?.onlineUsers || 1} Online
+          </Badge>
        </div>
  
       <div className="flex flex-col md:grid gap-3 overflow-x-auto md:overflow-visible no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth">
