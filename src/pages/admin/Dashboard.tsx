@@ -20,6 +20,7 @@ export default function AdminDashboard() {
   const { data: orders, isLoading: lo } = useAdminOrders();
   const { data: users, isLoading: lu } = useAdminUsers();
   const { data: rouletteStats, isLoading: lr } = useAdminRouletteStats();
+  const { data: globalStats } = useGlobalStats();
 
   const loading = lc || lo || lu || lr;
 
