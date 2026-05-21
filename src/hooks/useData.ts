@@ -793,3 +793,31 @@ export const useSiteSettings = () =>
       return settingsMap;
     },
   });
+
+export const useGlobalStats = () =>
+  useQuery({
+    queryKey: ["global-stats"],
+    queryFn: async () => {
+      const { count: usersCount } = await supabase
+        .from("profiles")
+        .select("*", { count: 'exact', head: true });
+        
+      const { count: ordersCount } = await supabase
+        .from("orders")
+        .select("*", { count: 'exact', head: true });
+        
+      const { data: recentActive } = await supabase
+        .from("orders")
+        .select("user_id")
+        .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString()); // Active in last 30 mins
+        
+      const activeCount = new Set(recentActive?.map(o => o.user_id)).size;
+      
+      return {
+        totalUsers: usersCount || 0,
+        totalOrders: ordersCount || 0,
+        onlineUsers: Math.max(activeCount, Math.floor((usersCount || 0) * 0.2) + 1) // At least 20% or 1
+      };
+    },
+    refetchInterval: 30000, // Refresh every 30s
+  });
