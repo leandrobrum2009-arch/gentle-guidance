@@ -91,8 +91,9 @@ export default function AdminCampaignEdit() {
       lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], 
       main_prizes: (data.main_prizes as any[]) ?? [], 
       roulette_rules: (data.roulette_rules as any[]) ?? [],
+      ranking_prizes: (data.ranking_prizes as any[]) ?? [],
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
-    } as CampaignForm);
+    } as unknown as CampaignForm);
     setLoading(false);
   };
 
