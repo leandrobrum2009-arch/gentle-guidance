@@ -64,11 +64,11 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
-                <span className="font-black text-foreground">0800 123 4567</span>
+                <span className="font-black text-foreground">{siteSettings?.company_phone || siteSettings?.support_whatsapp || "0800 123 4567"}</span>
               </div>
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
-                <span className="font-black text-foreground">ajuda@rifaspro.com</span>
+                <span className="font-black text-foreground truncate max-w-[150px]">{siteSettings?.company_email || "contato@empresa.com"}</span>
               </div>
             </div>
           </div>
