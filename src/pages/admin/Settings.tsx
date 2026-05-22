@@ -74,7 +74,14 @@ export default function AdminSettings() {
     company_phone: "Telefone Corporativo",
     company_email: "E-mail Corporativo",
     home_marquee_enabled: "Habilitar Faixa de Texto",
-    home_marquee_text: "Texto da Faixa (Marquee)"
+    home_marquee_text: "Texto da Faixa (Marquee)",
+    mercadopago_access_token: "Mercado Pago: Access Token",
+    mercadopago_public_key: "Mercado Pago: Public Key",
+    manual_payment_enabled: "Pagamento Manual (PIX)",
+    manual_payment_pix_key: "Chave PIX Manual",
+    manual_payment_pix_name: "Nome do Titular PIX",
+    paggue_client_key: "Paggue: Client Key",
+    paggue_client_secret: "Paggue: Client Secret"
   };
 
   const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
