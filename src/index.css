@@ -321,13 +321,29 @@ aside:has(a[href*="lovable.dev"]) {
 
    /* Animating gradient text */
 
-   @keyframes text-shimmer {
-     from {
-       background-position: -800px center;
-     }
-     to {
-       background-position: 800px center;
-     }
-   }
+    @keyframes text-shimmer {
+      from {
+        background-position: -800px center;
+      }
+      to {
+        background-position: 800px center;
+      }
+    }
+
+    @keyframes button-flash {
+      0%, 100% { 
+        filter: brightness(1);
+        transform: scale(1);
+      }
+      50% { 
+        filter: brightness(1.2);
+        transform: scale(1.02);
+      }
+    }
+
+    .animate-button-flash {
+      animation: button-flash 2s infinite ease-in-out;
+    }
+
 
 }
