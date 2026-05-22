@@ -35,10 +35,10 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
               <div className="absolute inset-0 overflow-hidden">
                 <motion.img 
                   src={campaign.image_url || "/placeholder.svg"} 
-                  className="h-full w-full object-cover" 
+                  className="h-full w-full object-cover will-change-transform" 
                   alt={campaign.title}
-                  animate={{ scale: [1, 1.05, 1] }}
-                  transition={{ duration: 15, repeat: Infinity }}
+                  animate={{ scale: [1, 1.03, 1] }}
+                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-r from-background via-background/60 to-transparent z-10" />
                 <div className="absolute inset-0 bg-gradient-to-t from-background via-background/20 to-transparent z-10" />

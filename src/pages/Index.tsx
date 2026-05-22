@@ -221,8 +221,8 @@ const Index = () => {
           <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-y border-primary/30 py-2.5 pointer-events-none">
             <motion.div 
               animate={{ x: ["0%", "-50%"] }}
-              transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-              className="flex whitespace-nowrap gap-12 items-center"
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              className="flex whitespace-nowrap gap-12 items-center will-change-transform"
             >
               {[...Array(6)].map((_, i) => (
                 <div key={i} className="flex items-center gap-12 text-[11px] font-black uppercase tracking-[0.3em] text-primary italic">

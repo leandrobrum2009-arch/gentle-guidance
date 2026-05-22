@@ -65,21 +65,15 @@
          </div>
        </div>
  
-       <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
-         <AnimatePresence mode="popLayout">
-           {tickets.map((ticket) => (
-             <motion.button
-               key={ticket.number}
-               layout
-               initial={{ opacity: 0, scale: 0.8 }}
-               animate={{ opacity: 1, scale: 1 }}
-               exit={{ opacity: 0, scale: 0.8 }}
-               whileHover={!ticket.isSold ? { scale: 1.1, zIndex: 10 } : {}}
-               whileTap={!ticket.isSold ? { scale: 0.95 } : {}}
-               disabled={ticket.isSold}
-               onClick={() => onSelect(ticket.number)}
-               className={cn(
-                 "relative aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+        <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
+            {tickets.map((ticket) => (
+              <button
+                key={ticket.number}
+                disabled={ticket.isSold}
+                onClick={() => onSelect(ticket.number)}
+                className={cn(
+                  "relative aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+                  !ticket.isSold && "hover:scale-110 hover:z-10 active:scale-95",
                  ticket.isSold 
                    ? "bg-muted-foreground/10 text-muted-foreground/50 cursor-not-allowed" 
                    : ticket.isSelected 
@@ -91,19 +85,14 @@
              >
                {ticket.isSold ? <Lock className="h-3 w-3" /> : ticket.number}
                
-               {ticket.isSelected && (
-                 <motion.div 
-                   initial={{ scale: 0 }} 
-                   animate={{ scale: 1 }} 
-                   className="absolute -top-1 -right-1 h-3 w-3 bg-white rounded-full flex items-center justify-center shadow-lg"
-                 >
-                   <Check className="h-2 w-2 text-primary" strokeWidth={4} />
-                 </motion.div>
-               )}
-             </motion.button>
-           ))}
-         </AnimatePresence>
-       </div>
+                {ticket.isSelected && (
+                  <div className="absolute -top-1 -right-1 h-3 w-3 bg-white rounded-full flex items-center justify-center shadow-lg">
+                    <Check className="h-2 w-2 text-primary" strokeWidth={4} />
+                  </div>
+                )}
+              </button>
+            ))}
+        </div>
  
        {selectedTickets.length > 0 && (
          <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
