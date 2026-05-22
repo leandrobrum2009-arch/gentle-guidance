@@ -37,7 +37,7 @@ const Footer = () => {
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
-              A maior e mais segura plataforma de ações online da {siteSettings?.site_name || "RifasPro"}. Prêmios instantâneos e sorteios garantidos.
+              A maior e mais segura plataforma de ações online da {siteSettings?.site_name || "Sua Empresa"}. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
