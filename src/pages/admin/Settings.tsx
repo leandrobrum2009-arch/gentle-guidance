@@ -37,6 +37,9 @@ export default function AdminSettings() {
     hero_transition_type: "Tipo de Transição",
     site_name: "Nome da Plataforma",
     site_logo_url: "Logotipo Principal",
+    site_logo_height: "Altura do Logo (Desktop)",
+    site_logo_height_mobile: "Altura do Logo (Mobile)",
+
     support_whatsapp: "WhatsApp de Atendimento",
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
