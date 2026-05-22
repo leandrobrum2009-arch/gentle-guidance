@@ -567,7 +567,7 @@ const Index = () => {
                 <Loader2 className="h-6 w-6 animate-spin text-primary" />
               </div>
             ) : (
-               <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+               <div className="grid gap-y-20 gap-x-8 sm:grid-cols-2 lg:grid-cols-4 pt-16">
                  {(winners && winners.length > 0 ? winners : [
                     { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "raffle", draw_date: new Date().toISOString() },
                     { id: "2", winner_name: "Maria Luiza", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "lucky_number", draw_date: new Date().toISOString() },
