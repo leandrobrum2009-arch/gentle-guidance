@@ -286,31 +286,59 @@ export const useCampaignTicketStats = (campaignId: string) =>
   useQuery({
     queryKey: ["campaign-ticket-stats", campaignId],
     queryFn: async () => {
-      // Get highest 3 tickets
-      const { data: highest, error: hError } = await supabase
+      // Fetch the campaign to see if there are active ranking prizes with time filters
+      const { data: campaign } = await supabase
+        .from('campaigns')
+        .select('ranking_prizes')
+        .eq('id', campaignId)
+        .single();
+
+      const rankingPrizes = (campaign?.ranking_prizes as any[]) || [];
+      const activePrize = rankingPrizes.find(p => p.active);
+
+      let query = supabase
         .from('tickets')
         .select('number, status, profiles!user_id(name)')
         .eq('campaign_id', campaignId)
-        .in('status', ['confirmed', 'paid'])
+        .in('status', ['confirmed', 'paid']);
+
+      // Apply date filter if an active prize exists
+      if (activePrize && activePrize.start_date && activePrize.end_date) {
+        query = query
+          .gte('created_at', activePrize.start_date)
+          .lte('created_at', activePrize.end_date);
+      }
+
+      // Get highest 1 ticket (as requested by user: "São duas pessoas")
+      const { data: highest, error: hError } = await query
         .order('number', { ascending: false })
-        .limit(3);
+        .limit(1);
       
       if (hError) throw hError;
 
-      // Get lowest 3 tickets
-      const { data: lowest, error: lError } = await supabase
+      // Re-create query for lowest to avoid filter carryover if any
+      let lowQuery = supabase
         .from('tickets')
         .select('number, status, profiles!user_id(name)')
         .eq('campaign_id', campaignId)
-        .in('status', ['confirmed', 'paid'])
+        .in('status', ['confirmed', 'paid']);
+
+      if (activePrize && activePrize.start_date && activePrize.end_date) {
+        lowQuery = lowQuery
+          .gte('created_at', activePrize.start_date)
+          .lte('created_at', activePrize.end_date);
+      }
+
+      const { data: lowest, error: lError } = await lowQuery
         .order('number', { ascending: true })
-        .limit(3);
+        .limit(1);
       
       if (lError) throw lError;
       
       return {
         highestTickets: highest || [],
-        lowestTickets: lowest || []
+        lowestTickets: lowest || [],
+        activePrize: activePrize || null
       };
     },
     enabled: !!campaignId
