@@ -12,6 +12,7 @@ import Footer from "@/components/Footer";
 import { useSiteSettings } from "@/hooks/useData";
 
 const Login = () => {
+  const { data: siteSettings } = useSiteSettings();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
