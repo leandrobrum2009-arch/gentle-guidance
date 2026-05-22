@@ -182,7 +182,7 @@ export default function AdminMysteryBoxes() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {boxes?.map((b) => (
+                {(boxes as any[])?.map((b: any) => (
                   <TableRow key={b.id} className="border-border hover:bg-secondary/20 transition-colors group">
                     <TableCell>
                       <div className="flex flex-col">
