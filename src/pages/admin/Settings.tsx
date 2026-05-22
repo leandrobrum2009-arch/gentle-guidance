@@ -207,6 +207,21 @@ export default function AdminSettings() {
                     uploading={uploading === 'site_logo_url'}
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_logo_height')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_logo_height']}
+                    getIcon={getIcon}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_logo_height_mobile')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_logo_height_mobile']}
+                    getIcon={getIcon}
+                  />
+                </div>
+
               </CardContent>
             </Card>
 
