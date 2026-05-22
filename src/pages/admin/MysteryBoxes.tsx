@@ -153,7 +153,7 @@ export default function AdminMysteryBoxes() {
               <div>
                 <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{rarity}</p>
                 <p className="text-xl font-bold text-foreground mt-1">
-                  {boxes?.filter(b => (b as any).rarity === rarity).length || 0} Ativas
+                  {boxes?.filter((b: any) => b.rarity === rarity).length || 0} Ativas
                 </p>
               </div>
               <Box className={`h-8 w-8 ${
