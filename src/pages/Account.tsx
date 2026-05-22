@@ -61,8 +61,9 @@ import { cn } from "@/lib/utils";
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
-   const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
-   const { data: commissions } = useAffiliateCommissions(affiliate?.id || "");
+    const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
+    const { data: commissions } = useAffiliateCommissions(affiliate?.id || "");
+    const { data: siteSettings } = useSiteSettings();
 
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
