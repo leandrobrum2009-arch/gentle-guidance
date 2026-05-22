@@ -59,6 +59,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="rifas-pro-theme">
         <TooltipProvider>
+          <SiteSettingsInjector />
           <Toaster />
           <Sonner />
           <LiveNotifications />
