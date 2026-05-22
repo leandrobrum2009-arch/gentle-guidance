@@ -92,15 +92,21 @@ const Header = () => {
          <div className="flex items-center gap-4 md:gap-8 min-w-0">
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
               {siteSettings?.site_logo_url ? (
-                <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-8 md:h-9 w-auto object-contain" />
+                <img 
+                  src={siteSettings.site_logo_url} 
+                  alt={siteSettings?.site_name || "Logo"} 
+                  className="h-9 md:h-11 w-auto object-contain" 
+                />
               ) : (
-                <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
-                  <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
+                    <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+                  </div>
+                  <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
+                    {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
+                  </span>
                 </div>
               )}
-              <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter ${scrolled ? 'text-foreground' : 'text-foreground'} text-animate-gradient truncate`}>
-                {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
-              </span>
             </Link>
  
            <nav className="hidden items-center gap-6 lg:flex">
