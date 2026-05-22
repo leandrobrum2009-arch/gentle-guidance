@@ -92,7 +92,7 @@ export default function AdminSettings() {
         .getPublicUrl(filePath);
 
       handleUpdate(key, publicUrl);
-      toast.success("Imagem enviada com sucesso!");
+      toast.success("Imagem enviada com sucesso! Lembre-se de clicar em Salvar Tudo para confirmar.");
     } catch (error: any) {
       toast.error("Erro no upload: " + error.message);
     } finally {
@@ -111,7 +111,6 @@ export default function AdminSettings() {
       }
       setInitialSettings(JSON.parse(JSON.stringify(settings)));
       toast.success("Todas as configurações foram atualizadas!");
-      // Force refresh data in hooks if needed, or user can just refresh
     } catch (error) {
       toast.error("Erro ao salvar algumas configurações.");
     } finally {
@@ -152,13 +151,13 @@ export default function AdminSettings() {
       <div className="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Painel de Configurações</h1>
-          <p className="text-muted-foreground text-sm">Personalize a identidade visual e as regras do seu sistema.</p>
+          <p className="text-muted-foreground text-sm font-medium">Personalize a identidade visual e as regras do seu sistema.</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={fetchSettings} disabled={saving}>
+          <Button variant="outline" onClick={fetchSettings} disabled={saving} className="rounded-xl font-bold border-2">
             Descartar
           </Button>
-          <Button onClick={saveSettings} disabled={saving || !hasChanges} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20">
+          <Button onClick={saveSettings} disabled={saving || !hasChanges} className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold shadow-lg shadow-primary/20 rounded-xl px-8 h-11 border-b-4 border-primary/40 active:border-b-0 active:translate-y-1 transition-all">
             {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
             Salvar Tudo
           </Button>
@@ -166,48 +165,56 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1 rounded-xl h-12 w-full justify-start overflow-x-auto overflow-y-hidden">
-          <TabsTrigger value="visual" className="rounded-lg px-6 data-[state=active]:bg-background">Visual & Design</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-lg px-6 data-[state=active]:bg-background">Pagamentos</TabsTrigger>
-          <TabsTrigger value="finance" className="rounded-lg px-6 data-[state=active]:bg-background">Financeiro</TabsTrigger>
-          <TabsTrigger value="company" className="rounded-lg px-6 data-[state=active]:bg-background">Empresa</TabsTrigger>
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-14 w-full md:w-auto justify-start overflow-x-auto overflow-y-hidden border border-border/50">
+          <TabsTrigger value="visual" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Design</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
+          <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
+          <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="visual" className="space-y-8 outline-none">
+        <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Globe className="h-5 w-5 text-primary" /> Identidade Principal
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+              <CardHeader className="pb-4 bg-primary/5">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                    <Globe className="h-5 w-5" />
+                  </div>
+                  Identidade do Site
                 </CardTitle>
-                <CardDescription>Nome e Logotipo da sua plataforma</CardDescription>
+                <CardDescription className="font-medium">Nome e Logotipo principal da sua plataforma</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 pt-6">
                 <SettingField 
                   s={settings.find(s => s.key === 'site_name')} 
                   onUpdate={handleUpdate} 
                   label={settingNames['site_name']}
                   getIcon={getIcon}
                 />
-                <SettingField 
-                  s={settings.find(s => s.key === 'site_logo_url')} 
-                  onUpdate={handleUpdate} 
-                  label={settingNames['site_logo_url']}
-                  getIcon={getIcon}
-                  onUpload={handleUpload}
-                  uploading={uploading === 'site_logo_url'}
-                />
+                <div className="pt-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_logo_url')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_logo_url']}
+                    getIcon={getIcon}
+                    onUpload={handleUpload}
+                    uploading={uploading === 'site_logo_url'}
+                  />
+                </div>
               </CardContent>
             </Card>
 
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Palette className="h-5 w-5 text-primary" /> Cores do Sistema
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+              <CardHeader className="pb-4 bg-primary/5">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                    <Palette className="h-5 w-5" />
+                  </div>
+                  Personalização de Cores
                 </CardTitle>
-                <CardDescription>Defina a paleta de cores predominante</CardDescription>
+                <CardDescription className="font-medium">Defina a paleta de cores predominante</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 pt-6">
                 <SettingField 
                   s={settings.find(s => s.key === 'primary_color')} 
                   onUpdate={handleUpdate} 
@@ -231,15 +238,18 @@ export default function AdminSettings() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm md:col-span-2">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-lg">
-                  <Layout className="h-5 w-5 text-primary" /> Layout & Carrossel
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm md:col-span-2 border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+              <CardHeader className="pb-4 bg-primary/5">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                    <Layout className="h-5 w-5" />
+                  </div>
+                  Experiência da Home (Landing Page)
                 </CardTitle>
-                <CardDescription>Configurações de exibição da Home</CardDescription>
+                <CardDescription className="font-medium">Configure como seus clientes veem a página inicial</CardDescription>
               </CardHeader>
-              <CardContent>
-                <div className="grid gap-6 md:grid-cols-3">
+              <CardContent className="pt-6">
+                <div className="grid gap-8 md:grid-cols-3">
                   <SettingField 
                     s={settings.find(s => s.key === 'home_hero_style')} 
                     onUpdate={handleUpdate} 
@@ -270,38 +280,46 @@ export default function AdminSettings() {
                     label={settingNames['hero_transition_speed']}
                     getIcon={getIcon}
                   />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'animation_easing')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['animation_easing']}
-                    getIcon={getIcon}
-                    type="select"
-                    options={[
-                      { label: "Suave (Ease-in-out)", value: "cubic-bezier(0.4, 0, 0.2, 1)" },
-                      { label: "Linear", value: "linear" },
-                      { label: "Rebote (Bounce)", value: "cubic-bezier(0.68, -0.55, 0.27, 1.55)" }
-                    ]}
-                  />
-                   <SettingField 
-                    s={settings.find(s => s.key === 'home_marquee_enabled')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['home_marquee_enabled']}
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'home_marquee_text')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['home_marquee_text']}
-                    getIcon={getIcon}
-                  />
+                  
+                  <div className="md:col-span-1">
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_marquee_enabled')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_marquee_enabled']}
+                      getIcon={getIcon}
+                    />
+                  </div>
+                  <div className="md:col-span-2">
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_marquee_text')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_marquee_text']}
+                      getIcon={getIcon}
+                    />
+                  </div>
+                  
+                  <div className="md:col-span-1">
+                     <SettingField 
+                      s={settings.find(s => s.key === 'animation_easing')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['animation_easing']}
+                      getIcon={getIcon}
+                      type="select"
+                      options={[
+                        { label: "Suave (Ease-in-out)", value: "cubic-bezier(0.4, 0, 0.2, 1)" },
+                        { label: "Linear", value: "linear" },
+                        { label: "Rebote (Bounce)", value: "cubic-bezier(0.68, -0.55, 0.27, 1.55)" }
+                      ]}
+                    />
+                  </div>
                 </div>
               </CardContent>
             </Card>
           </div>
         </TabsContent>
 
-        <TabsContent value="payment" className="space-y-6 outline-none">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20">
+        <TabsContent value="payment" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20 rounded-3xl shadow-sm">
              <div className="bg-primary/5 p-6 border-b border-primary/10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
                   <div className="flex items-center gap-4">
@@ -469,27 +487,30 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="finance" className="space-y-6 outline-none">
-           <div className="grid gap-6 md:grid-cols-3">
-              {['cashback_percent', 'affiliate_commission_percent', 'min_withdrawal_amount', 'support_whatsapp'].map(key => (
-                 <SettingField 
-                  key={key}
-                  s={settings.find(s => s.key === key)} 
-                  onUpdate={handleUpdate} 
-                  label={settingNames[key]}
-                  getIcon={getIcon}
-                />
-              ))}
-           </div>
+        <TabsContent value="finance" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+           <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl p-6 shadow-sm border-2">
+             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+                {['cashback_percent', 'affiliate_commission_percent', 'min_withdrawal_amount', 'support_whatsapp'].map(key => (
+                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50 hover:border-primary/20 transition-colors">
+                      <SettingField 
+                        s={settings.find(s => s.key === key)} 
+                        onUpdate={handleUpdate} 
+                        label={settingNames[key]}
+                        getIcon={getIcon}
+                      />
+                   </div>
+                ))}
+             </div>
+           </Card>
         </TabsContent>
 
-        <TabsContent value="company" className="space-y-6 outline-none">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm">
-            <CardHeader>
-              <CardTitle>Informações Legais</CardTitle>
-              <CardDescription>Estes dados aparecem no rodapé e nos termos do site</CardDescription>
+        <TabsContent value="company" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden border-2 shadow-sm">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-xl">Informações Legais & Contato</CardTitle>
+              <CardDescription className="font-medium">Estes dados aparecem no rodapé e nos termos do site para transparência</CardDescription>
             </CardHeader>
-            <CardContent className="grid gap-6 md:grid-cols-2">
+            <CardContent className="grid gap-6 md:grid-cols-2 pt-8">
               {settings.filter(s => s.key.includes('company_')).map(s => (
                  <SettingField 
                   key={s.id}
@@ -535,9 +556,13 @@ function SettingField({
   const renderInput = () => {
     if (isBoolean) {
       return (
-        <div className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border/50">
-          <span className="text-xs font-bold uppercase tracking-wider">{s.value === 'true' ? 'Ativado' : 'Desativado'}</span>
-          <Switch checked={s.value === 'true'} onCheckedChange={(checked) => onUpdate(s.key, checked.toString())} />
+        <div className="flex items-center justify-between p-3.5 rounded-xl bg-secondary/40 border border-border/50 shadow-inner">
+          <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">{s.value === 'true' ? 'Ativado' : 'Desativado'}</span>
+          <Switch 
+            checked={s.value === 'true'} 
+            onCheckedChange={(checked) => onUpdate(s.key, checked.toString())} 
+            className="data-[state=checked]:bg-primary"
+          />
         </div>
       );
     }
@@ -545,12 +570,12 @@ function SettingField({
     if (type === "select") {
       return (
         <Select value={s.value} onValueChange={(val) => onUpdate(s.key, val)}>
-          <SelectTrigger className="w-full bg-secondary/30 border-border/50 h-11 rounded-xl font-bold">
+          <SelectTrigger className="w-full bg-secondary/40 border-border/50 h-11 rounded-xl font-bold shadow-inner">
             <SelectValue placeholder="Selecione uma opção" />
           </SelectTrigger>
-          <SelectContent className="bg-card border-border">
+          <SelectContent className="bg-card border-border rounded-xl">
             {options.map(opt => (
-              <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+              <SelectItem key={opt.value} value={opt.value} className="rounded-lg">{opt.label}</SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -564,19 +589,21 @@ function SettingField({
             <Input 
               value={s.value} 
               onChange={(e) => onUpdate(s.key, e.target.value)} 
-              className="pl-12 bg-secondary/30 border-border/50 h-11 rounded-xl font-mono text-xs uppercase" 
+              className="pl-12 bg-secondary/40 border-border/50 h-11 rounded-xl font-mono text-xs uppercase font-bold shadow-inner" 
             />
             <div 
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg border border-border shadow-sm pointer-events-none"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-lg border border-border shadow-md pointer-events-none"
               style={{ backgroundColor: s.value }}
             />
           </div>
-          <Input 
-            type="color" 
-            value={s.value} 
-            onChange={(e) => onUpdate(s.key, e.target.value)}
-            className="w-12 h-11 p-1 bg-secondary/30 border-border/50 rounded-xl cursor-pointer"
-          />
+          <div className="relative overflow-hidden w-12 h-11 rounded-xl border border-border/50 bg-secondary/40">
+            <Input 
+              type="color" 
+              value={s.value} 
+              onChange={(e) => onUpdate(s.key, e.target.value)}
+              className="absolute inset-[-10px] w-[200%] h-[200%] cursor-pointer border-none"
+            />
+          </div>
         </div>
       );
     }
@@ -585,35 +612,38 @@ function SettingField({
       return (
         <div className="space-y-4">
            {s.value && (
-             <div className="relative group aspect-[3/1] rounded-2xl border-2 border-dashed border-border flex items-center justify-center overflow-hidden bg-secondary/10">
-                <img src={s.value} alt="Preview" className="max-h-full max-w-full object-contain p-4" />
-                <Button 
-                  variant="destructive" 
-                  size="icon" 
-                  className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity rounded-full h-8 w-8"
-                  onClick={() => onUpdate(s.key, "")}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
+             <div className="relative group aspect-video md:aspect-[4/1] rounded-2xl border-2 border-dashed border-primary/20 flex items-center justify-center overflow-hidden bg-primary/5 shadow-inner">
+                <img src={s.value} alt="Preview" className="max-h-full max-w-full object-contain p-4 drop-shadow-md" />
+                <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                  <Button 
+                    variant="destructive" 
+                    size="sm"
+                    className="rounded-xl font-bold shadow-lg"
+                    onClick={() => onUpdate(s.key, "")}
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" /> Remover
+                  </Button>
+                </div>
              </div>
            )}
            <div className="flex gap-2">
               <Input 
                 value={s.value} 
-                placeholder="URL da imagem..."
+                placeholder="Cole a URL ou suba um arquivo..."
                 onChange={(e) => onUpdate(s.key, e.target.value)} 
-                className="flex-1 bg-secondary/30 border-border/50 h-11 rounded-xl" 
+                className="flex-1 bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-medium text-xs" 
               />
               <div className="relative">
                 <Input 
                   type="file" 
                   accept="image/*"
                   onChange={(e) => e.target.files?.[0] && onUpload?.(s.key, e.target.files[0])}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
                   disabled={uploading}
                 />
-                <Button variant="secondary" className="h-11 rounded-xl px-4" disabled={uploading}>
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+                <Button variant="secondary" className="h-11 rounded-xl px-4 font-bold border-2 hover:bg-secondary transition-colors" disabled={uploading}>
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                  {uploading ? "Subindo..." : "Upload"}
                 </Button>
               </div>
            </div>
@@ -626,16 +656,16 @@ function SettingField({
         type={type}
         value={s.value} 
         onChange={(e) => onUpdate(s.key, e.target.value)} 
-        className="bg-secondary/30 border-border/50 h-11 rounded-xl" 
+        className="bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-bold" 
       />
     );
   };
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-3">
       <div className="flex items-center gap-2">
-        <div className="p-1 rounded bg-primary/5 text-primary">{getIcon(s.key)}</div>
-        <Label className="text-xs font-black uppercase tracking-widest text-muted-foreground">{label || s.key}</Label>
+        <div className="p-1.5 rounded-lg bg-primary/5 text-primary ring-1 ring-primary/10 shadow-sm">{getIcon(s.key)}</div>
+        <Label className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/80">{label || s.key}</Label>
       </div>
       {renderInput()}
     </div>
