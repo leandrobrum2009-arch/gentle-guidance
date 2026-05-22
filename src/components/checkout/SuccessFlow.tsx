@@ -108,14 +108,15 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                 )}
 
                 <div className="space-y-4 pt-4">
-                  <div className="p-6 rounded-2xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-center space-y-4">
-                    <div className="flex justify-center gap-2">
-                      <AlertCircle className="h-6 w-6 text-amber-500" />
-                      <h3 className="text-lg font-black uppercase italic tracking-tighter text-amber-500">Presta muita atenção!</h3>
+                  <div className="p-6 rounded-2xl bg-gradient-to-br from-destructive/20 to-orange-500/20 border border-destructive/30 text-center space-y-4 shadow-[0_0_30px_rgba(239,68,68,0.15)]">
+                    <div className="flex justify-center gap-2 items-center">
+                      <AlertCircle className="h-6 w-6 text-destructive animate-pulse" />
+                      <h3 className="text-xl font-black uppercase italic tracking-tighter text-destructive">Presta muita atenção!</h3>
+                      <AlertCircle className="h-6 w-6 text-destructive animate-pulse" />
                     </div>
-                    <p className="text-sm text-white/80">Você acaba de ganhar uma oportunidade única de mudar de vida! Clique no botão abaixo.</p>
-                    <Button onClick={() => setStep(3)} className="w-full h-14 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-[0_10px_20px_rgba(var(--primary-rgb),0.3)] hover:scale-105 transition-transform">
-                      PEGAR AGORA <ArrowRight className="ml-2 h-5 w-5" />
+                    <p className="text-sm text-white/90 font-bold">Você acaba de ganhar uma oportunidade de mudar de vida! Clica no botão abaixo 👇</p>
+                    <Button onClick={() => setStep(3)} className="w-full h-16 rounded-2xl bg-green-500 text-white font-black uppercase italic tracking-widest text-lg shadow-[0_10px_20px_rgba(34,197,94,0.3)] hover:scale-105 transition-transform border-b-4 border-green-700">
+                      PEGAR AGORA
                     </Button>
                   </div>
 
