@@ -43,9 +43,9 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   Premium
                 </Badge>
               )}
-              {progress > 80 && (
+              {progress > 80 && campaign.status === 'active' && (
                 <Badge variant="destructive" className="px-2 py-0.5 text-[8px] font-black uppercase tracking-widest animate-pulse">
-                  Quase Encerrando
+                  Últimas Cotas
                 </Badge>
               )}
               {campaign.status === 'active' && (
