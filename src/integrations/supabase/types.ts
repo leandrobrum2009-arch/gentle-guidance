@@ -162,6 +162,7 @@ export type Database = {
           payment_methods: Json | null
           price_bundles: Json | null
           ranking_enabled: boolean | null
+          ranking_prizes: Json | null
           regulations: string | null
           roulette_enabled: boolean | null
           roulette_free_tickets: number | null
@@ -217,6 +218,7 @@ export type Database = {
           payment_methods?: Json | null
           price_bundles?: Json | null
           ranking_enabled?: boolean | null
+          ranking_prizes?: Json | null
           regulations?: string | null
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null
@@ -272,6 +274,7 @@ export type Database = {
           payment_methods?: Json | null
           price_bundles?: Json | null
           ranking_enabled?: boolean | null
+          ranking_prizes?: Json | null
           regulations?: string | null
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null

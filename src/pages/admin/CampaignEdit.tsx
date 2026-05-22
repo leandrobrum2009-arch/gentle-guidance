@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X, TrendingUp } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -37,6 +37,7 @@ interface CampaignForm {
   vip_group_link: string; vip_group_video_url: string;
   upsell_video_url: string; upsell_offer_text: string;
   upsell_enabled: boolean; upsell_probability: string;
+  ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
 }
 
 const empty: CampaignForm = {
@@ -60,6 +61,7 @@ const empty: CampaignForm = {
   upsell_offer_text: "",
   upsell_enabled: false,
   upsell_probability: "98%",
+  ranking_prizes: [],
 };
 
 export default function AdminCampaignEdit() {
@@ -89,8 +91,9 @@ export default function AdminCampaignEdit() {
       lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], 
       main_prizes: (data.main_prizes as any[]) ?? [], 
       roulette_rules: (data.roulette_rules as any[]) ?? [],
+      ranking_prizes: (data.ranking_prizes as any[]) ?? [],
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
-    } as CampaignForm);
+    } as unknown as CampaignForm);
     setLoading(false);
   };
 
@@ -236,6 +239,10 @@ export default function AdminCampaignEdit() {
 
       if (error) throw error;
       
+      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaign", id] });
+      queryClient.invalidateQueries({ queryKey: ["campaign-ticket-stats", id] });
+
       toast({ title: "Sucesso!", description: "Campanha salva com sucesso." });
       navigate("/admin/campanhas");
     } catch (e: any) {
@@ -608,7 +615,123 @@ export default function AdminCampaignEdit() {
                    </div>
                  )}
                </div>
-            </Card>
+             </Card>
+
+             <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                    <TrendingUp className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold">Sorteio de Maior e Menor Cota</h3>
+                    <p className="text-sm text-muted-foreground">Configure prêmios para quem comprar o maior e o menor número em um período.</p>
+                  </div>
+                  <Button size="sm" onClick={() => set("ranking_prizes", [...form.ranking_prizes, {id: crypto.randomUUID(), title: "", start_date: "", end_date: "", prize_maior: "", prize_menor: "", active: false}])}>
+                    <Plus className="h-4 w-4 mr-2" /> Novo Sorteio
+                  </Button>
+                </div>
+
+                <div className="grid gap-4">
+                  {form.ranking_prizes.map((p, i) => (
+                    <div key={p.id} className="p-6 rounded-2xl border border-border bg-secondary/20 space-y-4">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="flex-1">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Título do Evento</Label>
+                          <Input 
+                            placeholder="Ex: Sorteio das 19h" 
+                            value={p.title} 
+                            onChange={(e) => {
+                              const n = [...form.ranking_prizes];
+                              n[i].title = e.target.value;
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                        </div>
+                        <div className="flex items-center gap-2 pt-5">
+                          <Label className="text-xs font-bold">Ativar</Label>
+                          <Switch 
+                            checked={p.active} 
+                            onCheckedChange={(v) => {
+                              const n = form.ranking_prizes.map((item, idx) => ({
+                                ...item,
+                                active: idx === i ? v : false // Only one can be active at a time
+                              }));
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                          <Button variant="ghost" size="icon" className="text-destructive" onClick={() => {
+                            const n = [...form.ranking_prizes];
+                            n.splice(i, 1);
+                            set("ranking_prizes", n);
+                          }}><Trash2 className="h-4 w-4" /></Button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Início do Período</Label>
+                          <Input 
+                            type="datetime-local" 
+                            value={p.start_date.slice(0, 16)} 
+                            onChange={(e) => {
+                              const n = [...form.ranking_prizes];
+                              n[i].start_date = new Date(e.target.value).toISOString();
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Fim do Período (Sorteio)</Label>
+                          <Input 
+                            type="datetime-local" 
+                            value={p.end_date.slice(0, 16)} 
+                            onChange={(e) => {
+                              const n = [...form.ranking_prizes];
+                              n[i].end_date = new Date(e.target.value).toISOString();
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                        <div className="space-y-2">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Prêmio Maior Cota</Label>
+                          <Input 
+                            placeholder="Ex: R$ 50,00 no PIX" 
+                            value={p.prize_maior} 
+                            onChange={(e) => {
+                              const n = [...form.ranking_prizes];
+                              n[i].prize_maior = e.target.value;
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Prêmio Menor Cota</Label>
+                          <Input 
+                            placeholder="Ex: R$ 50,00 no PIX" 
+                            value={p.prize_menor} 
+                            onChange={(e) => {
+                              const n = [...form.ranking_prizes];
+                              n[i].prize_menor = e.target.value;
+                              set("ranking_prizes", n);
+                            }} 
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {form.ranking_prizes.length === 0 && (
+                    <div className="text-center py-12 border-2 border-dashed rounded-3xl text-muted-foreground bg-secondary/5 hidden md:block">
+                      <TrendingUp className="h-8 w-8 mx-auto mb-2 opacity-20" />
+                      <p className="text-sm font-medium">Nenhum sorteio periódico configurado.</p>
+                      <p className="text-[10px] mt-1">Crie eventos para incentivar vendas em horários específicos!</p>
+                    </div>
+                  )}
+                </div>
+             </Card>
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
