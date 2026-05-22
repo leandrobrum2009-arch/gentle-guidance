@@ -188,7 +188,7 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                 <div className="p-8 space-y-6">
                   <div className="text-center space-y-2">
                     <h2 className="text-3xl font-black uppercase italic tracking-tighter leading-tight">
-                      ATENÇÃO, {order.customer_name?.split(' ')[0]}! <br />
+                      ATENÇÃO, {(order.profiles?.name || "Campeão").split(' ')[0]}! <br />
                       <span className="text-primary">VOCÊ ATIVOU O MÁXIMO DE SORTE!</span>
                     </h2>
                     <p className="text-sm text-white/60 font-medium">
