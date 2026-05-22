@@ -136,23 +136,9 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
  
          <div className="grid gap-8 lg:grid-cols-3">
            <div className="lg:col-span-2 space-y-6">
-             {isPaid ? (
-               <Card className="border-primary/50 bg-primary/5 shadow-xl ring-1 ring-primary/20 overflow-hidden">
-                 <CardContent className="p-8 text-center space-y-6">
-                   <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} className="mx-auto h-20 w-20 rounded-full bg-primary flex items-center justify-center">
-                     <CheckCircle2 className="h-10 w-10 text-primary-foreground" />
-                   </motion.div>
-                   <div className="space-y-2">
-                     <h2 className="text-3xl font-black uppercase italic">Pagamento Confirmado!</h2>
-                      <p className="text-muted-foreground font-medium">Você já está participando do sorteio. Boa sorte!</p>
-                   </div>
-                   <div className="pt-4 flex gap-4 justify-center">
-                     <Link to="/conta"><Button className="rounded-xl font-bold">Ver meus números</Button></Link>
-                     <Link to="/"><Button variant="outline" className="rounded-xl font-bold">Explorar mais</Button></Link>
-                   </div>
-                 </CardContent>
-               </Card>
-             ) : (
+              {isPaid ? (
+                <SuccessFlow order={order} campaign={order.campaigns} />
+              ) : (
                <>
                   {paymentMethod === 'pix' ? (
                     <Card className="border-border/50">
