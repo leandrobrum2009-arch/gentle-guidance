@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, User } from "lucide-react";
+import { Eye, EyeOff, User, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,8 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
+import { useSiteSettings } from "@/hooks/useData";
 
 const Register = () => {
+  const { data: siteSettings } = useSiteSettings();
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
@@ -81,7 +83,16 @@ const Register = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md space-y-6"
         >
-          <div className="text-center">
+          <div className="text-center space-y-4">
+            <div className="flex justify-center mb-6">
+              {siteSettings?.site_logo_url ? (
+                <img src={siteSettings.site_logo_url} alt="Logo" className="h-16 w-auto object-contain" />
+              ) : (
+                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <Ticket className="h-8 w-8 text-primary" />
+                </div>
+              )}
+            </div>
             <h1 className="font-display text-2xl font-bold">Criar Conta</h1>
             <p className="mt-1 text-sm text-muted-foreground">
               Cadastre-se para participar dos sorteios

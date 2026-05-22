@@ -11,8 +11,10 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function AdminSettings() {
+  const queryClient = useQueryClient();
   const [settings, setSettings] = useState<any[]>([]);
   const [initialSettings, setInitialSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -110,6 +112,7 @@ export default function AdminSettings() {
         }
       }
       setInitialSettings(JSON.parse(JSON.stringify(settings)));
+      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
       toast.success("Todas as configurações foram atualizadas!");
     } catch (error) {
       toast.error("Erro ao salvar algumas configurações.");
