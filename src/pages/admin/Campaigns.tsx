@@ -240,8 +240,14 @@ export default function AdminCampaigns() {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
                    return (
-                   <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
-                     <TableCell className="pl-6 py-4">
+                    <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
+                      <TableCell className="pl-6">
+                        <Checkbox 
+                          checked={selectedIds.includes(c.id)}
+                          onCheckedChange={() => toggleSelect(c.id)}
+                        />
+                      </TableCell>
+                      <TableCell className="py-4">
                        <div className="flex items-center gap-4">
                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
                            {c.image_url ? <img src={c.image_url} className="h-full w-full object-cover" /> : c.title.substring(0, 1)}
