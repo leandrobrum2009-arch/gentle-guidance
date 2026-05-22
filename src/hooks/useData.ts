@@ -55,6 +55,7 @@ export interface Campaign {
   show_timer?: boolean;
   timer_end_date?: string | null;
   created_at: string;
+  winners?: Winner[];
 }
 
  export type MysteryBoxRarity = 'common' | 'rare' | 'epic' | 'legendary';
