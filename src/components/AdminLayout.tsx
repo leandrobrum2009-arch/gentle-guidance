@@ -44,6 +44,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
   const { data: siteSettings } = useSiteSettings();
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchProfile = async () => {
+        const { data } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+        setProfile(data);
+      };
+      fetchProfile();
+    }
+  }, [user]);
 
   if (authLoading || roleLoading) {
     return (
