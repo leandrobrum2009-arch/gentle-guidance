@@ -76,8 +76,8 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
       
       {/* Decorative background elements */}
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-0">
-        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/20 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-secondary/20 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '3s' }} />
+        <div className="absolute top-1/4 -left-20 w-80 h-80 bg-primary/10 blur-[100px] rounded-full animate-pulse will-change-opacity" />
+        <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-secondary/10 blur-[100px] rounded-full animate-pulse will-change-opacity" style={{ animationDelay: '3s' }} />
       </div>
     </section>
   );
