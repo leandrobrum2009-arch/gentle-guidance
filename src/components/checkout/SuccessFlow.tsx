@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle2, ArrowRight, Video, Users, ExternalLink, 
   Ticket, Sparkles, Clock, Star, Play, Gift, 
-  ChevronRight, AlertCircle, Share2, Instagram, MessageCircle
+  ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
