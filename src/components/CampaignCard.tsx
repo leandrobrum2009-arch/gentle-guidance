@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles } from "lucide-react";
+import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import type { Campaign } from "@/hooks/useData";
 import CountdownTimer from "./CountdownTimer";
 
