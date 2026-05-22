@@ -55,6 +55,7 @@ export interface Campaign {
   show_timer?: boolean;
   timer_end_date?: string | null;
   created_at: string;
+  winners?: Winner[];
 }
 
  export type MysteryBoxRarity = 'common' | 'rare' | 'epic' | 'legendary';
@@ -222,7 +223,7 @@ export const useCampaigns = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("campaigns")
-        .select("*")
+        .select("*, winners(*)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data as any) as Campaign[];

@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles } from "lucide-react";
+import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 import type { Campaign } from "@/hooks/useData";
 import CountdownTimer from "./CountdownTimer";
 
@@ -12,7 +13,7 @@ interface CampaignCardProps {
 }
 
 const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
-  const isCompleted = campaign.status === "completed";
+  const isCompleted = campaign.status === "completed" || campaign.status === "finished";
   const progress = Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
   
   return (
@@ -43,9 +44,9 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   Premium
                 </Badge>
               )}
-              {progress > 80 && (
+              {progress > 80 && campaign.status === 'active' && (
                 <Badge variant="destructive" className="px-2 py-0.5 text-[8px] font-black uppercase tracking-widest animate-pulse">
-                  Quase Encerrando
+                  Últimas Cotas
                 </Badge>
               )}
               {campaign.status === 'active' && (
@@ -58,7 +59,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   Pausada
                 </Badge>
               )}
-              {campaign.status === 'completed' && (
+              {isCompleted && (
                 <Badge className="bg-blue-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest">
                   Finalizada
                 </Badge>
@@ -80,7 +81,16 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}
                 </div>
                 <div className="flex items-center gap-1 text-[10px] font-bold text-white/70">
-                  <Clock className="h-3 w-3" /> {campaign.draw_date ? "Sorteio em breve" : "Em breve"}
+                  <Clock className="h-3 w-3" /> 
+                  {campaign.status === 'completed' || campaign.status === 'finished' ? (
+                    <span>Sorteado</span>
+                  ) : campaign.status === 'paused' ? (
+                    <span>Pausada</span>
+                  ) : campaign.draw_date ? (
+                    <span>Sorteio em breve</span>
+                  ) : (
+                    <span>Em breve</span>
+                  )}
                 </div>
               </div>
             </div>
@@ -120,28 +130,65 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <span className="text-muted-foreground flex items-center gap-1">
-                  <TrendingUp className="h-3.5 w-3.5" /> {campaign.sold_tickets.toLocaleString()} vendidos
+                  <TrendingUp className="h-3.5 w-3.5" /> {isCompleted ? 'Finalizado' : `${campaign.sold_tickets.toLocaleString()} vendidos`}
                 </span>
-                <span className="text-primary font-black">{progress}%</span>
+                <span className={cn("font-black", isCompleted ? "text-blue-500" : "text-primary")}>
+                  {isCompleted ? '100%' : `${progress}%`}
+                </span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden border border-border">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  className="h-full rounded-full bg-primary shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]"
+                  animate={{ width: isCompleted ? '100%' : `${progress}%` }}
+                  className={cn("h-full rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]", 
+                    isCompleted ? "bg-blue-500" : "bg-primary"
+                  )}
                 />
               </div>
             </div>
 
+            {isCompleted && (
+              <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
+                <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                  <Trophy className="h-5 w-5 text-blue-500" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">
+                    {campaign.winners && campaign.winners.length > 0 ? 'Ganhador(a)' : 'Status'}
+                  </p>
+                  <p className="text-xs font-black text-foreground truncate">
+                    {campaign.winners && campaign.winners.length > 0 
+                      ? (campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name)
+                      : 'Acumulada / Sem Ganhador'
+                    }
+                  </p>
+                </div>
+              </div>
+            )}
+
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2">
                 <div className="h-6 w-6 rounded-full bg-secondary border border-border flex items-center justify-center">
-                  <ShieldCheck className="h-3 w-3 text-muted-foreground" />
+                  {isCompleted ? (
+                    <CheckCircle className="h-3 w-3 text-blue-500" />
+                  ) : (
+                    <ShieldCheck className="h-3 w-3 text-muted-foreground" />
+                  )}
                 </div>
-                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Garantido</span>
+                <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                  {isCompleted ? 'Encerrado' : 'Garantido'}
+                </span>
               </div>
-              <Button size="sm" className="h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 glow-primary border-light-path border-[#22c55e]/30 relative z-10">
-                COMPRAR AGORA
+              <Button 
+                size="sm" 
+                className={cn(
+                  "h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 relative z-10",
+                  isCompleted 
+                    ? "bg-secondary text-muted-foreground border-border hover:bg-secondary/80" 
+                    : "glow-primary border-light-path border-[#22c55e]/30"
+                )}
+              >
+                {isCompleted ? 'VER RESULTADO' : 'COMPRAR AGORA'}
               </Button>
             </div>
           </div>
