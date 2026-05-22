@@ -2,13 +2,70 @@ import AdminLayout from "@/components/AdminLayout";
 import { useAdminNotifications } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Bell, Send, Trash2, Users, User } from "lucide-react";
+import { Loader2, Bell, Send, Trash2, Users, User, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function AdminNotifications() {
-  const { data: notifications, isLoading } = useAdminNotifications();
+  const { data: notifications, isLoading, refetch } = useAdminNotifications();
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    body: "",
+    target_type: "all",
+    user_id: ""
+  });
+
+  const handleSend = async () => {
+    if (!formData.title || !formData.body) {
+      toast.error("Preencha o título e a mensagem");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.from("push_notifications").insert({
+        title: formData.title,
+        body: formData.body,
+        target_type: formData.target_type,
+        user_id: formData.target_type === 'specific' ? formData.user_id : null,
+        sent_at: new Date().toISOString()
+      });
+
+      if (error) throw error;
+
+      toast.success("Notificação enviada!");
+      setIsDialogOpen(false);
+      refetch();
+      setFormData({ title: "", body: "", target_type: "all", user_id: "" });
+    } catch (error: any) {
+      toast.error("Erro ao enviar: " + error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Remover do histórico?")) return;
+    try {
+      const { error } = await supabase.from("push_notifications").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Removida!");
+      refetch();
+    } catch (error: any) {
+      toast.error("Erro ao remover: " + error.message);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -17,9 +74,69 @@ export default function AdminNotifications() {
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Notificações Push</h1>
           <p className="text-muted-foreground mt-1">Envie mensagens instantâneas para seus usuários.</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
-          <Send className="mr-2 h-4 w-4" /> Nova Mensagem
-        </Button>
+        
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
+              <Send className="mr-2 h-4 w-4" /> Nova Mensagem
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>Enviar Notificação</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Título</Label>
+                <Input 
+                  placeholder="Título da mensagem" 
+                  value={formData.title}
+                  onChange={e => setFormData({...formData, title: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Mensagem</Label>
+                <Textarea 
+                  placeholder="Conteúdo da notificação..." 
+                  value={formData.body}
+                  onChange={e => setFormData({...formData, body: e.target.value})}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Público Alvo</Label>
+                <Select 
+                  value={formData.target_type}
+                  onValueChange={v => setFormData({...formData, target_type: v})}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos os Usuários</SelectItem>
+                    <SelectItem value="specific">Usuário Específico</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {formData.target_type === 'specific' && (
+                <div className="space-y-2 animate-in fade-in slide-in-from-top-2">
+                  <Label>ID do Usuário</Label>
+                  <Input 
+                    placeholder="UUID do usuário" 
+                    value={formData.user_id}
+                    onChange={e => setFormData({...formData, user_id: e.target.value})}
+                  />
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
+              <Button onClick={handleSend} disabled={isSaving}>
+                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Send className="mr-2 h-4 w-4" />}
+                Enviar Agora
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <Card className="border-border bg-card/50 backdrop-blur-xl">
@@ -54,10 +171,15 @@ export default function AdminNotifications() {
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground text-xs">
-                      {format(new Date(n.sent_at), 'dd MMM, HH:mm')}
+                      {n.sent_at ? format(new Date(n.sent_at), 'dd MMM, HH:mm') : 'N/A'}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10"
+                        onClick={() => handleDelete(n.id)}
+                      >
                         <Trash2 className="h-4 w-4" />
                       </Button>
                     </TableCell>
