@@ -251,7 +251,7 @@ import { cn } from "@/lib/utils";
                       <input type="file" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
                     </label>
                   </div>
-                  <h2 className="text-lg font-bold">{profile?.name || "Usuário"}</h2>
+                  <h2 className="text-lg font-bold">{profile?.name || user.user_metadata?.name || user?.email?.split('@')[0] || "Usuário"}</h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
                   <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
                     <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
