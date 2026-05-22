@@ -223,7 +223,7 @@ export const useCampaigns = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("campaigns")
-        .select("*")
+        .select("*, winners(*)")
         .order("created_at", { ascending: false });
       if (error) throw error;
       return (data as any) as Campaign[];
