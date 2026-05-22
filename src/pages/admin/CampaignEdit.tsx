@@ -61,6 +61,7 @@ const empty: CampaignForm = {
   upsell_offer_text: "",
   upsell_enabled: false,
   upsell_probability: "98%",
+  ranking_prizes: [],
 };
 
 export default function AdminCampaignEdit() {
