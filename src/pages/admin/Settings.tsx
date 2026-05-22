@@ -566,7 +566,7 @@ function SettingField({
   onUpdate: any, 
   getIcon: any, 
   label: string,
-  type?: "text" | "password" | "select" | "boolean" | "color",
+  type?: "text" | "password" | "select" | "boolean" | "color" | "number",
   options?: { label: string, value: string }[],
   onUpload?: (key: string, file: File) => void,
   uploading?: boolean
