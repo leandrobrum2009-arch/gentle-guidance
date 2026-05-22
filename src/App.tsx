@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
+import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
 import ScratchCard from "./pages/ScratchCard";
 import MysteryBox from "./pages/MysteryBox";
@@ -59,6 +60,7 @@ const App = () => {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="light" storageKey="rifas-pro-theme">
         <TooltipProvider>
+          <SiteSettingsInjector />
           <Toaster />
           <Sonner />
           <LiveNotifications />
