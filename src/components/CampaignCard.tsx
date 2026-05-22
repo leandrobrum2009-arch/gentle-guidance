@@ -59,7 +59,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   Pausada
                 </Badge>
               )}
-              {campaign.status === 'completed' && (
+              {isCompleted && (
                 <Badge className="bg-blue-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest">
                   Finalizada
                 </Badge>
