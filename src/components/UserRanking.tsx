@@ -15,6 +15,12 @@ interface UserRankingProps {
     highestTickets: any[];
     lowestTickets: any[];
     userTickets?: any[];
+    activePrize?: {
+      title: string;
+      prize_maior: string;
+      prize_menor: string;
+      end_date: string;
+    } | null;
   } | null;
 }
 
