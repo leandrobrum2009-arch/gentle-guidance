@@ -35,7 +35,7 @@ export default function AdminMysteryBoxes() {
     try {
       const { error } = await supabase.from("mystery_boxes").insert({
         title: formData.title,
-        rarity: formData.rarity,
+        rarity: formData.rarity as any,
         cost_to_open: parseFloat(formData.cost_to_open),
         prize_value: parseFloat(formData.prize_value),
         is_active: formData.is_active
