@@ -72,7 +72,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               className={cn(
                 "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden shimmer-effect",
                 isSelected
-                  ? "border-primary bg-primary shadow-[0_0_20px_rgba(var(--primary),0.3)] text-white"
+                  ? "border-primary bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] text-white"
                   : "border-primary/20 bg-primary/5 hover:border-primary/50 text-foreground"
               )}
             >
