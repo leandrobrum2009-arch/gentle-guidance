@@ -239,6 +239,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                     <div className="relative p-4 bg-white rounded-2xl shadow-xl ring-1 ring-black/5">
                       <img src={`data:image/png;base64,${order.pix_qr_code_base64}`} alt="QR Code PIX" className="h-44 w-44" />
                     </div>
+                  ) : order?.is_manual ? (
+                    <div className="relative p-12 bg-primary/5 rounded-3xl border-4 border-dashed border-primary/20 flex flex-col items-center gap-3">
+                      <Landmark className="h-16 w-16 text-primary" />
+                      <p className="text-xs font-black uppercase tracking-widest text-primary">Pagamento Manual</p>
+                    </div>
                   ) : (
                     <div className="h-52 w-52 rounded-2xl bg-secondary animate-pulse flex items-center justify-center">
                       <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
