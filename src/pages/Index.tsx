@@ -151,6 +151,7 @@ const Index = () => {
 
   const activeCampaigns = useMemo(() => {
     if (!campaigns) return [];
+    const now = new Date().getTime();
     return campaigns
       .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
       .sort((a, b) => {
@@ -158,9 +159,17 @@ const Index = () => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
         
-        // Second priority: Draw date (closest first)
+        // Second priority: Draw date
         if (a.draw_date && b.draw_date) {
-          return new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime();
+          const aTime = new Date(a.draw_date).getTime();
+          const bTime = new Date(b.draw_date).getTime();
+          const aIsPast = aTime < now;
+          const bIsPast = bTime < now;
+
+          if (aIsPast && !bIsPast) return 1;
+          if (!aIsPast && bIsPast) return -1;
+          
+          return aTime - bTime;
         }
         if (a.draw_date) return -1;
         if (b.draw_date) return 1;
