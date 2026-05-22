@@ -757,7 +757,14 @@ const CampaignDetail = () => {
       <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div 
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden"
+          >
         <div className="flex items-center gap-4">
           <div className="flex-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
