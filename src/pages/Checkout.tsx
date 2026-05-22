@@ -21,24 +21,43 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
    const [order, setOrder] = useState<any>(null);
    const [loading, setLoading] = useState(true);
   const [paymentMethod, setPaymentMethod] = useState<string>("pix");
-  const [processingStripe, setProcessingStripe] = useState(false);
-    const handleStripePayment = async () => {
-      setProcessingStripe(true);
+  const [processingPayment, setProcessingPayment] = useState(false);
+
+    const handleCardPayment = async () => {
+      setProcessingPayment(true);
       try {
-        const { data, error } = await supabase.functions.invoke('stripe-payment', {
-          body: { orderId, path: 'create' },
-        });
-        if (error) throw error;
-        if (data?.url) {
-          window.location.href = data.url;
+        const { data: settingsData } = await supabase.from("site_settings").select("key, value");
+        const settings: Record<string, string> = {};
+        settingsData?.forEach(s => { settings[s.key] = s.value; });
+
+        const provider = settings.active_payment_provider || "mercadopago";
+
+        if (provider === 'mercadopago') {
+          const { data, error } = await supabase.functions.invoke('mercadopago-payment', {
+            body: { orderId, path: 'create' },
+          });
+          if (error) throw error;
+          if (data?.init_point) {
+            window.location.href = data.init_point;
+          } else {
+            toast.error("Erro ao gerar link de pagamento Mercado Pago");
+          }
         } else {
-          toast.error("Erro ao gerar link de pagamento");
+          const { data, error } = await supabase.functions.invoke('stripe-payment', {
+            body: { orderId, path: 'create' },
+          });
+          if (error) throw error;
+          if (data?.url) {
+            window.location.href = data.url;
+          } else {
+            toast.error("Erro ao gerar link de pagamento Stripe");
+          }
         }
       } catch (err: any) {
-        console.error('Stripe error:', err);
+        console.error('Payment error:', err);
         toast.error("Erro ao processar pagamento com cartão");
       } finally {
-        setProcessingStripe(false);
+        setProcessingPayment(false);
       }
     };
 
