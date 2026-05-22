@@ -162,7 +162,7 @@ const Header = () => {
                  <Link to="/conta">
                      <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-border bg-card hover:bg-secondary font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
                       <User className="h-4 w-4 text-primary" />
-                      <span className="hidden lg:inline">{profile?.name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || "Perfil"}</span>
+                      <span className="hidden lg:inline">{profile?.name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || "Perfil"}</span>
                     </Button>
                  </Link>
               </div>
