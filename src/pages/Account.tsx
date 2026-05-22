@@ -130,7 +130,7 @@ import { cn } from "@/lib/utils";
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'RifasPro - Indique e Ganhe!',
+          title: `${siteSettings?.site_name || 'Nossa Empresa'} - Indique e Ganhe!`,
           text: 'Participe dos melhores sorteios com prêmios incríveis!',
           url: link,
         });
