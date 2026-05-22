@@ -14,6 +14,7 @@ import { compressImage } from "@/lib/image-upload";
 import { useSiteSettings } from "@/hooks/useData";
 
 const Register = () => {
+  const { data: siteSettings } = useSiteSettings();
   const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState("");
   const [cpf, setCpf] = useState("");
