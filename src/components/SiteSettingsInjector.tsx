@@ -63,6 +63,11 @@ export const SiteSettingsInjector = () => {
     if (settings.animation_easing) document.documentElement.style.setProperty('--animation-easing', settings.animation_easing);
     if (settings.button_glow_intensity) document.documentElement.style.setProperty('--button-glow-intensity', settings.button_glow_intensity);
     if (settings.title_shimmer_primary) document.documentElement.style.setProperty('--title-shimmer-primary', settings.title_shimmer_primary);
+    
+    // Logo Height
+    if (settings.site_logo_height) document.documentElement.style.setProperty('--logo-height-desktop', `${settings.site_logo_height}px`);
+    if (settings.site_logo_height_mobile) document.documentElement.style.setProperty('--logo-height-mobile', `${settings.site_logo_height_mobile}px`);
+
 
   }, [settings]);
 
