@@ -95,7 +95,7 @@ const Terms = () => {
                   </div>
                   <div className="space-y-4 text-muted-foreground leading-relaxed pl-13">
                     <p>
-                      Ao ser contemplado em qualquer premiação promovida pela {siteSettings?.site_name || "RifasPro"} — incluindo, mas não se limitando a prêmio principal, prêmios instantâneos, cotas premiadas, roletas, raspadinhas, caixinhas, presentes ou quaisquer outras dinâmicas promocionais — o ganhador obriga-se a enviar um vídeo de depoimento, conforme orientações fornecidas pela equipe da {siteSettings?.site_name || "RifasPro"}.
+                      Ao ser contemplado em qualquer premiação promovida pela {siteSettings?.site_name || "nossa plataforma"} — incluindo, mas não se limitando a prêmio principal, prêmios instantâneos, cotas premiadas, roletas, raspadinhas, caixinhas, presentes ou quaisquer outras dinâmicas promocionais — o ganhador obriga-se a enviar um vídeo de depoimento, conforme orientações fornecidas pela equipe da {siteSettings?.site_name || "nossa equipe"}.
                     </p>
                     <div className="p-6 rounded-3xl bg-primary/5 border border-primary/20 text-foreground">
                       <p className="text-sm font-black uppercase tracking-widest text-primary mb-2">📌 Condição Obrigatória</p>
