@@ -81,27 +81,27 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-6 overflow-y-auto p-4 custom-scrollbar">
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 scrollbar-hide">
         {navItems.map((group) => (
-          <div key={group.category} className="space-y-2">
-            <h3 className="px-3 text-[10px] font-black uppercase tracking-wider text-sidebar-foreground/80">
+          <div key={group.category} className="space-y-1">
+            <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
               {group.category}
             </h3>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {group.items.map((item) => {
                 const active = pathname === item.url;
                 return (
                   <Link
                     key={item.url}
                     to={item.url}
-                    className={`group flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-all duration-200 ${
+                    className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                       active
-                        ? "bg-sidebar-accent text-sidebar-accent-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
-                        : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
                     }`}
                   >
-                    <item.icon className={`h-4.5 w-4.5 transition-colors ${active ? "text-sidebar-primary" : "text-sidebar-foreground/80 group-hover:text-sidebar-primary"}`} />
-                    <span className="font-medium">{item.title}</span>
+                    <item.icon className={`h-4 w-4 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
+                    <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
                   </Link>
                 );
               })}
