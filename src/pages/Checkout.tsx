@@ -225,12 +225,12 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                           <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Total</p>
                           <p className="text-3xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
                         </div>
-                        <Button 
-                          className="w-full h-14 rounded-xl gap-2 font-black uppercase text-lg shadow-lg shadow-primary/20" 
-                          onClick={handleStripePayment}
-                          disabled={processingStripe}
-                        >
-                          {processingStripe ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
+                         <Button 
+                           className="w-full h-14 rounded-xl gap-2 font-black uppercase text-lg shadow-lg shadow-primary/20" 
+                           onClick={handleCardPayment}
+                           disabled={processingPayment}
+                         >
+                           {processingPayment ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
                           Pagar Agora
                         </Button>
                         <p className="text-[10px] font-bold uppercase text-muted-foreground">Sua transação é protegida por criptografia de ponta.</p>
