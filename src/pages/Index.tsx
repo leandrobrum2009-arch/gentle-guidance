@@ -79,7 +79,8 @@ const hexToHsl = (hex: string) => {
 };
 
 const Index = () => {
-  const { data: campaigns, isLoading: loadingCampaigns } = useCampaigns();
+  const queryClient = useQueryClient();
+  const { data: campaigns, isLoading: loadingCampaigns, isError, error } = useCampaigns();
   const { data: winners, isLoading: loadingWinners } = useWinners();
   const { data: siteSettings } = useSiteSettings();
   const { data: isAdmin } = useIsAdmin();
@@ -236,8 +237,28 @@ const Index = () => {
         )}
 
        {loadingCampaigns ? (
-        <div className="flex h-[90vh] items-center justify-center">
-          <Loader2 className="h-10 w-10 animate-spin text-primary" />
+        <div className="flex h-[80vh] flex-col items-center justify-center gap-4">
+          <Loader2 className="h-12 w-12 animate-spin text-primary" />
+          <p className="text-xs font-black uppercase tracking-widest text-muted-foreground animate-pulse">Carregando Oportunidades...</p>
+        </div>
+      ) : isError ? (
+        <div className="flex h-[80vh] flex-col items-center justify-center gap-6 text-center px-6">
+          <div className="h-20 w-20 rounded-full bg-rose-500/10 flex items-center justify-center">
+            <Activity className="h-10 w-10 text-rose-500" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase italic tracking-tighter">Opa! Algo deu errado</h2>
+            <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest max-w-md">
+              Não conseguimos carregar as rifas no momento. Por favor, tente atualizar a página.
+            </p>
+            {isAdmin && <pre className="text-[10px] bg-secondary p-4 rounded-xl mt-4 max-w-full overflow-auto">{(error as any)?.message}</pre>}
+          </div>
+          <Button 
+            className="h-14 rounded-2xl px-10 font-black uppercase italic tracking-widest glow-primary" 
+            onClick={() => window.location.reload()}
+          >
+            TENTAR NOVAMENTE
+          </Button>
         </div>
       ) : (
         <>
@@ -339,23 +360,38 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[400px]">
                     {activeCampaigns.length > 0 ? (
                       activeCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
                       ))
                     ) : (
-                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-4">
-                        <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center">
-                          <Trophy className="h-8 w-8 text-muted-foreground opacity-20" />
+                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
+                        <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
+                          <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
                         </div>
-                        <div className="space-y-1">
-                          <h3 className="font-display text-xl font-black uppercase italic tracking-tighter">Nenhum sorteio ativo</h3>
-                          <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Fique de olho! Novas oportunidades estão chegando.</p>
+                        <div className="space-y-2">
+                          <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
+                          <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
                         </div>
-                        <Button variant="outline" size="sm" className="h-10 rounded-xl px-8 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-[10px]" onClick={() => window.location.reload()}>
-                          ATUALIZAR PÁGINA
-                        </Button>
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <Button 
+                            variant="outline" 
+                            size="lg" 
+                            className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
+                            onClick={() => {
+                              queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+                              window.location.reload();
+                            }}
+                          >
+                            <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
+                          </Button>
+                          <Link to="/ganhadores">
+                            <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
+                              VER GANHADORES
+                            </Button>
+                          </Link>
+                        </div>
                       </div>
                     )}
                   </div>
