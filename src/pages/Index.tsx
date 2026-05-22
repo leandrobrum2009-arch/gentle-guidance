@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
-  ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
+  ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
