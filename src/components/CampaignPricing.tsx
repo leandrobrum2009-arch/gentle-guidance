@@ -28,16 +28,17 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
     return DEFAULT_BUNDLES;
   }, [campaign.price_bundles]);
 
+  const unitPrice = Number(campaign.ticket_price);
+
   const selectedBundle = useMemo(() => {
-    return bundles.find(b => Number(b.quantity) === quantity);
+    return bundles.find(b => Number(b.quantity) === Number(quantity));
   }, [quantity, bundles]);
 
   const totalPrice = useMemo(() => {
-    if (selectedBundle) return selectedBundle.price;
-    return quantity * Number(campaign.ticket_price);
-  }, [quantity, selectedBundle, campaign.ticket_price]);
-
-  const unitPrice = Number(campaign.ticket_price);
+    if (selectedBundle) return Number(selectedBundle.price);
+    const qty = Number(quantity) || 0;
+    return qty * unitPrice;
+  }, [quantity, selectedBundle, unitPrice]);
 
   const handleManualChange = (val: string) => {
     const num = parseInt(val) || 0;
@@ -65,7 +66,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
       {/* Discount Bundles Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {bundles.map((bundle) => {
-          const isSelected = quantity === bundle.quantity;
+          const isSelected = Number(quantity) === Number(bundle.quantity);
           const discountPercent = Math.round((1 - (bundle.price / (bundle.quantity * unitPrice))) * 100);
           
           return (

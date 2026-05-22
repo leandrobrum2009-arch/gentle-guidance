@@ -185,7 +185,8 @@ const Index = () => {
         if (a.draw_date) return -1;
         if (b.draw_date) return 1;
         
-        return 0;
+        // Third priority: Most recent
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
   }, [campaigns]);
 
@@ -203,8 +204,15 @@ const Index = () => {
   }, [campaigns]);
 
   const featuredCampaign = activeCampaigns[0];
-  const otherCampaigns = activeCampaigns.filter(c => c.id !== featuredCampaign?.id);
-  const endingSoon = activeCampaigns.filter(c => c.sold_tickets / c.total_tickets > 0.8);
+  // If there's only one campaign, show it in the grid too so it's not empty below
+  const otherCampaigns = activeCampaigns.length > 1 
+    ? activeCampaigns.filter(c => c.id !== featuredCampaign?.id)
+    : activeCampaigns;
+  const endingSoon = activeCampaigns.filter(c => {
+    const total = Number(c.total_tickets) || 1;
+    const sold = Number(c.sold_tickets) || 0;
+    return sold / total > 0.8;
+  });
 
    return (
      <div className="min-h-screen bg-background relative overflow-hidden">
@@ -343,8 +351,8 @@ const Index = () => {
                    badge="Em Destaque"
                  />
                   <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    {otherCampaigns.length > 0 ? (
-                      otherCampaigns.map((campaign, i) => (
+                    {activeCampaigns.length > 0 ? (
+                      activeCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
                       ))
                     ) : (

@@ -16,10 +16,12 @@ interface PaymentModalProps {
 export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }: PaymentModalProps) => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [generatingPix, setGeneratingPix] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120); 
   const [status, setStatus] = useState<'pending' | 'paid' | 'expired'>('pending');
   const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
+  const [pixError, setPixError] = useState<string | null>(null);
 
   const fetchOrder = useCallback(async (retryCount = 0) => {
     if (!orderId) return;
@@ -52,21 +54,30 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       setLoading(false);
 
       if (data.payment_status === 'pending' && !data.pix_code) {
+        setGeneratingPix(true);
+        setPixError(null);
         try {
           const { data: pixData, error: pixError } = await supabase.functions.invoke('pix-payment', {
             body: { orderId, path: 'create' },
             method: 'POST'
           });
           
-          if (!pixError && pixData) {
+          if (pixError) throw pixError;
+          
+          if (pixData) {
             setOrder((prev: any) => ({ 
               ...prev, 
               pix_code: pixData.pix_code, 
-              pix_qr_code_base64: pixData.pix_qr_code_base64 
+              pix_qr_code_base64: pixData.pix_qr_code_base64,
+              is_manual: pixData.is_manual,
+              pix_name: pixData.pix_name
             }));
           }
-        } catch (err) {
+        } catch (err: any) {
           console.error('Error generating PIX:', err);
+          setPixError(err.message || "Não foi possível gerar o código PIX. Tente novamente.");
+        } finally {
+          setGeneratingPix(false);
         }
       }
     } catch (err) {
@@ -181,7 +192,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[450px] bg-card border-border rounded-3xl p-0 overflow-hidden">
         <AnimatePresence mode="wait">
-          {loading ? (
+          {loading || generatingPix ? (
             <motion.div 
               key="loading"
               initial={{ opacity: 0 }} 
@@ -190,7 +201,25 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               className="p-12 flex flex-col items-center justify-center gap-4"
             >
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
-              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground animate-pulse">Gerando seu PIX...</p>
+              <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground animate-pulse">
+                {loading ? "Carregando pedido..." : "Gerando seu PIX..."}
+              </p>
+            </motion.div>
+          ) : pixError ? (
+            <motion.div 
+              key="error"
+              initial={{ opacity: 0, scale: 0.9 }} 
+              animate={{ opacity: 1, scale: 1 }}
+              className="p-10 text-center space-y-6"
+            >
+              <div className="mx-auto h-20 w-20 rounded-full bg-rose-500/20 flex items-center justify-center border-2 border-rose-500/30">
+                <XCircle className="h-10 w-10 text-rose-500" />
+              </div>
+              <div className="space-y-2">
+                <h2 className="text-2xl font-black uppercase italic tracking-tighter">ERRO NO PAGAMENTO</h2>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">{pixError}</p>
+              </div>
+              <Button className="w-full h-12 rounded-xl" onClick={() => fetchOrder()}>TENTAR NOVAMENTE</Button>
             </motion.div>
           ) : status === 'paid' ? (
             <motion.div 
