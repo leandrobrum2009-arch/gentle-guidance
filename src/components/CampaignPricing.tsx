@@ -184,7 +184,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
 
         <Button
           size="lg"
-          className="w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary),0.2)] transition-all active:scale-[0.98]"
+          className={cn(
+            "w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary),0.2)] transition-all active:scale-[0.98] border-light-path",
+            quantity > 0 && campaign.status === "active" && !isPurchasing && "animate-pulse-glow border-light-always"
+          )}
           disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
           onClick={() => onBuy(quantity)}
         >
