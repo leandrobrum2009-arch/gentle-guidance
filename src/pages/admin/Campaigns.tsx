@@ -335,9 +335,9 @@ export default function AdminCampaigns() {
                              <DropdownMenuItem onClick={() => window.open(`/campanha/${c.id}`, '_blank')} className="gap-2 cursor-pointer">
                                <ExternalLink className="h-4 w-4 text-muted-foreground" /> Ver no Site
                              </DropdownMenuItem>
-                             <DropdownMenuItem onClick={() => duplicate(c)} className="gap-2 cursor-pointer">
-                               <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifas
-                             </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => duplicate(c.id)} className="gap-2 cursor-pointer">
+                                <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifa
+                              </DropdownMenuItem>
                              <DropdownMenuSeparator className="bg-secondary/20" />
                              <DropdownMenuItem onClick={() => remove(c.id)} className="gap-2 cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
                                <Trash2 className="h-4 w-4" /> Excluir Definitivamente
