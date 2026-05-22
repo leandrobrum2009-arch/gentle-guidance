@@ -21,7 +21,8 @@ import { useAuth } from "@/contexts/AuthContext";
     useUserMysteryBoxWins,
     markNotificationsAsRead,
     useUserReferrals,
-    useAffiliateCommissions
+    useAffiliateCommissions,
+    useSiteSettings
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
