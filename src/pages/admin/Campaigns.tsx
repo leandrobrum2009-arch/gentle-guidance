@@ -140,12 +140,25 @@ export default function AdminCampaigns() {
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Campanhas</h1>
           <p className="text-muted-foreground mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
         </div>
-        <Button 
-          onClick={() => navigate("/admin/campanhas/nova")}
-          className="bg-primary hover:bg-primary/90 text-foreground font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
-        >
-          <Plus className="mr-2 h-5 w-5" /> Nova Campanha
-        </Button>
+        <div className="flex items-center gap-3">
+          {selectedIds.length > 0 && (
+            <Button 
+              variant="outline" 
+              onClick={bulkDuplicate}
+              disabled={saving}
+              className="border-primary/50 text-primary hover:bg-primary/10 font-bold h-12 px-6 rounded-xl"
+            >
+              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
+              Duplicar Selecionadas ({selectedIds.length})
+            </Button>
+          )}
+          <Button 
+            onClick={() => navigate("/admin/campanhas/nova")}
+            className="bg-primary hover:bg-primary/90 text-foreground font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+          >
+            <Plus className="mr-2 h-5 w-5" /> Nova Campanha
+          </Button>
+        </div>
       </div>
 
       <Card className="border-border bg-card/50 backdrop-blur-xl overflow-hidden">
