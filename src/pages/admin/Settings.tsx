@@ -112,6 +112,7 @@ export default function AdminSettings() {
         }
       }
       setInitialSettings(JSON.parse(JSON.stringify(settings)));
+      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
       toast.success("Todas as configurações foram atualizadas!");
     } catch (error) {
       toast.error("Erro ao salvar algumas configurações.");
