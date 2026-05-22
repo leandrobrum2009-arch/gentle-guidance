@@ -82,7 +82,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 </div>
                 <div className="flex items-center gap-1 text-[10px] font-bold text-white/70">
                   <Clock className="h-3 w-3" /> 
-                  {campaign.status === 'completed' ? (
+                  {campaign.status === 'completed' || campaign.status === 'finished' ? (
                     <span>Sorteado</span>
                   ) : campaign.status === 'paused' ? (
                     <span>Pausada</span>
