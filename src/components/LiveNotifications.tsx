@@ -36,7 +36,7 @@ const LiveNotifications = () => {
     // Get last 3 paid orders
     const { data: recentOrders } = await supabase
       .from('orders')
-      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .select('*, profiles!user_id(name, avatar_url), campaigns(title)')
       .eq('payment_status', 'paid')
       .order('created_at', { ascending: false })
       .limit(3);
@@ -44,7 +44,7 @@ const LiveNotifications = () => {
     // Get last 2 winners
     const { data: recentWinners } = await supabase
       .from('winners')
-      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .select('*, profiles!user_id(name, avatar_url), campaigns(title)')
       .order('created_at', { ascending: false })
       .limit(2);
 
@@ -61,7 +61,7 @@ const LiveNotifications = () => {
           avatarUrl: (item as any).profiles?.avatar_url,
           message: item.type === 'purchase' 
             ? `acabou de comprar ${(item as any).quantity} cotas` 
-            : `ganhou ${(item as any).prize_description} na cota ${(item as any).winning_ticket}`,
+            : `ganhou ${(item as any).prize_description} na cota ${(item as any).ticket_number}`,
           campaignTitle: (item as any).campaigns?.title,
         });
       }, index * 3000);
@@ -127,7 +127,7 @@ const LiveNotifications = () => {
               type: 'winner',
               userName: profile.name || 'Alguém',
               avatarUrl: profile.avatar_url,
-              message: `ganhou ${payload.new.prize_description} na cota ${payload.new.winning_ticket}`,
+              message: `ganhou ${payload.new.prize_description} na cota ${payload.new.ticket_number}`,
               campaignTitle: campaign.title,
             });
           }
