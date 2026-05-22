@@ -203,7 +203,7 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                         <span>Probabilidade de sair a cota premiada</span>
                         <span className="text-primary">{campaign.upsell_probability || "98%"}</span>
                       </div>
-                      <Progress value={98} className="h-3 bg-white/5" indicatorClassName="bg-gradient-to-r from-primary to-orange-500" />
+                      <Progress value={98} className="h-4 bg-white/5 border border-white/10" indicatorClassName="bg-gradient-to-r from-destructive via-orange-500 to-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
                       <p className="text-[10px] font-bold text-destructive uppercase tracking-widest text-center italic">Risco altíssimo — Compre agora por esta página</p>
                     </div>
 
