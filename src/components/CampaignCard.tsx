@@ -147,14 +147,21 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               </div>
             </div>
 
-            {campaign.status === 'completed' && campaign.winners && campaign.winners.length > 0 && (
+            {campaign.status === 'completed' && (
               <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
                 <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
                   <Trophy className="h-5 w-5 text-blue-500" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">Ganhador(a)</p>
-                  <p className="text-xs font-black text-foreground truncate">{campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name}</p>
+                  <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">
+                    {campaign.winners && campaign.winners.length > 0 ? 'Ganhador(a)' : 'Status'}
+                  </p>
+                  <p className="text-xs font-black text-foreground truncate">
+                    {campaign.winners && campaign.winners.length > 0 
+                      ? (campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name)
+                      : 'Acumulada / Sem Ganhador'
+                    }
+                  </p>
                 </div>
               </div>
             )}
