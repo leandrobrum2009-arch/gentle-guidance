@@ -666,7 +666,7 @@ export const useAffiliateCommissions = (affiliateId: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("affiliate_commissions")
-        .select("*, orders!fk_orders_campaigns(campaigns!fk_winners_campaigns(title))")
+        .select("*, orders(campaigns(title))")
         .eq("affiliate_id", affiliateId)
         .order("created_at", { ascending: false });
       if (error) throw error;
