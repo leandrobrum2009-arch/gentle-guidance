@@ -301,113 +301,169 @@ export default function AdminSettings() {
         </TabsContent>
 
         <TabsContent value="payment" className="space-y-6 outline-none">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden">
-             <div className="bg-primary/10 p-4 border-b border-primary/20 flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <CreditCard className="h-6 w-6 text-primary" />
-                  <div>
-                    <h3 className="font-bold text-sm">Controle de Pagamentos</h3>
-                    <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">Escolha qual meio de pagamento será utilizado</p>
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20">
+             <div className="bg-primary/5 p-6 border-b border-primary/10">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary shadow-inner">
+                      <CreditCard className="h-6 w-6" />
+                    </div>
+                    <div>
+                      <h3 className="font-display text-xl font-bold tracking-tight">Método de Pagamento Ativo</h3>
+                      <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Defina como seus clientes irão pagar pelas cotas</p>
+                    </div>
                   </div>
-                </div>
-                <div className="w-64">
-                   <SettingField 
-                    s={settings.find(s => s.key === 'active_payment_provider')} 
-                    onUpdate={handleUpdate} 
-                    label=""
-                    getIcon={() => null}
-                    type="select"
-                    options={[
-                      { label: "Mercado Pago (Recomendado)", value: "mercadopago" },
-                      { label: "Paggue", value: "paggue" },
-                      { label: "Manual (Apenas PIX)", value: "manual" }
-                    ]}
-                  />
+                  <div className="w-full md:w-80">
+                     <SettingField 
+                      s={settings.find(s => s.key === 'active_payment_provider')} 
+                      onUpdate={handleUpdate} 
+                      label=""
+                      getIcon={() => null}
+                      type="select"
+                      options={[
+                        { label: "Mercado Pago (Oficial / Automático)", value: "mercadopago" },
+                        { label: "Paggue (PIX Automático)", value: "paggue" },
+                        { label: "Manual (Envio de Comprovante)", value: "manual" }
+                      ]}
+                    />
+                  </div>
                 </div>
              </div>
              
-             <div className="p-6 grid gap-8 lg:grid-cols-3">
-                {/* Mercado Pago */}
-                <div className="space-y-4 p-5 rounded-2xl bg-secondary/20 border border-border/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-full bg-[#009EE3] flex items-center justify-center text-white">
-                      <span className="font-black">MP</span>
+             <div className="p-8">
+                <div className="grid gap-8 lg:grid-cols-3">
+                  {/* Mercado Pago */}
+                  <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
+                    settings.find(s => s.key === 'active_payment_provider')?.value === 'mercadopago' 
+                    ? 'bg-primary/5 border-primary shadow-xl shadow-primary/5' 
+                    : 'bg-secondary/20 border-border/50 opacity-60 grayscale-[0.5]'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-[#009EE3] flex items-center justify-center text-white shadow-lg">
+                          <span className="font-black text-lg">MP</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base">Mercado Pago</h4>
+                          <div className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse"></span>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">Automático</p>
+                          </div>
+                        </div>
+                      </div>
+                      {settings.find(s => s.key === 'active_payment_provider')?.value === 'mercadopago' && (
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Check className="h-5 w-5 stroke-[3px]" />
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-sm">Mercado Pago</h4>
-                      <p className="text-[10px] text-muted-foreground font-bold">API Oficial</p>
+                    
+                    <div className="space-y-4 pt-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'mercadopago_public_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Public Key (APP_USR-...)"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'mercadopago_access_token')} 
+                        onUpdate={handleUpdate} 
+                        label="Access Token (TEST-... ou APP_USR-...)"
+                        getIcon={getIcon}
+                        type="password"
+                      />
                     </div>
                   </div>
-                  <SettingField 
-                    s={settings.find(s => s.key === 'mercadopago_public_key')} 
-                    onUpdate={handleUpdate} 
-                    label="Public Key"
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'mercadopago_access_token')} 
-                    onUpdate={handleUpdate} 
-                    label="Access Token"
-                    getIcon={getIcon}
-                    type="password"
-                  />
-                </div>
 
-                {/* Paggue */}
-                <div className="space-y-4 p-5 rounded-2xl bg-secondary/20 border border-border/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-full bg-emerald-500 flex items-center justify-center text-white">
-                      <span className="font-black">PG</span>
+                  {/* Paggue */}
+                  <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
+                    settings.find(s => s.key === 'active_payment_provider')?.value === 'paggue' 
+                    ? 'bg-primary/5 border-primary shadow-xl shadow-primary/5' 
+                    : 'bg-secondary/20 border-border/50 opacity-60 grayscale-[0.5]'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-emerald-500 flex items-center justify-center text-white shadow-lg">
+                          <span className="font-black text-lg">PG</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base">Paggue</h4>
+                          <div className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">PIX Direto</p>
+                          </div>
+                        </div>
+                      </div>
+                      {settings.find(s => s.key === 'active_payment_provider')?.value === 'paggue' && (
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Check className="h-5 w-5 stroke-[3px]" />
+                        </div>
+                      )}
                     </div>
-                    <div>
-                      <h4 className="font-bold text-sm">Paggue</h4>
-                      <p className="text-[10px] text-muted-foreground font-bold">Integração PIX</p>
-                    </div>
-                  </div>
-                  <SettingField 
-                    s={settings.find(s => s.key === 'paggue_client_key')} 
-                    onUpdate={handleUpdate} 
-                    label="Client Key"
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'paggue_client_secret')} 
-                    onUpdate={handleUpdate} 
-                    label="Client Secret"
-                    getIcon={getIcon}
-                    type="password"
-                  />
-                </div>
 
-                {/* Manual */}
-                <div className="space-y-4 p-5 rounded-2xl bg-secondary/20 border border-border/50">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="h-10 w-10 rounded-full bg-amber-500 flex items-center justify-center text-white">
-                      <Smartphone className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm">Pagamento Manual</h4>
-                      <p className="text-[10px] text-muted-foreground font-bold">Confirmação via Chat</p>
+                    <div className="space-y-4 pt-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'paggue_client_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Key"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'paggue_client_secret')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Secret"
+                        getIcon={getIcon}
+                        type="password"
+                      />
                     </div>
                   </div>
-                  <SettingField 
-                    s={settings.find(s => s.key === 'manual_payment_enabled')} 
-                    onUpdate={handleUpdate} 
-                    label="Habilitar PIX Manual"
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'manual_payment_pix_key')} 
-                    onUpdate={handleUpdate} 
-                    label="Chave PIX"
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'manual_payment_pix_name')} 
-                    onUpdate={handleUpdate} 
-                    label="Nome do Titular"
-                    getIcon={getIcon}
-                  />
+
+                  {/* Manual */}
+                  <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
+                    settings.find(s => s.key === 'active_payment_provider')?.value === 'manual' 
+                    ? 'bg-primary/5 border-primary shadow-xl shadow-primary/5' 
+                    : 'bg-secondary/20 border-border/50 opacity-60 grayscale-[0.5]'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-amber-500 flex items-center justify-center text-white shadow-lg">
+                          <Smartphone className="h-6 w-6" />
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base">PIX Manual</h4>
+                          <div className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-amber-400 animate-pulse"></span>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">Comprovante</p>
+                          </div>
+                        </div>
+                      </div>
+                      {settings.find(s => s.key === 'active_payment_provider')?.value === 'manual' && (
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Check className="h-5 w-5 stroke-[3px]" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'manual_payment_pix_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Chave PIX para Recebimento"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'manual_payment_pix_name')} 
+                        onUpdate={handleUpdate} 
+                        label="Nome do Titular da Conta"
+                        getIcon={getIcon}
+                      />
+                      <div className="bg-amber-500/10 p-3 rounded-xl border border-amber-500/20">
+                        <p className="text-[10px] text-amber-700 leading-tight font-medium">
+                          Neste modo, o cliente precisa enviar o comprovante via WhatsApp para confirmação manual.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
              </div>
           </Card>
