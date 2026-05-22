@@ -28,6 +28,8 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
     return DEFAULT_BUNDLES;
   }, [campaign.price_bundles]);
 
+  const unitPrice = Number(campaign.ticket_price);
+
   const selectedBundle = useMemo(() => {
     return bundles.find(b => Number(b.quantity) === Number(quantity));
   }, [quantity, bundles]);
@@ -37,8 +39,6 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
     const qty = Number(quantity) || 0;
     return qty * unitPrice;
   }, [quantity, selectedBundle, unitPrice]);
-
-  const unitPrice = Number(campaign.ticket_price);
 
   const handleManualChange = (val: string) => {
     const num = parseInt(val) || 0;
