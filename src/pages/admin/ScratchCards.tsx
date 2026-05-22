@@ -3,14 +3,68 @@ import { useAdminScratchCards, useAdminScratchCardStats } from "@/hooks/useAdmin
 import { useGlobalScratchCardScratches } from "@/hooks/useData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Plus, Pencil, Trash2, Layout, History, Trophy, TrendingUp } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Layout, History, Trophy, TrendingUp, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function AdminScratchCards() {
-  const { data: prizes, isLoading } = useAdminScratchCards();
+  const { data: prizes, isLoading, refetch } = useAdminScratchCards();
   const { data: stats, isLoading: isLoadingStats } = useAdminScratchCardStats();
   const { data: recentScratches } = useGlobalScratchCardScratches(10);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    label: "",
+    prize_type: "fixed_value",
+    value: "0",
+    chance_percent: "1",
+    is_active: true
+  });
+
+  const handleCreate = async () => {
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.from("scratch_card_prizes").insert({
+        label: formData.label,
+        prize_type: formData.prize_type,
+        value: parseFloat(formData.value),
+        chance_percent: parseFloat(formData.chance_percent),
+        is_active: formData.is_active
+      });
+
+      if (error) throw error;
+
+      toast.success("Prêmio criado com sucesso!");
+      setIsDialogOpen(false);
+      refetch();
+      setFormData({ label: "", prize_type: "fixed_value", value: "0", chance_percent: "1", is_active: true });
+    } catch (error: any) {
+      toast.error("Erro ao criar prêmio: " + error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir este prêmio?")) return;
+    
+    try {
+      const { error } = await supabase.from("scratch_card_prizes").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Prêmio excluído!");
+      refetch();
+    } catch (error: any) {
+      toast.error("Erro ao excluir: " + error.message);
+    }
+  };
 
   return (
     <AdminLayout>
@@ -21,9 +75,71 @@ export default function AdminScratchCards() {
           </h1>
           <p className="text-muted-foreground mt-1">Configure prêmios e probabilidades das raspadinhas.</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
-          <Plus className="mr-2 h-4 w-4" /> Novo Prêmio
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
+              <Plus className="mr-2 h-4 w-4" /> Novo Prêmio
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>Novo Prêmio de Raspadinha</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Nome do Prêmio</Label>
+                <Input 
+                  placeholder="Ex: R$ 50,00 no PIX" 
+                  value={formData.label}
+                  onChange={e => setFormData({...formData, label: e.target.value})}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tipo</Label>
+                  <Select 
+                    value={formData.prize_type}
+                    onValueChange={v => setFormData({...formData, prize_type: v})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fixed_value">Valor Fixo</SelectItem>
+                      <SelectItem value="multiplier">Multiplicador</SelectItem>
+                      <SelectItem value="bonus">Bônus</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Valor (R$)</Label>
+                  <Input 
+                    type="number"
+                    value={formData.value}
+                    onChange={e => setFormData({...formData, value: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Probabilidade (%)</Label>
+                <Input 
+                  type="number"
+                  step="0.1"
+                  value={formData.chance_percent}
+                  onChange={e => setFormData({...formData, chance_percent: e.target.value})}
+                />
+                <p className="text-[10px] text-muted-foreground">A soma de todas as probabilidades não deve ultrapassar 100%.</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
+              <Button onClick={handleCreate} disabled={isSaving}>
+                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                Criar Prêmio
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -108,7 +224,12 @@ export default function AdminScratchCards() {
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10"
+                          onClick={() => handleDelete(p.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </TableCell>
