@@ -33,9 +33,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
   }, [quantity, bundles]);
 
   const totalPrice = useMemo(() => {
-    if (selectedBundle) return selectedBundle.price;
-    return quantity * Number(campaign.ticket_price);
-  }, [quantity, selectedBundle, campaign.ticket_price]);
+    if (selectedBundle) return Number(selectedBundle.price);
+    const qty = Number(quantity) || 0;
+    return qty * unitPrice;
+  }, [quantity, selectedBundle, unitPrice]);
 
   const unitPrice = Number(campaign.ticket_price);
 
