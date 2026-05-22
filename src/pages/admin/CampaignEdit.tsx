@@ -239,6 +239,10 @@ export default function AdminCampaignEdit() {
 
       if (error) throw error;
       
+      queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+      queryClient.invalidateQueries({ queryKey: ["campaign", id] });
+      queryClient.invalidateQueries({ queryKey: ["campaign-ticket-stats", id] });
+
       toast({ title: "Sucesso!", description: "Campanha salva com sucesso." });
       navigate("/admin/campanhas");
     } catch (e: any) {
