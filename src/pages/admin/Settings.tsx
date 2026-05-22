@@ -557,7 +557,7 @@ function SettingField({
 
   const isBoolean = s.value === 'true' || s.value === 'false';
   const isColor = s.key.includes('color') || s.key.includes('shimmer_primary') || s.key.includes('shimmer_secondary');
-  const isImage = s.key.includes('logo') || s.key.includes('image_url');
+  const isImage = (s.key.includes('logo') && s.key.includes('url')) || s.key.includes('image_url');
 
   const renderInput = () => {
     if (isBoolean) {
