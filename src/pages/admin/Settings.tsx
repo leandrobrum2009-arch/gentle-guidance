@@ -213,14 +213,17 @@ export default function AdminSettings() {
                     onUpdate={handleUpdate} 
                     label={settingNames['site_logo_height']}
                     getIcon={getIcon}
+                    type="number"
                   />
                   <SettingField 
                     s={settings.find(s => s.key === 'site_logo_height_mobile')} 
                     onUpdate={handleUpdate} 
                     label={settingNames['site_logo_height_mobile']}
                     getIcon={getIcon}
+                    type="number"
                   />
                 </div>
+
 
               </CardContent>
             </Card>
