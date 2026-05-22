@@ -346,19 +346,27 @@ export const useCampaignTicketStats = (campaignId: string) =>
   });
 
 
-export const useCampaign = (id: string) =>
+export const useCampaign = (idOrSlug: string) =>
   useQuery({
-    queryKey: ["campaign", id],
+    queryKey: ["campaign", idOrSlug],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("campaigns")
-        .select("*")
-        .eq("id", id)
-        .maybeSingle();
+      // Try to fetch by ID first, then by slug
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+      
+      let query = supabase.from("campaigns").select("*, winners(*)");
+      
+      if (isUuid) {
+        query = query.eq("id", idOrSlug);
+      } else {
+        query = query.eq("slug", idOrSlug);
+      }
+
+      const { data, error } = await query.maybeSingle();
+      
       if (error) throw error;
       return (data as any) as Campaign | null;
     },
-    enabled: !!id,
+    enabled: !!idOrSlug,
   });
 
 export const useWinners = () =>

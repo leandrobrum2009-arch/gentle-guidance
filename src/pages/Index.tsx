@@ -161,8 +161,8 @@ const Index = () => {
         
         // Second priority: Draw date
         if (a.draw_date && b.draw_date) {
-          const aTime = new Date(a.draw_date).getTime();
-          const bTime = new Date(b.draw_date).getTime();
+          const aTime = new Date(a.draw_date.replace(' ', 'T')).getTime();
+          const bTime = new Date(b.draw_date.replace(' ', 'T')).getTime();
           const aIsPast = aTime < now;
           const bIsPast = bTime < now;
 

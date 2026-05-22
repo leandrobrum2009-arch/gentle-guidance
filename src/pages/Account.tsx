@@ -453,7 +453,11 @@ import { cn } from "@/lib/utils";
                     <Button variant="link" size="sm" className="text-primary text-[10px] font-black uppercase tracking-widest" onClick={() => setActiveTab("tickets")}>Ver Todos</Button>
                   </CardHeader>
                   <div className="space-y-3">
-                    {orders?.length ? orders.slice(0, 3).map((o: any) => (
+                    {orders?.length ? [...orders].sort((a:any, b:any) => {
+                      if (a.payment_status === 'paid' && b.payment_status !== 'paid') return -1;
+                      if (a.payment_status !== 'paid' && b.payment_status === 'paid') return 1;
+                      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+                    }).slice(0, 5).map((o: any) => (
                       <div key={o.id} className="flex items-center justify-between p-4 bg-secondary rounded-2xl border border-border group hover:border-primary/30 transition-all">
                         <div className="flex items-center gap-4">
                           <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
