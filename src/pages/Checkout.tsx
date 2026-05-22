@@ -1,10 +1,10 @@
  import { useState, useEffect } from "react";
  import { useParams, Link, useNavigate } from "react-router-dom";
  import { motion } from "framer-motion";
- import { 
-   ArrowLeft, CheckCircle2, Clock, Copy, 
-    ExternalLink, ShieldCheck, Loader2, QrCode, CreditCard
- } from "lucide-react";
+  import { 
+    ArrowLeft, CheckCircle2, Clock, Copy, 
+     ExternalLink, ShieldCheck, Loader2, QrCode, CreditCard, Landmark
+  } from "lucide-react";
  import { supabase } from "@/integrations/supabase/client";
  import { Button } from "@/components/ui/button";
  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
