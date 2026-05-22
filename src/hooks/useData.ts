@@ -839,15 +839,18 @@ export const useSiteSettings = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("site_settings")
-        .select("*");
+        .select("key, value");
       if (error) throw error;
       
       const settingsMap: Record<string, string> = {};
-      data.forEach(s => {
-        settingsMap[s.key] = s.value;
-      });
+      if (data) {
+        data.forEach(s => {
+          settingsMap[s.key] = s.value;
+        });
+      }
       return settingsMap;
     },
+    staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
 export const useGlobalStats = () =>
