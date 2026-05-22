@@ -3,14 +3,68 @@ import { useAdminScratchCards, useAdminScratchCardStats } from "@/hooks/useAdmin
 import { useGlobalScratchCardScratches } from "@/hooks/useData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
-import { Loader2, Plus, Pencil, Trash2, Layout, History, Trophy, TrendingUp } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Layout, History, Trophy, TrendingUp, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogTrigger } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export default function AdminScratchCards() {
-  const { data: prizes, isLoading } = useAdminScratchCards();
+  const { data: prizes, isLoading, refetch } = useAdminScratchCards();
   const { data: stats, isLoading: isLoadingStats } = useAdminScratchCardStats();
   const { data: recentScratches } = useGlobalScratchCardScratches(10);
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    label: "",
+    prize_type: "fixed_value",
+    value: "0",
+    chance_percent: "1",
+    is_active: true
+  });
+
+  const handleCreate = async () => {
+    setIsSaving(true);
+    try {
+      const { error } = await supabase.from("scratch_card_prizes").insert({
+        label: formData.label,
+        prize_type: formData.prize_type,
+        value: parseFloat(formData.value),
+        chance_percent: parseFloat(formData.chance_percent),
+        is_active: formData.is_active
+      });
+
+      if (error) throw error;
+
+      toast.success("Prêmio criado com sucesso!");
+      setIsDialogOpen(false);
+      refetch();
+      setFormData({ label: "", prize_type: "fixed_value", value: "0", chance_percent: "1", is_active: true });
+    } catch (error: any) {
+      toast.error("Erro ao criar prêmio: " + error.message);
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Tem certeza que deseja excluir este prêmio?")) return;
+    
+    try {
+      const { error } = await supabase.from("scratch_card_prizes").delete().eq("id", id);
+      if (error) throw error;
+      toast.success("Prêmio excluído!");
+      refetch();
+    } catch (error: any) {
+      toast.error("Erro ao excluir: " + error.message);
+    }
+  };
 
   return (
     <AdminLayout>
