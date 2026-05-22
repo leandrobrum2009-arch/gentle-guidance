@@ -37,6 +37,7 @@ interface CampaignForm {
   vip_group_link: string; vip_group_video_url: string;
   upsell_video_url: string; upsell_offer_text: string;
   upsell_enabled: boolean; upsell_probability: string;
+  ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
 }
 
 const empty: CampaignForm = {
