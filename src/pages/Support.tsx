@@ -78,7 +78,7 @@ const Support = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold">E-mail</h3>
-                  <p className="text-sm text-muted-foreground">contato@rifaspro.com.br</p>
+                  <p className="text-sm text-muted-foreground">{siteSettings?.company_email || "contato@empresa.com"}</p>
                 </div>
               </div>
             </div>
