@@ -37,15 +37,22 @@ export const SiteSettingsInjector = () => {
       
       // Update favicon if site_logo_url is present
       if (settings.site_logo_url) {
-        const link = document.querySelector("link[rel~='icon']") as HTMLLinkElement;
-        if (link) {
-          link.href = settings.site_logo_url;
-        } else {
-          const newLink = document.createElement('link');
-          newLink.rel = 'icon';
-          newLink.href = settings.site_logo_url;
-          document.head.appendChild(newLink);
-        }
+        const logoUrl = settings.site_logo_url;
+        
+        // Update all icon types
+        const iconTypes = ["icon", "shortcut icon", "apple-touch-icon"];
+        
+        iconTypes.forEach(type => {
+          let link = document.querySelector(`link[rel~='${type}']`) as HTMLLinkElement;
+          if (link) {
+            link.href = logoUrl;
+          } else {
+            link = document.createElement('link');
+            link.rel = type;
+            link.href = logoUrl;
+            document.head.appendChild(link);
+          }
+        });
       }
     }
     
