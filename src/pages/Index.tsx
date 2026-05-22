@@ -583,7 +583,7 @@ const Index = () => {
                         repeatType: "reverse",
                         repeatDelay: 5
                       }}
-                      className="absolute -top-14 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
+                      className="absolute -top-20 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
                     >
                       {["EU GANHEI!", "ACREDITEI E FOI!", "DEU BOM!", "SÓ ALEGRIA!"][i % 4]}
                       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 border-t-8 border-t-primary border-x-8 border-x-transparent" />
