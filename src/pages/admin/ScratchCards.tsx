@@ -224,7 +224,12 @@ export default function AdminScratchCards() {
                         <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
                           <Pencil className="h-4 w-4" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-8 w-8 text-muted-foreground hover:text-rose-400 hover:bg-rose-500/10"
+                          onClick={() => handleDelete(p.id)}
+                        >
                           <Trash2 className="h-4 w-4" />
                         </Button>
                       </TableCell>
