@@ -74,12 +74,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-3 border-b border-sidebar-border p-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
-          <ShieldAlert className="h-6 w-6 text-primary-foreground" />
-        </div>
-        <div>
-          <span className="block font-display text-base font-bold tracking-tight">Painel Administrativo</span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Premium</span>
+        {siteSettings?.site_logo_url ? (
+          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
+            <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
+          </div>
+        ) : (
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+            <Ticket className="h-6 w-6 text-primary-foreground" />
+          </div>
+        )}
+        <div className="min-w-0 flex-1">
+          <span className="block font-display text-sm font-bold tracking-tight truncate">
+            {siteSettings?.site_name || "Painel Administrativo"}
+          </span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Admin</span>
         </div>
       </div>
 
