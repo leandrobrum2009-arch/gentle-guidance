@@ -195,9 +195,9 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
           size="lg"
           className={cn(
             "w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary-rgb),0.2)] transition-all active:scale-[0.98] border-light-path",
-            quantity > 0 && campaign.status === "active" && !isPurchasing && "animate-button-flash border-light-always"
+            quantity > 0 && campaign.status === "active" && !isPurchasing && !(campaign.draw_date && new Date(campaign.draw_date) < new Date()) && "animate-button-flash border-light-always"
           )}
-          disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
+          disabled={quantity === 0 || campaign.status !== "active" || isPurchasing || (campaign.draw_date ? new Date(campaign.draw_date) < new Date() : false)}
           onClick={() => onBuy(quantity)}
         >
           {isPurchasing ? (
