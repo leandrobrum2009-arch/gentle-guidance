@@ -95,67 +95,165 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
             </div>
           )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Crown className="h-4 w-4 text-primary" />
-              </div>
-              <h3 className="text-xs font-black uppercase tracking-widest italic">Maiores números sorteados</h3>
-            </div>
-            <div className="grid gap-3">
-              {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => {
-                const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
-                return (
-                  <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
-                      <div className="flex flex-col">
-                        <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
-                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
-                      </div>
-                    </div>
-                    <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
-                  </div>
-                );
-              }) : (
-                <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando sorteio...</p>
+          {stats.activePrize && (
+            <div className="bg-primary/5 border border-primary/20 rounded-[2rem] p-8 space-y-8 overflow-hidden relative group">
+              {/* Stretched Badge / Background Decoration */}
+              <div className="absolute top-0 right-0 left-0 h-1 bg-gradient-to-r from-transparent via-primary to-transparent opacity-50" />
+              <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/10 rounded-full blur-3xl group-hover:bg-primary/20 transition-all duration-700" />
+              
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+                <div className="space-y-2">
+                  <Badge className="bg-primary text-primary-foreground font-black italic uppercase tracking-[0.2em] px-6 py-1.5 rounded-full shadow-lg shadow-primary/30 text-[10px] animate-pulse">
+                    Sorteio Especial em Andamento
+                  </Badge>
+                  <h3 className="text-3xl font-black uppercase italic tracking-tighter text-foreground flex items-center gap-3">
+                    <TrendingUp className="h-8 w-8 text-primary" />
+                    {stats.activePrize.title}
+                  </h3>
                 </div>
-              )}
-            </div>
-          </div>
+                {stats.activePrize.end_date && (
+                  <div className="bg-primary/10 border border-primary/20 px-6 py-3 rounded-2xl backdrop-blur-sm">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">Encerramento</p>
+                    <p className="text-xl font-black text-foreground italic">
+                      {new Date(stats.activePrize.end_date).toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                )}
+              </div>
 
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center">
-                <TrendingUp className="h-4 w-4 text-muted-foreground rotate-180" />
-              </div>
-              <h3 className="text-xs font-black uppercase tracking-widest italic">Menores números sorteados</h3>
-            </div>
-            <div className="grid gap-3">
-              {stats.lowestTickets.length > 0 ? stats.lowestTickets.map((ticket, idx) => {
-                const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
-                return (
-                  <div key={idx} className="bg-secondary/30 border border-border p-4 rounded-2xl flex items-center justify-between group hover:bg-secondary/50 transition-all">
-                    <div className="flex items-center gap-3">
-                      <span className="text-lg font-black italic text-foreground/80">#{ticket.number}</span>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                {/* Maior Cota */}
+                <div className="bg-background/40 border border-border/50 p-6 rounded-[1.5rem] space-y-6 hover:border-primary/30 transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="border-primary/30 text-primary font-black uppercase tracking-widest px-4 py-1 rounded-full text-[9px]">
+                      Maior Cota
+                    </Badge>
+                    <Crown className="h-5 w-5 text-primary" />
+                  </div>
+                  
+                  {stats.highestTickets[0] ? (
+                    <div className="flex items-center gap-5">
+                      <div className="h-16 w-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-black italic shadow-xl shadow-primary/20">
+                        #{stats.highestTickets[0].number}
+                      </div>
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
-                        <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Ganhador em potencial</span>
+                        <span className="text-sm font-black uppercase text-foreground leading-tight">
+                          {(Array.isArray(stats.highestTickets[0].profiles) ? stats.highestTickets[0].profiles[0]?.name : stats.highestTickets[0].profiles?.name) || "Usuário"}
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Líder Atual</span>
                       </div>
                     </div>
-                    <Badge variant="outline" className="border-border text-muted-foreground text-[8px] font-black">MIN {idx + 1}</Badge>
+                  ) : (
+                    <div className="h-16 flex items-center justify-center border border-dashed border-border rounded-2xl">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
+                    </div>
+                  )}
+                  
+                  <div className="pt-4 border-t border-border/50">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Prêmio Estimado</p>
+                    <p className="text-lg font-black text-primary italic uppercase tracking-tight">{stats.activePrize.prize_maior || "R$ 50,00"}</p>
                   </div>
-                );
-              }) : (
-                <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando sorteio...</p>
                 </div>
-              )}
+
+                {/* Menor Cota */}
+                <div className="bg-background/40 border border-border/50 p-6 rounded-[1.5rem] space-y-6 hover:border-border transition-all duration-300">
+                  <div className="flex items-center justify-between">
+                    <Badge variant="outline" className="border-border text-muted-foreground font-black uppercase tracking-widest px-4 py-1 rounded-full text-[9px]">
+                      Menor Cota
+                    </Badge>
+                    <Trophy className="h-5 w-5 text-muted-foreground" />
+                  </div>
+
+                  {stats.lowestTickets[0] ? (
+                    <div className="flex items-center gap-5">
+                      <div className="h-16 w-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-2xl font-black italic text-foreground">
+                        #{stats.lowestTickets[0].number}
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black uppercase text-foreground leading-tight">
+                          {(Array.isArray(stats.lowestTickets[0].profiles) ? stats.lowestTickets[0].profiles[0]?.name : stats.lowestTickets[0].profiles?.name) || "Usuário"}
+                        </span>
+                        <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Líder Atual</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-16 flex items-center justify-center border border-dashed border-border rounded-2xl">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
+                    </div>
+                  )}
+
+                  <div className="pt-4 border-t border-border/50">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Prêmio Estimado</p>
+                    <p className="text-lg font-black text-foreground/80 italic uppercase tracking-tight">{stats.activePrize.prize_menor || "R$ 50,00"}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          )}
+
+          {!stats.activePrize && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <Crown className="h-4 w-4 text-primary" />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest italic">Maiores números comprados</h3>
+                </div>
+                <div className="grid gap-3">
+                  {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => {
+                    const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
+                    return (
+                      <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
+                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o maior número</span>
+                          </div>
+                        </div>
+                        <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
+                      </div>
+                    );
+                  }) : (
+                    <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center">
+                    <TrendingUp className="h-4 w-4 text-muted-foreground rotate-180" />
+                  </div>
+                  <h3 className="text-xs font-black uppercase tracking-widest italic">Menores números comprados</h3>
+                </div>
+                <div className="grid gap-3">
+                  {stats.lowestTickets.length > 0 ? stats.lowestTickets.map((ticket, idx) => {
+                    const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
+                    return (
+                      <div key={idx} className="bg-secondary/30 border border-border p-4 rounded-2xl flex items-center justify-between group hover:bg-secondary/50 transition-all">
+                        <div className="flex items-center gap-3">
+                          <span className="text-lg font-black italic text-foreground/80">#{ticket.number}</span>
+                          <div className="flex flex-col">
+                            <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
+                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o menor número</span>
+                          </div>
+                        </div>
+                        <Badge variant="outline" className="border-border text-muted-foreground text-[8px] font-black">MIN {idx + 1}</Badge>
+                      </div>
+                    );
+                  }) : (
+                    <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
       </div>
       )}
 
