@@ -367,7 +367,7 @@ export const useWinners = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("winners")
-        .select("*, campaigns!campaign_id(title)")
+        .select("*, campaigns(title)")
         .order("draw_date", { ascending: false });
       if (error) throw error;
       return data as Winner[];
@@ -537,7 +537,7 @@ export const useGlobalRouletteSpins = (limit = 20) =>
             name,
             avatar_url
           ),
-          campaigns!campaign_id (
+          campaigns (
             title
           )
         `)
@@ -666,7 +666,7 @@ export const useAffiliateCommissions = (affiliateId: string) =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("affiliate_commissions")
-        .select("*, orders!order_id(campaigns!campaign_id(title))")
+        .select("*, orders!order_id(campaigns(title))")
         .eq("affiliate_id", affiliateId)
         .order("created_at", { ascending: false });
       if (error) throw error;

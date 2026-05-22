@@ -36,7 +36,7 @@ const LiveNotifications = () => {
     // Get last 3 paid orders
     const { data: recentOrders } = await supabase
       .from('orders')
-      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .select('*, profiles!user_id(name, avatar_url), campaigns(title)')
       .eq('payment_status', 'paid')
       .order('created_at', { ascending: false })
       .limit(3);
@@ -44,7 +44,7 @@ const LiveNotifications = () => {
     // Get last 2 winners
     const { data: recentWinners } = await supabase
       .from('winners')
-      .select('*, profiles!user_id(name, avatar_url), campaigns!campaign_id(title)')
+      .select('*, profiles!user_id(name, avatar_url), campaigns(title)')
       .order('created_at', { ascending: false })
       .limit(2);
 
