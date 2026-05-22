@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
-   ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
+  ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw
 } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -10,26 +10,6 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-      {/* Gamification Teaser */}
-      <section className="container py-6">
-        <div className="grid grid-cols-2 gap-3">
-          <div className="rounded-2xl bg-gradient-to-br from-primary/20 to-secondary/30 p-4 border border-primary/20 flex flex-col items-center text-center gap-2">
-            <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
-              <Gamepad2 className="h-5 w-5 text-primary" />
-            </div>
-            <h3 className="text-xs font-black uppercase tracking-tighter">Roleta da Sorte</h3>
-            <p className="text-[10px] text-muted-foreground">Gire e ganhe prêmios!</p>
-          </div>
-          <div className="rounded-2xl bg-gradient-to-br from-secondary/30 to-background p-4 border border-border/50 flex flex-col items-center text-center gap-2">
-            <div className="h-10 w-10 rounded-full bg-secondary flex items-center justify-center">
-              <Gift className="h-5 w-5 text-primary" />
-            </div>
-            <h3 className="text-xs font-black uppercase tracking-tighter">Caixa Premiada</h3>
-            <p className="text-[10px] text-muted-foreground">Prêmios instantâneos</p>
-          </div>
-        </div>
-      </section>
-
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import HeroModel1 from "@/components/hero/HeroModel1";
@@ -171,6 +151,7 @@ const Index = () => {
 
   const activeCampaigns = useMemo(() => {
     if (!campaigns) return [];
+    const now = new Date().getTime();
     return campaigns
       .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
       .sort((a, b) => {
@@ -178,9 +159,17 @@ const Index = () => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
         
-        // Second priority: Draw date (closest first)
+        // Second priority: Draw date
         if (a.draw_date && b.draw_date) {
-          return new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime();
+          const aTime = new Date(a.draw_date).getTime();
+          const bTime = new Date(b.draw_date).getTime();
+          const aIsPast = aTime < now;
+          const bIsPast = bTime < now;
+
+          if (aIsPast && !bIsPast) return 1;
+          if (!aIsPast && bIsPast) return -1;
+          
+          return aTime - bTime;
         }
         if (a.draw_date) return -1;
         if (b.draw_date) return 1;
@@ -594,7 +583,7 @@ const Index = () => {
                         repeatType: "reverse",
                         repeatDelay: 5
                       }}
-                      className="absolute -top-14 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
+                      className="absolute -top-20 left-4 right-4 bg-primary text-primary-foreground p-3 rounded-2xl text-[10px] font-black uppercase tracking-widest text-center shadow-xl z-20 group-hover:scale-110 transition-transform"
                     >
                       {["EU GANHEI!", "ACREDITEI E FOI!", "DEU BOM!", "SÓ ALEGRIA!"][i % 4]}
                       <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 border-t-8 border-t-primary border-x-8 border-x-transparent" />
