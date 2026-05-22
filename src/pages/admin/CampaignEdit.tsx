@@ -270,6 +270,7 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
             <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            <TabsTrigger value="success_flow" className="rounded-xl px-6 gap-2"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
             <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
           </TabsList>
