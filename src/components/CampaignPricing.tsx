@@ -21,10 +21,15 @@ const DEFAULT_BUNDLES: PriceBundle[] = [
 
 const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
   const [quantity, setQuantity] = useState<number>(0);
-  const bundles = campaign.price_bundles || DEFAULT_BUNDLES;
+  const bundles = useMemo(() => {
+    if (Array.isArray(campaign.price_bundles) && campaign.price_bundles.length > 0) {
+      return campaign.price_bundles;
+    }
+    return DEFAULT_BUNDLES;
+  }, [campaign.price_bundles]);
 
   const selectedBundle = useMemo(() => {
-    return bundles.find(b => b.quantity === quantity);
+    return bundles.find(b => Number(b.quantity) === quantity);
   }, [quantity, bundles]);
 
   const totalPrice = useMemo(() => {
