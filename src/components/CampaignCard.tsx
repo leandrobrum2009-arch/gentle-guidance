@@ -13,7 +13,7 @@ interface CampaignCardProps {
 }
 
 const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
-  const isCompleted = campaign.status === "completed";
+  const isCompleted = campaign.status === "completed" || campaign.status === "finished";
   const progress = Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
   
   return (
