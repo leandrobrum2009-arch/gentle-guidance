@@ -61,17 +61,14 @@
        </div>
  
       <div className="flex flex-col md:grid gap-3 overflow-x-auto md:overflow-visible no-scrollbar -mx-4 px-4 md:mx-0 md:px-0 scroll-smooth">
-        <div className="flex md:flex-col gap-3 min-w-max md:min-w-0">
-          <AnimatePresence mode="popLayout">
+         <div className="flex md:flex-col gap-3 min-w-max md:min-w-0">
             {activities.map((activity) => (
               <motion.div
                 key={activity.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                  className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-secondary/50 border border-border group hover:border-primary/30 transition-all w-[240px] md:w-full"
+                  className="relative overflow-hidden flex items-center gap-3 p-3 rounded-2xl bg-secondary/50 border border-border group hover:border-primary/30 transition-all w-[240px] md:w-full will-change-transform"
               >
                 <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 
@@ -104,7 +101,6 @@
                 </div>
               </motion.div>
             ))}
-          </AnimatePresence>
         </div>
       </div>
      </div>
