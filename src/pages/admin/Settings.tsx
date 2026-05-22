@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 
 export default function AdminSettings() {
+  const queryClient = useQueryClient();
   const [settings, setSettings] = useState<any[]>([]);
   const [initialSettings, setInitialSettings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
