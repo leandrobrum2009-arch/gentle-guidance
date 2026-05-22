@@ -86,6 +86,8 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                     <span>Sorteado</span>
                   ) : campaign.status === 'paused' ? (
                     <span>Pausada</span>
+                  ) : campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
+                    <span>Aguardando Sorteio</span>
                   ) : campaign.draw_date ? (
                     <span>Sorteio em breve</span>
                   ) : (
