@@ -37,6 +37,9 @@ export default function AdminSettings() {
     hero_transition_type: "Tipo de Transição",
     site_name: "Nome da Plataforma",
     site_logo_url: "Logotipo Principal",
+    site_logo_height: "Altura do Logo (Desktop)",
+    site_logo_height_mobile: "Altura do Logo (Mobile)",
+
     support_whatsapp: "WhatsApp de Atendimento",
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
@@ -204,6 +207,24 @@ export default function AdminSettings() {
                     uploading={uploading === 'site_logo_url'}
                   />
                 </div>
+                <div className="grid grid-cols-2 gap-4 pt-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_logo_height')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_logo_height']}
+                    getIcon={getIcon}
+                    type="number"
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_logo_height_mobile')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_logo_height_mobile']}
+                    getIcon={getIcon}
+                    type="number"
+                  />
+                </div>
+
+
               </CardContent>
             </Card>
 
@@ -545,7 +566,7 @@ function SettingField({
   onUpdate: any, 
   getIcon: any, 
   label: string,
-  type?: "text" | "password" | "select" | "boolean" | "color",
+  type?: "text" | "password" | "select" | "boolean" | "color" | "number",
   options?: { label: string, value: string }[],
   onUpload?: (key: string, file: File) => void,
   uploading?: boolean
@@ -554,7 +575,7 @@ function SettingField({
 
   const isBoolean = s.value === 'true' || s.value === 'false';
   const isColor = s.key.includes('color') || s.key.includes('shimmer_primary') || s.key.includes('shimmer_secondary');
-  const isImage = s.key.includes('logo') || s.key.includes('image_url');
+  const isImage = (s.key.includes('logo') && s.key.includes('url')) || s.key.includes('image_url');
 
   const renderInput = () => {
     if (isBoolean) {

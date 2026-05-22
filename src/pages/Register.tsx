@@ -86,7 +86,7 @@ const Register = () => {
           <div className="text-center space-y-4">
             <div className="flex justify-center mb-6">
               {siteSettings?.site_logo_url ? (
-                <img src={siteSettings.site_logo_url} alt="Logo" className="h-16 w-auto object-contain" />
+                <img src={siteSettings.site_logo_url} alt="Logo" className="h-[var(--logo-height-desktop,64px)] w-auto object-contain" />
               ) : (
                 <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
                   <Ticket className="h-8 w-8 text-primary" />

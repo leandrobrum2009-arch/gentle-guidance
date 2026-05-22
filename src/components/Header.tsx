@@ -95,7 +95,7 @@ const Header = () => {
                 <img 
                   src={siteSettings.site_logo_url} 
                   alt={siteSettings?.site_name || "Logo"} 
-                  className="h-9 md:h-11 w-auto object-contain" 
+                  className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain" 
                 />
               ) : (
                 <div className="flex items-center gap-2">
