@@ -721,8 +721,9 @@ const CampaignDetail = () => {
         isVisible={showSuccess} 
         onComplete={() => {
           setShowSuccess(false);
-          toast.success("Redirecionando para o pagamento...");
+          setIsPaymentModalOpen(true);
         }} 
+
       />
 
       <QuickRegisterDialog 
