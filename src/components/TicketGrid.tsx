@@ -71,12 +71,9 @@
                 key={ticket.number}
                 disabled={ticket.isSold}
                 onClick={() => onSelect(ticket.number)}
-               whileHover={!ticket.isSold ? { scale: 1.1, zIndex: 10 } : {}}
-               whileTap={!ticket.isSold ? { scale: 0.95 } : {}}
-               disabled={ticket.isSold}
-               onClick={() => onSelect(ticket.number)}
-               className={cn(
-                 "relative aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+                className={cn(
+                  "relative aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+                  !ticket.isSold && "hover:scale-110 hover:z-10 active:scale-95",
                  ticket.isSold 
                    ? "bg-muted-foreground/10 text-muted-foreground/50 cursor-not-allowed" 
                    : ticket.isSelected 
