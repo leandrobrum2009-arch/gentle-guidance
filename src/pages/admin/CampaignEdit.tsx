@@ -54,6 +54,12 @@ const empty: CampaignForm = {
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
   show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
   timer_end_date: "",
+  vip_group_link: "",
+  vip_group_video_url: "",
+  upsell_video_url: "",
+  upsell_offer_text: "",
+  upsell_enabled: false,
+  upsell_probability: "98%",
 };
 
 export default function AdminCampaignEdit() {
