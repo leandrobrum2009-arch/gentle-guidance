@@ -173,8 +173,9 @@ const CampaignDetail = () => {
       setIsPurchasing(false);
       setShowSuccess(true);
       setCurrentOrderId(orderId);
-      setIsPaymentModalOpen(true);
-      setShowSuccess(true);
+      // We'll open the payment modal after the success animation completes
+      // setIsPaymentModalOpen(true); 
+      // setShowSuccess(true); - already set above
 
     } catch (error: any) {
       setIsPurchasing(false);
