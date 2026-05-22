@@ -38,7 +38,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         .maybeSingle();
       
       if (error || !data) {
-        if (retryCount < 3) {
+        if (retryCount < 5) {
           console.log(`Order not found, retrying... (${retryCount + 1})`);
           setTimeout(() => fetchOrder(retryCount + 1), 1000);
           return;
@@ -51,22 +51,31 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       setOrder(data);
       setLoading(false);
 
-    if (data.payment_status === 'pending' && !data.pix_code) {
-      try {
-        const { data: pixData, error: pixError } = await supabase.functions.invoke('pix-payment', {
-          body: { orderId, path: 'create' },
-          method: 'POST'
-        });
-        
-        if (!pixError && pixData) {
-          setOrder((prev: any) => ({ 
-            ...prev, 
-            pix_code: pixData.pix_code, 
-            pix_qr_code_base64: pixData.pix_qr_code_base64 
-          }));
+      if (data.payment_status === 'pending' && !data.pix_code) {
+        try {
+          const { data: pixData, error: pixError } = await supabase.functions.invoke('pix-payment', {
+            body: { orderId, path: 'create' },
+            method: 'POST'
+          });
+          
+          if (!pixError && pixData) {
+            setOrder((prev: any) => ({ 
+              ...prev, 
+              pix_code: pixData.pix_code, 
+              pix_qr_code_base64: pixData.pix_qr_code_base64 
+            }));
+          }
+        } catch (err) {
+          console.error('Error generating PIX:', err);
         }
-      } catch (err) {
-        console.error('Error generating PIX:', err);
+      }
+    } catch (err) {
+      console.error('Error fetching order:', err);
+      if (retryCount < 5) {
+        setTimeout(() => fetchOrder(retryCount + 1), 1000);
+      } else {
+        toast.error("Erro ao carregar pedido");
+        onOpenChange(false);
       }
     }
   }, [orderId, onOpenChange]);
