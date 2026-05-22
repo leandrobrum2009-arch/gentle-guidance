@@ -90,7 +90,7 @@ const Support = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold">Telefone</h3>
-                  <p className="text-sm text-muted-foreground">(00) 0000-0000</p>
+                  <p className="text-sm text-muted-foreground">{siteSettings?.company_phone || siteSettings?.support_whatsapp || "(00) 0000-0000"}</p>
                 </div>
               </div>
             </div>
