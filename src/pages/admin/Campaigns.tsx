@@ -222,14 +222,20 @@ export default function AdminCampaigns() {
             <Table className="min-w-[800px]">
                <TableHeader className="bg-card/[0.02]">
                  <TableRow className="hover:bg-transparent border-border">
-                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
+                   <TableHead className="w-12 pl-6">
+                     <Checkbox 
+                       checked={selectedIds.length === filteredCampaigns.length && filteredCampaigns.length > 0}
+                       onCheckedChange={toggleSelectAll}
+                     />
+                   </TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Campanha</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                 </TableRow>
+               </TableHeader>
+               <TableBody>
                  {filteredCampaigns.map((c) => {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
