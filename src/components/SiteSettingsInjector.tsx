@@ -27,6 +27,12 @@ export const SiteSettingsInjector = () => {
         // Shadcn UI uses HSL values separated by spaces: "H S% L%"
         document.documentElement.style.setProperty('--primary', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
         document.documentElement.style.setProperty('--ring', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+        
+        // Add RGB for transparency use
+        const rgb = hexToRgb(hex);
+        if (rgb) {
+          document.documentElement.style.setProperty('--primary-rgb', `${rgb.r}, ${rgb.g}, ${rgb.b}`);
+        }
       }
       
       // Update favicon if site_logo_url is present
@@ -100,4 +106,21 @@ function hexToHsl(hex: string) {
     s: Math.round(s * 100),
     l: Math.round(l * 100)
   };
+}
+
+function hexToRgb(hex: string) {
+  hex = hex.replace(/^#/, '');
+  let r = 0, g = 0, b = 0;
+  if (hex.length === 3) {
+    r = parseInt(hex[0] + hex[0], 16);
+    g = parseInt(hex[1] + hex[1], 16);
+    b = parseInt(hex[2] + hex[2], 16);
+  } else if (hex.length === 6) {
+    r = parseInt(hex.substring(0, 2), 16);
+    g = parseInt(hex.substring(2, 4), 16);
+    b = parseInt(hex.substring(4, 6), 16);
+  } else {
+    return null;
+  }
+  return { r, g, b };
 }

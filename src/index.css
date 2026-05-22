@@ -69,7 +69,9 @@ aside:has(a[href*="lovable.dev"]) {
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    rgba(var(--primary-rgb), 0.15),
+    rgba(255, 255, 255, 0.4),
+    rgba(var(--primary-rgb), 0.15),
     transparent
   );
   animation: shimmer 2s infinite;
@@ -84,6 +86,7 @@ aside:has(a[href*="lovable.dev"]) {
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 4%;
     --primary: 142.1 76.2% 30.3%;
+    --primary-rgb: 22, 163, 74;
     --primary-foreground: 0 0% 100%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -321,13 +324,29 @@ aside:has(a[href*="lovable.dev"]) {
 
    /* Animating gradient text */
 
-   @keyframes text-shimmer {
-     from {
-       background-position: -800px center;
-     }
-     to {
-       background-position: 800px center;
-     }
-   }
+    @keyframes text-shimmer {
+      from {
+        background-position: -800px center;
+      }
+      to {
+        background-position: 800px center;
+      }
+    }
+
+    @keyframes button-flash {
+      0%, 100% { 
+        filter: brightness(1);
+        transform: scale(1);
+      }
+      50% { 
+        filter: brightness(1.2);
+        transform: scale(1.02);
+      }
+    }
+
+    .animate-button-flash {
+      animation: button-flash 2s infinite ease-in-out;
+    }
+
 
 }

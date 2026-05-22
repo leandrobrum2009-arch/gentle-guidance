@@ -70,10 +70,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               whileTap={{ scale: 0.98 }}
               onClick={() => setQuantity(bundle.quantity)}
               className={cn(
-                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden",
+                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden shimmer-effect",
                 isSelected
-                  ? "border-primary bg-primary shadow-[0_0_20px_rgba(var(--primary),0.3)] text-white"
-                  : "border-border bg-card hover:border-primary/50 text-foreground"
+                  ? "border-primary bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] text-white"
+                  : "border-primary/20 bg-primary/5 hover:border-primary/50 text-foreground"
               )}
             >
               {bundle.is_popular && !isSelected && (
@@ -184,7 +184,10 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
 
         <Button
           size="lg"
-          className="w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary),0.2)] transition-all active:scale-[0.98]"
+          className={cn(
+            "w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary-rgb),0.2)] transition-all active:scale-[0.98] border-light-path",
+            quantity > 0 && campaign.status === "active" && !isPurchasing && "animate-button-flash border-light-always"
+          )}
           disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
           onClick={() => onBuy(quantity)}
         >
