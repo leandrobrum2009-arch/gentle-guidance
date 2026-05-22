@@ -10,31 +10,31 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
  const navItems = [
-   { category: "Dashboard", items: [
+   { category: "Início", items: [
      { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+     { title: "Preview Site", url: "/preview", icon: ImageIcon },
    ]},
-   { category: "Gestão", items: [
+   { category: "Vendas", items: [
      { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-     { title: "Usuários", url: "/admin/usuarios", icon: Users },
      { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
-     { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
-     { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
-   ]},
-   { category: "Jogos", items: [
-     { title: "Roletas", url: "/admin/roletas", icon: Dices },
-      { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
-      { title: "Raspadinhas", url: "/admin/raspadinhas", icon: Zap },
-      { title: "Federal", url: "/admin/federal", icon: Star },
-   ]},
-   { category: "Marketing", items: [
-     { title: "Banners", url: "/admin/banners", icon: ImageIcon },
      { title: "Cupons", url: "/admin/cupons", icon: Percent },
+     { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
+   ]},
+   { category: "Prêmios & Jogos", items: [
+     { title: "Roletas", url: "/admin/roletas", icon: Dices },
+     { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
+     { title: "Raspadinhas", url: "/admin/raspadinhas", icon: Zap },
+     { title: "Federal", url: "/admin/federal", icon: Star },
+   ]},
+   { category: "Comunidade", items: [
+     { title: "Usuários", url: "/admin/usuarios", icon: Users },
+     { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
      { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
    ]},
-    { category: "Sistema", items: [
-      { title: "Preview UI", url: "/preview", icon: ImageIcon },
-      { title: "Configurações", url: "/admin/configuracoes", icon: Settings },
-    ]},
+   { category: "Configurações", items: [
+     { title: "Banners", url: "/admin/banners", icon: ImageIcon },
+     { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+   ]},
  ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
