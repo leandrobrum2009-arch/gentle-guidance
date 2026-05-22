@@ -39,8 +39,15 @@ import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 
 const CampaignDetail = () => {
+  const [showStickyBar, setShowStickyBar] = useState(false);
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    const handleScroll = () => {
+      setShowStickyBar(window.scrollY > 400);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const { id } = useParams<{ id: string }>();
@@ -173,8 +180,9 @@ const CampaignDetail = () => {
       setIsPurchasing(false);
       setShowSuccess(true);
       setCurrentOrderId(orderId);
-      setIsPaymentModalOpen(true);
-      setShowSuccess(true);
+      // We'll open the payment modal after the success animation completes
+      // setIsPaymentModalOpen(true); 
+      // setShowSuccess(true); - already set above
 
     } catch (error: any) {
       setIsPurchasing(false);
@@ -720,8 +728,9 @@ const CampaignDetail = () => {
         isVisible={showSuccess} 
         onComplete={() => {
           setShowSuccess(false);
-          toast.success("Redirecionando para o pagamento...");
+          setIsPaymentModalOpen(true);
         }} 
+
       />
 
       <QuickRegisterDialog 
@@ -748,24 +757,33 @@ const CampaignDetail = () => {
       <Footer />
       
       {/* Sticky Mobile Purchase Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden">
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
-            <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-          </div>
-          <Button 
-            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
-            disabled={campaign.status !== "active"}
-            onClick={() => {
-              const element = document.getElementById('purchase-tabs');
-              element?.scrollIntoView({ behavior: 'smooth' });
-            }}
+      <AnimatePresence>
+        {showStickyBar && (
+          <motion.div 
+            initial={{ y: 100 }}
+            animate={{ y: 0 }}
+            exit={{ y: 100 }}
+            className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden"
           >
-            {campaign.status === "active" ? "QUERO MEUS BILHETES" : "VENDAS SUSPENSAS"}
-          </Button>
-        </div>
-      </div>
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
+                <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
+              </div>
+              <Button 
+                className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30 animate-button-flash"
+                disabled={campaign.status !== "active"}
+                onClick={() => {
+                  const element = document.getElementById('purchase-tabs');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                {campaign.status === "active" ? "PARTICIPAR AGORA" : "VENDAS SUSPENSAS"}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

@@ -21,10 +21,15 @@ const DEFAULT_BUNDLES: PriceBundle[] = [
 
 const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
   const [quantity, setQuantity] = useState<number>(0);
-  const bundles = campaign.price_bundles || DEFAULT_BUNDLES;
+  const bundles = useMemo(() => {
+    if (Array.isArray(campaign.price_bundles) && campaign.price_bundles.length > 0) {
+      return campaign.price_bundles;
+    }
+    return DEFAULT_BUNDLES;
+  }, [campaign.price_bundles]);
 
   const selectedBundle = useMemo(() => {
-    return bundles.find(b => b.quantity === quantity);
+    return bundles.find(b => Number(b.quantity) === quantity);
   }, [quantity, bundles]);
 
   const totalPrice = useMemo(() => {
@@ -66,16 +71,19 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
           return (
             <motion.button
               key={bundle.quantity}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.05, y: -5 }}
+              whileTap={{ scale: 0.95 }}
               onClick={() => setQuantity(bundle.quantity)}
               className={cn(
-                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden shimmer-effect",
+                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden",
                 isSelected
-                  ? "border-primary bg-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] text-white"
-                  : "border-primary/20 bg-primary/5 hover:border-primary/50 text-foreground"
+                  ? "border-primary bg-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] text-white scale-105 z-10"
+                  : "border-primary/30 bg-card hover:border-primary/60 text-foreground shadow-sm"
               )}
             >
+              {/* Light sweep effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full animate-light-sweep pointer-events-none" />
+              
               {bundle.is_popular && !isSelected && (
                 <div className="absolute top-0 right-0">
                   <Badge className="rounded-none rounded-bl-lg bg-amber-500 text-white border-none text-[8px] font-black uppercase px-1.5 py-0.5">
