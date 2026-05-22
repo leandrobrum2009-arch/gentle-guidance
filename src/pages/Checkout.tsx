@@ -48,7 +48,7 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
       
       const { data, error } = await supabase
         .from("orders")
-        .select("*, campaigns(*), tickets(*)")
+        .select("*, campaigns(*), tickets(*), profiles(name)")
         .eq("id", orderId)
         .maybeSingle();
       
