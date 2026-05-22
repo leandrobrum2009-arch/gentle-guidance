@@ -130,24 +130,24 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <span className="text-muted-foreground flex items-center gap-1">
-                  <TrendingUp className="h-3.5 w-3.5" /> {campaign.status === 'completed' ? 'Finalizado' : `${campaign.sold_tickets.toLocaleString()} vendidos`}
+                  <TrendingUp className="h-3.5 w-3.5" /> {isCompleted ? 'Finalizado' : `${campaign.sold_tickets.toLocaleString()} vendidos`}
                 </span>
-                <span className={cn("font-black", campaign.status === 'completed' ? "text-blue-500" : "text-primary")}>
-                  {campaign.status === 'completed' ? '100%' : `${progress}%`}
+                <span className={cn("font-black", isCompleted ? "text-blue-500" : "text-primary")}>
+                  {isCompleted ? '100%' : `${progress}%`}
                 </span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden border border-border">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: campaign.status === 'completed' ? '100%' : `${progress}%` }}
+                  animate={{ width: isCompleted ? '100%' : `${progress}%` }}
                   className={cn("h-full rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]", 
-                    campaign.status === 'completed' ? "bg-blue-500" : "bg-primary"
+                    isCompleted ? "bg-blue-500" : "bg-primary"
                   )}
                 />
               </div>
             </div>
 
-            {campaign.status === 'completed' && (
+            {isCompleted && (
               <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
                 <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
                   <Trophy className="h-5 w-5 text-blue-500" />
@@ -169,26 +169,26 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             <div className="flex items-center justify-between pt-1">
               <div className="flex items-center gap-2">
                 <div className="h-6 w-6 rounded-full bg-secondary border border-border flex items-center justify-center">
-                  {campaign.status === 'completed' ? (
+                  {isCompleted ? (
                     <CheckCircle className="h-3 w-3 text-blue-500" />
                   ) : (
                     <ShieldCheck className="h-3 w-3 text-muted-foreground" />
                   )}
                 </div>
                 <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                  {campaign.status === 'completed' ? 'Encerrado' : 'Garantido'}
+                  {isCompleted ? 'Encerrado' : 'Garantido'}
                 </span>
               </div>
               <Button 
                 size="sm" 
                 className={cn(
                   "h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 relative z-10",
-                  campaign.status === 'completed' 
+                  isCompleted 
                     ? "bg-secondary text-muted-foreground border-border hover:bg-secondary/80" 
                     : "glow-primary border-light-path border-[#22c55e]/30"
                 )}
               >
-                {campaign.status === 'completed' ? 'VER RESULTADO' : 'COMPRAR AGORA'}
+                {isCompleted ? 'VER RESULTADO' : 'COMPRAR AGORA'}
               </Button>
             </div>
           </div>
