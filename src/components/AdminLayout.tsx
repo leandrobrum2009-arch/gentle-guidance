@@ -43,6 +43,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const { data: siteSettings } = useSiteSettings();
 
   if (authLoading || roleLoading) {
     return (
