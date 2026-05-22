@@ -21,29 +21,35 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
   const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
 
-  const fetchOrder = useCallback(async () => {
+  const fetchOrder = useCallback(async (retryCount = 0) => {
     if (!orderId) return;
     
-    const { data: userData } = await supabase.auth.getUser();
-    if (userData.user) {
-      const { data: profile } = await supabase.from('profiles').select('balance').eq('user_id', userData.user.id).single();
-      if (profile) setUserBalance(Number(profile.balance));
-    }
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (userData.user) {
+        const { data: profile } = await supabase.from('profiles').select('balance').eq('user_id', userData.user.id).single();
+        if (profile) setUserBalance(Number(profile.balance));
+      }
 
-    const { data, error } = await supabase
-      .from("orders")
-      .select("*, campaigns(title)")
-      .eq("id", orderId)
-      .maybeSingle();
-    
-    if (error || !data) {
-      toast.error("Pedido não encontrado");
-      onOpenChange(false);
-      return;
-    }
-    
-    setOrder(data);
-    setLoading(false);
+      const { data, error } = await supabase
+        .from("orders")
+        .select("*, campaigns(title)")
+        .eq("id", orderId)
+        .maybeSingle();
+      
+      if (error || !data) {
+        if (retryCount < 3) {
+          console.log(`Order not found, retrying... (${retryCount + 1})`);
+          setTimeout(() => fetchOrder(retryCount + 1), 1000);
+          return;
+        }
+        toast.error("Pedido não encontrado");
+        onOpenChange(false);
+        return;
+      }
+      
+      setOrder(data);
+      setLoading(false);
 
     if (data.payment_status === 'pending' && !data.pix_code) {
       try {
