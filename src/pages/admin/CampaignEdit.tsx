@@ -34,6 +34,9 @@ interface CampaignForm {
   roulette_payout_rate: number; roulette_spin_cost: number; roulette_multiplier_max: number;
   show_instant_prizes: boolean; show_roulette_status: boolean; min_tickets: number; max_tickets: number;
   show_timer: boolean; sections_order: string[]; timer_end_date: string;
+  vip_group_link: string; vip_group_video_url: string;
+  upsell_video_url: string; upsell_offer_text: string;
+  upsell_enabled: boolean; upsell_probability: string;
 }
 
 const empty: CampaignForm = {
