@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, User } from "lucide-react";
+import { Eye, EyeOff, User, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,6 +11,7 @@ import { supabase } from "@/integrations/supabase/client";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
+import { useSiteSettings } from "@/hooks/useData";
 
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
