@@ -140,11 +140,11 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                 <SuccessFlow order={order} campaign={order.campaigns} />
               ) : (
                <>
-                  {paymentMethod === 'pix' ? (
+                  {paymentMethod === 'pix' || paymentMethod === 'manual' ? (
                     <Card className="border-border/50">
                       <CardHeader className="pb-4">
                         <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
-                          <QrCode className="h-4 w-4 text-primary" /> Pagamento via PIX
+                          <QrCode className="h-4 w-4 text-primary" /> {paymentMethod === 'manual' ? 'Pagamento Manual (PIX)' : 'Pagamento via PIX'}
                         </CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-6">
@@ -152,6 +152,11 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                            {order.pix_qr_code_base64 ? (
                              <div className="relative p-4 bg-white rounded-xl shadow-lg">
                                <img src={`data:image/png;base64,${order.pix_qr_code_base64}`} alt="QR Code PIX" className="h-40 w-40" />
+                             </div>
+                           ) : paymentMethod === 'manual' ? (
+                             <div className="relative p-8 bg-primary/10 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center gap-2">
+                               <Landmark className="h-12 w-12 text-primary" />
+                               <p className="text-[10px] font-black uppercase tracking-tighter">Use a chave PIX abaixo</p>
                              </div>
                            ) : (
                              <div className="relative p-4 bg-white rounded-xl shadow-lg">
@@ -164,14 +169,21 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                           <div className="text-center space-y-1">
                             <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">Valor a pagar</p>
                             <p className="text-3xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
+                            {order.pix_name && (
+                              <p className="text-[10px] font-bold text-muted-foreground uppercase">Favorecido: {order.pix_name}</p>
+                            )}
                           </div>
                           <Button className="w-full h-12 rounded-xl gap-2 font-black uppercase" onClick={copyPix}>
-                            <Copy className="h-4 w-4" /> Copiar Código PIX
+                            <Copy className="h-4 w-4" /> Copiar Chave PIX
                           </Button>
                         </div>
                         <div className="flex items-center gap-3 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500">
                           <Clock className="h-5 w-5 animate-pulse" />
-                          <p className="text-[10px] font-bold uppercase leading-tight">Aguardando confirmação... Não feche esta página após pagar.</p>
+                          <p className="text-[10px] font-bold uppercase leading-tight">
+                            {paymentMethod === 'manual' 
+                              ? "Após pagar, envie o comprovante no WhatsApp de suporte para liberação." 
+                              : "Aguardando confirmação automática... Não feche esta página após pagar."}
+                          </p>
                         </div>
                       </CardContent>
                     </Card>
