@@ -171,9 +171,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                  <Ticket className="h-5 w-5 text-primary-foreground" />
                </div>
              )}
-             <span className="font-display text-sm font-bold tracking-tight truncate max-w-[150px]">
-               {siteSettings?.site_name || "Admin"}
-             </span>
+              <span className="font-display text-sm font-bold tracking-tight truncate max-w-[150px]">
+                {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Admin"}
+              </span>
           </div>
           
           <Sheet>
