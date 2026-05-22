@@ -1253,6 +1253,7 @@ export type Database = {
     }
     Functions: {
       cleanup_expired_reservations: { Args: never; Returns: undefined }
+      duplicate_campaign: { Args: { p_campaign_id: string }; Returns: string }
       handle_order_payment: { Args: { p_order_id: string }; Returns: undefined }
       has_role: {
         Args: {

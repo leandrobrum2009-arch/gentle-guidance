@@ -10,12 +10,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2, Ticket, Zap } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2, Ticket, Zap, CheckSquare, Square } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DrawCeremony } from "@/components/DrawCeremony";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AdminCampaigns() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function AdminCampaigns() {
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
   
   // Draw Ceremony States
   const [isCeremonyOpen, setIsCeremonyOpen] = useState(false);
@@ -41,18 +43,52 @@ export default function AdminCampaigns() {
     queryClient.invalidateQueries({ queryKey: ["campaigns"] });
   };
 
-  const duplicate = async (campaign: any) => {
-    const { id, created_at, updated_at, sold_tickets, ...rest } = campaign;
-    const { error } = await supabase.from("campaigns").insert({
-      ...rest,
-      title: `${rest.title} (Cópia)`,
-      slug: `${rest.slug}-copia-${Math.floor(Math.random() * 1000)}`,
-      sold_tickets: 0,
-      status: "draft"
-    });
-    if (error) { toast({ title: "Erro", description: error.message, variant: "destructive" }); return; }
-    toast({ title: "Campanha duplicada com sucesso" });
+  const duplicate = async (id: string) => {
+    setSaving(true);
+    const { data, error } = await supabase.rpc("duplicate_campaign", { p_campaign_id: id });
+    setSaving(false);
+    if (error) { toast({ title: "Erro ao duplicar", description: error.message, variant: "destructive" }); return; }
+    toast({ title: "Campanha duplicada com sucesso", description: "A nova campanha foi criada como rascunho." });
     queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+  };
+
+  const bulkDuplicate = async () => {
+    if (selectedIds.length === 0) return;
+    if (!confirm(`Deseja duplicar as ${selectedIds.length} campanhas selecionadas?`)) return;
+    
+    setSaving(true);
+    let successCount = 0;
+    let failCount = 0;
+
+    for (const id of selectedIds) {
+      const { error } = await supabase.rpc("duplicate_campaign", { p_campaign_id: id });
+      if (error) {
+        console.error(`Erro ao duplicar ${id}:`, error);
+        failCount++;
+      } else {
+        successCount++;
+      }
+    }
+
+    setSaving(false);
+    toast({ 
+      title: "Duplicação concluída", 
+      description: `${successCount} sucesso(s), ${failCount} falha(s).` 
+    });
+    setSelectedIds([]);
+    queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === filteredCampaigns.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(filteredCampaigns.map(c => c.id));
+    }
   };
 
   const statusInfo = (s: string) => {
@@ -104,12 +140,25 @@ export default function AdminCampaigns() {
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Campanhas</h1>
           <p className="text-muted-foreground mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
         </div>
-        <Button 
-          onClick={() => navigate("/admin/campanhas/nova")}
-          className="bg-primary hover:bg-primary/90 text-foreground font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
-        >
-          <Plus className="mr-2 h-5 w-5" /> Nova Campanha
-        </Button>
+        <div className="flex items-center gap-3">
+          {selectedIds.length > 0 && (
+            <Button 
+              variant="outline" 
+              onClick={bulkDuplicate}
+              disabled={saving}
+              className="border-primary/50 text-primary hover:bg-primary/10 font-bold h-12 px-6 rounded-xl"
+            >
+              {saving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Copy className="mr-2 h-4 w-4" />}
+              Duplicar Selecionadas ({selectedIds.length})
+            </Button>
+          )}
+          <Button 
+            onClick={() => navigate("/admin/campanhas/nova")}
+            className="bg-primary hover:bg-primary/90 text-foreground font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
+          >
+            <Plus className="mr-2 h-5 w-5" /> Nova Campanha
+          </Button>
+        </div>
       </div>
 
       <Card className="border-border bg-card/50 backdrop-blur-xl overflow-hidden">
@@ -173,20 +222,32 @@ export default function AdminCampaigns() {
             <Table className="min-w-[800px]">
                <TableHeader className="bg-card/[0.02]">
                  <TableRow className="hover:bg-transparent border-border">
-                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest pl-6 py-4">Campanha</TableHead>
+                   <TableHead className="w-12 pl-6">
+                     <Checkbox 
+                       checked={selectedIds.length === filteredCampaigns.length && filteredCampaigns.length > 0}
+                       onCheckedChange={toggleSelectAll}
+                     />
+                   </TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Campanha</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
+                 </TableRow>
+               </TableHeader>
+               <TableBody>
                  {filteredCampaigns.map((c) => {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
                    return (
-                   <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
-                     <TableCell className="pl-6 py-4">
+                    <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
+                      <TableCell className="pl-6">
+                        <Checkbox 
+                          checked={selectedIds.includes(c.id)}
+                          onCheckedChange={() => toggleSelect(c.id)}
+                        />
+                      </TableCell>
+                      <TableCell className="py-4">
                        <div className="flex items-center gap-4">
                          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary/20 to-purple-600/20 border border-primary/20 flex items-center justify-center text-primary font-bold overflow-hidden">
                            {c.image_url ? <img src={c.image_url} className="h-full w-full object-cover" /> : c.title.substring(0, 1)}
@@ -274,9 +335,9 @@ export default function AdminCampaigns() {
                              <DropdownMenuItem onClick={() => window.open(`/campanha/${c.id}`, '_blank')} className="gap-2 cursor-pointer">
                                <ExternalLink className="h-4 w-4 text-muted-foreground" /> Ver no Site
                              </DropdownMenuItem>
-                             <DropdownMenuItem onClick={() => duplicate(c)} className="gap-2 cursor-pointer">
-                               <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifas
-                             </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => duplicate(c.id)} className="gap-2 cursor-pointer">
+                                <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifa
+                              </DropdownMenuItem>
                              <DropdownMenuSeparator className="bg-secondary/20" />
                              <DropdownMenuItem onClick={() => remove(c.id)} className="gap-2 cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
                                <Trash2 className="h-4 w-4" /> Excluir Definitivamente
