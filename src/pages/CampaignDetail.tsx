@@ -765,21 +765,22 @@ const CampaignDetail = () => {
             exit={{ y: 100 }}
             className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden"
           >
-        <div className="flex items-center gap-4">
-          <div className="flex-1">
-            <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
-            <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-          </div>
-          <Button 
-            className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
-            disabled={campaign.status !== "active"}
-            onClick={() => {
-              const element = document.getElementById('purchase-tabs');
-              element?.scrollIntoView({ behavior: 'smooth' });
-            }}
-          >
-            {campaign.status === "active" ? "QUERO MEUS BILHETES" : "VENDAS SUSPENSAS"}
-          </Button>
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
+                <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
+              </div>
+              <Button 
+                className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30 animate-button-flash"
+                disabled={campaign.status !== "active"}
+                onClick={() => {
+                  const element = document.getElementById('purchase-tabs');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+              >
+                {campaign.status === "active" ? "PARTICIPAR AGORA" : "VENDAS SUSPENSAS"}
+              </Button>
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
