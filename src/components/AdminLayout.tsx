@@ -85,9 +85,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         )}
         <div className="min-w-0 flex-1">
           <span className="block font-display text-sm font-bold tracking-tight truncate">
-            {siteSettings?.site_name || "Painel Administrativo"}
+            {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
           </span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Admin</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Painel Admin</span>
         </div>
       </div>
 
