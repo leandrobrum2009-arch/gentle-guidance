@@ -34,6 +34,9 @@ interface CampaignForm {
   roulette_payout_rate: number; roulette_spin_cost: number; roulette_multiplier_max: number;
   show_instant_prizes: boolean; show_roulette_status: boolean; min_tickets: number; max_tickets: number;
   show_timer: boolean; sections_order: string[]; timer_end_date: string;
+  vip_group_link: string; vip_group_video_url: string;
+  upsell_video_url: string; upsell_offer_text: string;
+  upsell_enabled: boolean; upsell_probability: string;
 }
 
 const empty: CampaignForm = {
@@ -51,6 +54,12 @@ const empty: CampaignForm = {
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
   show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
   timer_end_date: "",
+  vip_group_link: "",
+  vip_group_video_url: "",
+  upsell_video_url: "",
+  upsell_offer_text: "",
+  upsell_enabled: false,
+  upsell_probability: "98%",
 };
 
 export default function AdminCampaignEdit() {
@@ -261,6 +270,7 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
             <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            <TabsTrigger value="success_flow" className="rounded-xl px-6 gap-2"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
             <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
             <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
           </TabsList>
@@ -698,6 +708,65 @@ export default function AdminCampaignEdit() {
                     </div>
                     <Switch checked={form.ranking_enabled} onCheckedChange={(v) => set("ranking_enabled", v)} />
                   </div>
+               </div>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="success_flow" className="mt-6 space-y-6">
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                   <Crown className="h-5 w-5" />
+                 </div>
+                 <div className="flex-1">
+                   <h3 className="text-lg font-bold">Fluxo de Pós-Venda (Check-out)</h3>
+                   <p className="text-sm text-muted-foreground">Configure o que o cliente vê após o pagamento ser confirmado</p>
+                 </div>
+               </div>
+
+               <div className="space-y-6">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b">
+                   <div className="space-y-4">
+                     <div className="flex items-center justify-between">
+                       <Label className="font-bold">Oferta de Upsell (Aumentar Sorte)</Label>
+                       <Switch checked={form.upsell_enabled} onCheckedChange={(v) => set("upsell_enabled", v)} />
+                     </div>
+                     <p className="text-[11px] text-muted-foreground leading-relaxed">Mostra um vídeo e um cronômetro após o pagamento, incentivando o cliente a comprar mais cotas com "melhores chances".</p>
+                     
+                     {form.upsell_enabled && (
+                       <div className="space-y-4 pt-2">
+                         <div className="space-y-2">
+                           <Label className="text-xs">URL do Vídeo (Embed)</Label>
+                           <Input placeholder="Ex: https://www.youtube.com/embed/..." value={form.upsell_video_url} onChange={(e) => set("upsell_video_url", e.target.value)} />
+                         </div>
+                         <div className="space-y-2">
+                           <Label className="text-xs">Texto da Oferta</Label>
+                           <Textarea placeholder="Ex: Garanta agora mais números com 98% de chance..." value={form.upsell_offer_text} onChange={(e) => set("upsell_offer_text", e.target.value)} />
+                         </div>
+                         <div className="space-y-2">
+                           <Label className="text-xs">Porcentagem de Chance (Texto)</Label>
+                           <Input placeholder="Ex: 98%" value={form.upsell_probability} onChange={(e) => set("upsell_probability", e.target.value)} />
+                         </div>
+                       </div>
+                     )}
+                   </div>
+
+                   <div className="space-y-4">
+                     <Label className="font-bold">Comunidade VIP (WhatsApp/Telegram)</Label>
+                     <p className="text-[11px] text-muted-foreground leading-relaxed">Convida o cliente a entrar em um grupo exclusivo após o pagamento.</p>
+                     
+                     <div className="space-y-4 pt-2">
+                       <div className="space-y-2">
+                         <Label className="text-xs">Link do Grupo</Label>
+                         <Input placeholder="Ex: https://chat.whatsapp.com/..." value={form.vip_group_link} onChange={(e) => set("vip_group_link", e.target.value)} />
+                       </div>
+                       <div className="space-y-2">
+                         <Label className="text-xs">URL do Vídeo de Convite (Embed)</Label>
+                         <Input placeholder="Ex: https://www.youtube.com/embed/..." value={form.vip_group_video_url} onChange={(e) => set("vip_group_video_url", e.target.value)} />
+                       </div>
+                     </div>
+                   </div>
+                 </div>
                </div>
             </Card>
           </TabsContent>

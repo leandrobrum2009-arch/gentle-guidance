@@ -187,8 +187,14 @@ export type Database = {
           title: string
           total_tickets: number
           updated_at: string
+          upsell_enabled: boolean | null
+          upsell_offer_text: string | null
+          upsell_probability: string | null
+          upsell_video_url: string | null
           urgency_tag: string | null
           video_url: string | null
+          vip_group_link: string | null
+          vip_group_video_url: string | null
         }
         Insert: {
           auto_numbers?: boolean | null
@@ -236,8 +242,14 @@ export type Database = {
           title: string
           total_tickets?: number
           updated_at?: string
+          upsell_enabled?: boolean | null
+          upsell_offer_text?: string | null
+          upsell_probability?: string | null
+          upsell_video_url?: string | null
           urgency_tag?: string | null
           video_url?: string | null
+          vip_group_link?: string | null
+          vip_group_video_url?: string | null
         }
         Update: {
           auto_numbers?: boolean | null
@@ -285,8 +297,14 @@ export type Database = {
           title?: string
           total_tickets?: number
           updated_at?: string
+          upsell_enabled?: boolean | null
+          upsell_offer_text?: string | null
+          upsell_probability?: string | null
+          upsell_video_url?: string | null
           urgency_tag?: string | null
           video_url?: string | null
+          vip_group_link?: string | null
+          vip_group_video_url?: string | null
         }
         Relationships: []
       }
