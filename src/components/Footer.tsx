@@ -37,7 +37,7 @@ const Footer = () => {
               </span>
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
-              A maior e mais segura plataforma de ações online da {siteSettings?.site_name || "RifasPro"}. Prêmios instantâneos e sorteios garantidos.
+              A maior e mais segura plataforma de ações online da {siteSettings?.site_name || "Sua Empresa"}. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
@@ -64,11 +64,11 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Phone className="h-4 w-4 text-primary" /></div>
-                <span className="font-black text-foreground">0800 123 4567</span>
+                <span className="font-black text-foreground">{siteSettings?.company_phone || siteSettings?.support_whatsapp || "0800 123 4567"}</span>
               </div>
               <div className="flex items-center gap-3 text-xs">
                 <div className="h-8 w-8 rounded-lg bg-secondary border border-border flex items-center justify-center"><Mail className="h-4 w-4 text-primary" /></div>
-                <span className="font-black text-foreground">ajuda@rifaspro.com</span>
+                <span className="font-black text-foreground truncate max-w-[150px]">{siteSettings?.company_email || "contato@empresa.com"}</span>
               </div>
             </div>
           </div>
@@ -97,7 +97,7 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="text-center md:text-left">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
-              © {new Date().getFullYear()} {siteSettings?.site_name || "RifasPro"}. Todos os direitos reservados.
+              © {new Date().getFullYear()} {siteSettings?.site_name || "Sua Empresa"}. Todos os direitos reservados.
             </p>
             <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
               <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">

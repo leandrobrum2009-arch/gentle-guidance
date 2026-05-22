@@ -6,8 +6,10 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useSiteSettings } from "@/hooks/useData";
 
 const Support = () => {
+  const { data: siteSettings } = useSiteSettings();
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -76,7 +78,7 @@ const Support = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold">E-mail</h3>
-                  <p className="text-sm text-muted-foreground">contato@rifaspro.com.br</p>
+                  <p className="text-sm text-muted-foreground">{siteSettings?.company_email || "contato@empresa.com"}</p>
                 </div>
               </div>
             </div>
@@ -88,7 +90,7 @@ const Support = () => {
                 </div>
                 <div>
                   <h3 className="font-semibold">Telefone</h3>
-                  <p className="text-sm text-muted-foreground">(00) 0000-0000</p>
+                  <p className="text-sm text-muted-foreground">{siteSettings?.company_phone || siteSettings?.support_whatsapp || "(00) 0000-0000"}</p>
                 </div>
               </div>
             </div>

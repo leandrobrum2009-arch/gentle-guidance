@@ -21,7 +21,8 @@ import { useAuth } from "@/contexts/AuthContext";
     useUserMysteryBoxWins,
     markNotificationsAsRead,
     useUserReferrals,
-    useAffiliateCommissions
+    useAffiliateCommissions,
+    useSiteSettings
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -60,8 +61,9 @@ import { cn } from "@/lib/utils";
  
    const [profile, setProfile] = useState<any>(null);
    const [affiliate, setAffiliate] = useState<any>(null);
-   const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
-   const { data: commissions } = useAffiliateCommissions(affiliate?.id || "");
+    const { data: referrals } = useUserReferrals(affiliate?.referral_code || "");
+    const { data: commissions } = useAffiliateCommissions(affiliate?.id || "");
+    const { data: siteSettings } = useSiteSettings();
 
    const [isLoading, setIsLoading] = useState(true);
    const [activeTab, setActiveTab] = useState(() => {
@@ -130,7 +132,7 @@ import { cn } from "@/lib/utils";
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'RifasPro - Indique e Ganhe!',
+          title: `${siteSettings?.site_name || 'Nossa Empresa'} - Indique e Ganhe!`,
           text: 'Participe dos melhores sorteios com prêmios incríveis!',
           url: link,
         });
