@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
+import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
   Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket
@@ -44,6 +45,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
   const { data: siteSettings } = useSiteSettings();
+  const [profile, setProfile] = useState<any>(null);
+
+  useEffect(() => {
+    if (user) {
+      const fetchProfile = async () => {
+        const { data } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+        setProfile(data);
+      };
+      fetchProfile();
+    }
+  }, [user]);
 
   if (authLoading || roleLoading) {
     return (
@@ -85,9 +97,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         )}
         <div className="min-w-0 flex-1">
           <span className="block font-display text-sm font-bold tracking-tight truncate">
-            {siteSettings?.site_name || "Painel Administrativo"}
+            {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
           </span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Admin</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Painel Admin</span>
         </div>
       </div>
 
@@ -159,9 +171,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                  <Ticket className="h-5 w-5 text-primary-foreground" />
                </div>
              )}
-             <span className="font-display text-sm font-bold tracking-tight truncate max-w-[150px]">
-               {siteSettings?.site_name || "Admin"}
-             </span>
+              <span className="font-display text-sm font-bold tracking-tight truncate max-w-[150px]">
+                {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Admin"}
+              </span>
           </div>
           
           <Sheet>
