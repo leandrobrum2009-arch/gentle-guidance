@@ -12,7 +12,8 @@
  import { toast } from "sonner";
  import Header from "@/components/Header";
  import Footer from "@/components/Footer";
- import PaymentSelector from "@/components/PaymentSelector";
+import PaymentSelector from "@/components/PaymentSelector";
+import SuccessFlow from "@/components/checkout/SuccessFlow";
  
  export default function Checkout() {
    const { orderId } = useParams<{ orderId: string }>();
