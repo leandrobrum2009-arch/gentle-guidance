@@ -75,9 +75,71 @@ export default function AdminScratchCards() {
           </h1>
           <p className="text-muted-foreground mt-1">Configure prêmios e probabilidades das raspadinhas.</p>
         </div>
-        <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
-          <Plus className="mr-2 h-4 w-4" /> Novo Prêmio
-        </Button>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-primary hover:bg-primary/90 text-foreground font-bold shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none">
+              <Plus className="mr-2 h-4 w-4" /> Novo Prêmio
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="bg-card border-border">
+            <DialogHeader>
+              <DialogTitle>Novo Prêmio de Raspadinha</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4 py-4">
+              <div className="space-y-2">
+                <Label>Nome do Prêmio</Label>
+                <Input 
+                  placeholder="Ex: R$ 50,00 no PIX" 
+                  value={formData.label}
+                  onChange={e => setFormData({...formData, label: e.target.value})}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label>Tipo</Label>
+                  <Select 
+                    value={formData.prize_type}
+                    onValueChange={v => setFormData({...formData, prize_type: v})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="fixed_value">Valor Fixo</SelectItem>
+                      <SelectItem value="multiplier">Multiplicador</SelectItem>
+                      <SelectItem value="bonus">Bônus</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Valor (R$)</Label>
+                  <Input 
+                    type="number"
+                    value={formData.value}
+                    onChange={e => setFormData({...formData, value: e.target.value})}
+                  />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label>Probabilidade (%)</Label>
+                <Input 
+                  type="number"
+                  step="0.1"
+                  value={formData.chance_percent}
+                  onChange={e => setFormData({...formData, chance_percent: e.target.value})}
+                />
+                <p className="text-[10px] text-muted-foreground">A soma de todas as probabilidades não deve ultrapassar 100%.</p>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
+              <Button onClick={handleCreate} disabled={isSaving}>
+                {isSaving ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
+                Criar Prêmio
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
