@@ -17,6 +17,7 @@ import { toast } from "sonner";
 
 export default function AdminNotifications() {
   const { data: notifications, isLoading, refetch } = useAdminNotifications();
+  const { user } = useAuth();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -38,9 +39,10 @@ export default function AdminNotifications() {
         title: formData.title,
         body: formData.body,
         target_type: formData.target_type,
-        user_id: formData.target_type === 'specific' ? formData.user_id : null,
+        target_user_id: formData.target_type === 'specific' ? formData.user_id : null,
+        sent_by: user?.id,
         sent_at: new Date().toISOString()
-      });
+      } as any);
 
       if (error) throw error;
 
