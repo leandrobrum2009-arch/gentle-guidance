@@ -376,7 +376,7 @@ export default function AdminCampaignEdit() {
                      </div>
                      <div>
                        <p className="font-bold text-sm">Seleção Manual (Grade)</p>
-                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
+                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Agora suporta grandes volumes com busca por número.</p>
                      </div>
                    </button>
                  </div>
