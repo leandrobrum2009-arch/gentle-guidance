@@ -18,7 +18,6 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generatingPix, setGeneratingPix] = useState(false);
-  const [timeLeft, setTimeLeft] = useState(120); 
   const [status, setStatus] = useState<'pending' | 'paid' | 'expired'>('pending');
   const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
@@ -95,7 +94,6 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
   useEffect(() => {
     if (isOpen && orderId) {
       setLoading(true);
-      setTimeLeft(120);
       setStatus('pending');
       fetchOrder();
 
@@ -121,6 +119,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
     }
   }, [isOpen, orderId, fetchOrder, onPaymentSuccess, onOpenChange]);
 
+  // Timer removed as per user request to avoid confusion during payment
+  /*
   useEffect(() => {
     if (status !== 'pending' || !isOpen) return;
 
@@ -140,6 +140,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
     return () => clearInterval(timer);
   }, [status, isOpen]);
+  */
 
   const copyPix = () => {
     if (order?.pix_code) {
@@ -260,10 +261,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               className="flex flex-col"
             >
               <div className="bg-primary/10 p-6 flex flex-col items-center text-center gap-2 border-b border-primary/10 relative">
-                 <div className="absolute top-4 right-4 flex items-center gap-1.5 px-3 py-1 rounded-full bg-background border border-primary/20 shadow-sm">
-                   <Clock className={`h-3 w-3 ${timeLeft < 30 ? 'text-rose-500 animate-pulse' : 'text-primary'}`} />
-                   <span className={`text-xs font-black font-mono ${timeLeft < 30 ? 'text-rose-500' : 'text-foreground'}`}>{formatTime(timeLeft)}</span>
-                 </div>
+
 
                 <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 mb-2">
                   <QrCode className="h-6 w-6 text-primary-foreground" />
