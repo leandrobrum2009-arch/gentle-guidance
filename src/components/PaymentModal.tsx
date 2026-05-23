@@ -277,9 +277,74 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                       <img src={`data:image/png;base64,${order.pix_qr_code_base64}`} alt="QR Code PIX" className="h-44 w-44" />
                     </div>
                   ) : order?.is_manual ? (
-                    <div className="relative p-12 bg-primary/5 rounded-3xl border-4 border-dashed border-primary/20 flex flex-col items-center gap-3">
-                      <Landmark className="h-16 w-16 text-primary" />
-                      <p className="text-xs font-black uppercase tracking-widest text-primary">Pagamento Manual</p>
+                    <div className="relative p-12 bg-primary/5 rounded-3xl border-4 border-dashed border-primary/20 flex flex-col items-center gap-4 w-full">
+                      <div className="flex flex-col items-center gap-2">
+                        <Landmark className="h-16 w-16 text-primary" />
+                        <p className="text-xs font-black uppercase tracking-widest text-primary">Pagamento Manual</p>
+                      </div>
+                      
+                      <div className="w-full space-y-3">
+                        <div className="p-4 rounded-2xl bg-background border border-border space-y-3">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Anexar Comprovante</span>
+                            {order.proof_url && <Badge className="bg-emerald-500/10 text-emerald-500 border-none text-[8px]">ANEXADO</Badge>}
+                          </div>
+                          
+                          <Label className="cursor-pointer group">
+                            <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-border group-hover:border-primary/50 rounded-xl bg-secondary/20 transition-all">
+                              {isPayingWithBalance ? (
+                                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                              ) : (
+                                <>
+                                  <Upload className="h-6 w-6 text-muted-foreground mb-2 group-hover:text-primary transition-colors" />
+                                  <span className="text-[10px] font-bold text-muted-foreground group-hover:text-foreground transition-colors uppercase">
+                                    {order.proof_url ? "Alterar Arquivo" : "Clique para anexar"}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                            <input 
+                              type="file" 
+                              className="hidden" 
+                              accept="image/*,application/pdf" 
+                              onChange={async (e) => {
+                                const file = e.target.files?.[0];
+                                if (!file) return;
+                                
+                                setIsPayingWithBalance(true);
+                                try {
+                                  const fileExt = file.name.split('.').pop();
+                                  const filePath = `${order.id}/${crypto.randomUUID()}.${fileExt}`;
+                                  
+                                  const { error: uploadError } = await supabase.storage
+                                    .from('payment-proofs')
+                                    .upload(filePath, file);
+                                  
+                                  if (uploadError) throw uploadError;
+                                  
+                                  const { data: { publicUrl } } = supabase.storage
+                                    .from('payment-proofs')
+                                    .getPublicUrl(filePath);
+                                  
+                                  const { error: updateError } = await supabase
+                                    .from('orders')
+                                    .update({ proof_url: publicUrl })
+                                    .eq('id', order.id);
+                                  
+                                  if (updateError) throw updateError;
+                                  
+                                  toast.success("Comprovante anexado!");
+                                  setOrder((prev: any) => ({ ...prev, proof_url: publicUrl }));
+                                } catch (err: any) {
+                                  toast.error("Erro: " + err.message);
+                                } finally {
+                                  setIsPayingWithBalance(false);
+                                }
+                              }}
+                            />
+                          </Label>
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     <div className="h-52 w-52 rounded-2xl bg-secondary animate-pulse flex items-center justify-center">
