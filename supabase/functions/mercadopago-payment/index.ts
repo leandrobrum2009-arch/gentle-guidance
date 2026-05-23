@@ -125,7 +125,11 @@ serve(async (req) => {
             const orderId = paymentData.external_reference
             console.log(`[MP Webhook] Approving order ${orderId} for payment ${id}`);
             
-            const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
+            const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { 
+              p_order_id: orderId,
+              p_payment_id: id,
+              p_payment_provider: 'mercadopago'
+            })
             
             if (!rpcError) {
               await markAsProcessed(supabaseClient, id, 'mercadopago');
