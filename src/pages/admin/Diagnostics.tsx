@@ -75,6 +75,16 @@ export default function AdminDiagnostics() {
       }
     }
 
+    // 4. Check for Order Inconsistencies
+    try {
+      const { data, error } = await supabase.rpc('get_order_inconsistencies');
+      if (!error && data) {
+        setInconsistencies(data as any[]);
+      }
+    } catch (err) {
+      console.error('Audit Error:', err);
+    }
+
     setLoading(false);
     toast.success("Diagnóstico concluído");
   };
