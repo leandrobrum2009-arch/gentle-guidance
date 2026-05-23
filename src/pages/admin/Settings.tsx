@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2 } from "lucide-react";
+import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -58,7 +58,9 @@ export default function AdminSettings() {
     manual_payment_pix_name: "Nome do Titular PIX",
     paggue_client_key: "Paggue: Client Key",
     paggue_client_secret: "Paggue: Client Secret",
-    active_payment_provider: "Provedor de Pagamento Ativo"
+    active_payment_provider: "Provedor de Pagamento Ativo",
+    supabase_url: "Supabase URL (Configuração do Sistema)",
+    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
   };
 
   useEffect(() => {
@@ -504,6 +506,40 @@ export default function AdminSettings() {
                           Neste modo, o cliente precisa enviar o comprovante via WhatsApp para confirmação manual.
                         </p>
                       </div>
+                    </div>
+                  </div>
+
+                  {/* System/Supabase for queue */}
+                  <div className="space-y-5 p-6 rounded-3xl bg-secondary/10 border-2 border-border/50 col-span-1 md:col-span-3">
+                    <div className="flex items-center gap-4 mb-2">
+                      <div className="h-12 w-12 rounded-xl bg-slate-800 flex items-center justify-center text-white shadow-lg">
+                        <Database className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-base">Configurações do Sistema</h4>
+                        <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">Automático / Fila de Retentativas</p>
+                      </div>
+                    </div>
+                    
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'supabase_url')} 
+                        onUpdate={handleUpdate} 
+                        label="Supabase URL"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'supabase_service_role_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Service Role Key"
+                        getIcon={getIcon}
+                        type="password"
+                      />
+                    </div>
+                    <div className="p-4 rounded-xl bg-primary/5 border border-primary/10">
+                      <p className="text-[10px] text-primary font-bold uppercase leading-relaxed">
+                        Estas chaves são necessárias para o funcionamento da **Fila de Retentativas** e webhooks automáticos.
+                      </p>
                     </div>
                   </div>
                 </div>
