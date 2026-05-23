@@ -20,7 +20,7 @@ import { ptBR } from "date-fns/locale";
 export default function AdminPaymentLogs() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearch) = useState("");
+  const [searchTerm, setSearch] = useState("");
   const [selectedLog, setSelectedLog] = useState<any>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
