@@ -107,13 +107,27 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                   </div>
                 </div>
 
-                {(availableSpins > 0) && (
-                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Star className="h-5 w-5 text-primary animate-pulse" />
-                      <p className="text-sm font-bold text-primary">Você ganhou {availableSpins} giro(s) na roleta!</p>
-                    </div>
-                    <Button size="sm" onClick={() => setStep(2)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">GIRAR AGORA</Button>
+                {(availableSpins > 0 || availableScratchCards > 0) && (
+                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 flex flex-col gap-4">
+                    {availableSpins > 0 && (
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Star className="h-5 w-5 text-primary animate-pulse" />
+                          <p className="text-sm font-bold text-primary">Você ganhou {availableSpins} giro(s)!</p>
+                        </div>
+                        <Button size="sm" onClick={() => setStep(2)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">GIRAR AGORA</Button>
+                      </div>
+                    )}
+                    
+                    {availableScratchCards > 0 && (
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Gift className="h-5 w-5 text-primary animate-pulse" />
+                          <p className="text-sm font-bold text-primary">Você ganhou {availableScratchCards} raspadinha(s)!</p>
+                        </div>
+                        <Button size="sm" onClick={() => setStep(5)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">RASPAR AGORA</Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
