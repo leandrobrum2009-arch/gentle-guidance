@@ -673,6 +673,8 @@ export type Database = {
           expires_at: string | null
           id: string
           paid_at: string | null
+          payment_id: string | null
+          payment_provider: string | null
           payment_status: string
           pix_code: string | null
           pix_qr_code_base64: string | null
@@ -690,6 +692,8 @@ export type Database = {
           expires_at?: string | null
           id?: string
           paid_at?: string | null
+          payment_id?: string | null
+          payment_provider?: string | null
           payment_status?: string
           pix_code?: string | null
           pix_qr_code_base64?: string | null
@@ -707,6 +711,8 @@ export type Database = {
           expires_at?: string | null
           id?: string
           paid_at?: string | null
+          payment_id?: string | null
+          payment_provider?: string | null
           payment_status?: string
           pix_code?: string | null
           pix_qr_code_base64?: string | null
@@ -1353,7 +1359,16 @@ export type Database = {
           tickets_generated: number
         }[]
       }
-      handle_order_payment: { Args: { p_order_id: string }; Returns: undefined }
+      handle_order_payment:
+        | { Args: { p_order_id: string }; Returns: undefined }
+        | {
+            Args: {
+              p_order_id: string
+              p_payment_id?: string
+              p_payment_provider?: string
+            }
+            Returns: undefined
+          }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
