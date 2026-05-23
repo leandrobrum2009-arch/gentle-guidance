@@ -179,8 +179,29 @@ export const useAdminCampaigns = () =>
      onError: (error: any) => {
        toast.error("Erro ao atualizar pedido: " + error.message);
      },
-   });
- };
+  });
+};
+
+export const useDeleteOrder = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (orderId: string) => {
+      const { error } = await supabase
+        .from("orders")
+        .delete()
+        .eq("id", orderId);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+      toast.success("Pedido excluído com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error("Erro ao excluir pedido: " + error.message);
+    },
+  });
+};
 
 export const useAdminOrders = () =>
   useQuery({
