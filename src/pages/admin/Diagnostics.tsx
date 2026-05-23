@@ -86,6 +86,18 @@ export default function AdminDiagnostics() {
       console.error('Audit Error:', err);
     }
 
+    // 5. Fetch Draw Logs
+    try {
+      const { data } = await supabase
+        .from('draw_logs')
+        .select('*, campaigns(title), winners(winner_name, ticket_number)')
+        .order('created_at', { ascending: false })
+        .limit(10);
+      if (data) setDrawLogs(data);
+    } catch (err) {
+      console.error('Draw Logs Error:', err);
+    }
+
     setLoading(false);
     toast.success("Diagnóstico concluído");
   };
