@@ -33,6 +33,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   const displayTickets = useMemo(() => {
     return localTickets.length > 0 ? localTickets : (order.tickets || []);
