@@ -6,7 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { 
   CheckCircle2, XCircle, AlertCircle, RefreshCw, 
   ShieldCheck, Globe, Database, Server, Settings, 
-  CreditCard, Key, Webhook, Activity
+  CreditCard, Key, Webhook, Activity, ClipboardCheck,
+  Search, Info, History
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
