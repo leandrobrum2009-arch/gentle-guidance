@@ -40,6 +40,7 @@ import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 
 const CampaignDetail = () => {
+  const queryClient = useQueryClient();
   const [showStickyBar, setShowStickyBar] = useState(false);
 
   useEffect(() => {
