@@ -180,11 +180,12 @@ const CampaignDetail = () => {
       if (error) throw error;
 
       setIsPurchasing(false);
-      setShowSuccess(true);
       setCurrentOrderId(orderId);
-      // We'll open the payment modal after the success animation completes
-      // setIsPaymentModalOpen(true); 
-      // setShowSuccess(true); - already set above
+      
+      // Open payment modal immediately as requested
+      setIsPaymentModalOpen(true);
+      // We still show the success animation briefly in the background or as a flash
+      setShowSuccess(true);
 
     } catch (error: any) {
       setIsPurchasing(false);
