@@ -42,13 +42,23 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
   }, [step]);
 
   const fetchRewards = async () => {
-    // Check if user has roulette spins or mystery boxes from this order/campaign
-    // For now we calculate based on campaign rules
+    // Check if user has roulette spins
     const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
     if (spinRule) {
       setAvailableSpins(spinRule.spins);
     } else if (campaign.roulette_free_tickets > 0) {
       setAvailableSpins(Math.floor(order.quantity / campaign.roulette_free_tickets));
+    }
+
+    // Check if user has scratch cards
+    if (campaign.scratch_cards_enabled) {
+      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      if (scratchRule) {
+        setAvailableScratchCards(scratchRule.scratches || 1);
+      } else {
+        // Default 1 scratch card for buying anything if enabled and no specific rule
+        setAvailableScratchCards(1);
+      }
     }
 
     // Fetch roulette prizes for this campaign
@@ -97,13 +107,27 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                   </div>
                 </div>
 
-                {(availableSpins > 0) && (
-                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Star className="h-5 w-5 text-primary animate-pulse" />
-                      <p className="text-sm font-bold text-primary">Você ganhou {availableSpins} giro(s) na roleta!</p>
-                    </div>
-                    <Button size="sm" onClick={() => setStep(2)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">GIRAR AGORA</Button>
+                {(availableSpins > 0 || availableScratchCards > 0) && (
+                  <div className="p-4 rounded-2xl bg-primary/10 border border-primary/20 flex flex-col gap-4">
+                    {availableSpins > 0 && (
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Star className="h-5 w-5 text-primary animate-pulse" />
+                          <p className="text-sm font-bold text-primary">Você ganhou {availableSpins} giro(s)!</p>
+                        </div>
+                        <Button size="sm" onClick={() => setStep(2)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">GIRAR AGORA</Button>
+                      </div>
+                    )}
+                    
+                    {availableScratchCards > 0 && (
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2">
+                          <Gift className="h-5 w-5 text-primary animate-pulse" />
+                          <p className="text-sm font-bold text-primary">Você ganhou {availableScratchCards} raspadinha(s)!</p>
+                        </div>
+                        <Button size="sm" onClick={() => setStep(5)} className="rounded-xl font-bold bg-primary text-black hover:bg-primary/90">RASPAR AGORA</Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
@@ -298,6 +322,28 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                 </div>
               </CardContent>
             </Card>
+          </motion.div>
+        )}
+        {step === 5 && (
+          <motion.div key="step5" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+            <div className="flex items-center justify-between mb-4">
+               <h2 className="text-xl font-black uppercase italic tracking-tighter">Sua Raspadinha da Sorte</h2>
+               <Badge className="bg-primary text-black font-bold">{availableScratchCards} restantes</Badge>
+            </div>
+            
+            <ScratchCard 
+              campaignId={campaign.id} 
+              onComplete={() => {
+                setAvailableScratchCards(prev => prev - 1);
+                if (availableScratchCards <= 1) {
+                  setTimeout(() => setStep(3), 5000);
+                }
+              }}
+            />
+            
+            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(3)}>
+              Continuar para próxima etapa
+            </Button>
           </motion.div>
         )}
       </AnimatePresence>

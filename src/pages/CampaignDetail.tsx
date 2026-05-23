@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
@@ -39,6 +40,7 @@ import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 
 const CampaignDetail = () => {
+  const queryClient = useQueryClient();
   const [showStickyBar, setShowStickyBar] = useState(false);
 
   useEffect(() => {
@@ -751,8 +753,11 @@ const CampaignDetail = () => {
         onOpenChange={setIsPaymentModalOpen} 
         orderId={currentOrderId} 
         onPaymentSuccess={() => {
-          navigate("/conta#tickets");
+          // Just invalidate queries, don't navigate yet so user can see SuccessFlow
+          queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
+          queryClient.invalidateQueries({ queryKey: ["campaign"] });
         }} 
+
       />
       <Footer />
       

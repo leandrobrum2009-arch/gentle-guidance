@@ -5,6 +5,7 @@ import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landm
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import SuccessFlow from "./checkout/SuccessFlow";
 
 interface PaymentModalProps {
   orderId: string | null;
@@ -35,7 +36,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
       const { data, error } = await supabase
         .from("orders")
-        .select("*, campaigns(title)")
+        .select("*, campaigns(*), tickets(*), profiles(name)")
         .eq("id", orderId)
         .maybeSingle();
       
@@ -107,10 +108,9 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         }, (payload) => {
           if (payload.new.payment_status === 'paid') {
             setStatus('paid');
-            setTimeout(() => {
-              onPaymentSuccess();
-              onOpenChange(false);
-            }, 3000);
+            // Keep the modal open so user can see SuccessFlow (roulette/scratch cards)
+            // onPaymentSuccess() will be called when they manually close it or through specific actions
+            onPaymentSuccess(); 
           }
         })
         .subscribe();
@@ -168,10 +168,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       if (data.success) {
         toast.success(data.message);
         setStatus('paid');
-        setTimeout(() => {
-          onPaymentSuccess();
-          onOpenChange(false);
-        }, 3000);
+        onPaymentSuccess();
       } else {
         toast.error(data.message);
       }
@@ -190,7 +187,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[450px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[500px] bg-card border-border rounded-3xl p-0 overflow-hidden">
         <AnimatePresence mode="wait">
           {loading || generatingPix ? (
             <motion.div 
@@ -224,18 +221,20 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
           ) : status === 'paid' ? (
             <motion.div 
               key="paid"
-              initial={{ opacity: 0, scale: 0.9 }} 
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-10 text-center space-y-6"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }}
+              className="p-6 overflow-y-auto max-h-[80vh]"
             >
-              <div className="mx-auto h-24 w-24 rounded-full bg-emerald-500/20 flex items-center justify-center border-4 border-emerald-500/30">
-                <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+              <SuccessFlow order={order} campaign={order.campaigns} />
+              
+              <div className="mt-8 pt-6 border-t border-border flex flex-col gap-3">
+                <Button className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>
+                  CONCLUIR E VER MEUS NÚMEROS
+                </Button>
+                <p className="text-[10px] text-muted-foreground text-center font-bold uppercase tracking-widest">
+                  O comprovante também foi enviado para o seu WhatsApp/E-mail.
+                </p>
               </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-black uppercase italic tracking-tighter">PAGAMENTO CONFIRMADO!</h2>
-                <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Seus números já foram reservados. Boa sorte!</p>
-              </div>
-              <p className="text-xs text-primary font-bold animate-pulse">Redirecionando para seus títulos...</p>
             </motion.div>
           ) : status === 'expired' ? (
             <motion.div 
