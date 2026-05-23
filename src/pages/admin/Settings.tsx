@@ -58,7 +58,9 @@ export default function AdminSettings() {
     manual_payment_pix_name: "Nome do Titular PIX",
     paggue_client_key: "Paggue: Client Key",
     paggue_client_secret: "Paggue: Client Secret",
-    active_payment_provider: "Provedor de Pagamento Ativo"
+    active_payment_provider: "Provedor de Pagamento Ativo",
+    supabase_url: "Supabase URL (Configuração do Sistema)",
+    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
   };
 
   useEffect(() => {
