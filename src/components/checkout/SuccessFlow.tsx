@@ -334,6 +334,32 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                       </Button>
                     </div>
                   </div>
+
+                  {recommendedCampaigns.length > 0 && (
+                    <div className="pt-8 border-t border-white/5 space-y-4 text-left">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-white/60 flex items-center gap-2">
+                        <ShoppingCart className="h-4 w-4 text-primary" /> Outros Sorteios que Você pode Gostar
+                      </h3>
+                      <div className="grid grid-cols-1 gap-3">
+                        {recommendedCampaigns.map((c) => (
+                          <Link key={c.id} to={`/campanha/${c.slug}`} className="group">
+                            <div className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all active:scale-[0.98]">
+                              <div className="h-14 w-14 rounded-xl overflow-hidden flex-shrink-0">
+                                <img src={c.image_url} alt={c.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-black uppercase truncate text-white group-hover:text-primary transition-colors">{c.title}</p>
+                                <div className="flex items-center justify-between mt-1">
+                                   <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Cota: R$ {Number(c.ticket_price).toFixed(2).replace('.', ',')}</p>
+                                   <Badge variant="outline" className="text-[8px] h-4 border-primary/20 text-primary uppercase font-black">PARTICIPAR</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
