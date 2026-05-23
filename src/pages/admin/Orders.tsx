@@ -249,6 +249,15 @@ export default function AdminOrders() {
                                   <ShoppingBag className="h-4 w-4" />
                                   Ver Comprovante
                                 </DropdownMenuItem>
+                                {o.proof_url && (
+                                  <DropdownMenuItem 
+                                    className="flex items-center gap-3 focus:bg-emerald-500/10 focus:text-emerald-600 cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                    onClick={() => window.open(o.proof_url, '_blank')}
+                                  >
+                                    <FileText className="h-4 w-4" />
+                                    Anexo de Pagamento
+                                  </DropdownMenuItem>
+                                )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem 
                                   className="flex items-center gap-3 focus:bg-rose-500/10 focus:text-rose-500 cursor-pointer py-3 rounded-lg font-bold text-xs text-rose-500"
