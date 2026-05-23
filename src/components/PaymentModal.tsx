@@ -36,7 +36,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
       const { data, error } = await supabase
         .from("orders")
-        .select("*, campaigns(title)")
+        .select("*, campaigns(*), tickets(*), profiles(name)")
         .eq("id", orderId)
         .maybeSingle();
       
