@@ -2,7 +2,6 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 import { logWebhookEvent, markAsProcessed, markAsFailed } from "../_shared/webhook-handler.ts"
 
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -37,13 +36,15 @@ serve(async (req) => {
 
     if (path === "create") {
       const orderId = body.orderId
+      if (!orderId) throw new Error("ID do pedido não informado.")
+
       const { data: order, error: orderError } = await supabaseClient
         .from("orders")
         .select("*, campaigns(title)")
         .eq("id", orderId)
         .single()
 
-      if (orderError || !order) throw new Error("Order not found")
+      if (orderError || !order) throw new Error("Pedido não encontrado")
 
       // Create Preference for checkout redirect
       const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
@@ -98,12 +99,12 @@ serve(async (req) => {
           payload: body 
         });
 
-        // Check for idempotency (using the new table primarily)
+        // Check for idempotency
         const { data: existing } = await supabaseClient
           .from('webhook_events')
           .select('status')
           .match({ event_id: id, provider: 'mercadopago' })
-          .single();
+          .maybeSingle();
         
         if (existing?.status === 'processed') {
           console.log(`[MP Webhook] Already processed payment ${id}. Skipping.`);
@@ -125,6 +126,7 @@ serve(async (req) => {
             const orderId = paymentData.external_reference
             console.log(`[MP Webhook] Approving order ${orderId} for payment ${id}`);
             
+            // Call the RPC to handle confirmed payment (handles tickets, stats, etc.)
             const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { 
               p_order_id: orderId,
               p_payment_id: id,
@@ -149,13 +151,12 @@ serve(async (req) => {
               }
             }
           } else {
-            // Not approved yet, but we received it
-            await supabaseClient.from('webhook_events').update({ status: 'pending', last_attempt_at: new Date().toISOString() }).match({ event_id: id, provider: 'mercadopago' });
+             // Not approved yet
+             await supabaseClient.from('webhook_events').update({ status: 'pending', last_attempt_at: new Date().toISOString() }).match({ event_id: id, provider: 'mercadopago' });
           }
         } catch (err: any) {
           console.error(`[MP Webhook] Processing failed for ${id}:`, err.message);
           await markAsFailed(supabaseClient, id, 'mercadopago', err.message);
-          // Return 500 so MP retries too
           return new Response(JSON.stringify({ error: err.message }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
             status: 500,
