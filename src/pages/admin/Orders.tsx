@@ -245,10 +245,22 @@ export default function AdminOrders() {
                                 <DropdownMenuItem 
                                   className="flex items-center gap-3 focus:bg-secondary/20 focus:text-foreground cursor-pointer py-3 rounded-lg font-bold text-xs"
                                 onClick={() => window.open(`/checkout/${o.id}`, '_blank')}
-                              >
-                                <ShoppingBag className="h-4 w-4" />
-                                Ver Comprovante
-                              </DropdownMenuItem>
+                                >
+                                  <ShoppingBag className="h-4 w-4" />
+                                  Ver Comprovante
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem 
+                                  className="flex items-center gap-3 focus:bg-rose-500/10 focus:text-rose-500 cursor-pointer py-3 rounded-lg font-bold text-xs text-rose-500"
+                                  onClick={() => {
+                                    if (confirm("Tem certeza que deseja excluir permanentemente este pedido? Isso liberará todos os números vinculados.")) {
+                                      deleteOrder(o.id);
+                                    }
+                                  }}
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                  Excluir Pedido
+                                </DropdownMenuItem>
                             </div>
                           </DropdownMenuContent>
                        </DropdownMenu>
