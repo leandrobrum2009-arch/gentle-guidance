@@ -657,8 +657,9 @@ const CampaignDetail = () => {
             </div>
             
             <div className="space-y-3">
-              {campaignRanking?.slice(0, 5).map((user, i) => (
+              {campaignRanking?.slice(0, 5).map((user: any, i) => (
                 <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+
                   <div className="flex items-center gap-4">
                     <div className="w-8 text-sm font-black italic text-muted-foreground group-hover:text-primary transition-colors">#{i + 1}</div>
                     <Avatar className="h-10 w-10 border-2 border-border group-hover:border-primary/30 transition-all">
