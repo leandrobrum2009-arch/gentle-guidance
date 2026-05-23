@@ -34,7 +34,11 @@ const Header = () => {
     if (ref) {
       localStorage.setItem('referred_by', ref);
     }
-  }, []);
+    
+    if (siteSettings?.site_logo_url) {
+      localStorage.setItem('site_logo', siteSettings.site_logo_url);
+    }
+  }, [siteSettings]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
