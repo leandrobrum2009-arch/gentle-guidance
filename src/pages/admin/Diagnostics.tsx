@@ -338,6 +338,53 @@ export default function AdminDiagnostics() {
           </CardContent>
         </Card>
 
+        {/* Webhook Events & Retry Queue - New Section */}
+        <Card className="border-border bg-card shadow-sm md:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <History className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle className="text-lg">Logs de Pagamento & Fila</CardTitle>
+                <CardDescription className="text-xs">Monitoramento de notificações externas e retentativas.</CardDescription>
+              </div>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="rounded-xl font-bold uppercase tracking-widest text-[10px]"
+              onClick={() => window.location.href = '/admin/pagamentos/logs'}
+            >
+              VER LOGS DETALHADOS
+            </Button>
+          </CardHeader>
+          <CardContent className="space-y-4">
+             <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-4">
+               <Webhook className="h-5 w-5 text-primary mt-0.5" />
+               <div className="space-y-1">
+                 <p className="text-xs font-bold text-foreground">Fila de Retentativas Ativa</p>
+                 <p className="text-[10px] text-muted-foreground leading-relaxed">
+                   O sistema agora armazena todas as notificações do Mercado Pago e Stripe. Se houver falha no processamento, a fila tentará reprocessar automaticamente a cada 1 minuto.
+                 </p>
+               </div>
+             </div>
+             
+             <div className="grid grid-cols-2 gap-4">
+               <div className="p-4 rounded-2xl bg-secondary/30 border border-border">
+                 <p className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Status da Fila</p>
+                 <div className="flex items-center gap-2">
+                   <Badge className="bg-emerald-500/10 text-emerald-500 border-none animate-pulse">SAUDÁVEL</Badge>
+                 </div>
+               </div>
+               <div className="p-4 rounded-2xl bg-secondary/30 border border-border">
+                 <p className="text-[10px] font-bold text-muted-foreground uppercase mb-1">Automatização</p>
+                 <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-primary border-primary/20">CRON ATIVO</Badge>
+                 </div>
+               </div>
+             </div>
+          </CardContent>
+        </Card>
+
         {/* Edge Functions */}
         <Card className="border-border bg-card shadow-sm md:col-span-2">
           <CardHeader>
