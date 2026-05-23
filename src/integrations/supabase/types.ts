@@ -374,6 +374,51 @@ export type Database = {
         }
         Relationships: []
       }
+      draw_logs: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          details: Json | null
+          draw_method: string
+          executed_by: string | null
+          id: string
+          winner_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          draw_method: string
+          executed_by?: string | null
+          id?: string
+          winner_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          details?: Json | null
+          draw_method?: string
+          executed_by?: string | null
+          id?: string
+          winner_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "draw_logs_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "draw_logs_winner_id_fkey"
+            columns: ["winner_id"]
+            isOneToOne: false
+            referencedRelation: "winners"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       federal_lottery_results: {
         Row: {
           concurso: string
@@ -1271,7 +1316,12 @@ export type Database = {
         Args: { p_order_id: string; p_user_id: string }
         Returns: Json
       }
-      perform_draw: { Args: { p_campaign_id: string }; Returns: string }
+      perform_draw:
+        | { Args: { p_campaign_id: string }; Returns: string }
+        | {
+            Args: { p_campaign_id: string; p_executed_by?: string }
+            Returns: string
+          }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
         Returns: Json
