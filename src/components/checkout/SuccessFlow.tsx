@@ -323,6 +323,7 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
               </CardContent>
             </Card>
           </motion.div>
+        )}
         {step === 5 && (
           <motion.div key="step5" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
