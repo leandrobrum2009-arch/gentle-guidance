@@ -72,17 +72,13 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
       const timer = setTimeout(() => {
         if (premiumTickets.length > 0) {
           setStep(0); // Show premium tickets step
-        } else if (availableSpins > 0) {
-          setStep(2); // Go to roulette
-        } else if (availableScratchCards > 0) {
-          setStep(5); // Go to scratch cards
         } else {
-          setStep(3); // Go to upsell
+          setStep(6); // Go to order details
         }
       }, 3000); // Wait 3 seconds on "Payment Identified" screen
       return () => clearTimeout(timer);
     }
-  }, [step, hasCheckedLucky, premiumTickets, availableSpins, availableScratchCards]);
+  }, [step, hasCheckedLucky, premiumTickets]);
 
   useEffect(() => {
     if (step === 3) {
