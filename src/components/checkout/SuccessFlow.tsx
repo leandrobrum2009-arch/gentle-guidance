@@ -251,7 +251,7 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
             </div>
             
             <ScratchCard 
-              campaign={campaign}
+              campaignId={campaign.id}
               availableScratches={availableScratchCards}
               onComplete={() => {
                 setAvailableScratchCards(prev => prev - 1);
