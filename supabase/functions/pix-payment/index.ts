@@ -44,9 +44,15 @@ serve(async (req) => {
 
       if (orderError || !order) throw new Error("Order not found")
 
-      if (order.pix_code && order.pix_qr_code_base64 && order.payment_status !== 'pending') {
-         // Return existing if already generated and provider hasn't changed? 
-         // For now, let's allow regeneration if provider changed or if requested
+      if (order.pix_code && order.pix_qr_code_base64 && order.payment_status === 'pending') {
+        return new Response(JSON.stringify({
+          pix_code: order.pix_code,
+          pix_qr_code_base64: order.pix_qr_code_base64,
+          is_manual: false
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        })
       }
 
       if (activeProvider === 'manual') {
