@@ -126,6 +126,22 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     exit: { opacity: 0, y: -20 }
   };
 
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `Meu pedido na rifa ${campaign.title}`,
+        text: `Acabei de comprar ${order.quantity} cotas para concorrer a ${campaign.title}! Meus números: ${displayTickets.map((t: any) => t.number).join(', ')}`,
+        url: window.location.href
+      });
+    } else {
+      toast.info("Compartilhamento não suportado neste navegador.");
+    }
+  };
+
   return (
     <div className="w-full space-y-6">
       <AnimatePresence mode="wait">
