@@ -77,7 +77,7 @@ const CampaignDetail = () => {
   }, [allLuckyNumbers]);
 
   const canManualSelect = useMemo(() => {
-    return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
+    return campaign?.manual_numbers === true || campaign?.ticket_generation_type === 'manual';
   }, [campaign]);
 
   const { data: tickets } = useTickets(id || "", canManualSelect);
