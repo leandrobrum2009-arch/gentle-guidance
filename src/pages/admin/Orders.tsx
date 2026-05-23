@@ -1,28 +1,38 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
- import AdminLayout from "@/components/AdminLayout";
- import { useAdminOrders, useUpdateOrderStatus } from "@/hooks/useAdmin";
- import { Card, CardContent } from "@/components/ui/card";
- import { Badge } from "@/components/ui/badge";
- import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, CheckCircle2, XCircle, Clock, ShoppingBag, CreditCard, Search, Filter, Download, User, Calendar, MoreVertical, ClipboardCheck } from "lucide-react";
- import { format } from "date-fns";
- import { Button } from "@/components/ui/button";
+import AdminLayout from "@/components/AdminLayout";
+import { useAdminOrders, useUpdateOrderStatus, useDeleteOrder } from "@/hooks/useAdmin";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Loader2, CheckCircle2, XCircle, Clock, ShoppingBag, CreditCard, Search, Filter, Download, User, Calendar, MoreVertical, ClipboardCheck, Trash2 } from "lucide-react";
+import { format } from "date-fns";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
- import {
-   DropdownMenu,
-   DropdownMenuContent,
-   DropdownMenuItem,
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuLabel,
-   DropdownMenuTrigger,
- } from "@/components/ui/dropdown-menu";
- 
- export default function AdminOrders() {
+  DropdownMenuTrigger,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+
+export default function AdminOrders() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-   const { data: orders, isLoading } = useAdminOrders();
-   const { mutate: updateStatus, isPending: isUpdating } = useUpdateOrderStatus();
+  const { data: orders, isLoading, refetch } = useAdminOrders();
+  const { mutate: updateStatus, isPending: isUpdating } = useUpdateOrderStatus();
+  const { mutate: deleteOrder } = useDeleteOrder();
+
+  useEffect(() => {
+    const cleanup = async () => {
+      await supabase.rpc('release_expired_tickets');
+      refetch();
+    };
+    cleanup();
+  }, []);
  
    const statusLabel: Record<string, string> = {
      pending: "Pendente",
