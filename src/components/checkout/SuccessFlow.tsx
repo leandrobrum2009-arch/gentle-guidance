@@ -332,12 +332,12 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                   </div>
                   
                   <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
-                    {order.tickets?.map((ticket: any, i: number) => (
+                    {displayTickets.map((ticket: any, i: number) => (
                       <div key={i} className="bg-primary/10 border border-primary/20 text-primary font-black text-[10px] py-1.5 rounded-lg text-center tracking-tighter">
                         {ticket.number}
                       </div>
                     ))}
-                    {(!order.tickets || order.tickets.length === 0) && (
+                    {displayTickets.length === 0 && (
                       <div className="col-span-full py-4 text-center bg-white/5 rounded-xl border border-dashed border-white/10">
                         <p className="text-xs text-white/40 font-bold uppercase tracking-widest">Seus números estão sendo gerados...</p>
                       </div>
