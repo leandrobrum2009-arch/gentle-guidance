@@ -19,6 +19,7 @@ import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
 import AdminDiagnostics from "./pages/admin/Diagnostics";
 import AdminScratchCards from "./pages/admin/ScratchCards";
+import AdminPaymentLogs from "./pages/admin/PaymentLogs";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -107,6 +108,7 @@ const App = () => {
                 <Route path="/admin/notificacoes" element={<ProtectedRoute adminOnly><AdminNotifications /></ProtectedRoute>} />
                 <Route path="/admin/configuracoes" element={<ProtectedRoute adminOnly><AdminSettings /></ProtectedRoute>} />
                 <Route path="/admin/diagnostico" element={<ProtectedRoute adminOnly><AdminDiagnostics /></ProtectedRoute>} />
+                <Route path="/admin/pagamentos/logs" element={<ProtectedRoute adminOnly><AdminPaymentLogs /></ProtectedRoute>} />
     
                 <Route path="*" element={<NotFound />} />
               </Routes>

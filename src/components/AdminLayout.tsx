@@ -5,7 +5,7 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
-  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket, Activity
+  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket, Activity, History
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -18,7 +18,8 @@ import { useSiteSettings } from "@/hooks/useData";
    ]},
    { category: "Vendas", items: [
      { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-     { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+      { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+      { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
      { title: "Cupons", url: "/admin/cupons", icon: Percent },
      { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
    ]},
