@@ -218,9 +218,20 @@ import { Input } from "@/components/ui/input";
                                   <XCircle className="h-4 w-4" />
                                   Cancelar Compra
                                 </DropdownMenuItem>
-                              )}
-                              <DropdownMenuItem 
-                                className="flex items-center gap-3 focus:bg-secondary/20 focus:text-foreground cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                )}
+                                <DropdownMenuItem 
+                                  className="flex items-center gap-3 focus:bg-primary/10 focus:text-primary cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                  onClick={async () => {
+                                    const { data, error } = await supabase.rpc('repair_order', { p_order_id: o.id });
+                                    if (error) toast.error("Erro ao auditar: " + error.message);
+                                    else toast.success((data as any).message);
+                                  }}
+                                >
+                                  <ClipboardCheck className="h-4 w-4" />
+                                  Auditar e Reparar
+                                </DropdownMenuItem>
+                                <DropdownMenuItem 
+                                  className="flex items-center gap-3 focus:bg-secondary/20 focus:text-foreground cursor-pointer py-3 rounded-lg font-bold text-xs"
                                 onClick={() => window.open(`/checkout/${o.id}`, '_blank')}
                               >
                                 <ShoppingBag className="h-4 w-4" />
