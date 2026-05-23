@@ -19,6 +19,7 @@ import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
 import AdminDiagnostics from "./pages/admin/Diagnostics";
 import AdminScratchCards from "./pages/admin/ScratchCards";
+import AdminPaymentLogs from "./pages/admin/PaymentLogs";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
