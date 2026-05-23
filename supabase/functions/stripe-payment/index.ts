@@ -114,7 +114,11 @@ serve(async (req) => {
           const session = event.data.object
           const orderId = session.metadata.orderId
 
-          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
+          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { 
+            p_order_id: orderId,
+            p_payment_id: event.id,
+            p_payment_provider: 'stripe'
+          })
           
           if (!rpcError) {
             await markAsProcessed(supabaseClient, event.id, 'stripe');
