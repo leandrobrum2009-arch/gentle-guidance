@@ -1241,6 +1241,16 @@ export type Database = {
       audit_all_paid_orders: { Args: never; Returns: Json }
       cleanup_expired_reservations: { Args: never; Returns: undefined }
       duplicate_campaign: { Args: { p_campaign_id: string }; Returns: string }
+      get_order_inconsistencies: {
+        Args: never
+        Returns: {
+          customer_name: string
+          id: string
+          payment_status: string
+          quantity: number
+          tickets_generated: number
+        }[]
+      }
       handle_order_payment: { Args: { p_order_id: string }; Returns: undefined }
       has_role: {
         Args: {
