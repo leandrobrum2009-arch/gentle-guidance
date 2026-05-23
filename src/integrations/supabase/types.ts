@@ -1238,6 +1238,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      audit_all_paid_orders: { Args: never; Returns: Json }
       cleanup_expired_reservations: { Args: never; Returns: undefined }
       duplicate_campaign: { Args: { p_campaign_id: string }; Returns: string }
       handle_order_payment: { Args: { p_order_id: string }; Returns: undefined }
@@ -1270,6 +1271,7 @@ export type Database = {
         Returns: Json
       }
       release_expired_tickets: { Args: never; Returns: undefined }
+      repair_order: { Args: { p_order_id: string }; Returns: Json }
       reserve_tickets: {
         Args: {
           p_campaign_id: string

@@ -6,7 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { 
   CheckCircle2, XCircle, AlertCircle, RefreshCw, 
   ShieldCheck, Globe, Database, Server, Settings, 
-  CreditCard, Key, Webhook, Activity
+  CreditCard, Key, Webhook, Activity, ClipboardCheck,
+  Search, Info, History
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
@@ -112,6 +113,56 @@ export default function AdminDiagnostics() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
+        {/* Order Audit - New Section */}
+        <Card className="border-border bg-card shadow-sm md:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ClipboardCheck className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle className="text-lg">Auditoria de Compra</CardTitle>
+                <CardDescription className="text-xs">Valide a integridade de todos os pedidos pagos.</CardDescription>
+              </div>
+            </div>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2"
+              onClick={async () => {
+                setLoading(true);
+                try {
+                  const { data, error } = await supabase.rpc('audit_all_paid_orders');
+                  if (error) throw error;
+                  toast.success((data as any).message);
+                } catch (err: any) {
+                  toast.error("Erro na auditoria: " + err.message);
+                } finally {
+                  setLoading(false);
+                }
+              }}
+              disabled={loading}
+            >
+              <History className="h-3 w-3" />
+              AUDITAR TUDO
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-4">
+              <Info className="h-5 w-5 text-primary mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-foreground">Como funciona a auditoria?</p>
+                <p className="text-[10px] text-muted-foreground leading-relaxed">
+                  O sistema percorre todos os pedidos marcados como "Pago" e garante que:
+                </p>
+                <ul className="text-[10px] text-muted-foreground list-disc list-inside space-y-1 mt-2">
+                  <li>Os números (cotas) foram gerados corretamente.</li>
+                  <li>O status dos tickets está como "Confirmado".</li>
+                  <li>A contagem de bilhetes vendidos da campanha está sincronizada.</li>
+                </ul>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Database & Connection */}
         <Card className="border-border bg-card shadow-sm">
           <CardHeader className="flex flex-row items-center justify-between space-y-0">
