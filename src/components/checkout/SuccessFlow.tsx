@@ -178,9 +178,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                 </div>
 
                 <Button 
-                  onClick={() => {
-                    setStep(6);
-                  }} 
+                  onClick={() => setStep(6)} 
                   className="w-full h-16 rounded-2xl bg-amber-500 text-white font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-105 transition-transform"
                 >
                   VER MEUS DETALHES
@@ -234,11 +232,129 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           </motion.div>
         )}
 
+        {step === 6 && (
+          <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
+              <CardContent className="p-0">
+                <div ref={detailsRef} className="p-8 space-y-8 bg-card text-card-foreground">
+                  <div className="flex items-center justify-between border-b border-border pb-6">
+                    <div className="space-y-1">
+                      <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pedido #{order.id?.substring(0, 8)}</p>
+                    </div>
+                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <User className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Nome Completo</p>
+                          <p className="text-sm font-bold uppercase">{order.profiles?.name || "Usuário"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Phone className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Telefone</p>
+                          <p className="text-sm font-bold">{order.profiles?.phone || "Não informado"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Hash className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Transação</p>
+                          <p className="text-sm font-bold uppercase">{order.id?.substring(0, 12)}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Calendar className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Data e Hora</p>
+                          <p className="text-sm font-bold">{new Date().toLocaleString('pt-BR')}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Ticket className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantidade</p>
+                          <p className="text-sm font-bold">{order.quantity} Cotas</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <DollarSign className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Valor Total</p>
+                          <p className="text-sm font-bold">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-border space-y-4">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Seus Números da Sorte:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {displayTickets.map((t: any) => (
+                        <Badge key={t.id} variant="secondary" className="px-3 py-1 font-black text-xs bg-primary/10 text-primary border-primary/20">
+                          #{t.number}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8 bg-zinc-950 border-t border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handlePrint}>
+                      <Printer className="h-4 w-4" /> Imprimir
+                    </Button>
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handleShare}>
+                      <Share2 className="h-4 w-4" /> Compartilhar
+                    </Button>
+                  </div>
+
+                  <Button 
+                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-[1.02] transition-transform"
+                    onClick={() => {
+                      if (availableSpins > 0) setStep(2);
+                      else if (availableScratchCards > 0) setStep(5);
+                      else setStep(3);
+                    }}
+                  >
+                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {step === 2 && (
           <motion.div key="step2" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Sua Sorte Instantânea</h2>
-               <Badge className="bg-primary text-black font-bold">{availableSpins} giros restantes</Badge>
+               <div className="flex gap-2">
+                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
+                   Ver Detalhes
+                 </Button>
+                 <Badge className="bg-primary text-black font-bold h-7">{availableSpins} giros restantes</Badge>
+               </div>
             </div>
             
             <Roulette 
@@ -248,13 +364,13 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
               onSpinComplete={() => {
                 setAvailableSpins(prev => prev - 1);
                 if (availableSpins <= 1) {
-                  setTimeout(() => setStep(3), 5000);
+                  setTimeout(() => setStep(5), 5000);
                 }
               }}
             />
             
-            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(3)}>
-              Continuar para próxima etapa
+            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(5)}>
+              Ir para Raspadinha
             </Button>
           </motion.div>
         )}
@@ -263,7 +379,12 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           <motion.div key="step5" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Raspadinha da Sorte</h2>
-               <Badge className="bg-primary text-black font-bold">{availableScratchCards} restantes</Badge>
+               <div className="flex gap-2">
+                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
+                   Ver Detalhes
+                 </Button>
+                 <Badge className="bg-primary text-black font-bold h-7">{availableScratchCards} restantes</Badge>
+               </div>
             </div>
             
             <ScratchCard 
@@ -383,119 +504,6 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                 <div className="pt-8 border-t border-white/5 space-y-4">
                   <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={onClose}>
                     FECHAR E VOLTAR PARA RIFA
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-
-        {step === 6 && (
-          <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
-            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-0">
-                <div ref={detailsRef} className="p-8 space-y-8 bg-card text-card-foreground">
-                  <div className="flex items-center justify-between border-b border-border pb-6">
-                    <div className="space-y-1">
-                      <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pedido #{order.id?.substring(0, 8)}</p>
-                    </div>
-                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <User className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Nome Completo</p>
-                          <p className="text-sm font-bold uppercase">{order.profiles?.name || "Usuário"}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <Phone className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Telefone</p>
-                          <p className="text-sm font-bold">{order.profiles?.phone || "Não informado"}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <Hash className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Transação</p>
-                          <p className="text-sm font-bold uppercase">{order.id?.substring(0, 12)}</p>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <Calendar className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Data e Hora</p>
-                          <p className="text-sm font-bold">{new Date().toLocaleString('pt-BR')}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <Ticket className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantidade</p>
-                          <p className="text-sm font-bold">{order.quantity} Cotas</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
-                          <DollarSign className="h-5 w-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Valor Total</p>
-                          <p className="text-sm font-bold">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-6 border-t border-border space-y-4">
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Seus Números da Sorte:</p>
-                    <div className="flex flex-wrap gap-2">
-                      {displayTickets.map((t: any) => (
-                        <Badge key={t.id} variant="secondary" className="px-3 py-1 font-black text-xs bg-primary/10 text-primary border-primary/20">
-                          #{t.number}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="p-8 bg-zinc-950 border-t border-white/5 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handlePrint}>
-                      <Printer className="h-4 w-4" /> Imprimir
-                    </Button>
-                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handleShare}>
-                      <Share2 className="h-4 w-4" /> Compartilhar
-                    </Button>
-                  </div>
-
-                  <Button 
-                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-[1.02] transition-transform"
-                    onClick={() => {
-                      if (availableSpins > 0) setStep(2);
-                      else if (availableScratchCards > 0) setStep(5);
-                      else setStep(3);
-                    }}
-                  >
-                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
                 </div>
               </CardContent>
