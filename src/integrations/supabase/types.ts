@@ -678,6 +678,7 @@ export type Database = {
           payment_status: string
           pix_code: string | null
           pix_qr_code_base64: string | null
+          proof_url: string | null
           quantity: number
           stripe_session_id: string | null
           total_amount: number
@@ -697,6 +698,7 @@ export type Database = {
           payment_status?: string
           pix_code?: string | null
           pix_qr_code_base64?: string | null
+          proof_url?: string | null
           quantity?: number
           stripe_session_id?: string | null
           total_amount?: number
@@ -716,6 +718,7 @@ export type Database = {
           payment_status?: string
           pix_code?: string | null
           pix_qr_code_base64?: string | null
+          proof_url?: string | null
           quantity?: number
           stripe_session_id?: string | null
           total_amount?: number
