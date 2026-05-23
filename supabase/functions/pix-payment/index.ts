@@ -84,7 +84,7 @@ serve(async (req) => {
               last_name: "RifaPro"
             },
             external_reference: orderId,
-            notification_url: `${url.origin}/pix-payment/webhook`
+            notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/pix-payment?path=webhook`
           })
         })
 

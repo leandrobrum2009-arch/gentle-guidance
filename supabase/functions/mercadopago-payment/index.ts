@@ -66,7 +66,7 @@ serve(async (req) => {
             pending: `${req.headers.get("origin")}/checkout/${orderId}?status=pending`
           },
           auto_return: "approved",
-          notification_url: `${url.origin.replace('localhost', 'host.docker.internal')}/mercadopago-payment/webhook`
+          notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-payment?path=webhook`
         })
       })
 
