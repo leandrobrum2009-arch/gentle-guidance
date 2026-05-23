@@ -171,10 +171,11 @@ export const useAdminCampaigns = () =>
          .eq("id", orderId);
        if (error) throw error;
      },
-     onSuccess: () => {
-       queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
-       toast.success("Status do pedido atualizado!");
-     },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["admin-orders"] });
+        queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
+        toast.success("Status do pedido atualizado!");
+      },
      onError: (error: any) => {
        toast.error("Erro ao atualizar pedido: " + error.message);
      },
