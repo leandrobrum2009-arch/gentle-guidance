@@ -108,8 +108,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         }, (payload) => {
           if (payload.new.payment_status === 'paid') {
             setStatus('paid');
-            // Keep the modal open so user can see SuccessFlow (roulette/scratch cards)
-            // onPaymentSuccess() will be called when they manually close it or through specific actions
+            // Refresh order data to get tickets and updated status
+            fetchOrder();
             onPaymentSuccess(); 
           }
         })
