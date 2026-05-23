@@ -17,6 +17,7 @@ import AdminBanners from "./pages/admin/Banners";
 import AdminCoupons from "./pages/admin/Coupons";
 import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
+import AdminDiagnostics from "./pages/admin/Diagnostics";
 import AdminScratchCards from "./pages/admin/ScratchCards";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
