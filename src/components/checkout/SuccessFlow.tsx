@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle2, ArrowRight, Video, Users, ExternalLink, 
   Ticket, Sparkles, Clock, Star, Play, Gift, 
-  ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown
+  ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown, ShoppingCart, Percent, TrendingUp
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 import Roulette from "@/components/Roulette";
 import ScratchCard from "@/components/ScratchCard";
 import { supabase } from "@/integrations/supabase/client";
+import { useCampaigns } from "@/hooks/useData";
 
 interface SuccessFlowProps {
   order: any;
@@ -25,6 +26,11 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
   const [availableSpins, setAvailableSpins] = useState(0);
   const [availableScratchCards, setAvailableScratchCards] = useState(0);
   const [prizes, setPrizes] = useState<any[]>([]);
+  const { data: otherCampaigns } = useCampaigns();
+
+  const recommendedCampaigns = useMemo(() => {
+    return otherCampaigns?.filter(c => c.id !== campaign.id && c.status === 'active').slice(0, 3) || [];
+  }, [otherCampaigns, campaign.id]);
 
   useEffect(() => {
     if (order.payment_status === 'paid') {
@@ -181,13 +187,14 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
         {step === 3 && (
           <motion.div key="step3" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="text-center space-y-2">
-              <p className="text-xs font-black uppercase tracking-widest text-white/40">Seja rápido, você só tem:</p>
-              <p className="text-4xl font-black text-destructive font-mono tracking-tighter">{formatTime(countdown)}</p>
+              <Badge className="bg-destructive text-white animate-bounce mb-2">OFERTA ÚNICA E EXCLUSIVA</Badge>
+              <p className="text-xs font-black uppercase tracking-widest text-white/40">Sua chance expira em:</p>
+              <p className="text-4xl font-black text-destructive font-mono tracking-tighter shadow-destructive/20 drop-shadow-lg">{formatTime(countdown)}</p>
             </div>
 
-            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
+            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl shadow-2xl">
               <CardContent className="p-0">
-                <div className="relative aspect-video bg-zinc-900 flex items-center justify-center group cursor-pointer">
+                <div className="relative aspect-video bg-zinc-900 flex items-center justify-center group cursor-pointer border-b border-white/5">
                   {campaign.upsell_video_url ? (
                     <iframe 
                       src={campaign.upsell_video_url} 
@@ -200,45 +207,53 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                       <div className="h-16 w-16 rounded-full bg-primary/20 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
                         <Play className="h-8 w-8 fill-current" />
                       </div>
-                      <p className="text-sm font-bold uppercase tracking-widest opacity-40">Assista ao vídeo</p>
+                      <p className="text-sm font-bold uppercase tracking-widest opacity-40">Assista ao vídeo da estratégia</p>
                     </div>
                   )}
                   <div className="absolute top-4 left-4">
-                    <Badge className="bg-destructive text-white gap-2 font-black italic">
-                      <span className="h-2 w-2 rounded-full bg-white animate-ping" /> CONVITE
+                    <Badge className="bg-destructive text-white gap-2 font-black italic shadow-lg">
+                      <span className="h-2 w-2 rounded-full bg-white animate-ping" /> OPORTUNIDADE DE OURO
                     </Badge>
                   </div>
                 </div>
 
                 <div className="p-8 space-y-6">
-                  <div className="text-center space-y-2">
-                    <h2 className="text-3xl font-black uppercase italic tracking-tighter leading-tight">
+                  <div className="text-center space-y-3">
+                    <h2 className="text-3xl font-black uppercase italic tracking-tighter leading-tight text-white">
                       ATENÇÃO, {(order.profiles?.name || "Campeão").split(' ')[0]}! <br />
-                      <span className="text-primary">VOCÊ ATIVOU O MÁXIMO DE SORTE!</span>
+                      <span className="text-primary text-animate-gradient">ESTRATÉGIA DE CHANCES ATIVADA!</span>
                     </h2>
-                    <p className="text-sm text-white/60 font-medium">
-                      {campaign.upsell_offer_text || "Quem é de dentro ganha primeiro. Garanta agora mais números com 98% de chance de sair a cota premiada!"}
+                    <p className="text-sm text-white/80 font-bold leading-relaxed">
+                      {campaign.upsell_offer_text || "O sistema identificou que você está no 'Fluxo de Sorte'. Comprar mais cotas AGORA aumenta em até 10x suas chances de encontrar a Cota Premiada e ser o grande vencedor!"}
                     </p>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="space-y-2">
-                      <div className="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-white/40">
-                        <span>Probabilidade de sair a cota premiada</span>
-                        <span className="text-primary">{campaign.upsell_probability || "98%"}</span>
+                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                          <Percent className="h-4 w-4 text-primary" />
+                        </div>
+                        <span className="text-xs font-black uppercase text-white/70">Desconto Exclusivo</span>
                       </div>
-                      <Progress value={98} className="h-4 bg-white/5 border border-white/10" indicatorClassName="bg-gradient-to-r from-destructive via-orange-500 to-red-600 shadow-[0_0_15px_rgba(239,68,68,0.5)]" />
-                      <p className="text-[10px] font-bold text-destructive uppercase tracking-widest text-center italic">Risco altíssimo — Compre agora por esta página</p>
+                      <Badge className="bg-green-500 text-white font-black italic">LIBERADO!</Badge>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-primary" />
+                      <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Suas chances aumentam em +{campaign.upsell_probability || "98%"}</span>
+                    </div>
+                    <Progress value={98} className="h-3 bg-white/5" indicatorClassName="bg-primary" />
+                  </div>
 
-                    <Link to={`/campanha/${campaign.slug}`}>
-                      <Button className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform">
-                        PEGAR MINHA SORTE AGORA
+                  <div className="space-y-4">
+                    <Link to={`/campanha/${campaign.slug}?upsell=true`}>
+                      <Button className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20">
+                        DOBRAR MINHAS CHANCES AGORA
                       </Button>
                     </Link>
                     
                     <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(4)}>
-                      Não quero aumentar minhas chances
+                      Não quero aumentar minhas chances agora
                     </Button>
                   </div>
                 </div>
@@ -319,6 +334,32 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                       </Button>
                     </div>
                   </div>
+
+                  {recommendedCampaigns.length > 0 && (
+                    <div className="pt-8 border-t border-white/5 space-y-4 text-left">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-white/60 flex items-center gap-2">
+                        <ShoppingCart className="h-4 w-4 text-primary" /> Outros Sorteios que Você pode Gostar
+                      </h3>
+                      <div className="grid grid-cols-1 gap-3">
+                        {recommendedCampaigns.map((c) => (
+                          <Link key={c.id} to={`/campanha/${c.slug}`} className="group">
+                            <div className="flex items-center gap-4 p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all active:scale-[0.98]">
+                              <div className="h-14 w-14 rounded-xl overflow-hidden flex-shrink-0">
+                                <img src={c.image_url} alt={c.title} className="w-full h-full object-cover transition-transform group-hover:scale-110" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="text-xs font-black uppercase truncate text-white group-hover:text-primary transition-colors">{c.title}</p>
+                                <div className="flex items-center justify-between mt-1">
+                                   <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Cota: R$ {Number(c.ticket_price).toFixed(2).replace('.', ',')}</p>
+                                   <Badge variant="outline" className="text-[8px] h-4 border-primary/20 text-primary uppercase font-black">PARTICIPAR</Badge>
+                                </div>
+                              </div>
+                            </div>
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
