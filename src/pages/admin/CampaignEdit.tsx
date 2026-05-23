@@ -336,7 +336,11 @@ export default function AdminCampaignEdit() {
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <button 
                      type="button"
-                     onClick={() => set("ticket_generation_type", 'auto')}
+                      onClick={() => {
+                        set("ticket_generation_type", 'auto');
+                        set("manual_numbers", false);
+                        set("auto_numbers", true);
+                      }}
                      className={cn(
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'auto' 
