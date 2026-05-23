@@ -1,10 +1,11 @@
  import { useState, useEffect } from "react";
  import { useParams, Link, useNavigate } from "react-router-dom";
  import { motion } from "framer-motion";
-  import { 
-    ArrowLeft, CheckCircle2, Clock, Copy, 
-     ExternalLink, ShieldCheck, Loader2, QrCode, CreditCard, Landmark
-  } from "lucide-react";
+   import { 
+     ArrowLeft, CheckCircle2, Clock, Copy, 
+      ExternalLink, ShieldCheck, Loader2, QrCode, CreditCard, Landmark, Upload
+   } from "lucide-react";
+import { Label } from "@/components/ui/label";
  import { supabase } from "@/integrations/supabase/client";
  import { Button } from "@/components/ui/button";
  import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -172,19 +173,84 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                              <div className="relative p-4 bg-white rounded-xl shadow-lg">
                                <img src={`data:image/png;base64,${order.pix_qr_code_base64}`} alt="QR Code PIX" className="h-40 w-40" />
                              </div>
-                           ) : paymentMethod === 'manual' ? (
-                             <div className="relative p-8 bg-primary/10 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center gap-2">
-                               <Landmark className="h-12 w-12 text-primary" />
-                               <p className="text-[10px] font-black uppercase tracking-tighter">Use a chave PIX abaixo</p>
-                             </div>
-                           ) : (
-                             <div className="relative p-4 bg-white rounded-xl shadow-lg">
-                               <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PENDING_ORDER_${order.id}`} alt="QR Code PIX" className="h-40 w-40 opacity-20 grayscale" />
-                               <div className="absolute inset-0 flex items-center justify-center">
-                                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                               </div>
-                             </div>
-                           )}
+                            ) : paymentMethod === 'manual' ? (
+                              <div className="relative p-8 bg-primary/10 rounded-2xl border-2 border-dashed border-primary/20 flex flex-col items-center gap-4 w-full">
+                                <div className="flex flex-col items-center gap-2">
+                                  <Landmark className="h-12 w-12 text-primary" />
+                                  <p className="text-[10px] font-black uppercase tracking-tighter">Faça a transferência para a chave abaixo</p>
+                                </div>
+                                
+                                <div className="w-full space-y-4">
+                                  <div className="p-4 rounded-xl bg-background border border-border space-y-3">
+                                    <div className="flex items-center justify-between">
+                                      <span className="text-[10px] font-bold text-muted-foreground uppercase">Anexar Comprovante</span>
+                                      {order.proof_url && <Badge className="bg-emerald-500/10 text-emerald-500 border-none text-[8px]">ANEXADO</Badge>}
+                                    </div>
+                                    
+                                    <Label className="cursor-pointer group">
+                                      <div className="flex flex-col items-center justify-center py-6 border-2 border-dashed border-border group-hover:border-primary/50 rounded-xl bg-secondary/20 transition-all">
+                                        {processingPayment ? (
+                                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                                        ) : (
+                                          <>
+                                            <Upload className="h-6 w-6 text-muted-foreground mb-2 group-hover:text-primary transition-colors" />
+                                            <span className="text-xs font-bold text-muted-foreground group-hover:text-foreground transition-colors">
+                                              {order.proof_url ? "Alterar Comprovante" : "Clique para anexar comprovante"}
+                                            </span>
+                                          </>
+                                        )}
+                                      </div>
+                                      <input 
+                                        type="file" 
+                                        className="hidden" 
+                                        accept="image/*,application/pdf" 
+                                        onChange={async (e) => {
+                                          const file = e.target.files?.[0];
+                                          if (!file) return;
+                                          
+                                          setProcessingPayment(true);
+                                          try {
+                                            const fileExt = file.name.split('.').pop();
+                                            const filePath = `${order.id}/${crypto.randomUUID()}.${fileExt}`;
+                                            
+                                            const { error: uploadError } = await supabase.storage
+                                              .from('payment-proofs')
+                                              .upload(filePath, file);
+                                            
+                                            if (uploadError) throw uploadError;
+                                            
+                                            const { data: { publicUrl } } = supabase.storage
+                                              .from('payment-proofs')
+                                              .getPublicUrl(filePath);
+                                            
+                                            const { error: updateError } = await supabase
+                                              .from('orders')
+                                              .update({ proof_url: publicUrl })
+                                              .eq('id', order.id);
+                                            
+                                            if (updateError) throw updateError;
+                                            
+                                            toast.success("Comprovante anexado com sucesso!");
+                                            setOrder(prev => ({ ...prev, proof_url: publicUrl }));
+                                          } catch (err: any) {
+                                            toast.error("Erro ao anexar: " + err.message);
+                                          } finally {
+                                            setProcessingPayment(false);
+                                          }
+                                        }}
+                                      />
+                                    </Label>
+                                  </div>
+                                </div>
+                              </div>
+                            ) : (
+                              <div className="relative p-4 bg-white rounded-xl shadow-lg">
+                                <img src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PENDING_ORDER_${order.id}`} alt="QR Code PIX" className="h-40 w-40 opacity-20 grayscale" />
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                                </div>
+                              </div>
+                            )}
                           <div className="text-center space-y-1">
                             <p className="text-xs font-black text-muted-foreground uppercase tracking-wider">Valor a pagar</p>
                             <p className="text-3xl font-black text-primary">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>

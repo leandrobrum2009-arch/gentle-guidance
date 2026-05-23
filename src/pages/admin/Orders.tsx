@@ -6,7 +6,7 @@ import { useAdminOrders, useUpdateOrderStatus, useDeleteOrder } from "@/hooks/us
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Loader2, CheckCircle2, XCircle, Clock, ShoppingBag, CreditCard, Search, Filter, Download, User, Calendar, MoreVertical, ClipboardCheck, Trash2 } from "lucide-react";
+import { Loader2, CheckCircle2, XCircle, Clock, ShoppingBag, CreditCard, Search, Filter, Download, User, Calendar, MoreVertical, ClipboardCheck, Trash2, FileText } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -249,6 +249,15 @@ export default function AdminOrders() {
                                   <ShoppingBag className="h-4 w-4" />
                                   Ver Comprovante
                                 </DropdownMenuItem>
+                                {o.proof_url && (
+                                  <DropdownMenuItem 
+                                    className="flex items-center gap-3 focus:bg-emerald-500/10 focus:text-emerald-600 cursor-pointer py-3 rounded-lg font-bold text-xs"
+                                    onClick={() => window.open(o.proof_url, '_blank')}
+                                  >
+                                    <FileText className="h-4 w-4" />
+                                    Anexo de Pagamento
+                                  </DropdownMenuItem>
+                                )}
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem 
                                   className="flex items-center gap-3 focus:bg-rose-500/10 focus:text-rose-500 cursor-pointer py-3 rounded-lg font-bold text-xs text-rose-500"
