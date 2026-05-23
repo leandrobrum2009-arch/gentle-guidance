@@ -252,7 +252,6 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
             
             <ScratchCard 
               campaignId={campaign.id}
-              availableScratches={availableScratchCards}
               onComplete={() => {
                 setAvailableScratchCards(prev => prev - 1);
                 if (availableScratchCards <= 1) {
