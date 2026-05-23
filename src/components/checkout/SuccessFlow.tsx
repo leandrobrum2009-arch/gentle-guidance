@@ -179,13 +179,11 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
 
                 <Button 
                   onClick={() => {
-                    if (availableSpins > 0) setStep(2);
-                    else if (availableScratchCards > 0) setStep(5);
-                    else setStep(3);
+                    setStep(6);
                   }} 
                   className="w-full h-16 rounded-2xl bg-amber-500 text-white font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-105 transition-transform"
                 >
-                  CONTINUAR MINHA SORTE
+                  VER MEUS DETALHES
                 </Button>
               </CardContent>
             </Card>
