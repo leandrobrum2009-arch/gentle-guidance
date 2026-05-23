@@ -20,9 +20,10 @@ import { toast } from "sonner";
 interface SuccessFlowProps {
   order: any;
   campaign: any;
+  onClose?: () => void;
 }
 
-export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
+export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowProps) {
   const [step, setStep] = useState(1);
   const [countdown, setCountdown] = useState(300); // 5 minutes
   const [availableSpins, setAvailableSpins] = useState(0);
@@ -382,7 +383,10 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
                 <div className="space-y-3">
                   <Button 
                     className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest bg-white/10 text-white hover:bg-white/20 border-white/10"
-                    onClick={() => navigate(`/campanha/${campaign.slug}`)}
+                    onClick={() => {
+                      if (onClose) onClose();
+                      navigate(`/campanha/${campaign.slug}`);
+                    }}
                   >
                     VOLTAR PARA A RIFA
                   </Button>
