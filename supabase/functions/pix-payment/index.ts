@@ -122,6 +122,21 @@ serve(async (req) => {
       console.log(`[PIX Webhook] Received: Topic=${topic}, ID=${id}`);
 
       if ((topic === "payment" || topic === "payment.updated") && id) {
+        // Check for idempotency
+        const { data: existing } = await supabaseClient
+          .from('processed_webhooks')
+          .select('id')
+          .eq('id', `mp_pix_${id}`)
+          .maybeSingle();
+        
+        if (existing) {
+          console.log(`[PIX Webhook] Already processed payment ${id}. Skipping.`);
+          return new Response(JSON.stringify({ received: true, already_processed: true }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 200,
+          });
+        }
+
         const mpAccessToken = settings.mercadopago_access_token || Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN")
         const response = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
           headers: { "Authorization": `Bearer ${mpAccessToken}` }
@@ -136,7 +151,15 @@ serve(async (req) => {
           
           // Call the RPC to handle confirmed payment
           const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
-          if (rpcError) console.error("[PIX Webhook] RPC Error:", rpcError)
+          
+          if (!rpcError) {
+             // Mark as processed
+             await supabaseClient
+               .from('processed_webhooks')
+               .insert({ id: `mp_pix_${id}`, provider: 'mercadopago' });
+          } else {
+             console.error("[PIX Webhook] RPC Error:", rpcError)
+          }
         }
       }
       return new Response(JSON.stringify({ received: true }), {
