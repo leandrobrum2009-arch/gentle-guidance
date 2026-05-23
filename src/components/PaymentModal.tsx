@@ -168,10 +168,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       if (data.success) {
         toast.success(data.message);
         setStatus('paid');
-        setTimeout(() => {
-          onPaymentSuccess();
-          onOpenChange(false);
-        }, 3000);
+        onPaymentSuccess();
       } else {
         toast.error(data.message);
       }
