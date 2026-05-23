@@ -7,7 +7,7 @@ import {
   CheckCircle2, XCircle, AlertCircle, RefreshCw, 
   ShieldCheck, Globe, Database, Server, Settings, 
   CreditCard, Key, Webhook, Activity, ClipboardCheck,
-  Search, Info, History
+  Search, Info, History, ScrollText
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
