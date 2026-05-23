@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
-    ChevronDown, ChevronUp, Clock, Info, RefreshCw
+    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -643,6 +643,54 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'top_buyers':
+        return (
+          <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Trophy className="h-5 w-5 text-amber-500" />
+                </div>
+                <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Top Compradores</h2>
+              </div>
+              <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest bg-secondary">Últimos 5</Badge>
+            </div>
+            
+            <div className="space-y-3">
+              {campaignRanking?.slice(0, 5).map((user: any, i) => (
+                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/5 group hover:bg-white/10 transition-all">
+
+                  <div className="flex items-center gap-4">
+                    <div className="w-8 text-sm font-black italic text-muted-foreground group-hover:text-primary transition-colors">#{i + 1}</div>
+                    <Avatar className="h-10 w-10 border-2 border-border group-hover:border-primary/30 transition-all">
+                      <AvatarImage src={user.avatar_url || ""} />
+                      <AvatarFallback className="bg-secondary text-foreground font-black uppercase text-xs">
+                        {user.name.substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
+                      <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">{user.total_tickets} cotas adquiridas</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {i === 0 && <Crown className="h-5 w-5 text-amber-500" />}
+                    {i === 1 && <Medal className="h-5 w-5 text-zinc-400" />}
+                    {i === 2 && <Medal className="h-5 w-5 text-amber-700" />}
+                  </div>
+                </div>
+              ))}
+              {(!campaignRanking || campaignRanking.length === 0) && (
+                <p className="text-center text-muted-foreground text-xs italic py-4">Aguardando as primeiras compras...</p>
+              )}
+            </div>
+            
+            <p className="text-[10px] text-muted-foreground text-center font-bold uppercase tracking-widest mt-4">
+              Quem comprar mais cotas também receberá prêmios exclusivos!
+            </p>
+          </div>
+        );
+
       case 'ranking':
         return campaign.ranking_enabled && (
           <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
@@ -714,7 +762,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "roulette_footer", "scratch_footer", "ranking"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "top_buyers", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
     <div className="min-h-screen bg-background pb-24 lg:pb-0">

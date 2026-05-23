@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle2, ArrowRight, Video, Users, ExternalLink, 
   Ticket, Sparkles, Clock, Star, Play, Gift, 
   ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown, ShoppingCart, Percent, TrendingUp,
-  Trophy, PartyPopper
+  Trophy, PartyPopper, Printer, User, Phone, Hash, Calendar, DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +33,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
+  const detailsRef = useRef<HTMLDivElement>(null);
 
   const displayTickets = useMemo(() => {
     return localTickets.length > 0 ? localTickets : (order.tickets || []);
@@ -71,17 +72,13 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
       const timer = setTimeout(() => {
         if (premiumTickets.length > 0) {
           setStep(0); // Show premium tickets step
-        } else if (availableSpins > 0) {
-          setStep(2); // Go to roulette
-        } else if (availableScratchCards > 0) {
-          setStep(5); // Go to scratch cards
         } else {
-          setStep(3); // Go to upsell
+          setStep(6); // Go to order details
         }
       }, 3000); // Wait 3 seconds on "Payment Identified" screen
       return () => clearTimeout(timer);
     }
-  }, [step, hasCheckedLucky, premiumTickets, availableSpins, availableScratchCards]);
+  }, [step, hasCheckedLucky, premiumTickets]);
 
   useEffect(() => {
     if (step === 3) {
@@ -93,20 +90,24 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [step]);
 
   const fetchRewards = async () => {
+    // Basic rules from campaign
     const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
     if (spinRule) {
       setAvailableSpins(spinRule.spins);
     } else if (campaign.roulette_free_tickets > 0) {
-      setAvailableSpins(Math.floor(order.quantity / campaign.roulette_free_tickets));
+      setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
+    } else {
+      // Everyone who buys any quota gets at least 1 spin if enabled
+      setAvailableSpins(1);
     }
 
-    if (campaign.scratch_cards_enabled) {
-      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
-      if (scratchRule) {
-        setAvailableScratchCards(scratchRule.scratches || 1);
-      } else {
-        setAvailableScratchCards(1);
-      }
+    // Scratch card rule
+    const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+    if (scratchRule) {
+      setAvailableScratchCards(scratchRule.scratches || 1);
+    } else {
+      // Everyone gets at least 1 scratch card
+      setAvailableScratchCards(1);
     }
 
     const { data } = await supabase.from('roulette_prizes').select('*').eq('campaign_id', campaign.id);
@@ -123,6 +124,22 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
     exit: { opacity: 0, y: -20 }
+  };
+
+  const handlePrint = () => {
+    window.print();
+  };
+
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `Meu pedido na rifa ${campaign.title}`,
+        text: `Acabei de comprar ${order.quantity} cotas para concorrer a ${campaign.title}! Meus números: ${displayTickets.map((t: any) => t.number).join(', ')}`,
+        url: window.location.href
+      });
+    } else {
+      toast.info("Compartilhamento não suportado neste navegador.");
+    }
   };
 
   return (
@@ -161,14 +178,10 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                 </div>
 
                 <Button 
-                  onClick={() => {
-                    if (availableSpins > 0) setStep(2);
-                    else if (availableScratchCards > 0) setStep(5);
-                    else setStep(3);
-                  }} 
+                  onClick={() => setStep(6)} 
                   className="w-full h-16 rounded-2xl bg-amber-500 text-white font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-105 transition-transform"
                 >
-                  CONTINUAR MINHA SORTE
+                  VER MEUS DETALHES
                 </Button>
               </CardContent>
             </Card>
@@ -219,11 +232,129 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           </motion.div>
         )}
 
+        {step === 6 && (
+          <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
+              <CardContent className="p-0">
+                <div ref={detailsRef} className="p-8 space-y-8 bg-card text-card-foreground">
+                  <div className="flex items-center justify-between border-b border-border pb-6">
+                    <div className="space-y-1">
+                      <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pedido #{order.id?.substring(0, 8)}</p>
+                    </div>
+                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <User className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Nome Completo</p>
+                          <p className="text-sm font-bold uppercase">{order.profiles?.name || "Usuário"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Phone className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Telefone</p>
+                          <p className="text-sm font-bold">{order.profiles?.phone || "Não informado"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Hash className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Transação</p>
+                          <p className="text-sm font-bold uppercase">{order.id?.substring(0, 12)}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Calendar className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Data e Hora</p>
+                          <p className="text-sm font-bold">{new Date().toLocaleString('pt-BR')}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Ticket className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantidade</p>
+                          <p className="text-sm font-bold">{order.quantity} Cotas</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <DollarSign className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Valor Total</p>
+                          <p className="text-sm font-bold">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-border space-y-4">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Seus Números da Sorte:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {displayTickets.map((t: any) => (
+                        <Badge key={t.id} variant="secondary" className="px-3 py-1 font-black text-xs bg-primary/10 text-primary border-primary/20">
+                          #{t.number}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="p-8 bg-zinc-950 border-t border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handlePrint}>
+                      <Printer className="h-4 w-4" /> Imprimir
+                    </Button>
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handleShare}>
+                      <Share2 className="h-4 w-4" /> Compartilhar
+                    </Button>
+                  </div>
+
+                  <Button 
+                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-[1.02] transition-transform"
+                    onClick={() => {
+                      if (availableSpins > 0) setStep(2);
+                      else if (availableScratchCards > 0) setStep(5);
+                      else setStep(3);
+                    }}
+                  >
+                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
         {step === 2 && (
           <motion.div key="step2" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Sua Sorte Instantânea</h2>
-               <Badge className="bg-primary text-black font-bold">{availableSpins} giros restantes</Badge>
+               <div className="flex gap-2">
+                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
+                   Ver Detalhes
+                 </Button>
+                 <Badge className="bg-primary text-black font-bold h-7">{availableSpins} giros restantes</Badge>
+               </div>
             </div>
             
             <Roulette 
@@ -233,13 +364,13 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
               onSpinComplete={() => {
                 setAvailableSpins(prev => prev - 1);
                 if (availableSpins <= 1) {
-                  setTimeout(() => setStep(3), 5000);
+                  setTimeout(() => setStep(5), 5000);
                 }
               }}
             />
             
-            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(3)}>
-              Continuar para próxima etapa
+            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(5)}>
+              Ir para Raspadinha
             </Button>
           </motion.div>
         )}
@@ -248,7 +379,12 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           <motion.div key="step5" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Raspadinha da Sorte</h2>
-               <Badge className="bg-primary text-black font-bold">{availableScratchCards} restantes</Badge>
+               <div className="flex gap-2">
+                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
+                   Ver Detalhes
+                 </Button>
+                 <Badge className="bg-primary text-black font-bold h-7">{availableScratchCards} restantes</Badge>
+               </div>
             </div>
             
             <ScratchCard 
@@ -365,42 +501,10 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   </div>
                 )}
 
-                <div className="pt-8 border-t border-white/5 space-y-6 text-left">
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0">
-                      <img src={campaign.image_url} alt={campaign.title} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black uppercase truncate">{campaign.title}</p>
-                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Sorteio em breve</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Seus Números Adquiridos</h3>
-                    <Badge variant="outline" className="border-primary/30 text-primary font-black uppercase tracking-widest text-[10px]">{order.quantity} Títulos</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-4 md:grid-cols-6 gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
-                    {displayTickets.map((ticket: any, i: number) => (
-                      <div key={i} className="aspect-square rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-white/80">
-                        {ticket.number}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="space-y-3">
-                  <Button 
-                    className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest bg-white/10 text-white hover:bg-white/20 border-white/10"
-                    onClick={() => {
-                      if (onClose) onClose();
-                      navigate(`/campanha/${campaign.slug}`);
-                    }}
-                  >
-                    VOLTAR PARA A RIFA
+                <div className="pt-8 border-t border-white/5 space-y-4">
+                  <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={onClose}>
+                    FECHAR E VOLTAR PARA RIFA
                   </Button>
-                  <p className="text-[10px] text-white/20 font-bold uppercase tracking-widest">Obrigado pela sua participação e boa sorte!</p>
                 </div>
               </CardContent>
             </Card>
