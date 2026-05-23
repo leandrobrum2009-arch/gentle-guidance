@@ -42,13 +42,23 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
   }, [step]);
 
   const fetchRewards = async () => {
-    // Check if user has roulette spins or mystery boxes from this order/campaign
-    // For now we calculate based on campaign rules
+    // Check if user has roulette spins
     const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
     if (spinRule) {
       setAvailableSpins(spinRule.spins);
     } else if (campaign.roulette_free_tickets > 0) {
       setAvailableSpins(Math.floor(order.quantity / campaign.roulette_free_tickets));
+    }
+
+    // Check if user has scratch cards
+    if (campaign.scratch_cards_enabled) {
+      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      if (scratchRule) {
+        setAvailableScratchCards(scratchRule.scratches || 1);
+      } else {
+        // Default 1 scratch card for buying anything if enabled and no specific rule
+        setAvailableScratchCards(1);
+      }
     }
 
     // Fetch roulette prizes for this campaign
