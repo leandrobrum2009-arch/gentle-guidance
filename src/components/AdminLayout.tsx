@@ -18,7 +18,8 @@ import { useSiteSettings } from "@/hooks/useData";
    ]},
    { category: "Vendas", items: [
      { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-     { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+      { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+      { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
      { title: "Cupons", url: "/admin/cupons", icon: Percent },
      { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
    ]},
