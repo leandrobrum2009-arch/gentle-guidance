@@ -1,10 +1,10 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   CheckCircle2, ArrowRight, Video, Users, ExternalLink, 
   Ticket, Sparkles, Clock, Star, Play, Gift, 
   ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown, ShoppingCart, Percent, TrendingUp,
-  Trophy, PartyPopper
+  Trophy, PartyPopper, Printer, User, Phone, Hash, Calendar, DollarSign
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
