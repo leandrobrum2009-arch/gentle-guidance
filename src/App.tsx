@@ -17,6 +17,7 @@ import AdminBanners from "./pages/admin/Banners";
 import AdminCoupons from "./pages/admin/Coupons";
 import AdminNotifications from "./pages/admin/Notifications";
 import AdminSettings from "./pages/admin/Settings";
+import AdminDiagnostics from "./pages/admin/Diagnostics";
 import AdminScratchCards from "./pages/admin/ScratchCards";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
@@ -105,6 +106,7 @@ const App = () => {
                 <Route path="/admin/cupons" element={<ProtectedRoute adminOnly><AdminCoupons /></ProtectedRoute>} />
                 <Route path="/admin/notificacoes" element={<ProtectedRoute adminOnly><AdminNotifications /></ProtectedRoute>} />
                 <Route path="/admin/configuracoes" element={<ProtectedRoute adminOnly><AdminSettings /></ProtectedRoute>} />
+                <Route path="/admin/diagnostico" element={<ProtectedRoute adminOnly><AdminDiagnostics /></ProtectedRoute>} />
     
                 <Route path="*" element={<NotFound />} />
               </Routes>

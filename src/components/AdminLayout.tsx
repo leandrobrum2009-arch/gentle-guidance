@@ -5,7 +5,7 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
-  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket
+  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket, Activity
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -33,11 +33,12 @@ import { useSiteSettings } from "@/hooks/useData";
      { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
      { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
    ]},
-   { category: "Configurações", items: [
-     { title: "Banners", url: "/admin/banners", icon: ImageIcon },
-     { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
-   ]},
- ];
+    { category: "Configurações", items: [
+      { title: "Banners", url: "/admin/banners", icon: ImageIcon },
+      { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+      { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
+    ]},
+  ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
