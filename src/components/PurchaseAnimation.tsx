@@ -12,7 +12,7 @@
  const PurchaseAnimation = ({ isVisible, onComplete, type = "explosion" }: PurchaseAnimationProps) => {
    useEffect(() => {
      if (isVisible && type === "explosion") {
-       const duration = 1.5 * 1000;
+       const duration = 1.0 * 1000;
        const animationEnd = Date.now() + duration;
        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
  
@@ -80,12 +80,6 @@
              </div>
  
 
-              <div className="mt-8 flex flex-col items-center gap-2">
-                <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/40 animate-pulse">
-                  Abrindo tela de pagamento...
-                </p>
-              </div>
             </motion.div>
           </motion.div>
         )}
