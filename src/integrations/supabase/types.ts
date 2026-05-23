@@ -1243,6 +1243,45 @@ export type Database = {
         }
         Relationships: []
       }
+      webhook_events: {
+        Row: {
+          attempts: number | null
+          created_at: string | null
+          error_log: string | null
+          event_id: string
+          id: string
+          last_attempt_at: string | null
+          payload: Json
+          processed_at: string | null
+          provider: string
+          status: string
+        }
+        Insert: {
+          attempts?: number | null
+          created_at?: string | null
+          error_log?: string | null
+          event_id: string
+          id?: string
+          last_attempt_at?: string | null
+          payload: Json
+          processed_at?: string | null
+          provider: string
+          status?: string
+        }
+        Update: {
+          attempts?: number | null
+          created_at?: string | null
+          error_log?: string | null
+          event_id?: string
+          id?: string
+          last_attempt_at?: string | null
+          payload?: Json
+          processed_at?: string | null
+          provider?: string
+          status?: string
+        }
+        Relationships: []
+      }
       winners: {
         Row: {
           avatar_url: string | null

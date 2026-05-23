@@ -1,5 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
+import { logWebhookEvent, markAsProcessed, markAsFailed } from "../_shared/webhook-handler.ts"
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -89,14 +91,21 @@ serve(async (req) => {
       console.log(`[MP Webhook] Received: Topic=${topic}, ID=${id}`);
 
       if ((topic === "payment" || topic === "payment.updated") && id) {
-        // Check for idempotency
+        // Log the event for the retry queue
+        await logWebhookEvent(supabaseClient, { 
+          provider: 'mercadopago', 
+          eventId: id, 
+          payload: body 
+        });
+
+        // Check for idempotency (using the new table primarily)
         const { data: existing } = await supabaseClient
-          .from('processed_webhooks')
-          .select('id')
-          .eq('id', `mp_${id}`)
-          .maybeSingle();
+          .from('webhook_events')
+          .select('status')
+          .match({ event_id: id, provider: 'mercadopago' })
+          .single();
         
-        if (existing) {
+        if (existing?.status === 'processed') {
           console.log(`[MP Webhook] Already processed payment ${id}. Skipping.`);
           return new Response(JSON.stringify({ received: true, already_processed: true }), {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -104,43 +113,49 @@ serve(async (req) => {
           });
         }
 
-        const response = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
-          headers: { "Authorization": `Bearer ${mpAccessToken}` }
-        })
-        const paymentData = await response.json()
-        
-        console.log(`[MP Webhook] Payment ${id} status: ${paymentData.status}`);
+        try {
+          const response = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
+            headers: { "Authorization": `Bearer ${mpAccessToken}` }
+          })
+          const paymentData = await response.json()
+          
+          console.log(`[MP Webhook] Payment ${id} status: ${paymentData.status}`);
 
-        if (paymentData.status === "approved") {
-          const orderId = paymentData.external_reference
-          console.log(`[MP Webhook] Approving order ${orderId} for payment ${id}`);
-          
-          // Call the RPC to handle confirmed payment (handles tickets, stats, etc.)
-          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
-          
-          if (!rpcError) {
-            // Mark as processed
-            await supabaseClient
-              .from('processed_webhooks')
-              .insert({ id: `mp_${id}`, provider: 'mercadopago' });
-          } else {
-            console.error("[MP Webhook] RPC Error:", rpcError)
-            // Fallback to direct update if RPC fails
-            const { error: updateError } = await supabaseClient
-              .from('orders')
-              .update({ 
-                  payment_status: 'paid',
-                  paid_at: new Date().toISOString()
-              })
-              .eq('id', orderId)
-              .neq('payment_status', 'paid');
+          if (paymentData.status === "approved") {
+            const orderId = paymentData.external_reference
+            console.log(`[MP Webhook] Approving order ${orderId} for payment ${id}`);
             
-            if (!updateError) {
-              await supabaseClient
-                .from('processed_webhooks')
-                .insert({ id: `mp_${id}`, provider: 'mercadopago' });
+            const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
+            
+            if (!rpcError) {
+              await markAsProcessed(supabaseClient, id, 'mercadopago');
+            } else {
+              console.error("[MP Webhook] RPC Error:", rpcError)
+              // Fallback update
+              const { error: updateError } = await supabaseClient
+                .from('orders')
+                .update({ payment_status: 'paid', paid_at: new Date().toISOString() })
+                .eq('id', orderId)
+                .neq('payment_status', 'paid');
+              
+              if (!updateError) {
+                await markAsProcessed(supabaseClient, id, 'mercadopago');
+              } else {
+                throw new Error(`RPC and Update failed: ${rpcError.message || updateError.message}`);
+              }
             }
+          } else {
+            // Not approved yet, but we received it
+            await supabaseClient.from('webhook_events').update({ status: 'pending', last_attempt_at: new Date().toISOString() }).match({ event_id: id, provider: 'mercadopago' });
           }
+        } catch (err: any) {
+          console.error(`[MP Webhook] Processing failed for ${id}:`, err.message);
+          await markAsFailed(supabaseClient, id, 'mercadopago', err.message);
+          // Return 500 so MP retries too
+          return new Response(JSON.stringify({ error: err.message }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+            status: 500,
+          });
         }
       }
       return new Response(JSON.stringify({ received: true }), {
