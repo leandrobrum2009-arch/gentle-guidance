@@ -24,7 +24,9 @@
      )
  
     const url = new URL(req.url)
-    const path = url.searchParams.get('path')
+    // Check for path in search params or as a segment (last part of URL)
+    const path = url.searchParams.get('path') || url.pathname.split('/').pop()
+
 
     if (path === 'create') {
       const { orderId } = await req.json()
