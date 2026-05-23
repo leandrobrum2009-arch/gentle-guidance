@@ -22,6 +22,7 @@ export default function AdminDiagnostics() {
   });
   const [paymentProviderStatus, setPaymentProviderStatus] = useState<Record<string, any>>({});
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
+  const [inconsistencies, setInconsistencies] = useState<any[]>([]);
 
   const runDiagnostics = async () => {
     setLoading(true);
