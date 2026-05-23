@@ -26,6 +26,11 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
   const [availableSpins, setAvailableSpins] = useState(0);
   const [availableScratchCards, setAvailableScratchCards] = useState(0);
   const [prizes, setPrizes] = useState<any[]>([]);
+  const { data: otherCampaigns } = useCampaigns();
+
+  const recommendedCampaigns = useMemo(() => {
+    return otherCampaigns?.filter(c => c.id !== campaign.id && c.status === 'active').slice(0, 3) || [];
+  }, [otherCampaigns, campaign.id]);
 
   useEffect(() => {
     if (order.payment_status === 'paid') {
