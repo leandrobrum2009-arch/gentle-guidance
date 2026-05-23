@@ -5,6 +5,7 @@ import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landm
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import SuccessFlow from "./checkout/SuccessFlow";
 
 interface PaymentModalProps {
   orderId: string | null;
