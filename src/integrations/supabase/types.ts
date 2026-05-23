@@ -746,6 +746,24 @@ export type Database = {
           },
         ]
       }
+      processed_webhooks: {
+        Row: {
+          id: string
+          processed_at: string | null
+          provider: string
+        }
+        Insert: {
+          id: string
+          processed_at?: string | null
+          provider: string
+        }
+        Update: {
+          id?: string
+          processed_at?: string | null
+          provider?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
