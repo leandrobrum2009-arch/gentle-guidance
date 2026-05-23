@@ -380,42 +380,123 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   </div>
                 )}
 
-                <div className="pt-8 border-t border-white/5 space-y-6 text-left">
-                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
-                    <div className="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0">
-                      <img src={campaign.image_url} alt={campaign.title} className="w-full h-full object-cover" />
+                <div className="pt-8 border-t border-white/5 space-y-4">
+                  <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={onClose}>
+                    FECHAR E VOLTAR PARA RIFA
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
+
+        {step === 6 && (
+          <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+            <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
+              <CardContent className="p-0">
+                <div ref={detailsRef} className="p-8 space-y-8 bg-card text-card-foreground">
+                  <div className="flex items-center justify-between border-b border-border pb-6">
+                    <div className="space-y-1">
+                      <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
+                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Pedido #{order.id?.substring(0, 8)}</p>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black uppercase truncate">{campaign.title}</p>
-                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Sorteio em breve</p>
+                    <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <User className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Nome Completo</p>
+                          <p className="text-sm font-bold uppercase">{order.profiles?.name || "Usuário"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Phone className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Telefone</p>
+                          <p className="text-sm font-bold">{order.profiles?.phone || "Não informado"}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Hash className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Transação</p>
+                          <p className="text-sm font-bold uppercase">{order.id?.substring(0, 12)}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Calendar className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Data e Hora</p>
+                          <p className="text-sm font-bold">{new Date().toLocaleString('pt-BR')}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <Ticket className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Quantidade</p>
+                          <p className="text-sm font-bold">{order.quantity} Cotas</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-xl bg-secondary flex items-center justify-center">
+                          <DollarSign className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Valor Total</p>
+                          <p className="text-sm font-bold">R$ {Number(order.total_amount).toFixed(2).replace('.', ',')}</p>
+                        </div>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Seus Números Adquiridos</h3>
-                    <Badge variant="outline" className="border-primary/30 text-primary font-black uppercase tracking-widest text-[10px]">{order.quantity} Títulos</Badge>
-                  </div>
-                  
-                  <div className="grid grid-cols-4 md:grid-cols-6 gap-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
-                    {displayTickets.map((ticket: any, i: number) => (
-                      <div key={i} className="aspect-square rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-black text-white/80">
-                        {ticket.number}
-                      </div>
-                    ))}
+                  <div className="pt-6 border-t border-border space-y-4">
+                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Seus Números da Sorte:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {displayTickets.map((t: any) => (
+                        <Badge key={t.id} variant="secondary" className="px-3 py-1 font-black text-xs bg-primary/10 text-primary border-primary/20">
+                          #{t.number}
+                        </Badge>
+                      ))}
+                    </div>
                   </div>
                 </div>
 
-                <div className="space-y-3">
+                <div className="p-8 bg-zinc-950 border-t border-white/5 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handlePrint}>
+                      <Printer className="h-4 w-4" /> Imprimir
+                    </Button>
+                    <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handleShare}>
+                      <Share2 className="h-4 w-4" /> Compartilhar
+                    </Button>
+                  </div>
+
                   <Button 
-                    className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest bg-white/10 text-white hover:bg-white/20 border-white/10"
+                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-[1.02] transition-transform"
                     onClick={() => {
-                      if (onClose) onClose();
-                      navigate(`/campanha/${campaign.slug}`);
+                      if (availableSpins > 0) setStep(2);
+                      else if (availableScratchCards > 0) setStep(5);
+                      else setStep(3);
                     }}
                   >
-                    VOLTAR PARA A RIFA
+                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
-                  <p className="text-[10px] text-white/20 font-bold uppercase tracking-widest">Obrigado pela sua participação e boa sorte!</p>
                 </div>
               </CardContent>
             </Card>
