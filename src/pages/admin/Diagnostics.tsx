@@ -134,29 +134,88 @@ export default function AdminDiagnostics() {
                 <CardDescription className="text-xs">Valide a integridade de todos os pedidos pagos.</CardDescription>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2"
-              onClick={async () => {
-                setLoading(true);
-                try {
-                  const { data, error } = await supabase.rpc('audit_all_paid_orders');
-                  if (error) throw error;
-                  toast.success((data as any).message);
-                } catch (err: any) {
-                  toast.error("Erro na auditoria: " + err.message);
-                } finally {
-                  setLoading(false);
-                }
-              }}
-              disabled={loading}
-            >
-              <History className="h-3 w-3" />
-              AUDITAR TUDO
-            </Button>
+            <div className="flex gap-2">
+              {inconsistencies.length > 0 && (
+                <Button 
+                  variant="destructive" 
+                  size="sm" 
+                  className="rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2"
+                  onClick={async () => {
+                    setLoading(true);
+                    try {
+                      const { data, error } = await supabase.rpc('audit_all_paid_orders');
+                      if (error) throw error;
+                      toast.success((data as any).message);
+                      runDiagnostics(); // Refresh
+                    } catch (err: any) {
+                      toast.error("Erro na auditoria: " + err.message);
+                    } finally {
+                      setLoading(false);
+                    }
+                  }}
+                  disabled={loading}
+                >
+                  CORRIGIR TUDO
+                </Button>
+              )}
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="rounded-xl font-bold uppercase tracking-widest text-[10px] gap-2"
+                onClick={runDiagnostics}
+                disabled={loading}
+              >
+                <RefreshCw className={`h-3 w-3 ${loading ? 'animate-spin' : ''}`} />
+                AUDITAR AGORA
+              </Button>
+            </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            {inconsistencies.length > 0 ? (
+              <div className="space-y-3">
+                <div className="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 flex items-center gap-3">
+                  <AlertCircle className="h-4 w-4 text-rose-500" />
+                  <p className="text-xs font-bold text-rose-500 uppercase tracking-wider">
+                    Detectamos {inconsistencies.length} pedido(s) com falta de bilhetes!
+                  </p>
+                </div>
+                <div className="grid gap-2">
+                  {inconsistencies.map((inc) => (
+                    <div key={inc.id} className="flex items-center justify-between p-3 rounded-xl bg-secondary/30 border border-border text-[10px]">
+                      <div className="flex flex-col gap-1">
+                        <span className="font-bold text-foreground">ORD-{inc.id.substring(0, 8).toUpperCase()} - {inc.customer_name}</span>
+                        <span className="text-muted-foreground">Esperado: {inc.quantity} | Gerados: {inc.tickets_generated}</span>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        variant="ghost" 
+                        className="h-8 text-primary hover:text-primary hover:bg-primary/10 font-bold uppercase"
+                        onClick={async () => {
+                          const { data, error } = await supabase.rpc('repair_order', { p_order_id: inc.id });
+                          if (!error) {
+                            toast.success((data as any).message);
+                            runDiagnostics();
+                          }
+                        }}
+                      >
+                        REPARAR
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="p-4 rounded-xl bg-emerald-500/5 border border-emerald-500/10 flex items-center gap-4">
+                <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                <div className="space-y-1">
+                  <p className="text-xs font-bold text-emerald-500 uppercase tracking-widest">Tudo OK!</p>
+                  <p className="text-[10px] text-muted-foreground leading-relaxed">
+                    Nenhuma inconsistência detectada. Todos os pedidos pagos têm seus respectivos bilhetes gerados corretamente.
+                  </p>
+                </div>
+              </div>
+            )}
+            
             <div className="p-4 rounded-xl bg-primary/5 border border-primary/10 flex items-start gap-4">
               <Info className="h-5 w-5 text-primary mt-0.5" />
               <div className="space-y-1">
