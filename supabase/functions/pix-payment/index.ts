@@ -23,7 +23,7 @@ serve(async (req) => {
       body = await req.json().catch(() => ({}))
     }
 
-    const path = body.path || url.pathname.split("/").pop()
+    const path = body.path || url.searchParams.get("path") || url.pathname.split("/").pop()
 
     // Fetch site settings to determine provider and credentials
     const { data: settingsData } = await supabaseClient.from("site_settings").select("key, value");
@@ -117,7 +117,9 @@ serve(async (req) => {
 
     if (path === "webhook") {
       const topic = body.topic || url.searchParams.get("topic") || body.type
-      const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id")
+      const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id") || body.id
+
+      console.log(`[PIX Webhook] Received: Topic=${topic}, ID=${id}`);
 
       if ((topic === "payment" || topic === "payment.updated") && id) {
         const mpAccessToken = settings.mercadopago_access_token || Deno.env.get("MERCADO_PAGO_ACCESS_TOKEN")
@@ -125,12 +127,16 @@ serve(async (req) => {
           headers: { "Authorization": `Bearer ${mpAccessToken}` }
         })
         const paymentData = await response.json()
+        
+        console.log(`[PIX Webhook] Payment ${id} status: ${paymentData.status}`);
 
         if (paymentData.status === "approved") {
           const orderId = paymentData.external_reference
+          console.log(`[PIX Webhook] Approving order ${orderId} for payment ${id}`);
+          
           // Call the RPC to handle confirmed payment
           const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
-          if (rpcError) console.error("RPC Error:", rpcError)
+          if (rpcError) console.error("[PIX Webhook] RPC Error:", rpcError)
         }
       }
       return new Response(JSON.stringify({ received: true }), {

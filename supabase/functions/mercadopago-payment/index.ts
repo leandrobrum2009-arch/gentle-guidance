@@ -23,7 +23,7 @@ serve(async (req) => {
       body = await req.json().catch(() => ({}))
     }
 
-    const path = body.path || url.pathname.split("/").pop()
+    const path = body.path || url.searchParams.get("path") || url.pathname.split("/").pop()
 
     // Fetch site settings for credentials
     const { data: settingsData } = await supabaseClient.from("site_settings").select("key, value");
@@ -84,25 +84,36 @@ serve(async (req) => {
 
     if (path === "webhook") {
       const topic = body.topic || url.searchParams.get("topic") || body.type
-      const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id")
+      const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id") || body.id
+
+      console.log(`[MP Webhook] Received: Topic=${topic}, ID=${id}`);
 
       if ((topic === "payment" || topic === "payment.updated") && id) {
         const response = await fetch(`https://api.mercadopago.com/v1/payments/${id}`, {
           headers: { "Authorization": `Bearer ${mpAccessToken}` }
         })
         const paymentData = await response.json()
+        
+        console.log(`[MP Webhook] Payment ${id} status: ${paymentData.status}`);
 
         if (paymentData.status === "approved") {
           const orderId = paymentData.external_reference
-          // Call the RPC to handle confirmed payment
-          await supabaseClient
-            .from('orders')
-            .update({ 
-                payment_status: 'paid',
-                paid_at: new Date().toISOString()
-            })
-            .eq('id', orderId)
-            .neq('payment_status', 'paid')
+          console.log(`[MP Webhook] Approving order ${orderId} for payment ${id}`);
+          
+          // Call the RPC to handle confirmed payment (handles tickets, stats, etc.)
+          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { p_order_id: orderId })
+          if (rpcError) {
+            console.error("[MP Webhook] RPC Error:", rpcError)
+            // Fallback to direct update if RPC fails
+            await supabaseClient
+              .from('orders')
+              .update({ 
+                  payment_status: 'paid',
+                  paid_at: new Date().toISOString()
+              })
+              .eq('id', orderId)
+              .neq('payment_status', 'paid')
+          }
         }
       }
       return new Response(JSON.stringify({ received: true }), {
