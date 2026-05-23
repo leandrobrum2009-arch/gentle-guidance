@@ -23,7 +23,7 @@ serve(async (req) => {
       body = await req.json().catch(() => ({}))
     }
 
-    const path = body.path || url.pathname.split("/").pop()
+    const path = body.path || url.searchParams.get("path") || url.pathname.split("/").pop()
 
     // Fetch site settings for credentials
     const { data: settingsData } = await supabaseClient.from("site_settings").select("key, value");
