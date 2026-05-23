@@ -85,12 +85,33 @@ const ScratchCard = ({
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
-      // Add "scratch here" text
-      ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-      ctx.font = "bold 20px Inter";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2);
+      // Add logo if available
+      const logoUrl = localStorage.getItem('site_logo') || "";
+      if (logoUrl) {
+        const logoImg = new Image();
+        logoImg.crossOrigin = "anonymous";
+        logoImg.src = logoUrl;
+        logoImg.onload = () => {
+          const logoSize = 60;
+          ctx.globalAlpha = 0.3;
+          ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
+          ctx.globalAlpha = 1.0;
+          
+          // Add "scratch here" text below logo
+          ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+          ctx.font = "bold 16px Inter";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
+        };
+      } else {
+        // Fallback to text only
+        ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
+        ctx.font = "bold 20px Inter";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2);
+      }
       
       // Add decorative patterns
       ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
