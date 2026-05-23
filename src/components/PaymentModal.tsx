@@ -225,18 +225,20 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
           ) : status === 'paid' ? (
             <motion.div 
               key="paid"
-              initial={{ opacity: 0, scale: 0.9 }} 
-              animate={{ opacity: 1, scale: 1 }}
-              className="p-10 text-center space-y-6"
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }}
+              className="p-6 overflow-y-auto max-h-[80vh]"
             >
-              <div className="mx-auto h-24 w-24 rounded-full bg-emerald-500/20 flex items-center justify-center border-4 border-emerald-500/30">
-                <CheckCircle2 className="h-12 w-12 text-emerald-500" />
+              <SuccessFlow order={order} campaign={order.campaigns} />
+              
+              <div className="mt-8 pt-6 border-t border-border flex flex-col gap-3">
+                <Button className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>
+                  CONCLUIR E VER MEUS NÚMEROS
+                </Button>
+                <p className="text-[10px] text-muted-foreground text-center font-bold uppercase tracking-widest">
+                  O comprovante também foi enviado para o seu WhatsApp/E-mail.
+                </p>
               </div>
-              <div className="space-y-2">
-                <h2 className="text-2xl font-black uppercase italic tracking-tighter">PAGAMENTO CONFIRMADO!</h2>
-                <p className="text-sm text-muted-foreground font-medium uppercase tracking-widest">Seus números já foram reservados. Boa sorte!</p>
-              </div>
-              <p className="text-xs text-primary font-bold animate-pulse">Redirecionando para seus títulos...</p>
             </motion.div>
           ) : status === 'expired' ? (
             <motion.div 
