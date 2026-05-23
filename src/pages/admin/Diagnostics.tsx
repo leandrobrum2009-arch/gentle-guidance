@@ -359,6 +359,51 @@ export default function AdminDiagnostics() {
           </CardContent>
         </Card>
 
+        {/* Draw Logs - New Section */}
+        <Card className="border-border bg-card shadow-sm md:col-span-2">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <ScrollText className="h-5 w-5 text-primary" />
+              <CardTitle className="text-lg">Logs do Sorteio</CardTitle>
+            </div>
+            <CardDescription className="text-xs">Histórico das últimas premiações e sorteios realizados.</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {drawLogs.length > 0 ? (
+              <div className="grid gap-3">
+                {drawLogs.map((log) => (
+                  <div key={log.id} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <Trophy className="h-5 w-5" />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black text-foreground uppercase tracking-tight">{log.campaigns?.title}</span>
+                        <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                          Ganhador: {log.winners?.winner_name} • Cota: {log.winners?.ticket_number}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="outline" className="text-[9px] font-black uppercase tracking-tighter mb-1 border-primary/20 text-primary">
+                        MÉTODO: {log.draw_method}
+                      </Badge>
+                      <p className="text-[9px] text-muted-foreground font-bold">
+                        {new Date(log.created_at).toLocaleString('pt-BR')}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="p-8 text-center bg-secondary/20 rounded-2xl border border-dashed border-border">
+                <ScrollText className="h-8 w-8 text-muted-foreground mx-auto mb-2 opacity-20" />
+                <p className="text-xs text-muted-foreground font-bold uppercase tracking-widest">Nenhum log de sorteio encontrado.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Security Audit */}
         <Card className="border-border bg-card shadow-sm md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
