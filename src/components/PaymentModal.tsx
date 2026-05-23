@@ -187,7 +187,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[450px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+      <DialogContent className="sm:max-w-[500px] bg-card border-border rounded-3xl p-0 overflow-hidden">
         <AnimatePresence mode="wait">
           {loading || generatingPix ? (
             <motion.div 
