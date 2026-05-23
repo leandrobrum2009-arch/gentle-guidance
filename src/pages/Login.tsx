@@ -43,17 +43,8 @@ const Login = () => {
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md space-y-6"
         >
-          <div className="text-center space-y-4">
-            <div className="flex justify-center mb-6">
-              {siteSettings?.site_logo_url ? (
-                <img src={siteSettings.site_logo_url} alt="Logo" className="h-[var(--logo-height-desktop,64px)] w-auto object-contain" />
-              ) : (
-                <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <Ticket className="h-8 w-8 text-primary" />
-                </div>
-              )}
-            </div>
-            <h1 className="font-display text-2xl font-bold">Entrar</h1>
+          <div className="text-center space-y-4 pt-12">
+            <h1 className="font-display text-2xl font-bold italic uppercase tracking-widest text-animate-gradient">Entrar</h1>
             <p className="mt-1 text-sm text-muted-foreground">Acesse sua conta para ver seus bilhetes</p>
           </div>
 
