@@ -359,7 +359,11 @@ export default function AdminCampaignEdit() {
 
                    <button 
                      type="button"
-                     onClick={() => set("ticket_generation_type", 'manual')}
+                      onClick={() => {
+                        set("ticket_generation_type", 'manual');
+                        set("manual_numbers", true);
+                        set("auto_numbers", false);
+                      }}
                      className={cn(
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'manual' 
