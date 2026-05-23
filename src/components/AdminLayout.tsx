@@ -33,11 +33,12 @@ import { useSiteSettings } from "@/hooks/useData";
      { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
      { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
    ]},
-   { category: "Configurações", items: [
-     { title: "Banners", url: "/admin/banners", icon: ImageIcon },
-     { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
-   ]},
- ];
+    { category: "Configurações", items: [
+      { title: "Banners", url: "/admin/banners", icon: ImageIcon },
+      { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+      { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
+    ]},
+  ];
 
 export default function AdminLayout({ children }: { children: ReactNode }) {
   const { pathname } = useLocation();
