@@ -2,7 +2,6 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2"
 import { logWebhookEvent, markAsProcessed, markAsFailed } from "../_shared/webhook-handler.ts"
 
-
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
@@ -36,14 +35,17 @@ serve(async (req) => {
 
     if (path === "create") {
       const orderId = body.orderId
+      if (!orderId) throw new Error("ID do pedido não informado.")
+
       const { data: order, error: orderError } = await supabaseClient
         .from("orders")
         .select("*, campaigns(title)")
         .eq("id", orderId)
         .single()
 
-      if (orderError || !order) throw new Error("Order not found")
+      if (orderError || !order) throw new Error("Pedido não encontrado")
 
+      // If already has PIX and is pending, return it
       if (order.pix_code && order.pix_qr_code_base64 && order.payment_status === 'pending') {
         return new Response(JSON.stringify({
           pix_code: order.pix_code,
@@ -59,10 +61,9 @@ serve(async (req) => {
         const pixCode = settings.manual_payment_pix_key || "";
         const pixName = settings.manual_payment_pix_name || "";
         
-        // Return a mock response or the actual manual pix info
         return new Response(JSON.stringify({
           pix_code: pixCode,
-          pix_qr_code_base64: null, // No QR for manual pix usually
+          pix_qr_code_base64: null,
           is_manual: true,
           pix_name: pixName
         }), {
@@ -97,6 +98,20 @@ serve(async (req) => {
         })
 
         const mpData = await response.json()
+        
+        // Handle specifically "locked" error (idempotency key match)
+        if (response.status === 423) {
+           console.log(`[PIX Create] Resource already locked (MP status 423) for order ${orderId}. This usually means it was already created.`);
+           // We could try to fetch the existing payment from MP or wait for webhook
+           // For now, let's try to return what's in our DB or a descriptive error
+           if (order.pix_code) {
+             return new Response(JSON.stringify({
+               pix_code: order.pix_code,
+               pix_qr_code_base64: order.pix_qr_code_base64
+             }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+           }
+        }
+
         if (!response.ok) {
           console.error("MP Error:", mpData);
           throw new Error(mpData.message || "Erro ao gerar PIX no Mercado Pago")
@@ -119,8 +134,7 @@ serve(async (req) => {
         })
       }
 
-      // Fallback for unknown provider
-      throw new Error(`Provedor de pagamento '${activeProvider}' não suportado no momento.`)
+      throw new Error(`Provedor de pagamento '${activeProvider}' não suportado.`)
     }
 
     if (path === "webhook") {
@@ -142,7 +156,7 @@ serve(async (req) => {
           .from('webhook_events')
           .select('status')
           .match({ event_id: id, provider: 'mercadopago_pix' })
-          .single();
+          .maybeSingle();
         
         if (existing?.status === 'processed') {
           console.log(`[PIX Webhook] Already processed payment ${id}. Skipping.`);
@@ -200,7 +214,7 @@ serve(async (req) => {
     console.error("Function Error:", error.message);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400,
+      status: 400, // Returning 400 for general errors
     })
   }
 })
