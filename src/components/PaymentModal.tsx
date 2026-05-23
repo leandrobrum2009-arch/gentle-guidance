@@ -226,16 +226,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               animate={{ opacity: 1 }}
               className="p-6 overflow-y-auto max-h-[80vh]"
             >
-              <SuccessFlow order={order} campaign={order.campaigns} />
-              
-              <div className="mt-8 pt-6 border-t border-border flex flex-col gap-3">
-                <Button className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>
-                  CONCLUIR E VER MEUS NÚMEROS
-                </Button>
-                <p className="text-[10px] text-muted-foreground text-center font-bold uppercase tracking-widest">
-                  O comprovante também foi enviado para o seu WhatsApp/E-mail.
-                </p>
-              </div>
+              <SuccessFlow 
+                order={order} 
+                campaign={order.campaigns} 
+                onClose={() => onOpenChange(false)} 
+              />
             </motion.div>
           ) : status === 'expired' ? (
             <motion.div 
