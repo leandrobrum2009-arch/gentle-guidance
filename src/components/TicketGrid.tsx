@@ -1,9 +1,10 @@
- import { useState, useMemo } from "react";
- import { motion, AnimatePresence } from "framer-motion";
- import { Check, Info, Lock, Trophy } from "lucide-react";
- import { cn } from "@/lib/utils";
- import { Badge } from "@/components/ui/badge";
- import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { useState, useMemo } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Check, Info, Lock, Trophy, Search } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Input } from "@/components/ui/input";
  
  interface TicketGridProps {
    totalTickets: number;
@@ -48,21 +49,43 @@
            <div className="flex items-center gap-1"><div className="h-3 w-3 rounded bg-amber-500 shadow-[0_0_8px_rgba(245,158,11,0.5)]" /> Sorte</div>
          </div>
          
-         <div className="flex items-center gap-2">
-           <select 
-             className="bg-background border border-border rounded px-2 py-1 text-xs"
-             onChange={(e) => {
-               const start = parseInt(e.target.value);
-               setViewRange({ start, end: start + 100 });
-             }}
-           >
-             {Array.from({ length: Math.ceil(totalTickets / 100) }).map((_, i) => (
-               <option key={i} value={i * 100}>
-                 {i * 100} - {Math.min((i + 1) * 100, totalTickets)}
-               </option>
-             ))}
-           </select>
-         </div>
+          <div className="flex items-center gap-2">
+            <div className="relative group">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <Input 
+                 type="number" 
+                 placeholder="Ir para o número..." 
+                 className="w-32 h-8 pl-8 text-[10px] font-bold uppercase tracking-tight rounded-lg border-border/50 focus:ring-1 focus:ring-primary/30"
+                 onChange={(e) => {
+                   const num = parseInt(e.target.value);
+                   if (!isNaN(num) && num >= 0 && num < totalTickets) {
+                      const start = Math.floor(num / 100) * 100;
+                      setViewRange({ start, end: start + 100 });
+                   }
+                 }}
+              />
+            </div>
+            <select 
+              className="bg-background border border-border/50 rounded-lg px-2 h-8 text-[10px] font-bold uppercase tracking-tight focus:ring-1 focus:ring-primary/30 outline-none cursor-pointer hover:bg-secondary/50 transition-colors"
+              value={viewRange.start}
+              onChange={(e) => {
+                const start = parseInt(e.target.value);
+                setViewRange({ start, end: start + 100 });
+              }}
+            >
+              {Array.from({ length: Math.ceil(totalTickets / 100) }).map((_, i) => {
+                // For very large numbers of tickets, we show options in steps
+                const isVeryLarge = totalTickets > 10000;
+                if (isVeryLarge && i % 10 !== 0 && i !== Math.ceil(totalTickets / 100) - 1) return null;
+                
+                return (
+                  <option key={i} value={i * 100}>
+                    {i * 100} - {Math.min((i + 1) * 100, totalTickets)}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
        </div>
  
         <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">

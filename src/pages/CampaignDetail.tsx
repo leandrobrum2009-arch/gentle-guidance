@@ -77,7 +77,7 @@ const CampaignDetail = () => {
   }, [allLuckyNumbers]);
 
   const canManualSelect = useMemo(() => {
-    return campaign?.manual_numbers && campaign?.total_tickets <= 5000;
+    return campaign?.manual_numbers === true || campaign?.ticket_generation_type === 'manual';
   }, [campaign]);
 
   const { data: tickets } = useTickets(id || "", canManualSelect);
@@ -316,7 +316,7 @@ const CampaignDetail = () => {
             <div className="lg:col-span-2 space-y-6">
 
               <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
-                <Tabs defaultValue="auto" className="w-full">
+                <Tabs defaultValue={campaign?.ticket_generation_type === 'manual' ? "manual" : "auto"} className="w-full">
                   {canManualSelect && (
                     <div className="px-6 pt-6">
                       <TabsList className="grid w-full grid-cols-2 h-12 bg-secondary rounded-2xl p-1">

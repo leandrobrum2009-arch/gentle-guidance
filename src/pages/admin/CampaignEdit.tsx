@@ -336,7 +336,11 @@ export default function AdminCampaignEdit() {
                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                    <button 
                      type="button"
-                     onClick={() => set("ticket_generation_type", 'auto')}
+                      onClick={() => {
+                        set("ticket_generation_type", 'auto');
+                        set("manual_numbers", false);
+                        set("auto_numbers", true);
+                      }}
                      className={cn(
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'auto' 
@@ -355,7 +359,11 @@ export default function AdminCampaignEdit() {
 
                    <button 
                      type="button"
-                     onClick={() => set("ticket_generation_type", 'manual')}
+                      onClick={() => {
+                        set("ticket_generation_type", 'manual');
+                        set("manual_numbers", true);
+                        set("auto_numbers", false);
+                      }}
                      className={cn(
                        "flex flex-col gap-3 p-5 rounded-2xl border-2 text-left transition-all",
                        form.ticket_generation_type === 'manual' 
@@ -368,7 +376,7 @@ export default function AdminCampaignEdit() {
                      </div>
                      <div>
                        <p className="font-bold text-sm">Seleção Manual (Grade)</p>
-                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Recomendado para rifas com até 5.000 números.</p>
+                       <p className="text-[11px] text-muted-foreground mt-1 leading-relaxed">O cliente visualiza a grade e escolhe seus números **antes de pagar**. Agora suporta grandes volumes com busca por número.</p>
                      </div>
                    </button>
                  </div>
