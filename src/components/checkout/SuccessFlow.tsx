@@ -90,20 +90,24 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [step]);
 
   const fetchRewards = async () => {
+    // Basic rules from campaign
     const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
     if (spinRule) {
       setAvailableSpins(spinRule.spins);
     } else if (campaign.roulette_free_tickets > 0) {
-      setAvailableSpins(Math.floor(order.quantity / campaign.roulette_free_tickets));
+      setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
+    } else {
+      // Everyone who buys any quota gets at least 1 spin if enabled
+      setAvailableSpins(1);
     }
 
-    if (campaign.scratch_cards_enabled) {
-      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
-      if (scratchRule) {
-        setAvailableScratchCards(scratchRule.scratches || 1);
-      } else {
-        setAvailableScratchCards(1);
-      }
+    // Scratch card rule
+    const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+    if (scratchRule) {
+      setAvailableScratchCards(scratchRule.scratches || 1);
+    } else {
+      // Everyone gets at least 1 scratch card
+      setAvailableScratchCards(1);
     }
 
     const { data } = await supabase.from('roulette_prizes').select('*').eq('campaign_id', campaign.id);
