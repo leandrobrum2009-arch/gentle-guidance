@@ -323,6 +323,27 @@ export default function SuccessFlow({ order, campaign }: SuccessFlowProps) {
               </CardContent>
             </Card>
           </motion.div>
+        {step === 5 && (
+          <motion.div key="step5" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
+            <div className="flex items-center justify-between mb-4">
+               <h2 className="text-xl font-black uppercase italic tracking-tighter">Sua Raspadinha da Sorte</h2>
+               <Badge className="bg-primary text-black font-bold">{availableScratchCards} restantes</Badge>
+            </div>
+            
+            <ScratchCard 
+              campaignId={campaign.id} 
+              onComplete={() => {
+                setAvailableScratchCards(prev => prev - 1);
+                if (availableScratchCards <= 1) {
+                  setTimeout(() => setStep(3), 5000);
+                }
+              }}
+            />
+            
+            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(3)}>
+              Continuar para próxima etapa
+            </Button>
+          </motion.div>
         )}
       </AnimatePresence>
     </div>
