@@ -262,9 +262,9 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black">
                      <ShieldCheck className="h-3 w-3 text-green-500" /> Transação 100% Segura
                    </div>
-                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black">
-                     <Clock className="h-3 w-3 text-primary" /> Reserva expira em 15min
-                   </div>
+                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground uppercase font-black">
+                      <CheckCircle2 className="h-3 w-3 text-primary" /> Aguardando seu pagamento
+                    </div>
                  </div>
                </CardContent>
              </Card>
