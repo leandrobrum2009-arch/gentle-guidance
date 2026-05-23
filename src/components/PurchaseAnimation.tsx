@@ -12,7 +12,7 @@
  const PurchaseAnimation = ({ isVisible, onComplete, type = "explosion" }: PurchaseAnimationProps) => {
    useEffect(() => {
      if (isVisible && type === "explosion") {
-       const duration = 3 * 1000;
+       const duration = 1.5 * 1000;
        const animationEnd = Date.now() + duration;
        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
  
