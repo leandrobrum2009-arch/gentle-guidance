@@ -751,8 +751,11 @@ const CampaignDetail = () => {
         onOpenChange={setIsPaymentModalOpen} 
         orderId={currentOrderId} 
         onPaymentSuccess={() => {
-          navigate("/conta#tickets");
+          // Just invalidate queries, don't navigate yet so user can see SuccessFlow
+          queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
+          queryClient.invalidateQueries({ queryKey: ["campaign"] });
         }} 
+
       />
       <Footer />
       
