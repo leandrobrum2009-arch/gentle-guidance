@@ -366,6 +366,16 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                 )}
 
                 <div className="pt-8 border-t border-white/5 space-y-6 text-left">
+                  <div className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4">
+                    <div className="h-16 w-16 rounded-xl overflow-hidden flex-shrink-0">
+                      <img src={campaign.image_url} alt={campaign.title} className="w-full h-full object-cover" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-black uppercase truncate">{campaign.title}</p>
+                      <p className="text-[10px] text-primary font-bold uppercase tracking-widest">Sorteio em breve</p>
+                    </div>
+                  </div>
+
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-black uppercase tracking-widest text-white/60">Seus Números Adquiridos</h3>
                     <Badge variant="outline" className="border-primary/30 text-primary font-black uppercase tracking-widest text-[10px]">{order.quantity} Títulos</Badge>
