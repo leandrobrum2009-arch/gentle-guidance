@@ -1,7 +1,7 @@
  import { useEffect, useState } from "react";
  import { motion, AnimatePresence } from "framer-motion";
  import confetti from "canvas-confetti";
- import { CheckCircle2, Star, Zap } from "lucide-react";
+ import { CheckCircle2, Star, Zap, Loader2 } from "lucide-react";
  
  interface PurchaseAnimationProps {
    isVisible: boolean;
@@ -12,7 +12,7 @@
  const PurchaseAnimation = ({ isVisible, onComplete, type = "explosion" }: PurchaseAnimationProps) => {
    useEffect(() => {
      if (isVisible && type === "explosion") {
-       const duration = 3 * 1000;
+       const duration = 1.5 * 1000;
        const animationEnd = Date.now() + duration;
        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
  
@@ -79,26 +79,16 @@
                <p className="text-xl font-bold text-primary">Seus números foram reservados!</p>
              </div>
  
-             <div className="flex gap-4">
-               <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur-sm">
-                 <Star className="h-4 w-4 text-amber-400 fill-current" /> Sorte extra ativada
-               </div>
-               <div className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-bold text-white backdrop-blur-sm">
-                 <Zap className="h-4 w-4 text-primary fill-current" /> Processamento instantâneo
-               </div>
-             </div>
- 
-             <motion.button
-               whileHover={{ scale: 1.05 }}
-               whileTap={{ scale: 0.95 }}
-               onClick={onComplete}
-               className="mt-8 rounded-full bg-primary px-10 py-4 text-lg font-black uppercase tracking-widest text-primary-foreground shadow-xl hover:bg-primary/90"
-             >
-               Ir para Pagamento
-             </motion.button>
-           </motion.div>
-         </motion.div>
-       )}
+
+              <div className="mt-8 flex flex-col items-center gap-2">
+                <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/40 animate-pulse">
+                  Abrindo tela de pagamento...
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
      </AnimatePresence>
    );
  };

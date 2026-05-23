@@ -297,23 +297,50 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                   </div>
 
                   <div className="w-full space-y-3">
-                    <Button 
-                      className="w-full h-14 rounded-2xl gap-2 font-black uppercase italic tracking-widest glow-primary shadow-lg shadow-primary/20 border-none" 
-                      onClick={copyPix}
-                    >
-                      <Copy className="h-5 w-5" /> COPIAR CÓDIGO PIX
-                    </Button>
-
-                    {userBalance >= Number(order?.total_amount) && (
-                      <Button 
-                        variant="outline"
-                        className="w-full h-14 rounded-2xl gap-2 font-black uppercase italic tracking-widest border-emerald-500/50 text-emerald-500 hover:bg-emerald-500/10" 
-                        onClick={handlePayWithBalance}
-                        disabled={isPayingWithBalance}
-                      >
-                        {isPayingWithBalance ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
-                        PAGAR COM MEU SALDO (R$ {userBalance.toFixed(2)})
-                      </Button>
+                    {userBalance >= Number(order?.total_amount) ? (
+                      <div className="space-y-3 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20">
+                        <div className="flex items-center justify-between mb-2">
+                           <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Saldo Disponível</span>
+                           <span className="text-sm font-black text-emerald-600">R$ {userBalance.toFixed(2)}</span>
+                        </div>
+                        <Button 
+                          className="w-full h-14 rounded-2xl gap-2 font-black uppercase italic tracking-widest bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 border-none" 
+                          onClick={handlePayWithBalance}
+                          disabled={isPayingWithBalance}
+                        >
+                          {isPayingWithBalance ? <Loader2 className="h-5 w-5 animate-spin" /> : <ShieldCheck className="h-5 w-5" />}
+                          ABATER DO SALDO AGORA
+                        </Button>
+                        <div className="flex items-center justify-center gap-4 py-2">
+                          <div className="h-px flex-1 bg-border" />
+                          <span className="text-[8px] font-black text-muted-foreground uppercase">OU PAGUE COM PIX</span>
+                          <div className="h-px flex-1 bg-border" />
+                        </div>
+                        <Button 
+                          variant="outline"
+                          className="w-full h-12 rounded-xl gap-2 font-black uppercase text-[10px] tracking-widest border-primary/20 text-primary" 
+                          onClick={copyPix}
+                        >
+                          <Copy className="h-4 w-4" /> COPIAR CÓDIGO PIX
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <Button 
+                          className="w-full h-14 rounded-2xl gap-2 font-black uppercase italic tracking-widest glow-primary shadow-lg shadow-primary/20 border-none" 
+                          onClick={copyPix}
+                        >
+                          <Copy className="h-5 w-5" /> COPIAR CÓDIGO PIX
+                        </Button>
+                        
+                        {userBalance > 0 && (
+                          <div className="p-3 rounded-xl bg-secondary/50 border border-border text-center">
+                            <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                              Saldo insuficiente (R$ {userBalance.toFixed(2)})
+                            </p>
+                          </div>
+                        )}
+                      </>
                     )}
                     
                     <div className="flex items-center justify-center gap-2 text-[10px] font-bold text-muted-foreground uppercase tracking-widest py-2">
