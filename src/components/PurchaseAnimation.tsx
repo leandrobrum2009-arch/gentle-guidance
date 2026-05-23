@@ -1,7 +1,7 @@
  import { useEffect, useState } from "react";
  import { motion, AnimatePresence } from "framer-motion";
  import confetti from "canvas-confetti";
- import { CheckCircle2, Star, Zap } from "lucide-react";
+ import { CheckCircle2, Star, Zap, Loader2 } from "lucide-react";
  
  interface PurchaseAnimationProps {
    isVisible: boolean;
