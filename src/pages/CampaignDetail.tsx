@@ -225,6 +225,16 @@ const CampaignDetail = () => {
   const isActive = campaign.status === "active";
   const drawDate = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString("pt-BR") : "";
 
+  return (
+    <div className="min-h-screen bg-background">
+      <SEO 
+        title={campaign.title} 
+        description={campaign.subtitle || campaign.description?.slice(0, 160) || ""} 
+        image={campaign.image_url || ""}
+        type="article"
+      />
+
+
   const renderSection = (section: string) => {
     switch (section) {
       case 'gallery':
