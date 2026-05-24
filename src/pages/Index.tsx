@@ -207,9 +207,15 @@ const Index = () => {
     return sold / total > 0.8;
   });
 
-   return (
+    return (
      <div className="min-h-screen bg-background relative overflow-hidden">
+       <SEO 
+         title={siteSettings?.site_name} 
+         description={siteSettings?.description} 
+         keywords={siteSettings?.site_keywords} 
+       />
        {/* Global Background Particles */}
+
        <div className="fixed inset-0 z-0">
          <Particles count={25} />
        </div>
