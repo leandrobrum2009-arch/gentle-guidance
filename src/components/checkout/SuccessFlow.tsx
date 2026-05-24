@@ -95,11 +95,15 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     const isRouletteEnabled = campaign.roulette_enabled === true;
     const isScratchEnabled = campaign.scratch_cards_enabled === true;
 
+    console.log("Checking rewards:", { isRouletteEnabled, isScratchEnabled, quantity: order.quantity });
+
     if (isRouletteEnabled) {
       // Basic rules from campaign
-      const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      const rules = Array.isArray(campaign.roulette_rules) ? campaign.roulette_rules : [];
+      const spinRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
+      
       if (spinRule) {
-        setAvailableSpins(spinRule.spins);
+        setAvailableSpins(Number(spinRule.spins));
       } else if (campaign.roulette_free_tickets > 0) {
         setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
       } else {
@@ -112,9 +116,11 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
 
     if (isScratchEnabled) {
       // Scratch card rule
-      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      const rules = Array.isArray(campaign.scratch_card_rules) ? campaign.scratch_card_rules : [];
+      const scratchRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
+      
       if (scratchRule) {
-        setAvailableScratchCards(scratchRule.scratches || 1);
+        setAvailableScratchCards(Number(scratchRule.scratches) || 1);
       } else {
         // Everyone gets at least 1 scratch card
         setAvailableScratchCards(1);
