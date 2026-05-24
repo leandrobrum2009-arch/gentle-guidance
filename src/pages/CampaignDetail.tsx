@@ -843,8 +843,14 @@ const CampaignDetail = () => {
       />
       <PaymentModal 
         isOpen={isPaymentModalOpen} 
-        onOpenChange={setIsPaymentModalOpen} 
+        onOpenChange={(open) => {
+          setIsPaymentModalOpen(open);
+          if (!open) {
+            setSearchParams({}, { replace: true });
+          }
+        }} 
         orderId={currentOrderId} 
+
         onPaymentSuccess={() => {
           // Just invalidate queries, don't navigate yet so user can see SuccessFlow
           queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
