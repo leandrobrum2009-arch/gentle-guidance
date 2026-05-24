@@ -168,7 +168,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   return (
     <div className="w-full space-y-4 max-w-full">
       {/* Mini Stepper */}
-      <div className="flex items-center justify-center gap-2 mb-2">
+      <div className="flex items-center justify-center gap-2 mb-1">
         {[1, 6, 2, 5].map((s) => (
           <div 
             key={s} 
@@ -227,7 +227,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         {step === 1 && (
           <motion.div key="step1" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-4 md:p-8 text-center space-y-4 md:space-y-6">
+              <CardContent className="p-3 md:p-8 text-center space-y-3 md:space-y-6">
                 <motion.div 
                   initial={{ scale: 0, rotate: -180 }} 
                   animate={{ scale: 1, rotate: 0 }} 
@@ -283,7 +283,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
               <CardContent className="p-0">
-                <div ref={detailsRef} className="p-4 md:p-8 space-y-4 md:space-y-8 bg-card text-card-foreground">
+                <div ref={detailsRef} className="p-3 md:p-8 space-y-3 md:space-y-8 bg-card text-card-foreground">
                   <div className="flex items-center justify-between border-b border-border pb-6">
                     <div className="space-y-1">
                       <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>

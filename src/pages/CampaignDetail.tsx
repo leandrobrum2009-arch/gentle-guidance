@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQueryClient } from "@tanstack/react-query";
 import {
@@ -56,6 +56,7 @@ const CampaignDetail = () => {
 
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
   const campaignId = campaign?.id || "";
@@ -130,6 +131,17 @@ const CampaignDetail = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
+  // Sync modal state with URL parameter for "Manter modal ao voltar"
+  useEffect(() => {
+    const orderId = searchParams.get('order');
+    if (orderId && orderId !== currentOrderId) {
+      setCurrentOrderId(orderId);
+      setIsPaymentModalOpen(true);
+    } else if (!orderId && isPaymentModalOpen) {
+      setIsPaymentModalOpen(false);
+    }
+  }, [searchParams, isPaymentModalOpen, currentOrderId]);
+
   const soldTickets = useMemo(() => {
     return tickets?.filter(t => t.status === "confirmed" || t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
   }, [tickets]);
@@ -185,6 +197,9 @@ const CampaignDetail = () => {
 
       setIsPurchasing(false);
       setCurrentOrderId(orderId);
+      
+      // Update URL to maintain modal state on navigation
+      setSearchParams({ order: orderId }, { replace: true });
       
       // Open payment modal immediately as requested
       setIsPaymentModalOpen(true);
@@ -828,8 +843,14 @@ const CampaignDetail = () => {
       />
       <PaymentModal 
         isOpen={isPaymentModalOpen} 
-        onOpenChange={setIsPaymentModalOpen} 
+        onOpenChange={(open) => {
+          setIsPaymentModalOpen(open);
+          if (!open) {
+            setSearchParams({}, { replace: true });
+          }
+        }} 
         orderId={currentOrderId} 
+
         onPaymentSuccess={() => {
           // Just invalidate queries, don't navigate yet so user can see SuccessFlow
           queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
