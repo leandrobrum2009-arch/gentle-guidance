@@ -45,6 +45,27 @@ export default function SalesPage() {
         <title>{`O Melhor ${mainKeyword} - Lucrativo e Completo`}</title>
       </Helmet>
 
+      {/* Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+              <Zap className="h-6 w-6" />
+            </div>
+            <span className="text-2xl font-black tracking-tighter italic uppercase">{siteName}</span>
+          </div>
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#funcionalidades" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Funcionalidades</a>
+            <a href="#depoimentos" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Depoimentos</a>
+            <a href="#faq" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">FAQ</a>
+            <Button onClick={handleWhatsApp} className="rounded-full px-6 font-bold shadow-lg shadow-primary/20">
+              Começar Agora
+            </Button>
+          </div>
+        </div>
+      </header>
+
+
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
