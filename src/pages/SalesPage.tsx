@@ -100,7 +100,8 @@ export default function SalesPage() {
       </section>
 
       {/* Features */}
-      <section className="py-20 px-4">
+      <section id="funcionalidades" className="py-20 px-4">
+
         <div className="container mx-auto">
           <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Por que escolher nossa solução?</h2>
           <div className="grid md:grid-cols-3 gap-8">
