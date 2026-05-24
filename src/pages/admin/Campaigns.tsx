@@ -332,7 +332,7 @@ export default function AdminCampaigns() {
                            <DropdownMenuContent align="end" className="w-56 border-border bg-card text-foreground">
                              <DropdownMenuLabel>Ações Avançadas</DropdownMenuLabel>
                              <DropdownMenuSeparator className="bg-secondary/20" />
-                             <DropdownMenuItem onClick={() => window.open(`/campanha/${c.id}`, '_blank')} className="gap-2 cursor-pointer">
+                             <DropdownMenuItem onClick={() => window.open(`/campanha/${c.slug || c.id}`, '_blank')} className="gap-2 cursor-pointer">
                                <ExternalLink className="h-4 w-4 text-muted-foreground" /> Ver no Site
                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => duplicate(c.id)} className="gap-2 cursor-pointer">
