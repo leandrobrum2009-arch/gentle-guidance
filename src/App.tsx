@@ -29,6 +29,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useSiteSettings } from "@/hooks/useData";
+
 import { ThemeProvider } from "./components/ThemeProvider";
 import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
@@ -52,16 +54,10 @@ import { supabase } from "@/integrations/supabase/client";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { data: settings } = useQuery({
-    queryKey: ["site-settings-app"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("*");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data: settings } = useSiteSettings();
+  const showSalesPage = settings?.show_sales_page === "true";
 
-  const showSalesPage = settings?.find(s => s.key === "show_sales_page")?.value === "true";
+
 
   useEffect(() => {
     runContrastAudit();

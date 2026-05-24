@@ -1,34 +1,37 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, MessageSquare, Layout, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Server, Palette, FileText, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Palette, Sparkles, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { useQuery } from "@tanstack/react-query";
-import { Helmet } from "react-helmet-async";
+import { useSiteSettings } from "@/hooks/useData";
+import { SEO } from "@/components/SEO";
+
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import GoogleReviews from "@/components/GoogleReviews";
+
+
+const faqs = [
+  { q: "Preciso de conhecimento técnico para usar o sistema?", a: "Absolutamente não. Nosso painel é extremamente intuitivo, permitindo que qualquer pessoa gerencie rifas, banners e financeiro com poucos cliques." },
+  { q: "Como funciona a integração de pagamentos?", a: "Integramos automaticamente com os principais gateways de pagamento (Mercado Pago, Paggue, etc.). O sistema confirma o pagamento instantaneamente e libera os números para o cliente." },
+  { q: "O sistema é responsivo para celular?", a: "Sim! Nosso design é 100% mobile-first, garantindo uma experiência fluida para seus clientes comprarem rifas pelo celular ou computador." },
+  { q: "Posso personalizar as cores e logotipo?", a: "Com certeza. Você tem controle total da identidade visual através do painel administrativo, sem precisar editar código." },
+  { q: "Existe suporte técnico?", a: "Sim, todos os nossos planos contam com suporte dedicado. Além disso, oferecemos treinamento e tutoriais em vídeo para você começar com o pé direito." },
+  { q: "Como funciona o sistema de afiliados?", a: "Você pode ativar um programa de afiliados onde seus vendedores ganham comissões por vendas realizadas, aumentando exponencialmente sua divulgação." },
+  { q: "O sistema é seguro contra fraudes?", a: "Sim, contamos com proteção contra bots, bloqueio de números falsos e auditoria completa de cada transação." },
+  { q: "Posso ter domínios próprios?", a: "Sim, você pode conectar seu próprio domínio (ex: www.suarifaprofissional.com.br) na plataforma." },
+  { q: "O sistema emite números aleatórios automaticamente?", a: "Sim, o sistema gerencia automaticamente a numeração e reserva, evitando qualquer conflito de números repetidos." },
+  { q: "Qual o prazo para ativação após a compra?", a: "A ativação é extremamente rápida, geralmente em poucas horas sua plataforma já está pronta para receber os primeiros acessos." }
+];
 
 export default function SalesPage() {
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("admin");
 
-  const { data: settings } = useQuery({
-    queryKey: ["site-settings-array"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("*");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data: settings } = useSiteSettings();
+  const siteName = settings?.site_name || "Plataforma de Rifas";
+  const mainKeyword = settings?.sales_page_keywords?.split(",")?.[0]?.trim() || "sistema para rifas online";
+  const supportWhatsapp = settings?.sales_page_whatsapp || settings?.support_whatsapp || "";
 
-  const getSetting = (key: string) => settings?.find((s) => s.key === key)?.value || "";
-
-  const siteName = getSetting("site_name") || "Plataforma de Rifas";
-  const primaryColor = getSetting("primary_color") || "#000000";
-  const supportWhatsapp = getSetting("sales_page_whatsapp") || getSetting("support_whatsapp") || "";
-  const keywordsStr = getSetting("sales_page_keywords") || "sistema para rifas online, script para rifas online, tenha a sua rifa, site para fazer rifas";
-  const keywords = keywordsStr.split(",").map(k => k.trim());
-  const platformType = getSetting("sales_page_type") || "rifas";
-
-  const mainKeyword = keywords[0] || "sistema para rifas online";
 
   const handleWhatsApp = () => {
     if (supportWhatsapp) {
@@ -36,313 +39,141 @@ export default function SalesPage() {
     }
   };
 
-  const KeywordLink = ({ text }: { text: string }) => (
-    <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="font-bold underline decoration-primary/30 hover:decoration-primary transition-all">
-      {text}
-    </a>
-  );
-
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-primary/20">
-      <Helmet>
-        <title>{`O Melhor ${mainKeyword} - Lucrativo e Completo`}</title>
-        <meta name="description" content={`Tenha agora o seu próprio ${mainKeyword}. Script completo com painel administrativo, integração de pagamentos e sistema de afiliados.`} />
-        <meta name="keywords" content={keywordsStr} />
-      </Helmet>
+    <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
+      <SEO 
+        title={`O Melhor ${mainKeyword} - Lucrativo e Completo`}
+        description={`Tenha agora o seu próprio ${mainKeyword}. Script completo com painel administrativo, integração de pagamentos e sistema de afiliados.`}
+        keywords={settings?.sales_page_keywords}
+      />
+
 
       {/* Header */}
-      <header className="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-md border-b border-border/50">
-        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
+      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
+        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <Zap className="text-primary-foreground h-5 w-5" />
+            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
+              <Zap className="h-6 w-6" />
             </div>
-            <span className="font-display font-bold text-xl tracking-tight">{siteName}</span>
+            <span className="text-2xl font-black tracking-tighter italic uppercase">{siteName}</span>
           </div>
-          <nav className="hidden md:flex items-center gap-8 font-medium text-sm">
-            <a href="#features" className="hover:text-primary transition-colors">Funcionalidades</a>
-            <a href="#panel" className="hover:text-primary transition-colors">Painel Admin</a>
-            <a href="#plans" className="hover:text-primary transition-colors">Planos</a>
-            <Button variant="ghost" size="sm" onClick={() => navigate("/campanhas")} className="font-bold">
-              Ver Demonstração
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#funcionalidades" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Funcionalidades</a>
+            <a href="#depoimentos" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Depoimentos</a>
+            <a href="#faq" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">FAQ</a>
+            <Button onClick={handleWhatsApp} className="rounded-full px-6 font-bold shadow-lg shadow-primary/20">
+              Começar Agora
             </Button>
-            <Button size="sm" onClick={handleWhatsApp} className="bg-primary text-primary-foreground font-bold rounded-full px-6">
-              Falar com Consultor
-            </Button>
-          </nav>
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={handleWhatsApp}>
-            <MessageSquare className="h-6 w-6" />
-          </Button>
+          </div>
         </div>
       </header>
 
-      <main className="pt-24">
-        {/* Hero Section */}
-        <section className="container mx-auto px-4 py-16 md:py-24 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm mb-6 animate-fade-in">
+
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-4">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="container mx-auto text-center relative z-10"
+        >
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm mb-6 border border-primary/20">
             <Sparkles className="h-4 w-4" />
-            <span>A plataforma nº 1 do Brasil</span>
+            <span>A plataforma número 1 do Brasil</span>
           </div>
-          <h1 className="font-display text-4xl md:text-7xl font-extrabold tracking-tight mb-8 max-w-4xl mx-auto leading-[1.1]">
-            Lance agora o seu próprio <br />
-            <span className="text-primary italic">
-              <KeywordLink text={mainKeyword} />
+          <h1 className="text-5xl md:text-8xl font-black tracking-tight mb-8">
+            Lance seu próprio <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-500 to-primary">
+              {mainKeyword}
             </span>
           </h1>
-          <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-12 font-medium">
-            Não compre apenas um <KeywordLink text={keywords[1] || "script"} />. Tenha um negócio completo, validado e altamente lucrativo com suporte profissional.
+          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12">
+            Transforme seus sonhos em realidade com uma plataforma profissional, segura e pronta para escalar suas vendas.
           </p>
           <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <Button size="lg" onClick={handleWhatsApp} className="w-full md:w-auto bg-primary text-primary-foreground font-bold text-lg h-14 px-10 rounded-2xl shadow-xl shadow-primary/20 hover:scale-105 transition-all">
+            <Button size="lg" onClick={handleWhatsApp} className="h-16 px-10 text-lg font-bold rounded-full bg-primary hover:bg-primary/90">
               Quero Minha Plataforma
-              <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="w-full md:w-auto font-bold text-lg h-14 px-10 rounded-2xl border-2">
-              <Play className="mr-2 h-5 w-5 fill-current" />
+            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-16 px-10 text-lg font-bold rounded-full border-2">
               Ver Demonstração
             </Button>
           </div>
-          
-          {/* Hero Mockup */}
-          <div className="mt-20 relative max-w-6xl mx-auto">
-            <div className="absolute -top-10 -left-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-            <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-            <div className="bg-card border-2 border-border/50 rounded-[2.5rem] p-3 shadow-2xl overflow-hidden backdrop-blur-sm">
-              <div className="bg-background rounded-[2rem] overflow-hidden border border-border/50 aspect-video relative group">
-                <img 
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=2426&auto=format&fit=crop" 
-                  alt="Dashboard Preview" 
-                  className="w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent flex items-end p-8">
-                  <div className="flex items-center gap-4 bg-background/50 backdrop-blur-md p-4 rounded-2xl border border-white/10">
-                    <div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
-                      <TrendingUp className="text-green-500 h-6 w-6" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-bold text-muted-foreground uppercase">Faturamento Hoje</div>
-                      <div className="text-2xl font-black">R$ 12.450,00</div>
-                    </div>
-                  </div>
+        </motion.div>
+      </section>
+
+      {/* Features */}
+      <section id="funcionalidades" className="py-20 px-4">
+
+        <div className="container mx-auto">
+          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Por que escolher nossa solução?</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {[
+              { icon: Zap, title: "PIX Automático", desc: "Aprovação instantânea de pedidos, 24 horas por dia." },
+              { icon: Shield, title: "Segurança Total", desc: "Proteção contra fraudes e bots com auditoria completa." },
+              { icon: TrendingUp, title: "Escalabilidade", desc: "Suporta milhares de acessos simultâneos sem lentidão." },
+              { icon: Users, title: "Sistema de Afiliados", desc: "Transforme seus clientes em vendedores com comissão automática." },
+              { icon: Smartphone, title: "Mobile Friendly", desc: "Design impecável em qualquer celular ou tablet." },
+              { icon: Palette, title: "Personalização", desc: "Mude cores, banners e layout pelo painel admin." }
+            ].map((f, i) => (
+              <motion.div 
+                key={i} 
+                whileHover={{ y: -10 }}
+                className="bg-card border border-border p-8 rounded-3xl shadow-xl shadow-primary/5 hover:border-primary/50 transition-colors"
+              >
+                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary">
+                  <f.icon className="h-8 w-8" />
                 </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Features Grid */}
-        <section id="features" className="bg-secondary/30 py-24">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-3xl md:text-5xl font-extrabold mb-4">
-                Tudo o que o seu <br />
-                <span className="text-primary italic">
-                  <KeywordLink text={keywords[2] || "site para fazer rifas"} />
-                </span> precisa
-              </h2>
-              <p className="text-muted-foreground font-medium">Funcionalidades pensadas para escala e segurança.</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8">
-              {[
-                {
-                  icon: <Zap className="h-6 w-6" />,
-                  title: "PIX Automático",
-                  desc: `O seu ${mainKeyword} aprova pedidos instantaneamente 24/7 com integração via Mercado Pago ou Paggue.`
-                },
-                {
-                  icon: <Users className="h-6 w-6" />,
-                  title: "Sistema de Afiliados",
-                  desc: `Com este ${keywords[1] || "script para rifas"}, você transforma clientes em vendedores com comissão automática.`
-                },
-                {
-                  icon: <Smartphone className="h-6 w-6" />,
-                  title: "Totalmente Mobile",
-                  desc: `Uma experiência perfeita em qualquer dispositivo, essencial para um ${keywords[2] || "site para fazer rifas"} de sucesso.`
-                },
-                {
-                  icon: <Shield className="h-6 w-6" />,
-                  title: "Segurança Avançada",
-                  desc: `Proteção robusta contra bots e fraudes, garantindo que você **tenha a sua rifa** sempre segura.`
-                },
-                {
-                  icon: <Palette className="h-6 w-6" />,
-                  title: "Personalização Total",
-                  desc: "Mude cores, banners e estilos em segundos através do painel administrativo intuitivo."
-                },
-                {
-                  icon: <Globe className="h-6 w-6" />,
-                  title: "Otimizado para SEO",
-                  desc: `Ranqueie no topo do Google e IAs com o melhor ${mainKeyword} do mercado.`
-                }
-              ].map((feature, i) => (
-                <div key={i} className="bg-card p-8 rounded-3xl border-2 border-border/50 hover:border-primary/40 transition-all group">
-                  <div className="w-14 h-14 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                    {feature.icon}
-                  </div>
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground font-medium leading-relaxed" dangerouslySetInnerHTML={{ __html: feature.desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Admin Panel Deep Dive */}
-        <section id="panel" className="py-24 container mx-auto px-4">
-          <div className="flex flex-col lg:flex-row items-center gap-16">
-            <div className="lg:w-1/2">
-              <h2 className="font-display text-3xl md:text-5xl font-extrabold mb-8">
-                Controle total com o <br />
-                <span className="text-primary italic">Painel Administrativo</span>
-              </h2>
-              <div className="space-y-4">
-                {[
-                  { id: "admin", label: "Gestão de Campanhas", desc: "Crie rifas ilimitadas, gerencie números, cotas e prêmios com facilidade." },
-                  { id: "finance", label: "Controle Financeiro", desc: "Acompanhe vendas, lucro líquido, comissões e saques em tempo real." },
-                  { id: "seo", label: "Marketing & SEO", desc: "Gerencie banners, cupons de desconto e otimize seu ranqueamento." }
-                ].map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => setActiveTab(item.id)}
-                    className={`w-full text-left p-6 rounded-2xl border-2 transition-all ${
-                      activeTab === item.id 
-                        ? "bg-primary/5 border-primary shadow-lg shadow-primary/5" 
-                        : "bg-transparent border-border/50 hover:border-border"
-                    }`}
-                  >
-                    <h4 className="font-bold text-lg mb-1 flex items-center justify-between">
-                      {item.label}
-                      {activeTab === item.id && <CheckCircle2 className="h-5 w-5 text-primary" />}
-                    </h4>
-                    <p className="text-muted-foreground text-sm font-medium">{item.desc}</p>
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className="lg:w-1/2 w-full">
-              <div className="bg-card border-2 border-border/50 rounded-3xl p-4 shadow-2xl aspect-square overflow-hidden flex items-center justify-center relative">
-                <div className="absolute inset-0 bg-primary/5 animate-pulse" />
-                <Layout className="h-40 w-40 text-primary/20" />
-                <p className="absolute bottom-12 text-center text-sm font-bold text-muted-foreground uppercase tracking-widest">Visualização em Tempo Real</p>
-                {/* Here we could put real screenshots if available */}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Plans / Pricing */}
-        <section id="plans" className="bg-secondary/30 py-24">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-16">
-              <h2 className="font-display text-3xl md:text-5xl font-extrabold mb-4">
-                Planos flexíveis para o seu <br />
-                <span className="text-primary italic">
-                  <KeywordLink text={keywords[3] || "tenha a sua rifa"} />
-                </span>
-              </h2>
-              <p className="text-muted-foreground font-medium">Escolha o modelo que melhor se adapta ao seu bolso.</p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-              {/* Rental Plan */}
-              <div className="bg-card border-2 border-border/50 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group hover:border-primary/40 transition-all">
-                <div className="absolute top-6 right-6 px-4 py-1 rounded-full bg-green-500/10 text-green-600 text-xs font-black uppercase">Mais Procurado</div>
-                <h3 className="text-2xl font-black mb-2">Plano Aluguel Mensal</h3>
-                <p className="text-muted-foreground font-medium mb-8">Ideal para quem quer começar com baixo investimento.</p>
-                <div className="space-y-4 mb-10">
-                  {[
-                    "Hospedagem de alta performance inclusa",
-                    "Suporte técnico prioritário",
-                    "Treinamento completo da equipe",
-                    "Atualizações automáticas semanais",
-                    "Personalização de Logo e Identidade",
-                    "Backups diários automáticos"
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="h-3 w-3" />
-                      </div>
-                      <span className="font-bold text-sm">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <Button onClick={handleWhatsApp} className="w-full h-14 rounded-2xl font-bold text-lg bg-primary text-primary-foreground shadow-xl shadow-primary/20">
-                  Consultar Valor Mensal
-                </Button>
-              </div>
-
-              {/* Ownership Plan */}
-              <div className="bg-card border-2 border-border/50 rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden group hover:border-primary/40 transition-all">
-                <h3 className="text-2xl font-black mb-2">Adquirir Plataforma (Licença)</h3>
-                <p className="text-muted-foreground font-medium mb-8">Para quem deseja ter o controle total e independência.</p>
-                <div className="space-y-4 mb-10">
-                  {[
-                    "Licença vitalícia sem mensalidades",
-                    "Instalação no seu servidor próprio",
-                    "Acesso completo ao banco de dados",
-                    "Código fonte otimizado (Script)",
-                    "Manual de uso detalhado",
-                    "Suporte inicial para instalação"
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-3">
-                      <div className="h-5 w-5 rounded-full bg-primary/10 text-primary flex items-center justify-center shrink-0">
-                        <CheckCircle2 className="h-3 w-3" />
-                      </div>
-                      <span className="font-bold text-sm">{item}</span>
-                    </div>
-                  ))}
-                </div>
-                <Button onClick={handleWhatsApp} variant="outline" className="w-full h-14 rounded-2xl font-bold text-lg border-2">
-                  Consultar Valor de Compra
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Final CTA */}
-        <section className="py-24 container mx-auto px-4 text-center">
-          <div className="bg-primary rounded-[3rem] p-12 md:p-24 text-primary-foreground relative overflow-hidden shadow-2xl shadow-primary/40">
-            <div className="absolute top-0 right-0 p-8 opacity-10">
-              <Zap className="h-64 w-64" />
-            </div>
-            <h2 className="font-display text-4xl md:text-6xl font-black mb-8 relative z-10 leading-tight">
-              Pronto para faturar com o seu <br /> 
-              <span className="underline decoration-white/30 italic">{mainKeyword}</span>?
-            </h2>
-            <p className="text-primary-foreground/80 text-lg md:text-xl font-medium max-w-2xl mx-auto mb-12 relative z-10">
-              Junte-se a centenas de empreendedores que já mudaram de vida com a nossa tecnologia. Comece hoje mesmo!
-            </p>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 relative z-10">
-              <Button size="lg" onClick={handleWhatsApp} className="bg-white text-primary hover:bg-white/90 font-black text-xl h-16 px-12 rounded-2xl shadow-2xl">
-                <MessageSquare className="mr-3 h-6 w-6" />
-                Chamar no WhatsApp
-              </Button>
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* Footer */}
-      <footer className="bg-background border-t border-border/50 py-12">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-8">
-            <div className="flex items-center gap-2">
-              <Zap className="text-primary h-6 w-6" />
-              <span className="font-display font-bold text-xl tracking-tight">{siteName}</span>
-            </div>
-            <div className="flex gap-8 text-sm font-bold text-muted-foreground">
-              <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">NC BRASIL</a>
-              <a href="#" className="hover:text-primary transition-colors">Termos</a>
-              <a href="#" className="hover:text-primary transition-colors">Privacidade</a>
-            </div>
-            <p className="text-sm text-muted-foreground font-medium">
-              © {new Date().getFullYear()} {siteName}. Todos os direitos reservados.
-            </p>
+                <h3 className="text-2xl font-bold mb-3">{f.title}</h3>
+                <p className="text-muted-foreground">{f.desc}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
-      </footer>
+      </section>
+
+      {/* Testimonials */}
+      <section id="depoimentos" className="bg-secondary/30 relative">
+
+        <GoogleReviews />
+      </section>
+
+
+      {/* FAQ */}
+      <section id="faq" className="py-20 px-4">
+
+        <div className="container mx-auto max-w-3xl">
+          <h2 className="text-4xl font-black text-center mb-12">Perguntas Frequentes</h2>
+          <Accordion type="single" collapsible className="w-full space-y-4">
+            {faqs.map((f, i) => (
+              <AccordionItem key={i} value={`item-${i}`} className="bg-card px-6 rounded-2xl border border-border">
+                <AccordionTrigger className="text-lg font-bold">{f.q}</AccordionTrigger>
+                <AccordionContent className="text-muted-foreground text-lg leading-relaxed">{f.a}</AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
+      {/* Footer CTA */}
+      <section className="py-20 px-4">
+        <div className="container mx-auto bg-primary rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Zap className="h-40 w-40" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black mb-8 relative z-10">Pronto para faturar?</h2>
+          <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-black rounded-full bg-white text-primary hover:bg-gray-100 relative z-10 shadow-xl">
+            Falar com Consultor no WhatsApp
+          </Button>
+          <div className="mt-12 pt-8 border-t border-white/20 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p className="text-sm font-bold opacity-70">© 2024 {siteName}. Todos os direitos reservados.</p>
+            <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="text-sm font-black uppercase tracking-widest hover:underline">
+              Desenvolvido por NC Brasil
+            </a>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
+
