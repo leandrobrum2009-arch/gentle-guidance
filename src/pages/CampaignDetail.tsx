@@ -56,6 +56,7 @@ const CampaignDetail = () => {
 
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
   const campaignId = campaign?.id || "";
