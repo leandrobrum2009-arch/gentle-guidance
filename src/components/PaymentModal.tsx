@@ -237,11 +237,34 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                 <h2 className="text-2xl font-black uppercase italic tracking-tighter">ERRO NO PAGAMENTO</h2>
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">{pixError}</p>
               </div>
-              <Button className="w-full h-12 rounded-xl" onClick={(e) => {
-                e.preventDefault();
-                setPixError(null);
-                fetchOrder();
-              }}>TENTAR NOVAMENTE</Button>
+              <div className="w-full space-y-3">
+                <Button className="w-full h-12 rounded-xl" onClick={(e) => {
+                  e.preventDefault();
+                  setPixError(null);
+                  fetchOrder();
+                }}>TENTAR NOVAMENTE</Button>
+                
+                <Button variant="ghost" className="w-full h-10 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={async () => {
+                   if (!orderId) return;
+                   setLoading(true);
+                   try {
+                     const { data, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: orderId });
+                     if (error) throw error;
+                     if (data.success) {
+                       toast.success(data.message);
+                       fetchOrder();
+                     } else {
+                       toast.error(data.message);
+                       setLoading(false);
+                     }
+                   } catch (err: any) {
+                     toast.error("Erro ao reprocessar: " + err.message);
+                     setLoading(false);
+                   }
+                }}>
+                  Já paguei? Reprocessar prêmios
+                </Button>
+              </div>
             </motion.div>
           ) : status === 'paid' ? (
             <motion.div 
