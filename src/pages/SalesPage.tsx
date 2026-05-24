@@ -41,9 +41,12 @@ export default function SalesPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
-      <Helmet>
-        <title>{`O Melhor ${mainKeyword} - Lucrativo e Completo`}</title>
-      </Helmet>
+      <SEO 
+        title={`O Melhor ${mainKeyword} - Lucrativo e Completo`}
+        description={`Tenha agora o seu próprio ${mainKeyword}. Script completo com painel administrativo, integração de pagamentos e sistema de afiliados.`}
+        keywords={settings?.sales_page_keywords}
+      />
+
 
       {/* Header */}
       <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
