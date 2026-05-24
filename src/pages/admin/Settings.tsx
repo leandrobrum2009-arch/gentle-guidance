@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database, Search, FileText } from "lucide-react";
+import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database, Search, FileText, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
