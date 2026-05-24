@@ -163,6 +163,8 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     } else {
       toast.info("Compartilhamento não suportado neste navegador.");
     }
+  };
+
   const handleReprocess = async () => {
     try {
       const { data: response, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: order.id });
