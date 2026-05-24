@@ -131,6 +131,17 @@ const CampaignDetail = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
 
+  // Sync modal state with URL parameter for "Manter modal ao voltar"
+  useEffect(() => {
+    const orderId = searchParams.get('order');
+    if (orderId && orderId !== currentOrderId) {
+      setCurrentOrderId(orderId);
+      setIsPaymentModalOpen(true);
+    } else if (!orderId && isPaymentModalOpen) {
+      setIsPaymentModalOpen(false);
+    }
+  }, [searchParams, isPaymentModalOpen, currentOrderId]);
+
   const soldTickets = useMemo(() => {
     return tickets?.filter(t => t.status === "confirmed" || t.status === "paid" || t.status === "reserved").map(t => t.number) || [];
   }, [tickets]);
