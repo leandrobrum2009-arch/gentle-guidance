@@ -148,32 +148,32 @@ export default function SalesPage() {
                 {
                   icon: <Zap className="h-6 w-6" />,
                   title: "PIX Automático",
-                  desc: "Receba e aprove pedidos instantaneamente 24/7 com integração direta via Mercado Pago ou Paggue."
+                  desc: `O seu ${mainKeyword} aprova pedidos instantaneamente 24/7 com integração via Mercado Pago ou Paggue.`
                 },
                 {
                   icon: <Users className="h-6 w-6" />,
                   title: "Sistema de Afiliados",
-                  desc: "Transforme seus clientes em vendedores com comissionamento automático e painel exclusivo."
+                  desc: `Com este ${keywords[1] || "script para rifas"}, você transforma clientes em vendedores com comissão automática.`
                 },
                 {
                   icon: <Smartphone className="h-6 w-6" />,
                   title: "Totalmente Mobile",
-                  desc: "Interface ultra-rápida e otimizada para celulares, garantindo a melhor experiência de compra."
+                  desc: `Uma experiência perfeita em qualquer dispositivo, essencial para um ${keywords[2] || "site para fazer rifas"} de sucesso.`
                 },
                 {
                   icon: <Shield className="h-6 w-6" />,
                   title: "Segurança Avançada",
-                  desc: "Proteção contra bots, auditoria de pagamentos e criptografia de ponta a ponta para seus dados."
+                  desc: `Proteção robusta contra bots e fraudes, garantindo que você **tenha a sua rifa** sempre segura.`
                 },
                 {
                   icon: <Palette className="h-6 w-6" />,
                   title: "Personalização Total",
-                  desc: "Mude cores, banners, logos e estilos em segundos através do painel administrativo intuitivo."
+                  desc: "Mude cores, banners e estilos em segundos através do painel administrativo intuitivo."
                 },
                 {
                   icon: <Globe className="h-6 w-6" />,
                   title: "Otimizado para SEO",
-                  desc: "Ranqueie no topo do Google e IAs com sitemap automático e meta tags dinâmicas."
+                  desc: `Ranqueie no topo do Google e IAs com o melhor ${mainKeyword} do mercado.`
                 }
               ].map((feature, i) => (
                 <div key={i} className="bg-card p-8 rounded-3xl border-2 border-border/50 hover:border-primary/40 transition-all group">
@@ -181,7 +181,7 @@ export default function SalesPage() {
                     {feature.icon}
                   </div>
                   <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
-                  <p className="text-muted-foreground font-medium leading-relaxed">{feature.desc}</p>
+                  <p className="text-muted-foreground font-medium leading-relaxed" dangerouslySetInnerHTML={{ __html: feature.desc.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') }} />
                 </div>
               ))}
             </div>
