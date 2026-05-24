@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database, Search, FileText } from "lucide-react";
+import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database, Search, FileText, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -62,7 +62,11 @@ export default function AdminSettings() {
     site_keywords: "Palavras-chave (SEO)",
     site_description: "Descrição Meta (SEO)",
     supabase_url: "Supabase URL (Configuração do Sistema)",
-    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
+    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)",
+    show_sales_page: "Habilitar Página de Vendas",
+    sales_page_keywords: "Palavras-chave da Venda",
+    sales_page_type: "Tipo da Plataforma",
+    sales_page_whatsapp: "WhatsApp de Vendas"
   };
 
 
@@ -182,7 +186,7 @@ export default function AdminSettings() {
           <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
           <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
           <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
-
+          <TabsTrigger value="sales" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Vendas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -627,6 +631,63 @@ export default function AdminSettings() {
                   getIcon={getIcon}
                 />
               ))}
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="sales" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <TrendingUp className="h-5 w-5" />
+                </div>
+                Configurações da Página de Vendas
+              </CardTitle>
+              <CardDescription className="font-medium">Transforme seu site em uma vitrine para vender a plataforma</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <div className="flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border/50">
+                  <div className="space-y-0.5">
+                    <Label className="text-base font-bold">Ativar Página de Vendas</Label>
+                    <p className="text-sm text-muted-foreground">Quando ativo, a home será substituída pela página de vendas da plataforma.</p>
+                  </div>
+                  <Switch 
+                    checked={settings.find(s => s.key === 'show_sales_page')?.value === 'true'}
+                    onCheckedChange={(checked) => handleUpdate('show_sales_page', checked ? 'true' : 'false')}
+                  />
+                </div>
+
+                <div className="grid gap-4 md:grid-cols-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'sales_page_type')} 
+                    onUpdate={handleUpdate} 
+                    label="Tipo da Plataforma (ex: rifas, leilões)"
+                    getIcon={getIcon}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'sales_page_whatsapp')} 
+                    onUpdate={handleUpdate} 
+                    label="WhatsApp de Vendas (Opcional)"
+                    getIcon={getIcon}
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="font-bold flex items-center gap-2">
+                    <Search className="h-4 w-4" />
+                    Palavras-chave SEO da Página de Vendas
+                  </Label>
+                  <Input 
+                    value={settings.find(s => s.key === 'sales_page_keywords')?.value || ''}
+                    onChange={(e) => handleUpdate('sales_page_keywords', e.target.value)}
+                    placeholder="Ex: sistema para rifas online, script para rifas online..."
+                    className="rounded-xl border-2 h-12"
+                  />
+                  <p className="text-xs text-muted-foreground">Separe por vírgulas. A primeira será o título principal da página.</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
