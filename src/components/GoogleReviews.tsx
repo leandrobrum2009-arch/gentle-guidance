@@ -12,7 +12,7 @@ const REVIEWS = [
     name: "Adriano Silva",
     date: "há 2 dias",
     rating: 5,
-    text: "Mudei de plataforma e foi a melhor decisão. O sistema de PIX automático e a roleta aumentaram meu faturamento em 40% no primeiro mês. Entrega impecável!",
+    text: "Recebi a plataforma em menos de 4 horas, suporte impecável da NC Brasil. Em apenas 15 dias já recuperei todo o investimento inicial. O sistema de PIX automático é o segredo do lucro!",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
@@ -21,7 +21,7 @@ const REVIEWS = [
     name: "Juliana Ferreira",
     date: "há 1 semana",
     rating: 5,
-    text: "O suporte da NC Brasil é diferenciado. A plataforma é extremamente estável e o painel administrativo me dá todo o controle financeiro que eu precisava para escalar.",
+    text: "A entrega foi super rápida e o treinamento incluso me ajudou a configurar tudo. Minha primeira rifa foi um sucesso, faturei R$ 12.000,00 limpo. A estabilidade do sistema é impressionante.",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
@@ -30,7 +30,7 @@ const REVIEWS = [
     name: "Ricardo Mendes",
     date: "há 3 dias",
     rating: 5,
-    text: "O ranking de compradores e as raspadinhas são o diferencial. Meus clientes adoraram a interatividade. O retorno financeiro veio muito mais rápido do que eu imaginava.",
+    text: "O que mais me impressionou foi a facilidade de uso. O retorno financeiro com as raspadinhas e roletas é absurdo, o engajamento dos clientes dobrou. Plataforma entregue exatamente como prometido.",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
@@ -39,7 +39,7 @@ const REVIEWS = [
     name: "Patrícia Souza",
     date: "há 5 dias",
     rating: 5,
-    text: "Sistema completo e muito fácil de configurar. Em poucas horas já estava com tudo rodando e vendendo. Recomendo para quem quer profissionalismo.",
+    text: "Trabalho profissional e entrega dentro do prazo. A plataforma é uma máquina de fazer dinheiro se você souber usar o CRM e as automações de WhatsApp que eles ensinam no treinamento.",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
@@ -48,7 +48,7 @@ const REVIEWS = [
     name: "Bruno Oliveira",
     date: "há 1 mês",
     rating: 5,
-    text: "Já testei vários scripts, mas esse é o único que realmente aguenta o tráfego pesado sem lentidão. O CRM integrado ajuda muito na recuperação de vendas.",
+    text: "Sempre tive medo de golpes em scripts baratos, mas a NC Brasil entregou uma solução de elite. Suporte 24h e atualizações constantes. Meu faturamento mensal estabilizou em 5 dígitos.",
     avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   }
