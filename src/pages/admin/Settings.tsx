@@ -671,7 +671,6 @@ export default function AdminSettings() {
                     onUpdate={handleUpdate} 
                     label="WhatsApp de Vendas (Opcional)"
                     getIcon={getIcon}
-                    placeholder="Deixe vazio para usar o padrão"
                   />
                 </div>
 
