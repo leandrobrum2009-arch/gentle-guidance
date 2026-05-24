@@ -248,8 +248,9 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                    if (!orderId) return;
                    setLoading(true);
                    try {
-                     const { data, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: orderId });
+                     const { data: response, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: orderId });
                      if (error) throw error;
+                     const data = response as any;
                      if (data.success) {
                        toast.success(data.message);
                        fetchOrder();
