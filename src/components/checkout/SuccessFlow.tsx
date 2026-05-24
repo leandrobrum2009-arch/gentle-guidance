@@ -502,7 +502,11 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                 )}
 
                 <div className="pt-8 border-t border-white/5 space-y-4">
-                  <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={onClose}>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" 
+                    onClick={() => onClose ? onClose() : navigate(`/campanha/${campaign.slug || campaign.id}`)}
+                  >
                     FECHAR E VOLTAR PARA RIFA
                   </Button>
                 </div>
