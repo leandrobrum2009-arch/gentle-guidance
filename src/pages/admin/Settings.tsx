@@ -59,9 +59,12 @@ export default function AdminSettings() {
     paggue_client_key: "Paggue: Client Key",
     paggue_client_secret: "Paggue: Client Secret",
     active_payment_provider: "Provedor de Pagamento Ativo",
+    site_keywords: "Palavras-chave (SEO)",
+    site_description: "Descrição Meta (SEO)",
     supabase_url: "Supabase URL (Configuração do Sistema)",
     supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
   };
+
 
   useEffect(() => {
     fetchSettings();
