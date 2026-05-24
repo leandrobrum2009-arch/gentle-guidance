@@ -102,11 +102,38 @@ serve(async (req) => {
         // Handle specifically "locked" error (idempotency key match)
         if (response.status === 423) {
            console.log(`[PIX Create] Resource already locked (MP status 423) for order ${orderId}.`);
+           
+           // If order already has pix data in DB, return it
            if (order.pix_code) {
              return new Response(JSON.stringify({
                pix_code: order.pix_code,
                pix_qr_code_base64: order.pix_qr_code_base64
              }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+           }
+
+           // Otherwise, try to fetch the payment from Mercado Pago to get the details
+           const searchResponse = await fetch(`https://api.mercadopago.com/v1/payments/search?external_reference=${orderId}`, {
+             headers: { "Authorization": `Bearer ${mpAccessToken}` }
+           });
+           const searchData = await searchResponse.json();
+           
+           if (searchData.results && searchData.results.length > 0) {
+             const payment = searchData.results[0];
+             const pixCode = payment.point_of_interaction?.transaction_data?.qr_code;
+             const pixQrBase64 = payment.point_of_interaction?.transaction_data?.qr_code_base64;
+             
+             if (pixCode) {
+               // Update DB with the found info
+               await supabaseClient.from("orders").update({
+                 pix_code: pixCode,
+                 pix_qr_code_base64: pixQrBase64
+               }).eq("id", orderId);
+
+               return new Response(JSON.stringify({
+                 pix_code: pixCode,
+                 pix_qr_code_base64: pixQrBase64
+               }), { headers: { ...corsHeaders, "Content-Type": "application/json" }, status: 200 });
+             }
            }
         }
 
