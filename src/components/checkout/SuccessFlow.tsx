@@ -227,7 +227,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         {step === 1 && (
           <motion.div key="step1" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-4 md:p-8 text-center space-y-4 md:space-y-6">
+              <CardContent className="p-3 md:p-8 text-center space-y-3 md:space-y-6">
                 <motion.div 
                   initial={{ scale: 0, rotate: -180 }} 
                   animate={{ scale: 1, rotate: 0 }} 
