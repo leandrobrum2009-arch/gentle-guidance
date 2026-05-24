@@ -4,12 +4,17 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAnnouncements } from "@/hooks/useData";
 
+import { SEO } from "@/components/SEO";
+
 const Announcements = () => {
+
   const { data: announcements, isLoading } = useAnnouncements();
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Comunicados" description="Fique por dentro de todas as novidades, atualizações e comunicados oficiais da nossa plataforma." />
       <Header />
+
       <div className="container py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

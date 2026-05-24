@@ -1,6 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database } from "lucide-react";
+import { Loader2, Settings, Save, Percent, DollarSign, MessageSquare, Layout, Globe, Image as ImageIcon, Zap, Sparkles, MousePointer2, Palette, Sliders, CreditCard, Upload, Trash2, Check, Smartphone, CheckCircle2, Database, Search, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
@@ -59,9 +59,12 @@ export default function AdminSettings() {
     paggue_client_key: "Paggue: Client Key",
     paggue_client_secret: "Paggue: Client Secret",
     active_payment_provider: "Provedor de Pagamento Ativo",
+    site_keywords: "Palavras-chave (SEO)",
+    site_description: "Descrição Meta (SEO)",
     supabase_url: "Supabase URL (Configuração do Sistema)",
     supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
   };
+
 
   useEffect(() => {
     fetchSettings();
@@ -175,9 +178,11 @@ export default function AdminSettings() {
       <Tabs defaultValue="visual" className="space-y-6">
         <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-14 w-full md:w-auto justify-start overflow-x-auto overflow-y-hidden border border-border/50">
           <TabsTrigger value="visual" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Design</TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Google</TabsTrigger>
           <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
           <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
           <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
+
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -343,6 +348,48 @@ export default function AdminSettings() {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="seo" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <Search className="h-5 w-5" />
+                </div>
+                Otimização para Buscadores (SEO)
+              </CardTitle>
+              <CardDescription className="font-medium">Configure como o Google e outras IAs veem seu site</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_keywords')} 
+                  onUpdate={handleUpdate} 
+                  label="Palavras-chave do Site (Separadas por vírgula)"
+                  getIcon={() => <Search className="h-4 w-4" />}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_description')} 
+                  onUpdate={handleUpdate} 
+                  label="Descrição Meta do Site (Recomendado 160 caracteres)"
+                  getIcon={() => <FileText className="h-4 w-4" />}
+                  type="textarea"
+                />
+              </div>
+
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
+                <div className="flex items-center gap-2 text-amber-600">
+                  <Zap className="h-4 w-4" />
+                  <span className="text-xs font-black uppercase tracking-wider">Dica SEO</span>
+                </div>
+                <p className="text-[11px] text-amber-800 font-bold leading-relaxed">
+                  As URLs amigáveis em português já estão ativadas automaticamente em todo o site. 
+                  Para cada rifa, o slug (URL personalizada) é usado para ranquear no Google.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
 
         <TabsContent value="payment" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20 rounded-3xl shadow-sm">
@@ -602,7 +649,7 @@ function SettingField({
   onUpdate: any, 
   getIcon: any, 
   label: string,
-  type?: "text" | "password" | "select" | "boolean" | "color" | "number",
+  type?: "text" | "password" | "select" | "boolean" | "color" | "number" | "textarea",
   options?: { label: string, value: string }[],
   onUpload?: (key: string, file: File) => void,
   uploading?: boolean
@@ -627,7 +674,18 @@ function SettingField({
       );
     }
 
+    if (type === "textarea") {
+      return (
+        <textarea 
+          value={s.value} 
+          onChange={(e) => onUpdate(s.key, e.target.value)} 
+          className="w-full bg-secondary/40 border-border/50 min-h-[100px] p-3 rounded-xl font-medium text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+        />
+      );
+    }
+
     if (type === "select") {
+
       return (
         <Select value={s.value} onValueChange={(val) => onUpdate(s.key, val)}>
           <SelectTrigger className="w-full bg-secondary/40 border-border/50 h-11 rounded-xl font-bold shadow-inner">

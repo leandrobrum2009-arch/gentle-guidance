@@ -38,6 +38,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import ScratchCard from "@/components/ScratchCard";
 import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
+import { SEO } from "@/components/SEO";
+
 
 const CampaignDetail = () => {
   const queryClient = useQueryClient();
@@ -765,9 +767,16 @@ const CampaignDetail = () => {
   const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "top_buyers", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
-    <div className="min-h-screen bg-background pb-24 lg:pb-0">
+    <div className="min-h-screen bg-background">
+      <SEO 
+        title={campaign.title} 
+        description={campaign.subtitle || campaign.description?.slice(0, 160) || ""} 
+        image={campaign.image_url || ""}
+        type="article"
+      />
       <Header />
       <LiveNotifications />
+
       
       <div className="container px-4 md:px-6">
         <div className="flex flex-col gap-6">
