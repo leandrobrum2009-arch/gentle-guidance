@@ -25,19 +25,11 @@ const faqs = [
 export default function SalesPage() {
   const navigate = useNavigate();
 
-  const { data: settings } = useQuery({
-    queryKey: ["site-settings-array"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("*");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data: settings } = useSiteSettings();
+  const siteName = settings?.site_name || "Plataforma de Rifas";
+  const mainKeyword = settings?.sales_page_keywords?.split(",")?.[0]?.trim() || "sistema para rifas online";
+  const supportWhatsapp = settings?.sales_page_whatsapp || settings?.support_whatsapp || "";
 
-  const getSetting = (key: string) => settings?.find((s) => s.key === key)?.value || "";
-  const siteName = getSetting("site_name") || "Plataforma de Rifas";
-  const mainKeyword = getSetting("sales_page_keywords").split(",")[0].trim() || "sistema para rifas online";
-  const supportWhatsapp = getSetting("sales_page_whatsapp") || getSetting("support_whatsapp") || "";
 
   const handleWhatsApp = () => {
     if (supportWhatsapp) {
