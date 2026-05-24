@@ -325,9 +325,9 @@ const Index = () => {
           <section className="container relative z-30 -mt-6 md:-mt-12 py-6 md:py-8">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-6">
                 {[
-                  { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta", badge: "HOT" },
-                  { icon: Sparkles, title: "Raspadinha", desc: "Prêmios Instantâneos", color: "from-amber-500/40", href: "/raspadinha", badge: "NOVO" },
-                  { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa", badge: "HOT" },
+                  { icon: Gamepad2, title: "Roleta Premiada", desc: "Gire e Ganhe Agora", color: "from-primary/40", href: "/roleta-premiada", badge: "HOT" },
+                  { icon: Sparkles, title: "Raspadinha", desc: "Prêmios Instantâneos", color: "from-amber-500/40", href: "/raspadinha-da-sorte", badge: "NOVO" },
+                  { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa-de-premios", badge: "HOT" },
                   { icon: Award, title: "Ranking Top", desc: "Melhores do Mês", color: "from-blue-500/40", href: "/ranking" },
                   { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/40", href: "/afiliados" },
                 ].map((item, i) => (
