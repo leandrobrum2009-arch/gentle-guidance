@@ -199,8 +199,6 @@ const CampaignDetail = () => {
     return (
       <div className="min-h-screen bg-background">
         <Header />
-
-
         <div className="container flex justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
@@ -224,16 +222,6 @@ const CampaignDetail = () => {
 
   const isActive = campaign.status === "active";
   const drawDate = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString("pt-BR") : "";
-
-  return (
-    <div className="min-h-screen bg-background">
-      <SEO 
-        title={campaign.title} 
-        description={campaign.subtitle || campaign.description?.slice(0, 160) || ""} 
-        image={campaign.image_url || ""}
-        type="article"
-      />
-
 
   const renderSection = (section: string) => {
     switch (section) {
@@ -779,7 +767,13 @@ const CampaignDetail = () => {
   const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "top_buyers", "roulette_footer", "scratch_footer", "ranking"];
 
   return (
-    <div className="min-h-screen bg-background pb-24 lg:pb-0">
+    <div className="min-h-screen bg-background">
+      <SEO 
+        title={campaign.title} 
+        description={campaign.subtitle || campaign.description?.slice(0, 160) || ""} 
+        image={campaign.image_url || ""}
+        type="article"
+      />
       <Header />
       <LiveNotifications />
       
