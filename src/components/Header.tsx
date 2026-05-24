@@ -145,7 +145,7 @@ const Header = () => {
               </motion.div>
               
                 <button
-                   onClick={() => navigate("/conta")}
+                   onClick={() => navigate("/minha-conta")}
                    className="relative rounded-full bg-secondary/50 p-2 text-foreground/90 hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
                 >
                 <Bell className="h-5 w-5" />
