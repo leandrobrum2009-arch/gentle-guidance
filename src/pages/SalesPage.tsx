@@ -108,28 +108,10 @@ export default function SalesPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 px-4 bg-secondary/30">
-        <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Depoimentos reais</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-background p-8 rounded-3xl border border-border">
-                <div className="flex text-yellow-400 mb-4">
-                  {[...Array(5)].map((_, s) => <Star key={s} className="h-5 w-5 fill-current" />)}
-                </div>
-                <p className="text-lg mb-6 italic text-muted-foreground">"O sistema mudou meu negócio. Hoje consigo gerenciar minhas rifas de onde estiver com total segurança!"</p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-primary rounded-full" />
-                  <div>
-                    <h4 className="font-bold text-lg">Cliente {i}</h4>
-                    <p className="text-xs text-muted-foreground">Usuário desde 2024</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section className="bg-secondary/30 relative">
+        <GoogleReviews />
       </section>
+
 
       {/* FAQ */}
       <section className="py-20 px-4">
