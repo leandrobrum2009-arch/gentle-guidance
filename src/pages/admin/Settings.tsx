@@ -348,6 +348,48 @@ export default function AdminSettings() {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="seo" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <Search className="h-5 w-5" />
+                </div>
+                Otimização para Buscadores (SEO)
+              </CardTitle>
+              <CardDescription className="font-medium">Configure como o Google e outras IAs veem seu site</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_keywords')} 
+                  onUpdate={handleUpdate} 
+                  label="Palavras-chave do Site (Separadas por vírgula)"
+                  getIcon={() => <Search className="h-4 w-4" />}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_description')} 
+                  onUpdate={handleUpdate} 
+                  label="Descrição Meta do Site (Recomendado 160 caracteres)"
+                  getIcon={() => <FileText className="h-4 w-4" />}
+                  type="textarea"
+                />
+              </div>
+
+              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
+                <div className="flex items-center gap-2 text-amber-600">
+                  <Zap className="h-4 w-4" />
+                  <span className="text-xs font-black uppercase tracking-wider">Dica SEO</span>
+                </div>
+                <p className="text-[11px] text-amber-800 font-bold leading-relaxed">
+                  As URLs amigáveis em português já estão ativadas automaticamente em todo o site. 
+                  Para cada rifa, o slug (URL personalizada) é usado para ranquear no Google.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
 
         <TabsContent value="payment" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20 rounded-3xl shadow-sm">
