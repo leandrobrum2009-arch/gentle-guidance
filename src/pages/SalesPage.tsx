@@ -40,7 +40,31 @@ export default function SalesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white">
+    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white relative">
+      {/* Animated Background Orbs for entire page */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <motion.div 
+          animate={{ 
+            scale: [1, 1.2, 1],
+            opacity: [0.1, 0.2, 0.1],
+            x: [0, 100, 0],
+            y: [0, 50, 0]
+          }}
+          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+          className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500 rounded-full blur-[150px]" 
+        />
+        <motion.div 
+          animate={{ 
+            scale: [1.2, 1, 1.2],
+            opacity: [0.05, 0.15, 0.05],
+            x: [0, -100, 0],
+            y: [0, -50, 0]
+          }}
+          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
+          className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600 rounded-full blur-[150px]" 
+        />
+      </div>
+
       <SEO 
         title={`O Melhor ${mainKeyword} - Lucrativo e Completo`}
         description={`Tenha agora o seu próprio ${mainKeyword}. Script completo com painel administrativo, integração de pagamentos e sistema de afiliados.`}
@@ -108,7 +132,7 @@ export default function SalesPage() {
 
       {/* Manual & Features Detail Section */}
       <section id="manual" className="py-24 px-6 bg-[#0F0F0F]">
-        <div className="container mx-auto max-w-6xl">
+        <div className="container mx-auto max-w-6xl relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-6xl font-black mb-6 italic">Manual de <span className="text-emerald-500">Funcionalidades</span></h2>
             <p className="text-zinc-500 max-w-2xl mx-auto text-lg uppercase tracking-widest font-bold">Tudo o que você precisa para dominar o mercado</p>
@@ -429,11 +453,11 @@ export default function SalesPage() {
       <section className="py-16 px-6 bg-[#0A0A0A]">
         <div className="container mx-auto max-w-4xl text-center">
           <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Gateways & Confiança</p>
-          <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all">
-             <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-2048.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain" />
-             <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain" />
-             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain" />
-             <img src="https://logopng.com.br/logos/google-65.png" alt="Google" className="h-8 md:h-12 w-auto object-contain" />
+          <div className="flex flex-wrap justify-center gap-12 grayscale hover:grayscale-0 transition-all">
+             <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain brightness-200" />
+             <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain brightness-200" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain brightness-200" />
+             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" className="h-8 md:h-12 w-auto object-contain brightness-200" />
           </div>
         </div>
       </section>

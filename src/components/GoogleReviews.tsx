@@ -9,46 +9,46 @@ import { Button } from "@/components/ui/button";
 const REVIEWS = [
   {
     id: 1,
-    name: "Carlos Eduardo",
+    name: "Adriano Silva",
     date: "há 2 dias",
     rating: 5,
-    text: "Plataforma sensacional! Participei da rifa do iPhone e ganhei com apenas 5 cotas. Transparência total e entrega super rápida. Recomendo a todos!",
+    text: "Mudei de plataforma e foi a melhor decisão. O sistema de PIX automático e a roleta aumentaram meu faturamento em 40% no primeiro mês. Entrega impecável!",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
   {
     id: 2,
-    name: "Ana Beatriz Rocha",
+    name: "Juliana Ferreira",
     date: "há 1 semana",
     rating: 5,
-    text: "No começo fiquei com receio, mas depois que vi os sorteios ao vivo pelo Instagram, ganhei confiança. Ganhei o pix de R$ 500 ontem!",
+    text: "O suporte da NC Brasil é diferenciado. A plataforma é extremamente estável e o painel administrativo me dá todo o controle financeiro que eu precisava para escalar.",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
   {
     id: 3,
-    name: "Marcos Oliveira",
+    name: "Ricardo Mendes",
     date: "há 3 dias",
     rating: 5,
-    text: "O melhor site de rifas do Brasil. O sistema de roleta e as caixas misteriosas deixam tudo muito mais divertido. Parabéns pela organização.",
+    text: "O ranking de compradores e as raspadinhas são o diferencial. Meus clientes adoraram a interatividade. O retorno financeiro veio muito mais rápido do que eu imaginava.",
     avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
   {
     id: 4,
-    name: "Fernanda Lima",
+    name: "Patrícia Souza",
     date: "há 5 dias",
-    rating: 4,
-    text: "Excelente atendimento ao suporte. Tive uma dúvida sobre o pagamento e me responderam em menos de 5 minutos. Muito satisfeito.",
+    rating: 5,
+    text: "Sistema completo e muito fácil de configurar. Em poucas horas já estava com tudo rodando e vendendo. Recomendo para quem quer profissionalismo.",
     avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },
   {
     id: 5,
-    name: "Ricardo Santos",
+    name: "Bruno Oliveira",
     date: "há 1 mês",
     rating: 5,
-    text: "Já sou cliente fiel. O site é leve, fácil de usar e os prêmios são entregues de verdade. Podem confiar!",
+    text: "Já testei vários scripts, mas esse é o único que realmente aguenta o tráfego pesado sem lentidão. O CRM integrado ajuda muito na recuperação de vendas.",
     avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   }
@@ -81,10 +81,10 @@ const GoogleReviews = () => {
           </div>
         </div>
         <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter leading-none">
-          O que dizem os <span className="text-primary neon-text-primary">Ganhadores</span>
+          O que dizem os <span className="text-primary neon-text-primary">Organizadores</span>
         </h2>
         <p className="text-sm text-muted-foreground max-w-xl uppercase tracking-widest font-medium">
-          Confira o depoimento de quem já participou e transformou a sorte em realidade na nossa plataforma
+          Confira o depoimento de quem já escalou suas vendas e profissionalizou seus sorteios com nossa plataforma
         </p>
       </div>
 
