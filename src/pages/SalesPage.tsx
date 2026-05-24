@@ -130,7 +130,8 @@ export default function SalesPage() {
       </section>
 
       {/* Testimonials */}
-      <section className="bg-secondary/30 relative">
+      <section id="depoimentos" className="bg-secondary/30 relative">
+
         <GoogleReviews />
       </section>
 
