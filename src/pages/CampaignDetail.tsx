@@ -859,11 +859,11 @@ const CampaignDetail = () => {
 
           {/* Mobile "Quero Participar" Float */}
           <div className="lg:hidden w-full pointer-events-auto">
-             <Button 
+              <Button 
                 className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all animate-button-flash text-lg"
                 onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                QUERO PARTICIPAR <Sparkles className="ml-2 h-6 w-6" />
+                QUERO PARTICIPAR DA VERSÃO MOBILE <Sparkles className="ml-2 h-6 w-6" />
               </Button>
           </div>
         </motion.div>
