@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
