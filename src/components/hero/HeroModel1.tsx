@@ -73,7 +73,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                   </div>
 
                   <div className="flex items-center gap-4 pt-4">
-                    <Link to={`/campanha/${campaign.id}`}>
+                    <Link to={`/campanha/${campaign.slug || campaign.id}`}>
                       <Button size="lg" className="h-12 md:h-16 rounded-xl md:rounded-2xl px-6 md:px-10 font-black uppercase italic tracking-widest gap-2 glow-primary text-sm md:text-lg border-light-path border-light-always border-[#22c55e]/30 relative z-10">
                         PARTICIPAR AGORA <Zap className="h-6 w-6 fill-current" />
                       </Button>
