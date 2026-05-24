@@ -57,9 +57,9 @@ const CampaignDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { data: campaign, isLoading } = useCampaign(id || "");
-  const { data: mysteryBoxes } = useMysteryBoxConfigs(id || "");
-  const { data: roulettePrizes } = useRoulettePrizes(id || "");
+  const campaignId = campaign?.id || "";
+  const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
+  const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: allWinners } = useWinners();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
@@ -84,7 +84,7 @@ const CampaignDetail = () => {
     return campaign?.manual_numbers === true || campaign?.ticket_generation_type === 'manual';
   }, [campaign]);
 
-  const { data: tickets } = useTickets(id || "", canManualSelect);
+  const { data: tickets } = useTickets(campaignId, canManualSelect && !!campaignId);
   const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
@@ -113,11 +113,11 @@ const CampaignDetail = () => {
     return () => clearInterval(interval);
   }, [id, luckyNumbersList]);
 
-  const { data: campaignRanking } = useCampaignRanking(id || "", 10);
-  const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
-  const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
-  const { data: ticketStats } = useCampaignTicketStats(id || "");
-  const { data: userTickets } = useUserTickets(user?.id || "", id || "");
+  const { data: campaignRanking } = useCampaignRanking(campaignId, 10);
+  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
+  const { data: luckyWinners } = useCampaignLuckyWinners(campaignId);
+  const { data: ticketStats } = useCampaignTicketStats(campaignId);
+  const { data: userTickets } = useUserTickets(user?.id || "", campaignId);
 
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
