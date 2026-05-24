@@ -4,7 +4,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useAnnouncements } from "@/hooks/useData";
 
+import { SEO } from "@/components/SEO";
+
 const Announcements = () => {
+
   const { data: announcements, isLoading } = useAnnouncements();
 
   return (
