@@ -27,6 +27,8 @@ import { useCampaigns, useWinners, useSiteSettings } from "@/hooks/useData";
 import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
 import { useTheme } from "@/components/ThemeProvider";
+import { SEO } from "@/components/SEO";
+
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
   <div className="flex flex-col gap-2 mb-10">
