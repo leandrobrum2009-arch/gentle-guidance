@@ -145,7 +145,7 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
        <Header />
        <div className="container max-w-4xl py-10">
          <div className="mb-8 flex items-center gap-4">
-           <Link to={`/campanha/${order.campaign_id}`}>
+           <Link to={`/campanha/${order.campaigns?.slug || order.campaign_id}`}>
              <Button variant="ghost" size="icon" className="rounded-full"><ArrowLeft className="h-5 w-5" /></Button>
            </Link>
            <div>
