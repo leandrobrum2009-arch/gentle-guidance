@@ -1397,16 +1397,14 @@ export type Database = {
           tickets_generated: number
         }[]
       }
-      handle_order_payment:
-        | { Args: { p_order_id: string }; Returns: undefined }
-        | {
-            Args: {
-              p_order_id: string
-              p_payment_id?: string
-              p_payment_provider?: string
-            }
-            Returns: undefined
-          }
+      handle_order_payment: {
+        Args: {
+          p_order_id: string
+          p_payment_id?: string
+          p_payment_provider?: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
