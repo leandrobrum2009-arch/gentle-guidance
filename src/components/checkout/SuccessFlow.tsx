@@ -283,7 +283,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
               <CardContent className="p-0">
-                <div ref={detailsRef} className="p-4 md:p-8 space-y-4 md:space-y-8 bg-card text-card-foreground">
+                <div ref={detailsRef} className="p-3 md:p-8 space-y-3 md:space-y-8 bg-card text-card-foreground">
                   <div className="flex items-center justify-between border-b border-border pb-6">
                     <div className="space-y-1">
                       <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
