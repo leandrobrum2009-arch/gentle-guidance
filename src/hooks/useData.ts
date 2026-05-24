@@ -361,7 +361,28 @@ export const useCampaign = (idOrSlug: string) =>
         query = query.eq("slug", idOrSlug);
       }
 
-      const { data, error } = await query.maybeSingle();
+      let { data, error } = await query.maybeSingle();
+      
+      // Fallback: if not found by primary method, try the other one
+      if (!data && !error && idOrSlug) {
+        if (isUuid) {
+          // If it looked like a UUID but wasn't found as ID, try as slug
+          const slugQuery = supabase.from("campaigns").select("*, winners(*)").eq("slug", idOrSlug);
+          const fallback = await slugQuery.maybeSingle();
+          data = fallback.data;
+          error = fallback.error;
+        } else {
+          // If it didn't look like a UUID but wasn't found as slug, 
+          // double check if it actually IS a UUID and try as ID
+          const isActuallyUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrSlug);
+          if (isActuallyUuid) {
+            const idQuery = supabase.from("campaigns").select("*, winners(*)").eq("id", idOrSlug);
+            const fallback = await idQuery.maybeSingle();
+            data = fallback.data;
+            error = fallback.error;
+          }
+        }
+      }
       
       if (error) throw error;
       return (data as any) as Campaign | null;
