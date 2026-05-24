@@ -126,6 +126,49 @@ export default function SalesPage() {
         </div>
       </section>
 
+      {/* Advanced Details Section */}
+      <section className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight">
+                Tecnologia de Ponta <br />
+                <span className="text-emerald-400">Sem Limites.</span>
+              </h2>
+              <div className="space-y-6">
+                {[
+                  { title: "Escalabilidade Extrema", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números sem travamentos." },
+                  { title: "Sorteios Automáticos", desc: "Integração total com a Loteria Federal para resultados transparentes e automáticos." },
+                  { title: "Baixa Automática PIX", desc: "O sistema detecta o pagamento via QR Code e envia os números no WhatsApp do cliente em segundos." },
+                  { title: "Recuperação de Carrinho", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="mt-1">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold mb-1">{item.title}</h4>
+                      <p className="text-zinc-400">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-[100px] rounded-full" />
+              <div className="relative bg-[#1A1A1A] border border-white/10 p-4 rounded-[2rem] shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
+                 <div className="text-center">
+                    <Smartphone className="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-bounce" />
+                    <p className="font-bold text-xl">Interface Mobile Premiada</p>
+                    <p className="text-zinc-500 text-sm">Otimizada para máxima conversão</p>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
       {/* Statistics Section */}
       <section className="py-20 bg-[#0A0A0A] border-y border-white/5">
         <div className="container mx-auto px-6">
