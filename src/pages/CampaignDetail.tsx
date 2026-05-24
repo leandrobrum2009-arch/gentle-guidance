@@ -266,7 +266,25 @@ const CampaignDetail = () => {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div className="space-y-1">
                 <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
-                <p className="text-sm text-muted-foreground font-medium">{campaign.subtitle}</p>
+                <p className="text-sm text-muted-foreground font-medium mb-3">{campaign.subtitle}</p>
+                <div className="flex flex-wrap gap-3">
+                  <Button 
+                    className="h-10 px-6 rounded-xl font-black uppercase tracking-widest text-[10px] bg-primary text-black hover:scale-105 transition-all shadow-lg shadow-primary/20 animate-button-flash"
+                    onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                  >
+                    PARTICIPE AGORA <Zap className="ml-2 h-3 w-3 fill-current" />
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    className="h-10 px-6 rounded-xl font-black uppercase tracking-widest text-[10px] border-primary/20 text-primary hover:bg-primary/5"
+                    onClick={() => {
+                      const element = document.getElementById('prizes');
+                      element?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                  >
+                    VER COTAS PREMIADAS <Trophy className="ml-2 h-3 w-3" />
+                  </Button>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 {campaign.status === "active" && (
