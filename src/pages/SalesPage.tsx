@@ -8,6 +8,8 @@ import { useSiteSettings } from "@/hooks/useData";
 import { Helmet } from "react-helmet-async";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import GoogleReviews from "@/components/GoogleReviews";
+
 
 const faqs = [
   { q: "Preciso de conhecimento técnico para usar o sistema?", a: "Absolutamente não. Nosso painel é extremamente intuitivo, permitindo que qualquer pessoa gerencie rifas, banners e financeiro com poucos cliques." },
