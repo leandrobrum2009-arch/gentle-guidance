@@ -29,6 +29,8 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { useSiteSettings } from "@/hooks/useData";
+
 import { ThemeProvider } from "./components/ThemeProvider";
 import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
