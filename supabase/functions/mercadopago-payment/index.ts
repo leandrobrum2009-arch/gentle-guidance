@@ -47,7 +47,9 @@ serve(async (req) => {
       if (orderError || !order) throw new Error("Pedido não encontrado")
 
       const origin = req.headers.get("origin") || "https://suarifapro.com.br"
-      
+      const userEmail = order.profiles?.email || "cliente@rifapro.com"
+      const userName = order.profiles?.name || "Cliente RifaPro"
+
       // Create Preference for checkout redirect
       const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
         method: "POST",
@@ -65,8 +67,8 @@ serve(async (req) => {
             }
           ],
           payer: {
-            name: order.profiles?.name || "Cliente",
-            email: order.profiles?.email || "cliente@rifapro.com",
+            name: userName,
+            email: userEmail
           },
           external_reference: orderId,
           back_urls: {
