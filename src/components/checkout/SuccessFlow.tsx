@@ -165,6 +165,22 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     }
   };
 
+  const handleReprocess = async () => {
+    try {
+      const { data: response, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: order.id });
+      if (error) throw error;
+      const data = response as any;
+      if (data.success) {
+        toast.success(data.message);
+        fetchRewards();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    }
+  };
+
   return (
     <div className="w-full space-y-4 max-w-full">
       {/* Mini Stepper */}
@@ -404,11 +420,16 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                     TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
                   
-                  {onClose && (
-                    <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>
-                      Fechar Modal
+                  <div className="flex flex-col gap-2">
+                    <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary" onClick={handleReprocess}>
+                      Reprocessar Prêmios
                     </Button>
-                  )}
+                    {onClose && (
+                      <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>
+                        Fechar Modal
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </CardContent>
             </Card>
