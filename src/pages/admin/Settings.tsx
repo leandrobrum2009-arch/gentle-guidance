@@ -186,7 +186,7 @@ export default function AdminSettings() {
           <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
           <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
           <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
-
+          <TabsTrigger value="sales" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Vendas</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
