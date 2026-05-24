@@ -851,7 +851,13 @@ const CampaignDetail = () => {
              <Button 
                 size="lg"
                 className="h-16 px-10 rounded-full font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black hover:scale-110 transition-all animate-button-flash"
-                onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  const element = document.getElementById('purchase-tabs');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                    // If we have a selected quantity, maybe we should highlight it?
+                  }
+                }}
               >
                 PARTICIPE AGORA <Zap className="ml-2 h-5 w-5 fill-current" />
               </Button>
@@ -861,9 +867,14 @@ const CampaignDetail = () => {
           <div className="lg:hidden w-full pointer-events-auto">
               <Button 
                 className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all animate-button-flash text-lg"
-                onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                onClick={() => {
+                  const element = document.getElementById('purchase-tabs');
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' });
+                  }
+                }}
               >
-                QUERO PARTICIPAR DA VERSÃO MOBILE <Sparkles className="ml-2 h-6 w-6" />
+                QUERO PARTICIPAR <Sparkles className="ml-2 h-6 w-6" />
               </Button>
           </div>
         </motion.div>
