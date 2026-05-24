@@ -114,7 +114,7 @@ const HeroCampaign = ({ campaign }: HeroCampaignProps) => {
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-4">
-              <Link to={`/campanha/${campaign.id}`}>
+              <Link to={`/campanha/${campaign.slug || campaign.id}`}>
                 <Button size="lg" className="h-14 md:h-16 rounded-2xl px-6 md:px-10 gap-2 md:gap-3 text-base md:text-lg font-black uppercase italic tracking-tight glow-primary group">
                   <Zap className="h-5 w-5 md:h-6 md:w-6 fill-current group-hover:scale-125 transition-transform" />
                   Participar Agora

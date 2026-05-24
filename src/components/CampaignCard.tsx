@@ -23,7 +23,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
       transition={{ duration: 0.5, delay: index * 0.1 }}
       className="group relative h-full"
     >
-      <Link to={`/campanha/${campaign.id}`} className="block h-full outline-none">
+      <Link to={`/campanha/${campaign.slug || campaign.id}`} className="block h-full outline-none">
         <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.2)] group-hover:scale-[1.02] shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 border-light-path border-[#22c55e]/20">
           
           {/* Reflection Effect */}

@@ -102,7 +102,7 @@ const CampaignSlide = ({ campaign }: { campaign: Campaign }) => {
           )}
 
           <div className="flex gap-4 pt-4">
-            <Link to={`/campanha/${campaign.id}`} className="flex-1">
+            <Link to={`/campanha/${campaign.slug || campaign.id}`} className="flex-1">
               <Button size="lg" className="w-full h-14 md:h-16 rounded-2xl font-black uppercase italic tracking-widest gap-2 glow-primary border-light-path border-light-always text-sm md:text-base border-[#22c55e]/30 relative z-10">
                 COMPRAR AGORA <Zap className="h-5 w-5 fill-current" />
               </Button>
