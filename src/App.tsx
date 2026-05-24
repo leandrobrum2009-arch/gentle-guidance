@@ -53,6 +53,11 @@ import { supabase } from "@/integrations/supabase/client";
 
 const queryClient = new QueryClient();
 
+const CampaignRedirect = () => {
+  const { id } = useParams();
+  return <Navigate to={`/campanha/${id}`} replace />;
+};
+
 const AppContent = () => {
   const { data: settings } = useSiteSettings();
   const showSalesPage = settings?.show_sales_page === "true" || (settings?.show_sales_page as any) === true;
@@ -76,8 +81,8 @@ const AppContent = () => {
           <Route path="/demonstracao" element={<Index />} />
           <Route path="/campanhas" element={<Navigate to={showSalesPage ? "/demonstracao" : "/"} replace />} />
           <Route path="/campanha/:id" element={<CampaignDetail />} />
-          <Route path="/rifa/:id" element={<Navigate to="/campanha/:id" replace />} />
-          <Route path="/rifas/:id" element={<Navigate to="/campanha/:id" replace />} />
+          <Route path="/rifa/:id" element={<CampaignRedirect />} />
+          <Route path="/rifas/:id" element={<CampaignRedirect />} />
           <Route path="/cadastrar" element={<Register />} />
           <Route path="/entrar" element={<Login />} />
           <Route path="/ganhadores" element={<Winners />} />
