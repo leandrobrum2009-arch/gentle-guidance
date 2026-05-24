@@ -340,9 +340,9 @@ const SOUND_URLS = {
          </div>
        </div>
  
-       <div className="relative group scale-[0.85] md:scale-100 transition-transform duration-500">
+       <div className="relative group scale-[0.7] sm:scale-[0.85] md:scale-100 transition-transform duration-500">
         {/* Metallic Outer Ring */}
-        <div className="absolute -inset-6 md:-inset-10 rounded-full border-[8px] md:border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+        <div className="absolute -inset-6 md:-inset-10 rounded-full border-[6px] md:border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
         <div className="absolute -inset-4 md:-inset-6 rounded-full border-[1px] md:border-[2px] border-white/20 pointer-events-none" />
         
         {/* Neon Ring */}
@@ -356,7 +356,7 @@ const SOUND_URLS = {
         </div>
 
         {/* Wheel */}
-        <div className="relative h-64 w-64 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
+        <div className="relative h-48 w-48 sm:h-64 sm:w-64 md:h-[350px] md:w-[350px] rounded-full p-2 bg-gradient-to-br from-zinc-800 to-zinc-950 shadow-[0_0_100px_rgba(0,0,0,0.8)] border-4 border-zinc-900 overflow-hidden">
           <motion.div
             animate={controls}
             initial={{ rotate: 0 }}
@@ -376,12 +376,12 @@ const SOUND_URLS = {
                     clipPath: `polygon(50% 50%, ${50 - Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%, ${50 + Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%)`
                   }}
                 >
-                  <div className="mt-12 md:mt-16 flex flex-col items-center gap-2 transform rotate-180" style={{ writingMode: "vertical-rl" }}>
-                    <span className="text-[10px] md:text-sm font-black text-white uppercase tracking-tighter drop-shadow-lg">
+                  <div className="mt-8 sm:mt-12 md:mt-16 flex flex-col items-center gap-1 sm:gap-2 transform rotate-180" style={{ writingMode: "vertical-rl" }}>
+                    <span className="text-[8px] sm:text-[10px] md:text-sm font-black text-white uppercase tracking-tighter drop-shadow-lg">
                       {prize.label}
                     </span>
-                    {prize.prize_type === 'balance' && <Coins className="h-4 w-4 text-yellow-400 opacity-50" />}
-                    {prize.prize_type === 'ticket' && <Star className="h-4 w-4 text-primary opacity-50" />}
+                    {prize.prize_type === 'balance' && <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 opacity-50" />}
+                    {prize.prize_type === 'ticket' && <Star className="h-3 w-3 sm:h-4 sm:w-4 text-primary opacity-50" />}
                   </div>
                 </div>
               );
