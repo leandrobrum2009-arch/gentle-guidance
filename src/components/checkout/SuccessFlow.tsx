@@ -95,11 +95,15 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     const isRouletteEnabled = campaign.roulette_enabled === true;
     const isScratchEnabled = campaign.scratch_cards_enabled === true;
 
+    console.log("Checking rewards:", { isRouletteEnabled, isScratchEnabled, quantity: order.quantity });
+
     if (isRouletteEnabled) {
       // Basic rules from campaign
-      const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      const rules = Array.isArray(campaign.roulette_rules) ? campaign.roulette_rules : [];
+      const spinRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
+      
       if (spinRule) {
-        setAvailableSpins(spinRule.spins);
+        setAvailableSpins(Number(spinRule.spins));
       } else if (campaign.roulette_free_tickets > 0) {
         setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
       } else {
@@ -112,9 +116,11 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
 
     if (isScratchEnabled) {
       // Scratch card rule
-      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      const rules = Array.isArray(campaign.scratch_card_rules) ? campaign.scratch_card_rules : [];
+      const scratchRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
+      
       if (scratchRule) {
-        setAvailableScratchCards(scratchRule.scratches || 1);
+        setAvailableScratchCards(Number(scratchRule.scratches) || 1);
       } else {
         // Everyone gets at least 1 scratch card
         setAvailableScratchCards(1);
@@ -254,12 +260,14 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       Verificando seus prêmios instantâneos...
                     </p>
                     <Button 
-                      variant="ghost" 
-                      className="w-full text-[9px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white"
+                      className="w-full h-12 rounded-xl bg-primary text-black font-black uppercase tracking-widest text-[10px]"
                       onClick={() => setStep(6)}
                     >
-                      Pular espera e ver comprovante
+                      Ver Detalhes da Compra <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 text-center italic">
+                      Seus números já estão garantidos!
+                    </p>
                   </div>
                 </div>
               </CardContent>

@@ -170,6 +170,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
       if (data.success) {
         toast.success(data.message);
+        // Important: fetch the order again to get the "paid" status and tickets
+        await fetchOrder();
         setStatus('paid');
         onPaymentSuccess();
       } else {
