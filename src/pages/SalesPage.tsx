@@ -11,7 +11,7 @@ export default function SalesPage() {
   const [activeTab, setActiveTab] = useState("admin");
 
   const { data: settings } = useQuery({
-    queryKey: ["site-settings"],
+    queryKey: ["site-settings-array"],
     queryFn: async () => {
       const { data, error } = await supabase.from("site_settings").select("*");
       if (error) throw error;
