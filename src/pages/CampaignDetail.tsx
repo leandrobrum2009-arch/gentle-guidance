@@ -58,8 +58,10 @@ const CampaignDetail = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
-  const { data: mysteryBoxes } = useMysteryBoxConfigs(id || "");
-  const { data: roulettePrizes } = useRoulettePrizes(id || "");
+  const campaignId = campaign?.id || "";
+  
+  const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
+  const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: allWinners } = useWinners();
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
@@ -84,17 +86,17 @@ const CampaignDetail = () => {
     return campaign?.manual_numbers === true || campaign?.ticket_generation_type === 'manual';
   }, [campaign]);
 
-  const { data: tickets } = useTickets(id || "", canManualSelect);
+  const { data: tickets } = useTickets(campaignId, canManualSelect && !!campaignId);
   const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (!id || !luckyNumbersList.length) return;
+    if (!campaignId || !luckyNumbersList.length) return;
     
     const fetchLuckyStatus = async () => {
       const { data } = await supabase
         .from('tickets')
         .select('number, status')
-        .eq('campaign_id', id)
+        .eq('campaign_id', campaignId)
         .in('number', luckyNumbersList);
         
       if (data) {
@@ -111,13 +113,13 @@ const CampaignDetail = () => {
     fetchLuckyStatus();
     const interval = setInterval(fetchLuckyStatus, 30000);
     return () => clearInterval(interval);
-  }, [id, luckyNumbersList]);
+  }, [campaignId, luckyNumbersList]);
 
-  const { data: campaignRanking } = useCampaignRanking(id || "", 10);
-  const { data: userSpins } = useUserCampaignSpins(user?.id || "", id || "");
-  const { data: luckyWinners } = useCampaignLuckyWinners(id || "");
-  const { data: ticketStats } = useCampaignTicketStats(id || "");
-  const { data: userTickets } = useUserTickets(user?.id || "", id || "");
+  const { data: campaignRanking } = useCampaignRanking(campaignId, 10);
+  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
+  const { data: luckyWinners } = useCampaignLuckyWinners(campaignId);
+  const { data: ticketStats } = useCampaignTicketStats(campaignId);
+  const { data: userTickets } = useUserTickets(user?.id || "", campaignId);
 
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
@@ -173,7 +175,7 @@ const CampaignDetail = () => {
       const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
       
       const { data: orderId, error } = await supabase.rpc('reserve_tickets', {
-        p_campaign_id: id,
+        p_campaign_id: campaignId,
         p_user_id: user.id,
         p_quantity: quantity,
         p_numbers: numbers
