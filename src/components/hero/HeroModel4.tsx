@@ -48,7 +48,6 @@ const HeroModel4 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
             <Button 
               asChild
               size="lg"
-              to={`/campanha/${campaign.slug || campaign.id}`}
               className="h-16 md:h-20 rounded-2xl px-8 md:px-12 gap-3 text-lg md:text-xl font-black uppercase italic tracking-tight glow-primary group"
             >
               <Link to={`/campanha/${campaign.slug || campaign.id}`}>
