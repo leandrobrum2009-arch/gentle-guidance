@@ -25,9 +25,15 @@ const FederalResults = () => {
      },
    });
  
-   return (
-     <div className="min-h-screen bg-background">
-       <Header />
+    return (
+      <div className="min-h-screen bg-background">
+        <SEO 
+          title="Resultados da Federal" 
+          description="Confira os últimos resultados da Loteria Federal utilizados para os sorteios da nossa plataforma."
+          keywords="loteria federal, resultados caixa, sorteios oficiais"
+        />
+        <Header />
+
        <div className="container py-12 md:py-20">
          <div className="mb-10 text-center space-y-4">
            <motion.div 
