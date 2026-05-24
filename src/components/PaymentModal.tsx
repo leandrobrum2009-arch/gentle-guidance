@@ -152,10 +152,19 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
   };
 
   const handlePayWithBalance = async () => {
-    if (!orderId || !order) return;
+    if (!orderId || !order || isPayingWithBalance) return;
     
+    // Check if already paid to avoid duplicate attempts
+    if (order.payment_status === 'paid') {
+      setStatus('paid');
+      return;
+    }
+
     const { data: userData } = await supabase.auth.getUser();
-    if (!userData.user) return;
+    if (!userData.user) {
+      toast.error("Usuário não autenticado");
+      return;
+    }
 
     setIsPayingWithBalance(true);
     try {
@@ -164,20 +173,27 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         p_user_id: userData.user.id
       });
 
-      const data = response as any;
-
       if (error) throw error;
 
+      const data = response as any;
+
       if (data.success) {
-        toast.success(data.message);
-        // Important: fetch the order again to get the "paid" status and tickets
-        await fetchOrder();
+        toast.success(data.message || "Pagamento realizado com sucesso!");
         setStatus('paid');
+        // Re-fetch to get updated tickets and order info
+        fetchOrder();
         onPaymentSuccess();
       } else {
-        toast.error(data.message);
+        // If the error message indicates it's already paid, just move to success
+        if (data.message?.toLowerCase().includes('pago') || data.message?.toLowerCase().includes('já foi processado')) {
+          setStatus('paid');
+          fetchOrder();
+        } else {
+          toast.error(data.message || "Erro ao processar pagamento");
+        }
       }
     } catch (err: any) {
+      console.error('Balance payment error:', err);
       toast.error(err.message || "Erro ao processar pagamento com saldo");
     } finally {
       setIsPayingWithBalance(false);
@@ -192,7 +208,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="w-full sm:max-w-[500px] max-h-[95vh] sm:max-h-[85vh] bg-card border-border rounded-t-[40px] sm:rounded-3xl p-0 overflow-hidden flex flex-col">
+      <DialogContent className="w-[95vw] sm:max-w-[500px] h-[90vh] sm:h-auto max-h-[90vh] sm:max-h-[85vh] bg-card border-border rounded-3xl p-0 overflow-hidden flex flex-col">
         <AnimatePresence mode="wait">
           {loading || generatingPix ? (
             <motion.div 
@@ -200,7 +216,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
               exit={{ opacity: 0 }}
-              className="p-12 flex flex-col items-center justify-center gap-4"
+              className="flex-1 flex flex-col items-center justify-center gap-4 p-12"
             >
               <Loader2 className="h-12 w-12 animate-spin text-primary" />
               <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground animate-pulse">
@@ -212,7 +228,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               key="error"
               initial={{ opacity: 0, scale: 0.9 }} 
               animate={{ opacity: 1, scale: 1 }}
-              className="p-10 text-center space-y-6"
+              className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-6"
             >
               <div className="mx-auto h-20 w-20 rounded-full bg-rose-500/20 flex items-center justify-center border-2 border-rose-500/30">
                 <XCircle className="h-10 w-10 text-rose-500" />
@@ -221,7 +237,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                 <h2 className="text-2xl font-black uppercase italic tracking-tighter">ERRO NO PAGAMENTO</h2>
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">{pixError}</p>
               </div>
-              <Button className="w-full h-12 rounded-xl" onClick={() => fetchOrder()}>TENTAR NOVAMENTE</Button>
+              <Button className="w-full h-12 rounded-xl" onClick={(e) => {
+                e.preventDefault();
+                setPixError(null);
+                fetchOrder();
+              }}>TENTAR NOVAMENTE</Button>
             </motion.div>
           ) : status === 'paid' ? (
             <motion.div 
@@ -243,7 +263,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               key="expired"
               initial={{ opacity: 0, scale: 0.9 }} 
               animate={{ opacity: 1, scale: 1 }}
-              className="p-10 text-center space-y-6"
+              className="flex-1 flex flex-col items-center justify-center p-10 text-center space-y-6"
             >
               <div className="mx-auto h-20 w-20 rounded-full bg-rose-500/20 flex items-center justify-center border-2 border-rose-500/30">
                 <XCircle className="h-10 w-10 text-rose-500" />
@@ -252,18 +272,16 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                 <h2 className="text-2xl font-black uppercase italic tracking-tighter">TEMPO ESGOTADO</h2>
                 <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Infelizmente o tempo para pagamento expirou e seus números foram liberados para outros usuários.</p>
               </div>
-              <Button variant="outline" className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>TENTAR NOVAMENTE</Button>
+              <Button variant="outline" className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>VOLTAR</Button>
             </motion.div>
           ) : (
             <motion.div 
               key="payment"
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }}
-              className="flex flex-col"
+              className="flex-1 flex flex-col overflow-hidden"
             >
-              <div className="bg-primary/10 p-6 flex flex-col items-center text-center gap-2 border-b border-primary/10 relative">
-
-
+              <div className="bg-primary/10 p-6 flex flex-col items-center text-center gap-2 border-b border-primary/10 relative flex-shrink-0">
                 <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 mb-2">
                   <QrCode className="h-6 w-6 text-primary-foreground" />
                 </div>
@@ -275,7 +293,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                 </DialogDescription>
               </div>
 
-              <div className="p-6 space-y-6">
+              <div className="flex-1 overflow-y-auto p-6 space-y-6 no-scrollbar">
                 <div className="flex flex-col items-center gap-6">
                   {order?.pix_qr_code_base64 ? (
                     <div className="relative p-4 bg-white rounded-2xl shadow-xl ring-1 ring-black/5">
