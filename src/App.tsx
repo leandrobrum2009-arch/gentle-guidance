@@ -55,7 +55,7 @@ const queryClient = new QueryClient();
 
 const AppContent = () => {
   const { data: settings } = useSiteSettings();
-  const showSalesPage = settings?.show_sales_page === "true";
+  const showSalesPage = settings?.show_sales_page === "true" || settings?.show_sales_page === true;
 
 
 
