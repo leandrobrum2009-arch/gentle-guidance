@@ -674,7 +674,18 @@ function SettingField({
       );
     }
 
+    if (type === "textarea") {
+      return (
+        <textarea 
+          value={s.value} 
+          onChange={(e) => onUpdate(s.key, e.target.value)} 
+          className="w-full bg-secondary/40 border-border/50 min-h-[100px] p-3 rounded-xl font-medium text-sm shadow-inner focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all"
+        />
+      );
+    }
+
     if (type === "select") {
+
       return (
         <Select value={s.value} onValueChange={(val) => onUpdate(s.key, val)}>
           <SelectTrigger className="w-full bg-secondary/40 border-border/50 h-11 rounded-xl font-bold shadow-inner">
