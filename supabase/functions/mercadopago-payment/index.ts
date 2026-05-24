@@ -40,12 +40,14 @@ serve(async (req) => {
 
       const { data: order, error: orderError } = await supabaseClient
         .from("orders")
-        .select("*, campaigns(title)")
+        .select("*, campaigns(title), profiles(name, email)")
         .eq("id", orderId)
         .single()
 
       if (orderError || !order) throw new Error("Pedido não encontrado")
 
+      const origin = req.headers.get("origin") || "https://suarifapro.com.br"
+      
       // Create Preference for checkout redirect
       const response = await fetch("https://api.mercadopago.com/checkout/preferences", {
         method: "POST",
@@ -62,11 +64,15 @@ serve(async (req) => {
               currency_id: "BRL"
             }
           ],
+          payer: {
+            name: order.profiles?.name || "Cliente",
+            email: order.profiles?.email || "cliente@rifapro.com",
+          },
           external_reference: orderId,
           back_urls: {
-            success: `${req.headers.get("origin")}/checkout/${orderId}?status=success`,
-            failure: `${req.headers.get("origin")}/checkout/${orderId}?status=failure`,
-            pending: `${req.headers.get("origin")}/checkout/${orderId}?status=pending`
+            success: `${origin}/checkout/${orderId}?status=success`,
+            failure: `${origin}/checkout/${orderId}?status=failure`,
+            pending: `${origin}/checkout/${orderId}?status=pending`
           },
           auto_return: "approved",
           notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/mercadopago-payment?path=webhook`
