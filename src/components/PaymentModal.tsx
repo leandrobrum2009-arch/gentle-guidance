@@ -250,7 +250,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               animate={{ opacity: 1 }}
               className="flex-1 overflow-y-auto no-scrollbar"
             >
-              <div className="p-4 md:p-6">
+              <div className="p-2 md:p-6">
                 <SuccessFlow 
                   order={order} 
                   campaign={order.campaigns} 
