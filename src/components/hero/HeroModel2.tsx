@@ -62,7 +62,7 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
                 </div>
 
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8">
-                  <Link to={`/campanha/${campaign.id}`}>
+                  <Link to={`/campanha/${campaign.slug || campaign.id}`}>
                     <Button size="lg" className="h-14 md:h-20 rounded-2xl md:rounded-[2rem] px-8 md:px-12 gap-2 md:gap-4 text-sm md:text-xl font-black uppercase italic tracking-widest glow-primary border-light-path border-light-always shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)] border-[#22c55e]/30 relative z-10">
                       RESGATAR MEU PRÊMIO <ArrowRight className="h-6 w-6" />
                     </Button>
