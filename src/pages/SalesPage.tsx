@@ -2,8 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Palette, Sparkles, Star, Lock, CreditCard, BarChart3, ChevronRight } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { 
+  CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, 
+  Globe, ArrowRight, Play, Palette, Sparkles, Star, Lock, CreditCard, 
+  BarChart3, ChevronRight, Gift, Trophy, Gamepad2, Layout, Video, 
+  Share2, Headphones, Layers, Eye, Target, MousePointer2, Database
+} from "lucide-react";
 import { useSiteSettings } from "@/hooks/useData";
 import { SEO } from "@/components/SEO";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -54,6 +58,7 @@ export default function SalesPage() {
           </div>
           <div className="hidden md:flex items-center gap-6">
             <a href="#funcionalidades" className="text-sm font-medium hover:text-emerald-400 transition-colors">Funcionalidades</a>
+            <a href="#manual" className="text-sm font-medium hover:text-emerald-400 transition-colors">Manual do Sistema</a>
             <a href="#depoimentos" className="text-sm font-medium hover:text-emerald-400 transition-colors">Depoimentos</a>
             <Button variant="ghost" className="text-sm font-medium" onClick={() => navigate("/campanhas")}>Demonstração</Button>
             <Button onClick={handleWhatsApp} className="rounded-full px-6 bg-emerald-500 hover:bg-emerald-600 text-black font-bold">Começar Agora</Button>
@@ -71,20 +76,20 @@ export default function SalesPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-8"
           >
             <Star className="w-4 h-4 fill-emerald-400" />
-            <span className="text-sm font-semibold">Plataforma nº 1 em conversão</span>
+            <span className="text-sm font-semibold">Tecnologia de elite para rifas profissionais</span>
           </motion.div>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">
-            Lance seu próprio <br />
+            O Mais Completo <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
               {mainKeyword}
             </span>
           </h1>
           <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">
-            Crie um site de rifas profissional, veloz e que converte visitantes em clientes em minutos. Pagamentos automáticos, gestão de cotas e sistema antifraude.
+            A única plataforma que une sorteios, gamificação e um CRM potente em um só lugar. Venda mais com Roleta, Raspadinha e Sorteios da Federal automáticos.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" onClick={handleWhatsApp} className="h-14 px-8 text-lg rounded-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold">
-              Criar meu site agora
+              Quero minha plataforma agora
             </Button>
             <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-14 px-8 text-lg rounded-full border-zinc-800 hover:bg-zinc-800">
               Ver demonstração <ChevronRight className="ml-2 w-4 h-4" />
@@ -93,36 +98,208 @@ export default function SalesPage() {
           
           {/* Trust Badges */}
           <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all">
-            <div className="flex items-center gap-2"><Lock className="w-5 h-5" /> Ambiente Seguro</div>
-            <div className="flex items-center gap-2"><CreditCard className="w-5 h-5" /> Pagamento Rápido</div>
-            <div className="flex items-center gap-2"><BarChart3 className="w-5 h-5" /> Gestão Inteligente</div>
-            <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5" /> Suporte 24/7</div>
+            <div className="flex items-center gap-2"><Lock className="w-5 h-5" /> SSL Seguro</div>
+            <div className="flex items-center gap-2"><CreditCard className="w-5 h-5" /> PIX Automático</div>
+            <div className="flex items-center gap-2"><BarChart3 className="w-5 h-5" /> Painel BI</div>
+            <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5" /> Suporte VIP</div>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section id="funcionalidades" className="py-24 px-6 bg-[#0F0F0F]">
+      {/* Manual & Features Detail Section */}
+      <section id="manual" className="py-24 px-6 bg-[#0F0F0F]">
         <div className="container mx-auto max-w-6xl">
-          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Funcionalidades Poderosas</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              { icon: Zap, title: "Cotas Premiadas", desc: "Aumente o engajamento com premiações instantâneas integradas." },
-              { icon: Shield, title: "Sistema Antifraude", desc: "Proteção avançada contra robôs e verificações de segurança em tempo real." },
-              { icon: TrendingUp, title: "Desconto Progressivo", desc: "Incentive compras maiores com descontos automáticos por volume." },
-              { icon: Users, title: "Gestão de Afiliados", desc: "Painel completo para seus consultores acompanharem as vendas." },
-              { icon: Smartphone, title: "App nativo (PWA)", desc: "Instalação rápida no celular do cliente como um aplicativo." },
-              { icon: Palette, title: "Branding Completo", desc: "Personalize cada detalhe visual para combinar com sua marca." }
-            ].map((f, i) => (
-              <div key={i} className="group p-8 bg-[#1A1A1A] rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-all">
-                <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
-                  <f.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-bold mb-3">{f.title}</h3>
-                <p className="text-zinc-400 leading-relaxed">{f.desc}</p>
-              </div>
-            ))}
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-6xl font-black mb-6 italic">Manual de <span className="text-emerald-500">Funcionalidades</span></h2>
+            <p className="text-zinc-500 max-w-2xl mx-auto text-lg uppercase tracking-widest font-bold">Tudo o que você precisa para dominar o mercado</p>
           </div>
+
+          <div className="space-y-32">
+            {/* Gamificação */}
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+                <div className="flex items-center gap-3 text-emerald-500 mb-6">
+                  <Gamepad2 className="w-8 h-8" />
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">Super Gamificação</span>
+                </div>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Mais do que rifas: Uma <span className="text-emerald-400">experiência de jogo</span></h3>
+                <div className="space-y-6 text-zinc-400">
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Sparkles className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Raspadinha Digital</h4>
+                      <p>O cliente raspa na tela e ganha na hora. Aumenta absurdamente a retenção e o desejo de compra.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Gift className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Caixa Premiada</h4>
+                      <p>Sistema de loot boxes onde o usuário abre caixas misteriosas em busca de prêmios exclusivos.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><MousePointer2 className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Roleta da Sorte</h4>
+                      <p>Gire para ganhar descontos, números extras ou prêmios instantâneos. Totalmente configurável.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-emerald-500/20 blur-[120px] rounded-full group-hover:bg-emerald-500/30 transition-all" />
+                <div className="relative bg-[#1A1A1A] border border-white/10 rounded-[3rem] p-8 shadow-2xl">
+                  {/* Mockup do Game */}
+                  <div className="aspect-[4/3] bg-zinc-900 rounded-2xl p-6 flex flex-col items-center justify-center border border-white/5 relative overflow-hidden">
+                    <div className="absolute inset-0 opacity-10 bg-[url('https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1024')] bg-cover" />
+                    <Trophy className="w-16 h-16 text-emerald-500 mb-4" />
+                    <p className="text-2xl font-black italic mb-2 uppercase">Raspadinha Premiada</p>
+                    <div className="w-full h-24 bg-zinc-800 rounded-xl border-2 border-dashed border-emerald-500/50 flex items-center justify-center">
+                      <p className="text-xs text-emerald-500/50 font-black uppercase tracking-widest">Raspe aqui para ver o prêmio</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Sorteios e Transparência */}
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="order-2 md:order-1 relative group">
+                <div className="absolute inset-0 bg-cyan-500/20 blur-[120px] rounded-full group-hover:bg-cyan-500/30 transition-all" />
+                <div className="relative bg-[#1A1A1A] border border-white/10 rounded-[3rem] p-8 shadow-2xl">
+                  {/* Mockup do Painel de Sorteio */}
+                  <div className="aspect-video bg-zinc-900 rounded-2xl overflow-hidden border border-white/5 relative flex items-center justify-center">
+                     <Play className="w-12 h-12 text-cyan-500 absolute z-10 animate-pulse" />
+                     <div className="absolute bottom-0 inset-x-0 p-4 bg-black/60 backdrop-blur-md">
+                        <div className="flex justify-center gap-2">
+                           {[5, 2, 8, 9, 3].map((n, i) => (
+                             <div key={i} className="w-8 h-10 bg-cyan-500 rounded flex items-center justify-center font-black text-black">{n}</div>
+                           ))}
+                        </div>
+                     </div>
+                     <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1024" className="w-full h-full object-cover opacity-40" alt="Sorteio" />
+                  </div>
+                </div>
+              </div>
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 md:order-2">
+                <div className="flex items-center gap-3 text-cyan-400 mb-6">
+                  <Star className="w-8 h-8" />
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">Sorteios Automáticos</span>
+                </div>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Transparência total com a <span className="text-cyan-400">Loteria Federal</span></h3>
+                <div className="space-y-6 text-zinc-400">
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center shrink-0"><Database className="w-5 h-5 text-cyan-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Integração Federal</h4>
+                      <p>O sistema puxa automaticamente os resultados da Caixa. Sem intervenção humana, 100% de confiança.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center shrink-0"><Video className="w-5 h-5 text-cyan-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Painel para Live</h4>
+                      <p>Um painel exclusivo com contagem regressiva e efeitos visuais para você transmitir seu sorteio ao vivo.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center shrink-0"><Target className="w-5 h-5 text-cyan-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Maior e Menor Cota</h4>
+                      <p>Premie quem mais compra (Maior Cota) e até o comprador da menor cota, incentivando todos os perfis.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+
+            {/* CRM e Gestão */}
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+                <div className="flex items-center gap-3 text-purple-500 mb-6">
+                  <Users className="w-8 h-8" />
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">CRM & Growth</span>
+                </div>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Um ecossistema de <span className="text-purple-400">crescimento automático</span></h3>
+                <div className="space-y-6 text-zinc-400">
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0"><MessageSquare className="w-5 h-5 text-purple-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Cadastro Inteligente (CRM)</h4>
+                      <p>Histórico completo de cada cliente: o que comprou, quanto gastou e quais campanhas mais gosta.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0"><Share2 className="w-5 h-5 text-purple-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Automação de Grupos</h4>
+                      <p>Ao finalizar o cadastro ou compra, o cliente é direcionado automaticamente para seu WhatsApp ou Telegram VIP.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-purple-500/10 flex items-center justify-center shrink-0"><BarChart3 className="w-5 h-5 text-purple-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Ranking de Compradores</h4>
+                      <p>Gere disputa saudável entre seus clientes com um ranking público em tempo real dos maiores compradores.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+              <div className="relative group">
+                <div className="absolute inset-0 bg-purple-500/20 blur-[120px] rounded-full group-hover:bg-purple-500/30 transition-all" />
+                <div className="relative bg-[#1A1A1A] border border-white/10 rounded-[3rem] p-8 shadow-2xl">
+                  {/* Mockup do CRM */}
+                  <div className="bg-zinc-900 rounded-2xl p-6 border border-white/5">
+                     <div className="flex items-center gap-4 mb-6">
+                        <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 font-bold">JD</div>
+                        <div>
+                           <p className="text-white font-bold">João das Rifas</p>
+                           <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Cliente Platinum</p>
+                        </div>
+                     </div>
+                     <div className="grid grid-cols-2 gap-4">
+                        <div className="p-4 bg-zinc-800 rounded-xl"><p className="text-[9px] text-zinc-500 mb-1">TOTAL COMPRADO</p><p className="text-emerald-500 font-black">R$ 12.450</p></div>
+                        <div className="p-4 bg-zinc-800 rounded-xl"><p className="text-[9px] text-zinc-500 mb-1">TICKETS</p><p className="text-white font-black">1.250 un</p></div>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Customization & Support */}
+      <section className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-6xl">
+           <div className="bg-gradient-to-br from-zinc-900 to-black border border-white/5 rounded-[4rem] p-12 md:p-20 text-center relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-cyan-500 to-purple-500" />
+              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 text-zinc-400 border border-white/10 mb-8">
+                <Headphones className="w-4 h-4" />
+                <span className="text-sm font-semibold uppercase tracking-widest">Desenvolvimento Sob Demanda</span>
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black mb-8 italic">Seu sistema, <span className="text-white underline decoration-emerald-500">suas regras</span></h2>
+              <p className="text-zinc-400 text-lg md:text-xl mb-12 max-w-3xl mx-auto leading-relaxed">
+                Além de todas as funcionalidades inclusas, nossa equipe de engenharia está pronta para criar <span className="text-white font-bold">funcionalidades exclusivas</span> para o seu projeto. Personalização de template, novas artes para redes sociais e suporte técnico dedicado garantido.
+              </p>
+              <div className="grid md:grid-cols-3 gap-8 text-left mb-16">
+                 {[
+                   { icon: Layout, title: "Design Custom", desc: "Artes e layout adaptados 100% à sua identidade visual." },
+                   { icon: Layers, title: "Novos Módulos", desc: "Ideias novas? Nós transformamos em código para sua plataforma." },
+                   { icon: Headphones, title: "Treinamento VIP", desc: "Consultoria para você aprender a extrair o máximo de lucro." }
+                 ].map((item, i) => (
+                   <div key={i} className="p-6 bg-white/5 rounded-3xl border border-white/5">
+                      <item.icon className="w-8 h-8 text-emerald-500 mb-4" />
+                      <h4 className="text-white font-bold text-lg mb-2">{item.title}</h4>
+                      <p className="text-zinc-500 text-sm leading-relaxed">{item.desc}</p>
+                   </div>
+                 ))}
+              </div>
+              <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-emerald-500 text-black hover:bg-emerald-600 shadow-2xl glow-emerald">
+                Solicitar projeto personalizado
+              </Button>
+           </div>
         </div>
       </section>
 
@@ -132,13 +309,13 @@ export default function SalesPage() {
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div>
               <h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight">
-                Tecnologia de Ponta <br />
-                <span className="text-emerald-400">Sem Limites.</span>
+                Infraestrutura de <br />
+                <span className="text-emerald-400">Alta Performance.</span>
               </h2>
               <div className="space-y-6">
                 {[
-                  { title: "Escalabilidade Extrema", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números sem travamentos." },
-                  { title: "Sorteios Automáticos", desc: "Integração total com a Loteria Federal para resultados transparentes e automáticos." },
+                  { title: "Escalabilidade Sem Travamentos", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números com fluidez total." },
+                  { title: "Vídeos e Sliders", desc: "Personalize sua página de venda com vídeos do YouTube/Vimeo e sliders de imagens em alta definição." },
                   { title: "Baixa Automática PIX", desc: "O sistema detecta o pagamento via QR Code e envia os números no WhatsApp do cliente em segundos." },
                   { title: "Recuperação de Carrinho", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra." }
                 ].map((item, i) => (
@@ -160,7 +337,7 @@ export default function SalesPage() {
                  <div className="text-center">
                     <Smartphone className="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-bounce" />
                     <p className="font-bold text-xl">Interface Mobile Premiada</p>
-                    <p className="text-zinc-500 text-sm">Otimizada para máxima conversão</p>
+                    <p className="text-zinc-500 text-sm">Otimizada para máxima conversão no celular</p>
                  </div>
               </div>
             </div>
@@ -168,6 +345,66 @@ export default function SalesPage() {
         </div>
       </section>
 
+
+      {/* Multimedia & Customization Section */}
+      <section className="py-24 px-6 bg-[#0F0F0F] border-t border-white/5">
+        <div className="container mx-auto max-w-6xl">
+           <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="relative order-2 md:order-1">
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                       <div className="aspect-[3/4] bg-zinc-900 rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center relative">
+                          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1024" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Video" />
+                          <Video className="w-8 h-8 text-white relative z-10" />
+                       </div>
+                       <div className="aspect-square bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center">
+                          <Layout className="w-8 h-8 text-emerald-500" />
+                       </div>
+                    </div>
+                    <div className="space-y-4 pt-12">
+                       <div className="aspect-square bg-cyan-500/10 rounded-3xl border border-cyan-500/20 flex items-center justify-center">
+                          <Sparkles className="w-8 h-8 text-cyan-500" />
+                       </div>
+                       <div className="aspect-[3/4] bg-zinc-900 rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center relative">
+                          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1024" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Stats" />
+                          <BarChart3 className="w-8 h-8 text-white relative z-10" />
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 md:order-2">
+                <div className="flex items-center gap-3 text-emerald-500 mb-6">
+                  <Video className="w-8 h-8" />
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">Multimídia Avançada</span>
+                </div>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Impacto visual que <span className="text-emerald-400">gera vendas</span></h3>
+                <div className="space-y-6 text-zinc-400">
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Play className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Vídeos de Demonstração</h4>
+                      <p>Insira vídeos do YouTube ou Vimeo diretamente na página da rifa para explicar o prêmio e gerar desejo imediato.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Layers className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Slide de Imagens</h4>
+                      <p>Galeria inteligente que organiza suas fotos automaticamente, otimizada para carregamento ultra-rápido.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Layout className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Customização de Seções</h4>
+                      <p>Arraste e solte para mudar a ordem das seções na página: descrição, galeria, compras, ranking e muito mais.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+           </div>
+        </div>
+      </section>
 
       {/* Statistics Section */}
       <section className="py-20 bg-[#0A0A0A] border-y border-white/5">
@@ -191,8 +428,8 @@ export default function SalesPage() {
       {/* Integration Badges */}
       <section className="py-16 px-6 bg-[#0A0A0A]">
         <div className="container mx-auto max-w-4xl text-center">
-          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Integrações Oficiais</p>
-          <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale">
+          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Gateways & Confiança</p>
+          <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale hover:grayscale-0 transition-all">
              <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-2048.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain" />
              <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain" />
              <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain" />
@@ -205,7 +442,7 @@ export default function SalesPage() {
       {/* Testimonials */}
       <section id="depoimentos" className="py-24 px-6 bg-[#0A0A0A]">
         <div className="container mx-auto max-w-6xl text-center">
-          <h2 className="text-4xl font-black mb-12">Quem usa, recomenda</h2>
+          <h2 className="text-4xl font-black mb-12">O que nossos parceiros dizem</h2>
           <GoogleReviews />
         </div>
       </section>
@@ -227,15 +464,15 @@ export default function SalesPage() {
       </section>
 
       {/* Footer CTA */}
-      <section className="py-24 px-6">
+      <footer className="py-24 px-6">
         <div className="container mx-auto max-w-5xl bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 p-12 opacity-10">
             <Zap className="w-64 h-64" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-8 text-white relative z-10">Pronto para escalar?</h2>
-          <p className="text-emerald-100 text-xl mb-12 max-w-xl mx-auto relative z-10">Junte-se a mais de 500 organizadores de sucesso e comece a lucrar com sua plataforma hoje mesmo.</p>
+          <h2 className="text-4xl md:text-6xl font-black mb-8 text-white relative z-10">Sua jornada começa aqui</h2>
+          <p className="text-emerald-100 text-xl mb-12 max-w-xl mx-auto relative z-10">Escalabilidade, segurança e lucro. Tenha a melhor plataforma de rifas do Brasil hoje mesmo.</p>
           <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-white text-emerald-900 hover:bg-emerald-50 relative z-10 shadow-2xl">
-            Falar com consultor agora
+            Ativar minha plataforma AGORA
           </Button>
           <div className="mt-16 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 opacity-80 text-sm">
             <p>© 2025 {siteName}. Todos os direitos reservados.</p>
@@ -244,7 +481,8 @@ export default function SalesPage() {
             </a>
           </div>
         </div>
-      </section>
+      </footer>
     </div>
   );
 }
+
