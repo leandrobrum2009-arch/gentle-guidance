@@ -54,17 +54,9 @@ import { supabase } from "@/integrations/supabase/client";
 const queryClient = new QueryClient();
 
 const AppContent = () => {
-  const { data: settings } = useQuery({
-    queryKey: ["site-settings-app"],
-    queryFn: async () => {
-      const { data, error } = await supabase.from("site_settings").select("*");
-      if (error) throw error;
-      return data;
-    },
-  });
+  const { data: settings } = useSiteSettings();
+  const showSalesPage = settings?.show_sales_page === "true";
 
-  const showSalesPage = settings ? settings.find(s => s.key === "show_sales_page")?.value === "true" : false;
-  const isLoaded = !!settings;
 
 
   useEffect(() => {
