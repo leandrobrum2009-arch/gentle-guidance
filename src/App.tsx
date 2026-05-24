@@ -61,7 +61,9 @@ const AppContent = () => {
     },
   });
 
-  const showSalesPage = settings?.find(s => s.key === "show_sales_page")?.value === "true";
+  const showSalesPage = settings ? settings.find(s => s.key === "show_sales_page")?.value === "true" : false;
+  const isLoaded = !!settings;
+
 
   useEffect(() => {
     runContrastAudit();
