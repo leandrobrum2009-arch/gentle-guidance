@@ -137,7 +137,8 @@ export default function SalesPage() {
 
 
       {/* FAQ */}
-      <section className="py-20 px-4">
+      <section id="faq" className="py-20 px-4">
+
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-4xl font-black text-center mb-12">Perguntas Frequentes</h2>
           <Accordion type="single" collapsible className="w-full space-y-4">
