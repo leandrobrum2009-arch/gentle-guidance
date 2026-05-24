@@ -346,6 +346,66 @@ export default function SalesPage() {
       </section>
 
 
+      {/* Multimedia & Customization Section */}
+      <section className="py-24 px-6 bg-[#0F0F0F] border-t border-white/5">
+        <div className="container mx-auto max-w-6xl">
+           <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="relative order-2 md:order-1">
+                 <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-4">
+                       <div className="aspect-[3/4] bg-zinc-900 rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center relative">
+                          <img src="https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1024" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Video" />
+                          <Video className="w-8 h-8 text-white relative z-10" />
+                       </div>
+                       <div className="aspect-square bg-emerald-500/10 rounded-3xl border border-emerald-500/20 flex items-center justify-center">
+                          <Layout className="w-8 h-8 text-emerald-500" />
+                       </div>
+                    </div>
+                    <div className="space-y-4 pt-12">
+                       <div className="aspect-square bg-cyan-500/10 rounded-3xl border border-cyan-500/20 flex items-center justify-center">
+                          <Sparkles className="w-8 h-8 text-cyan-500" />
+                       </div>
+                       <div className="aspect-[3/4] bg-zinc-900 rounded-3xl border border-white/5 overflow-hidden flex items-center justify-center relative">
+                          <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1024" className="absolute inset-0 w-full h-full object-cover opacity-30" alt="Stats" />
+                          <BarChart3 className="w-8 h-8 text-white relative z-10" />
+                       </div>
+                    </div>
+                 </div>
+              </div>
+              <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} className="order-1 md:order-2">
+                <div className="flex items-center gap-3 text-emerald-500 mb-6">
+                  <Video className="w-8 h-8" />
+                  <span className="text-sm font-black uppercase tracking-[0.3em]">Multimídia Avançada</span>
+                </div>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Impacto visual que <span className="text-emerald-400">gera vendas</span></h3>
+                <div className="space-y-6 text-zinc-400">
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Play className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Vídeos de Demonstração</h4>
+                      <p>Insira vídeos do YouTube ou Vimeo diretamente na página da rifa para explicar o prêmio e gerar desejo imediato.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Layers className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Slide de Imagens</h4>
+                      <p>Galeria inteligente que organiza suas fotos automaticamente, otimizada para carregamento ultra-rápido.</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-4">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Layout className="w-5 h-5 text-emerald-500" /></div>
+                    <div>
+                      <h4 className="text-white font-bold text-xl mb-2">Customização de Seções</h4>
+                      <p>Arraste e solte para mudar a ordem das seções na página: descrição, galeria, compras, ranking e muito mais.</p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+           </div>
+        </div>
+      </section>
+
       {/* Statistics Section */}
       <section className="py-20 bg-[#0A0A0A] border-y border-white/5">
         <div className="container mx-auto px-6">
