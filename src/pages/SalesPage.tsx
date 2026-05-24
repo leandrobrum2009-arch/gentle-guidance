@@ -46,23 +46,33 @@ export default function SalesPage() {
       <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
         <motion.div 
           animate={{ 
-            scale: [1, 1.2, 1],
-            opacity: [0.1, 0.2, 0.1],
-            x: [0, 100, 0],
-            y: [0, 50, 0]
+            scale: [1, 1.4, 1],
+            opacity: [0.1, 0.3, 0.1],
+            x: [0, 200, 0],
+            y: [0, 100, 0],
+            rotate: [0, 90, 0]
           }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-emerald-500 rounded-full blur-[150px]" 
+          transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] bg-emerald-500/20 rounded-full blur-[180px]" 
         />
         <motion.div 
           animate={{ 
-            scale: [1.2, 1, 1.2],
-            opacity: [0.05, 0.15, 0.05],
-            x: [0, -100, 0],
-            y: [0, -50, 0]
+            scale: [1.3, 1, 1.3],
+            opacity: [0.05, 0.2, 0.05],
+            x: [0, -200, 0],
+            y: [0, -100, 0],
+            rotate: [0, -90, 0]
           }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-600 rounded-full blur-[150px]" 
+          transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-purple-600/20 rounded-full blur-[180px]" 
+        />
+        <motion.div 
+          animate={{ 
+            opacity: [0, 0.15, 0],
+            scale: [0.8, 1.1, 0.8]
+          }}
+          transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-cyan-500/5 rounded-full blur-[200px]" 
         />
       </div>
 
