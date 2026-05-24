@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Palette, Sparkles, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useData";
-import { Helmet } from "react-helmet-async";
+import { SEO } from "@/components/SEO";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import GoogleReviews from "@/components/GoogleReviews";
