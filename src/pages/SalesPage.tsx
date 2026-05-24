@@ -107,12 +107,12 @@ export default function SalesPage() {
           <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Funcionalidades Poderosas</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: Zap, title: "PIX Automático", desc: "Aprovação instantânea de pedidos, 24 horas por dia." },
-              { icon: Shield, title: "Segurança Total", desc: "Proteção contra fraudes e bots com auditoria completa." },
-              { icon: TrendingUp, title: "Alta Escalabilidade", desc: "Suporta milhões de números sem qualquer lentidão." },
-              { icon: Users, title: "Programa de Afiliados", desc: "Seus vendedores vendem por você automaticamente." },
-              { icon: Smartphone, title: "Mobile Otimizado", desc: "Experiência perfeita em qualquer dispositivo móvel." },
-              { icon: Palette, title: "Design Personalizável", desc: "Controle total da marca pelo painel administrativo." }
+              { icon: Zap, title: "Cotas Premiadas", desc: "Aumente o engajamento com premiações instantâneas integradas." },
+              { icon: Shield, title: "Sistema Antifraude", desc: "Proteção avançada contra robôs e verificações de segurança em tempo real." },
+              { icon: TrendingUp, title: "Desconto Progressivo", desc: "Incentive compras maiores com descontos automáticos por volume." },
+              { icon: Users, title: "Gestão de Afiliados", desc: "Painel completo para seus consultores acompanharem as vendas." },
+              { icon: Smartphone, title: "App nativo (PWA)", desc: "Instalação rápida no celular do cliente como um aplicativo." },
+              { icon: Palette, title: "Branding Completo", desc: "Personalize cada detalhe visual para combinar com sua marca." }
             ].map((f, i) => (
               <div key={i} className="group p-8 bg-[#1A1A1A] rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-all">
                 <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
