@@ -37,7 +37,9 @@ import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import ScratchCard from "@/components/ScratchCard";
 import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
+import { PaymentModal } from "@/components/PaymentModal";
 import { SEO } from "@/components/SEO";
+
 
 const CampaignDetail = () => {
   const queryClient = useQueryClient();
