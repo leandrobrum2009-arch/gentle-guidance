@@ -1440,6 +1440,7 @@ export type Database = {
       }
       release_expired_tickets: { Args: never; Returns: undefined }
       repair_order: { Args: { p_order_id: string }; Returns: Json }
+      reprocess_order_prizes: { Args: { p_order_id: string }; Returns: Json }
       reserve_tickets: {
         Args: {
           p_campaign_id: string
