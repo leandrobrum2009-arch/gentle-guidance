@@ -91,24 +91,36 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [step]);
 
   const fetchRewards = async () => {
-    // Basic rules from campaign
-    const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
-    if (spinRule) {
-      setAvailableSpins(spinRule.spins);
-    } else if (campaign.roulette_free_tickets > 0) {
-      setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
+    // Check if features are enabled in campaign
+    const isRouletteEnabled = campaign.roulette_enabled === true;
+    const isScratchEnabled = campaign.scratch_cards_enabled === true;
+
+    if (isRouletteEnabled) {
+      // Basic rules from campaign
+      const spinRule = campaign.roulette_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      if (spinRule) {
+        setAvailableSpins(spinRule.spins);
+      } else if (campaign.roulette_free_tickets > 0) {
+        setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
+      } else {
+        // Everyone who buys any quota gets at least 1 spin if enabled
+        setAvailableSpins(1);
+      }
     } else {
-      // Everyone who buys any quota gets at least 1 spin if enabled
-      setAvailableSpins(1);
+      setAvailableSpins(0);
     }
 
-    // Scratch card rule
-    const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
-    if (scratchRule) {
-      setAvailableScratchCards(scratchRule.scratches || 1);
+    if (isScratchEnabled) {
+      // Scratch card rule
+      const scratchRule = campaign.scratch_card_rules?.find((r: any) => order.quantity >= r.min_tickets);
+      if (scratchRule) {
+        setAvailableScratchCards(scratchRule.scratches || 1);
+      } else {
+        // Everyone gets at least 1 scratch card
+        setAvailableScratchCards(1);
+      }
     } else {
-      // Everyone gets at least 1 scratch card
-      setAvailableScratchCards(1);
+      setAvailableScratchCards(0);
     }
 
     const { data } = await supabase.from('roulette_prizes').select('*').eq('campaign_id', campaign.id);
@@ -358,7 +370,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       onClick={() => setStep(2)}
                       disabled={availableSpins === 0}
                     >
-                      <RotateCw className="mr-2 h-4 w-4" /> ROALETA ({availableSpins})
+                      <RotateCw className="mr-2 h-4 w-4" /> ROLETA ({availableSpins})
                     </Button>
                     <Button 
                       className="h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase italic tracking-widest text-[10px] shadow-lg"
