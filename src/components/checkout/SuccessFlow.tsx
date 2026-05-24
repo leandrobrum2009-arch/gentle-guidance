@@ -377,7 +377,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       onClick={() => setStep(5)}
                       disabled={availableScratchCards === 0}
                     >
-                      <Sparkles className="mr-2 h-4 w-4" /> RASPRA ({availableScratchCards})
+                      <Sparkles className="mr-2 h-4 w-4" /> RASPARDINHA ({availableScratchCards})
                     </Button>
                   </div>
 
