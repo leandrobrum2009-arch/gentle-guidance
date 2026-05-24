@@ -175,7 +175,7 @@ const CampaignDetail = () => {
       const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
       
       const { data: orderId, error } = await supabase.rpc('reserve_tickets', {
-        p_campaign_id: id,
+        p_campaign_id: campaignId,
         p_user_id: user.id,
         p_quantity: quantity,
         p_numbers: numbers
