@@ -198,6 +198,9 @@ const CampaignDetail = () => {
       setIsPurchasing(false);
       setCurrentOrderId(orderId);
       
+      // Update URL to maintain modal state on navigation
+      setSearchParams({ order: orderId }, { replace: true });
+      
       // Open payment modal immediately as requested
       setIsPaymentModalOpen(true);
       // We still show the success animation briefly in the background or as a flash
