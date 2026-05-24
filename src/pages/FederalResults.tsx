@@ -9,7 +9,10 @@
  import { format } from "date-fns";
  import { ptBR } from "date-fns/locale";
  
- const FederalResults = () => {
+import { SEO } from "@/components/SEO";
+
+const FederalResults = () => {
+
    const { data: results, isLoading } = useQuery({
      queryKey: ["public-federal-results"],
      queryFn: async () => {
