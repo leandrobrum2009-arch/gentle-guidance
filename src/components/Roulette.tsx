@@ -343,7 +343,7 @@ const SOUND_URLS = {
          </div>
        </div>
  
-       <div className="relative group scale-[0.6] xs:scale-[0.7] sm:scale-[0.85] md:scale-100 transition-transform duration-500">
+       <div className="relative group scale-[0.55] xs:scale-[0.65] sm:scale-[0.85] md:scale-100 transition-transform duration-500">
         {/* Metallic Outer Ring */}
         <div className="absolute -inset-6 md:-inset-10 rounded-full border-[6px] md:border-[12px] border-white/5 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
         <div className="absolute -inset-4 md:-inset-6 rounded-full border-[1px] md:border-[2px] border-white/20 pointer-events-none" />
