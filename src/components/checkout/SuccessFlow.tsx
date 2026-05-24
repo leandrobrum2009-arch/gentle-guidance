@@ -4,8 +4,9 @@ import {
   CheckCircle2, ArrowRight, Video, Users, ExternalLink, 
   Ticket, Sparkles, Clock, Star, Play, Gift, 
   ChevronRight, AlertCircle, Share2, Instagram, MessageCircle, Crown, ShoppingCart, Percent, TrendingUp,
-  Trophy, PartyPopper, Printer, User, Phone, Hash, Calendar, DollarSign
+  Trophy, PartyPopper, Printer, User, Phone, Hash, Calendar, DollarSign, RotateCw
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
