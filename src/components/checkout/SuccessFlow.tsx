@@ -260,12 +260,14 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       Verificando seus prêmios instantâneos...
                     </p>
                     <Button 
-                      variant="ghost" 
-                      className="w-full text-[9px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white"
+                      className="w-full h-12 rounded-xl bg-primary text-black font-black uppercase tracking-widest text-[10px]"
                       onClick={() => setStep(6)}
                     >
-                      Pular espera e ver comprovante
+                      Ver Detalhes da Compra <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 text-center italic">
+                      Seus números já estão garantidos!
+                    </p>
                   </div>
                 </div>
               </CardContent>
