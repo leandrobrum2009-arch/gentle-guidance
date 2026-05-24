@@ -198,7 +198,14 @@ const CampaignDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
+        <SEO 
+          title={campaign?.title} 
+          description={campaign?.subtitle || campaign?.description?.slice(0, 160)} 
+          image={campaign?.image_url}
+          type="article"
+        />
         <Header />
+
         <div className="container flex justify-center py-20">
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
