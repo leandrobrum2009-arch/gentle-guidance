@@ -151,13 +151,23 @@ export default function SalesPage() {
 
       {/* Footer CTA */}
       <section className="py-20 px-4">
-        <div className="container mx-auto bg-primary rounded-[3rem] p-12 text-center text-white">
-          <h2 className="text-4xl md:text-6xl font-black mb-8">Pronto para começar?</h2>
-          <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-black rounded-full bg-white text-primary hover:bg-gray-100">
+        <div className="container mx-auto bg-primary rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
+          <div className="absolute top-0 right-0 p-8 opacity-10">
+            <Zap className="h-40 w-40" />
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black mb-8 relative z-10">Pronto para faturar?</h2>
+          <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-black rounded-full bg-white text-primary hover:bg-gray-100 relative z-10 shadow-xl">
             Falar com Consultor no WhatsApp
           </Button>
+          <div className="mt-12 pt-8 border-t border-white/20 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
+            <p className="text-sm font-bold opacity-70">© 2024 {siteName}. Todos os direitos reservados.</p>
+            <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="text-sm font-black uppercase tracking-widest hover:underline">
+              Desenvolvido por NC Brasil
+            </a>
+          </div>
         </div>
       </section>
     </div>
   );
 }
+
