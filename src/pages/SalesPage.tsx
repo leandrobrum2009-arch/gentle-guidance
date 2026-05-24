@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, MessageSquare, Layout, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Server, Palette, FileText } from "lucide-react";
+import { CheckCircle2, MessageSquare, Layout, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Server, Palette, FileText, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useQuery } from "@tanstack/react-query";
 import { Helmet } from "react-helmet-async";
