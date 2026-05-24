@@ -57,7 +57,9 @@ const CampaignDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { data: campaign, isLoading } = useCampaign(id || "");
   const campaignId = campaign?.id || "";
+  
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: allWinners } = useWinners();
@@ -88,13 +90,13 @@ const CampaignDetail = () => {
   const [luckyNumbersStatus, setLuckyNumbersStatus] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (!id || !luckyNumbersList.length) return;
+    if (!campaignId || !luckyNumbersList.length) return;
     
     const fetchLuckyStatus = async () => {
       const { data } = await supabase
         .from('tickets')
         .select('number, status')
-        .eq('campaign_id', id)
+        .eq('campaign_id', campaignId)
         .in('number', luckyNumbersList);
         
       if (data) {
@@ -111,7 +113,7 @@ const CampaignDetail = () => {
     fetchLuckyStatus();
     const interval = setInterval(fetchLuckyStatus, 30000);
     return () => clearInterval(interval);
-  }, [id, luckyNumbersList]);
+  }, [campaignId, luckyNumbersList]);
 
   const { data: campaignRanking } = useCampaignRanking(campaignId, 10);
   const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
