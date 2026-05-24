@@ -2,14 +2,12 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Palette, Sparkles, Star } from "lucide-react";
+import { CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, Globe, ArrowRight, Play, Palette, Sparkles, Star, Lock, CreditCard, BarChart3, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useData";
 import { SEO } from "@/components/SEO";
-
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import GoogleReviews from "@/components/GoogleReviews";
-
 
 const faqs = [
   { q: "Preciso de conhecimento técnico para usar o sistema?", a: "Absolutamente não. Nosso painel é extremamente intuitivo, permitindo que qualquer pessoa gerencie rifas, banners e financeiro com poucos cliques." },
@@ -26,12 +24,10 @@ const faqs = [
 
 export default function SalesPage() {
   const navigate = useNavigate();
-
   const { data: settings } = useSiteSettings();
   const siteName = settings?.site_name || "Plataforma de Rifas";
   const mainKeyword = settings?.sales_page_keywords?.split(",")?.[0]?.trim() || "sistema para rifas online";
   const supportWhatsapp = settings?.sales_page_whatsapp || settings?.support_whatsapp || "";
-
 
   const handleWhatsApp = () => {
     if (supportWhatsapp) {
@@ -40,115 +36,190 @@ export default function SalesPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground font-sans antialiased overflow-x-hidden">
+    <div className="min-h-screen bg-[#0A0A0A] text-white font-sans antialiased overflow-x-hidden selection:bg-emerald-500 selection:text-white">
       <SEO 
         title={`O Melhor ${mainKeyword} - Lucrativo e Completo`}
         description={`Tenha agora o seu próprio ${mainKeyword}. Script completo com painel administrativo, integração de pagamentos e sistema de afiliados.`}
         keywords={settings?.sales_page_keywords}
       />
 
-
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="container mx-auto px-4 h-20 flex items-center justify-between">
+      {/* Navbar */}
+      <nav className="fixed top-0 w-full z-50 bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-white/10">
+        <div className="container mx-auto px-6 h-20 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg shadow-primary/20">
-              <Zap className="h-6 w-6" />
+            <div className="w-10 h-10 bg-emerald-500 rounded-xl flex items-center justify-center">
+              <Zap className="h-6 w-6 text-black fill-current" />
             </div>
-            <span className="text-2xl font-black tracking-tighter italic uppercase">{siteName}</span>
+            <span className="text-xl font-bold tracking-tight">{siteName}</span>
           </div>
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#funcionalidades" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Funcionalidades</a>
-            <a href="#depoimentos" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">Depoimentos</a>
-            <a href="#faq" className="text-sm font-bold uppercase tracking-widest hover:text-primary transition-colors">FAQ</a>
-            <Button onClick={handleWhatsApp} className="rounded-full px-6 font-bold shadow-lg shadow-primary/20">
-              Começar Agora
-            </Button>
+          <div className="hidden md:flex items-center gap-6">
+            <a href="#funcionalidades" className="text-sm font-medium hover:text-emerald-400 transition-colors">Funcionalidades</a>
+            <a href="#depoimentos" className="text-sm font-medium hover:text-emerald-400 transition-colors">Depoimentos</a>
+            <Button variant="ghost" className="text-sm font-medium" onClick={() => navigate("/campanhas")}>Demonstração</Button>
+            <Button onClick={handleWhatsApp} className="rounded-full px-6 bg-emerald-500 hover:bg-emerald-600 text-black font-bold">Começar Agora</Button>
           </div>
         </div>
-      </header>
-
+      </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 px-4">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-primary/20 via-background to-background" />
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="container mx-auto text-center relative z-10"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary font-bold text-sm mb-6 border border-primary/20">
-            <Sparkles className="h-4 w-4" />
-            <span>A plataforma número 1 do Brasil</span>
-          </div>
-          <h1 className="text-5xl md:text-8xl font-black tracking-tight mb-8">
+      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-emerald-900/20 via-[#0A0A0A] to-[#0A0A0A]" />
+        <div className="container mx-auto max-w-5xl text-center relative z-10">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-8"
+          >
+            <Star className="w-4 h-4 fill-emerald-400" />
+            <span className="text-sm font-semibold">Plataforma nº 1 em conversão</span>
+          </motion.div>
+          <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">
             Lance seu próprio <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-emerald-500 to-primary">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-400">
               {mainKeyword}
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-2xl mx-auto mb-12">
-            Transforme seus sonhos em realidade com uma plataforma profissional, segura e pronta para escalar suas vendas.
+          <p className="text-xl text-zinc-400 mb-12 max-w-2xl mx-auto">
+            Crie um site de rifas profissional, veloz e que converte visitantes em clientes em minutos. Pagamentos automáticos, gestão de cotas e sistema antifraude.
           </p>
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4">
-            <Button size="lg" onClick={handleWhatsApp} className="h-16 px-10 text-lg font-bold rounded-full bg-primary hover:bg-primary/90">
-              Quero Minha Plataforma
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button size="lg" onClick={handleWhatsApp} className="h-14 px-8 text-lg rounded-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold">
+              Criar meu site agora
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-16 px-10 text-lg font-bold rounded-full border-2">
-              Ver Demonstração
+            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-14 px-8 text-lg rounded-full border-zinc-800 hover:bg-zinc-800">
+              Ver demonstração <ChevronRight className="ml-2 w-4 h-4" />
             </Button>
           </div>
-        </motion.div>
+          
+          {/* Trust Badges */}
+          <div className="mt-16 flex flex-wrap items-center justify-center gap-8 opacity-50 grayscale hover:grayscale-0 transition-all">
+            <div className="flex items-center gap-2"><Lock className="w-5 h-5" /> Ambiente Seguro</div>
+            <div className="flex items-center gap-2"><CreditCard className="w-5 h-5" /> Pagamento Rápido</div>
+            <div className="flex items-center gap-2"><BarChart3 className="w-5 h-5" /> Gestão Inteligente</div>
+            <div className="flex items-center gap-2"><CheckCircle2 className="w-5 h-5" /> Suporte 24/7</div>
+          </div>
+        </div>
       </section>
 
-      {/* Features */}
-      <section id="funcionalidades" className="py-20 px-4">
-
-        <div className="container mx-auto">
-          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Por que escolher nossa solução?</h2>
-          <div className="grid md:grid-cols-3 gap-8">
+      {/* Features Grid */}
+      <section id="funcionalidades" className="py-24 px-6 bg-[#0F0F0F]">
+        <div className="container mx-auto max-w-6xl">
+          <h2 className="text-4xl md:text-5xl font-black text-center mb-16">Funcionalidades Poderosas</h2>
+          <div className="grid md:grid-cols-3 gap-6">
             {[
-              { icon: Zap, title: "PIX Automático", desc: "Aprovação instantânea de pedidos, 24 horas por dia." },
-              { icon: Shield, title: "Segurança Total", desc: "Proteção contra fraudes e bots com auditoria completa." },
-              { icon: TrendingUp, title: "Escalabilidade", desc: "Suporta milhares de acessos simultâneos sem lentidão." },
-              { icon: Users, title: "Sistema de Afiliados", desc: "Transforme seus clientes em vendedores com comissão automática." },
-              { icon: Smartphone, title: "Mobile Friendly", desc: "Design impecável em qualquer celular ou tablet." },
-              { icon: Palette, title: "Personalização", desc: "Mude cores, banners e layout pelo painel admin." }
+              { icon: Zap, title: "Cotas Premiadas", desc: "Aumente o engajamento com premiações instantâneas integradas." },
+              { icon: Shield, title: "Sistema Antifraude", desc: "Proteção avançada contra robôs e verificações de segurança em tempo real." },
+              { icon: TrendingUp, title: "Desconto Progressivo", desc: "Incentive compras maiores com descontos automáticos por volume." },
+              { icon: Users, title: "Gestão de Afiliados", desc: "Painel completo para seus consultores acompanharem as vendas." },
+              { icon: Smartphone, title: "App nativo (PWA)", desc: "Instalação rápida no celular do cliente como um aplicativo." },
+              { icon: Palette, title: "Branding Completo", desc: "Personalize cada detalhe visual para combinar com sua marca." }
             ].map((f, i) => (
-              <motion.div 
-                key={i} 
-                whileHover={{ y: -10 }}
-                className="bg-card border border-border p-8 rounded-3xl shadow-xl shadow-primary/5 hover:border-primary/50 transition-colors"
-              >
-                <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mb-6 text-primary">
-                  <f.icon className="h-8 w-8" />
+              <div key={i} className="group p-8 bg-[#1A1A1A] rounded-3xl border border-white/5 hover:border-emerald-500/50 transition-all">
+                <div className="w-12 h-12 bg-emerald-500/10 rounded-xl flex items-center justify-center mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
+                  <f.icon className="w-6 h-6" />
                 </div>
-                <h3 className="text-2xl font-bold mb-3">{f.title}</h3>
-                <p className="text-muted-foreground">{f.desc}</p>
-              </motion.div>
+                <h3 className="text-xl font-bold mb-3">{f.title}</h3>
+                <p className="text-zinc-400 leading-relaxed">{f.desc}</p>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="depoimentos" className="bg-secondary/30 relative">
-
-        <GoogleReviews />
+      {/* Advanced Details Section */}
+      <section className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-6xl">
+          <div className="grid md:grid-cols-2 gap-16 items-center">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 leading-tight">
+                Tecnologia de Ponta <br />
+                <span className="text-emerald-400">Sem Limites.</span>
+              </h2>
+              <div className="space-y-6">
+                {[
+                  { title: "Escalabilidade Extrema", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números sem travamentos." },
+                  { title: "Sorteios Automáticos", desc: "Integração total com a Loteria Federal para resultados transparentes e automáticos." },
+                  { title: "Baixa Automática PIX", desc: "O sistema detecta o pagamento via QR Code e envia os números no WhatsApp do cliente em segundos." },
+                  { title: "Recuperação de Carrinho", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra." }
+                ].map((item, i) => (
+                  <div key={i} className="flex gap-4">
+                    <div className="mt-1">
+                      <CheckCircle2 className="w-6 h-6 text-emerald-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-xl font-bold mb-1">{item.title}</h4>
+                      <p className="text-zinc-400">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 bg-emerald-500/20 blur-[100px] rounded-full" />
+              <div className="relative bg-[#1A1A1A] border border-white/10 p-4 rounded-[2rem] shadow-2xl overflow-hidden aspect-video flex items-center justify-center">
+                 <div className="text-center">
+                    <Smartphone className="w-16 h-16 text-emerald-500 mx-auto mb-4 animate-bounce" />
+                    <p className="font-bold text-xl">Interface Mobile Premiada</p>
+                    <p className="text-zinc-500 text-sm">Otimizada para máxima conversão</p>
+                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </section>
 
 
+      {/* Statistics Section */}
+      <section className="py-20 bg-[#0A0A0A] border-y border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { label: "Vendas hoje", value: "R$ 15.280", prefix: "+" },
+              { label: "Números suportados", value: "10 Milhões", prefix: "Até" },
+              { label: "Clientes ativos", value: "1.500", prefix: "+" },
+              { label: "Segurança", value: "100%", prefix: "" }
+            ].map((s, i) => (
+              <div key={i}>
+                <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest mb-2">{s.label}</p>
+                <p className="text-3xl md:text-4xl font-black text-emerald-400">{s.prefix} {s.value}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Integration Badges */}
+      <section className="py-16 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-4xl text-center">
+          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Integrações Oficiais</p>
+          <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale">
+             <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-2048.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://logopng.com.br/logos/google-65.png" alt="Google" className="h-8 md:h-12 w-auto object-contain" />
+          </div>
+        </div>
+      </section>
+
+
+      {/* Testimonials */}
+      <section id="depoimentos" className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="text-4xl font-black mb-12">Quem usa, recomenda</h2>
+          <GoogleReviews />
+        </div>
+      </section>
+
       {/* FAQ */}
-      <section id="faq" className="py-20 px-4">
+      <section id="faq" className="py-24 px-6 bg-[#0F0F0F]">
 
         <div className="container mx-auto max-w-3xl">
-          <h2 className="text-4xl font-black text-center mb-12">Perguntas Frequentes</h2>
-          <Accordion type="single" collapsible className="w-full space-y-4">
+          <h2 className="text-4xl font-black text-center mb-12">Dúvidas Frequentes</h2>
+          <Accordion type="single" collapsible className="space-y-4">
             {faqs.map((f, i) => (
-              <AccordionItem key={i} value={`item-${i}`} className="bg-card px-6 rounded-2xl border border-border">
-                <AccordionTrigger className="text-lg font-bold">{f.q}</AccordionTrigger>
-                <AccordionContent className="text-muted-foreground text-lg leading-relaxed">{f.a}</AccordionContent>
+              <AccordionItem key={i} value={`item-${i}`} className="bg-[#1A1A1A] border-none px-6 rounded-2xl">
+                <AccordionTrigger className="text-lg font-semibold hover:no-underline">{f.q}</AccordionTrigger>
+                <AccordionContent className="text-zinc-400 leading-relaxed">{f.a}</AccordionContent>
               </AccordionItem>
             ))}
           </Accordion>
@@ -156,18 +227,19 @@ export default function SalesPage() {
       </section>
 
       {/* Footer CTA */}
-      <section className="py-20 px-4">
-        <div className="container mx-auto bg-primary rounded-[3rem] p-12 text-center text-white relative overflow-hidden shadow-2xl shadow-primary/30">
-          <div className="absolute top-0 right-0 p-8 opacity-10">
-            <Zap className="h-40 w-40" />
+      <section className="py-24 px-6">
+        <div className="container mx-auto max-w-5xl bg-gradient-to-r from-emerald-600 to-emerald-800 rounded-[3rem] p-12 md:p-20 text-center relative overflow-hidden">
+          <div className="absolute top-0 right-0 p-12 opacity-10">
+            <Zap className="w-64 h-64" />
           </div>
-          <h2 className="text-4xl md:text-6xl font-black mb-8 relative z-10">Pronto para faturar?</h2>
-          <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-black rounded-full bg-white text-primary hover:bg-gray-100 relative z-10 shadow-xl">
-            Falar com Consultor no WhatsApp
+          <h2 className="text-4xl md:text-6xl font-black mb-8 text-white relative z-10">Pronto para escalar?</h2>
+          <p className="text-emerald-100 text-xl mb-12 max-w-xl mx-auto relative z-10">Junte-se a mais de 500 organizadores de sucesso e comece a lucrar com sua plataforma hoje mesmo.</p>
+          <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-white text-emerald-900 hover:bg-emerald-50 relative z-10 shadow-2xl">
+            Falar com consultor agora
           </Button>
-          <div className="mt-12 pt-8 border-t border-white/20 relative z-10 flex flex-col md:flex-row items-center justify-between gap-6">
-            <p className="text-sm font-bold opacity-70">© 2024 {siteName}. Todos os direitos reservados.</p>
-            <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="text-sm font-black uppercase tracking-widest hover:underline">
+          <div className="mt-16 pt-8 border-t border-white/20 flex flex-col md:flex-row items-center justify-between gap-6 opacity-80 text-sm">
+            <p>© 2025 {siteName}. Todos os direitos reservados.</p>
+            <a href="https://ncbrasil.com.br" target="_blank" rel="noopener noreferrer" className="hover:underline">
               Desenvolvido por NC Brasil
             </a>
           </div>
@@ -176,4 +248,3 @@ export default function SalesPage() {
     </div>
   );
 }
-
