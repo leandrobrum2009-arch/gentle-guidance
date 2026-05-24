@@ -162,7 +162,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   };
 
   return (
-    <div className="w-full space-y-4">
+    <div className="w-full space-y-2 md:space-y-4 max-w-full overflow-hidden">
       {/* Mini Stepper */}
       <div className="flex items-center justify-center gap-2 mb-2">
         {[1, 6, 2, 5].map((s) => (
@@ -223,7 +223,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         {step === 1 && (
           <motion.div key="step1" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-8 text-center space-y-6">
+              <CardContent className="p-4 md:p-8 text-center space-y-4 md:space-y-6">
                 <motion.div 
                   initial={{ scale: 0, rotate: -180 }} 
                   animate={{ scale: 1, rotate: 0 }} 
@@ -279,7 +279,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
           <motion.div key="step6" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
               <CardContent className="p-0">
-                <div ref={detailsRef} className="p-8 space-y-8 bg-card text-card-foreground">
+                <div ref={detailsRef} className="p-4 md:p-8 space-y-4 md:space-y-8 bg-card text-card-foreground">
                   <div className="flex items-center justify-between border-b border-border pb-6">
                     <div className="space-y-1">
                       <h2 className="text-2xl font-black uppercase italic tracking-tighter">Comprovante</h2>
@@ -362,7 +362,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   </div>
                 </div>
 
-                <div className="p-8 bg-zinc-950 border-t border-white/5 space-y-4">
+                <div className="p-4 md:p-8 bg-zinc-950 border-t border-white/5 space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <Button variant="outline" className="rounded-2xl gap-2 font-bold uppercase tracking-widest text-[10px] border-white/10" onClick={handlePrint}>
                       <Printer className="h-4 w-4" /> Imprimir

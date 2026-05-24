@@ -852,10 +852,15 @@ const CampaignDetail = () => {
                 size="lg"
                 className="h-16 px-10 rounded-full font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black hover:scale-110 transition-all animate-button-flash"
                 onClick={() => {
-                  const element = document.getElementById('purchase-tabs');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
-                    // If we have a selected quantity, maybe we should highlight it?
+                  const bundles = campaign?.price_bundles || [];
+                  const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
+                  if (popularBundle) {
+                    handleBuy(popularBundle.quantity);
+                  } else {
+                    const element = document.getElementById('purchase-tabs');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
                   }
                 }}
               >
@@ -868,9 +873,15 @@ const CampaignDetail = () => {
               <Button 
                 className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all animate-button-flash text-lg"
                 onClick={() => {
-                  const element = document.getElementById('purchase-tabs');
-                  if (element) {
-                    element.scrollIntoView({ behavior: 'smooth' });
+                  const bundles = campaign?.price_bundles || [];
+                  const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
+                  if (popularBundle) {
+                    handleBuy(popularBundle.quantity);
+                  } else {
+                    const element = document.getElementById('purchase-tabs');
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth' });
+                    }
                   }
                 }}
               >

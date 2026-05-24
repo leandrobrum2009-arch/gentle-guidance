@@ -192,7 +192,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+      <DialogContent className="w-full sm:max-w-[500px] max-h-[95vh] sm:max-h-[85vh] bg-card border-border rounded-t-[40px] sm:rounded-3xl p-0 overflow-hidden flex flex-col">
         <AnimatePresence mode="wait">
           {loading || generatingPix ? (
             <motion.div 
@@ -228,13 +228,15 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
               key="paid"
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }}
-              className="p-6 overflow-y-auto max-h-[80vh]"
+              className="flex-1 overflow-y-auto no-scrollbar"
             >
-              <SuccessFlow 
-                order={order} 
-                campaign={order.campaigns} 
-                onClose={() => onOpenChange(false)} 
-              />
+              <div className="p-4 md:p-6">
+                <SuccessFlow 
+                  order={order} 
+                  campaign={order.campaigns} 
+                  onClose={() => onOpenChange(false)} 
+                />
+              </div>
             </motion.div>
           ) : status === 'expired' ? (
             <motion.div 

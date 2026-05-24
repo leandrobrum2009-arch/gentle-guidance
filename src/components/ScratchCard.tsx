@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,18 +63,15 @@ const ScratchCard = ({
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setCanvasSize({ width, height });
-    }
-  }, []);
-
-  useEffect(() => {
+  const initCanvas = useCallback(() => {
     if (canvasRef.current && canvasSize.width > 0) {
       const canvas = canvasRef.current;
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
+
+      // Clear any previous drawings
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.globalCompositeOperation = "source-over";
 
       // Fill with "scratchable" layer
       const gradient = ctx.createLinearGradient(0, 0, canvasSize.width, canvasSize.height);
@@ -97,7 +94,6 @@ const ScratchCard = ({
           ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
           ctx.globalAlpha = 1.0;
           
-          // Add "scratch here" text below logo
           ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
           ctx.font = "bold 16px Inter";
           ctx.textAlign = "center";
@@ -105,7 +101,6 @@ const ScratchCard = ({
           ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
         };
       } else {
-        // Fallback to text only
         ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
         ctx.font = "bold 20px Inter";
         ctx.textAlign = "center";
@@ -113,7 +108,6 @@ const ScratchCard = ({
         ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2);
       }
       
-      // Add decorative patterns
       ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
       ctx.lineWidth = 1;
       for (let i = 0; i < canvasSize.width; i += 20) {
@@ -124,6 +118,34 @@ const ScratchCard = ({
       }
     }
   }, [canvasSize]);
+
+  useEffect(() => {
+    initCanvas();
+  }, [canvasSize, initCanvas]);
+
+  const resetScratchCard = () => {
+    setHasStarted(false);
+    setIsScratched(false);
+    setScratchPercentage(0);
+    setIsDrawing(false);
+    setPrizeLabel("");
+    setIsWinner(false);
+    initCanvas();
+  };
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setCanvasSize({ width, height });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const { width, height } = containerRef.current.getBoundingClientRect();
+      setCanvasSize({ width, height });
+    }
+  }, []);
 
   const getMousePos = (e: React.MouseEvent | React.TouchEvent) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
@@ -366,7 +388,7 @@ const ScratchCard = ({
         {isScratched && !isProcessing && (
           <Button 
             className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group"
-            onClick={() => window.location.reload()}
+            onClick={resetScratchCard}
           >
             TENTAR NOVAMENTE <RefreshCw className="ml-2 h-4 w-4 group-hover:rotate-180 transition-transform duration-500" />
           </Button>
