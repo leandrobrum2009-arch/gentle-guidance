@@ -166,7 +166,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   };
 
   return (
-    <div className="w-full space-y-2 md:space-y-4 max-w-full overflow-y-auto no-scrollbar">
+    <div className="w-full space-y-4 max-w-full">
       {/* Mini Stepper */}
       <div className="flex items-center justify-center gap-2 mb-2">
         {[1, 6, 2, 5].map((s) => (
