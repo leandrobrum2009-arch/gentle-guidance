@@ -181,13 +181,13 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
         toast.success(data.message || "Pagamento realizado com sucesso!");
         setStatus('paid');
         // Re-fetch to get updated tickets and order info
-        await fetchOrder();
+        fetchOrder();
         onPaymentSuccess();
       } else {
         // If the error message indicates it's already paid, just move to success
         if (data.message?.toLowerCase().includes('pago') || data.message?.toLowerCase().includes('já foi processado')) {
           setStatus('paid');
-          await fetchOrder();
+          fetchOrder();
         } else {
           toast.error(data.message || "Erro ao processar pagamento");
         }
