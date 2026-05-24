@@ -126,12 +126,38 @@ export default function SalesPage() {
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section id="depoimentos" className="py-24 px-6 bg-[#0A0A0A]">
-        <div className="container mx-auto max-w-6xl">
-          <GoogleReviews />
+      {/* Statistics Section */}
+      <section className="py-20 bg-[#0A0A0A] border-y border-white/5">
+        <div className="container mx-auto px-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            {[
+              { label: "Vendas hoje", value: "R$ 15.280", prefix: "+" },
+              { label: "Números suportados", value: "10 Milhões", prefix: "Até" },
+              { label: "Clientes ativos", value: "1.500", prefix: "+" },
+              { label: "Segurança", value: "100%", prefix: "" }
+            ].map((s, i) => (
+              <div key={i}>
+                <p className="text-zinc-500 text-sm font-medium uppercase tracking-widest mb-2">{s.label}</p>
+                <p className="text-3xl md:text-4xl font-black text-emerald-400">{s.prefix} {s.value}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* Integration Badges */}
+      <section className="py-16 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-4xl text-center">
+          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Integrações Oficiais</p>
+          <div className="flex flex-wrap justify-center gap-12 opacity-60 grayscale">
+             <img src="https://logospng.org/download/mercado-pago/logo-mercado-pago-2048.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain" />
+             <img src="https://logopng.com.br/logos/google-65.png" alt="Google" className="h-8 md:h-12 w-auto object-contain" />
+          </div>
+        </div>
+      </section>
+
 
       {/* FAQ */}
       <section id="faq" className="py-24 px-6 bg-[#0F0F0F]">
