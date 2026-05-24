@@ -67,7 +67,10 @@ const SOUND_URLS = {
   };
 
   const spin = async () => {
-    if (isSpinning || prizes.length === 0) return;
+    if (isSpinning || prizes.length === 0) {
+      if (prizes.length === 0) toast.error("Nenhum prêmio configurado para esta roleta.");
+      return;
+    }
     
     if (!isSimulation && !user) {
       toast.error("Você precisa estar logado para girar a roleta!");
