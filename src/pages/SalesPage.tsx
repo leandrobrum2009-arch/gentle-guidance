@@ -159,8 +159,17 @@ export default function SalesPage() {
       </section>
 
 
+      {/* Testimonials */}
+      <section id="depoimentos" className="py-24 px-6 bg-[#0A0A0A]">
+        <div className="container mx-auto max-w-6xl text-center">
+          <h2 className="text-4xl font-black mb-12">Quem usa, recomenda</h2>
+          <GoogleReviews />
+        </div>
+      </section>
+
       {/* FAQ */}
       <section id="faq" className="py-24 px-6 bg-[#0F0F0F]">
+
         <div className="container mx-auto max-w-3xl">
           <h2 className="text-4xl font-black text-center mb-12">Dúvidas Frequentes</h2>
           <Accordion type="single" collapsible className="space-y-4">
