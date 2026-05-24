@@ -62,7 +62,11 @@ export default function AdminSettings() {
     site_keywords: "Palavras-chave (SEO)",
     site_description: "Descrição Meta (SEO)",
     supabase_url: "Supabase URL (Configuração do Sistema)",
-    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)"
+    supabase_service_role_key: "Supabase Service Role Key (Configuração do Sistema)",
+    show_sales_page: "Habilitar Página de Vendas",
+    sales_page_keywords: "Palavras-chave da Venda",
+    sales_page_type: "Tipo da Plataforma",
+    sales_page_whatsapp: "WhatsApp de Vendas"
   };
 
 
