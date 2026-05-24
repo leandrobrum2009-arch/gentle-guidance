@@ -449,15 +449,84 @@ export default function SalesPage() {
         </div>
       </section>
 
+      {/* Features Grid - Everything you need */}
+      <section id="funcionalidades" className="py-24 px-6 bg-[#0F0F0F]">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-black mb-4 italic">Funcionalidades</h2>
+            <p className="text-emerald-500 font-bold uppercase tracking-widest">Tudo o que você precisa</p>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Database, title: "Até 10 milhões de números", desc: "Suporte para sorteios massivos com alta performance." },
+              { icon: TrendingUp, title: "Desconto progressivo", desc: "Incentive compras maiores com descontos automáticos conforme o cliente compra mais números." },
+              { icon: Trophy, title: "Cotas premiadas", desc: "Defina números específicos que dão prêmios instantâneos." },
+              { icon: BarChart3, title: "Relatórios completos", desc: "Acompanhe vendas, acessos e lucros em tempo real." },
+              { icon: Users, title: "Programa de afiliados", desc: "Permita que usuários divulguem suas rifas e ganhem comissão automaticamente por cada venda gerada." },
+              { icon: Smartphone, title: "Aplicativo web (PWA)", desc: "Seu sistema instalado no celular do cliente como um App." },
+              { icon: Star, title: "Ranking de clientes", desc: "Gere competição e aumente as vendas com ranking público." },
+              { icon: Gift, title: "Caixas surpresas", desc: "Engajamento extra com abertura de prêmios misteriosos." },
+              { icon: Sparkles, title: "Raspadinhas premiadas", desc: "Sorteios instantâneos com visual de raspadinha digital." },
+              { icon: Gamepad2, title: "Roletas premiadas", desc: "Gire a sorte para ganhar descontos ou prêmios." },
+              { icon: Target, title: "Integração com Meta Ads", desc: "Pixel e API de conversão configurados para tráfego pago." },
+              { icon: Globe, title: "Google Analytics", desc: "Análise profunda do comportamento dos seus visitantes." },
+              { icon: Layers, title: "Google Tag Manager", desc: "Gestão fácil de todas as suas tags de marketing." },
+              { icon: MessageSquare, title: "Integração com WhatsApp", desc: "Envio de comprovantes e suporte via WhatsApp." },
+              { icon: Zap, title: "Integração com OneSignal", desc: "Notificações push diretamente no navegador/celular." },
+              { icon: MessageSquare, title: "Emails personalizáveis", desc: "Configure o layout dos emails enviados aos clientes." },
+              { icon: Play, title: "Sorteador automático", desc: "Realize sorteios rápidos e seguros dentro da plataforma." },
+              { icon: Trophy, title: "Maior e menor cota", desc: "Premiações especiais para o maior e menor comprador." },
+              { icon: CreditCard, title: "Múltiplos Gateways", desc: "Mercado Pago, Paggue, Pix e outros integrados." },
+              { icon: Star, title: "Sorteios exclusivos", desc: "Crie campanhas fechadas para grupos específicos." },
+              { icon: Shield, title: "Painel de revendedor", desc: "Controle total para quem vende suas cotas no físico." },
+              { icon: Palette, title: "Customização CSS e JS", desc: "Liberdade total para alterar o visual e scripts extras." },
+              { icon: Star, title: "Sistema de avaliações", desc: "Deixe seus clientes avaliarem e passarem confiança." },
+              { icon: MousePointer2, title: "Integração com Utmify", desc: "Rastreamento avançado de UTMs para suas vendas." }
+            ].map((feature, i) => (
+              <motion.div 
+                key={i} 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05 }}
+                className="p-6 bg-[#1A1A1A] border border-white/5 rounded-3xl hover:border-emerald-500/30 transition-all group"
+              >
+                <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                  <feature.icon className="w-6 h-6 text-emerald-500" />
+                </div>
+                <h4 className="text-white font-bold text-lg mb-2">{feature.title}</h4>
+                <p className="text-zinc-500 text-sm leading-relaxed">{feature.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Integration Badges */}
-      <section className="py-16 px-6 bg-[#0A0A0A]">
-        <div className="container mx-auto max-w-4xl text-center">
-          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-10">Gateways & Confiança</p>
-          <div className="flex flex-wrap justify-center gap-12 grayscale hover:grayscale-0 transition-all">
-             <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo.png" alt="Mercado Pago" className="h-8 md:h-12 w-auto object-contain brightness-200" />
-             <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-8 md:h-12 w-auto object-contain brightness-200" />
-             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-8 md:h-12 w-auto object-contain brightness-200" />
-             <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" className="h-8 md:h-12 w-auto object-contain brightness-200" />
+      <section className="py-24 px-6 bg-[#0A0A0A] relative overflow-hidden">
+        {/* Glow effect */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[300px] bg-emerald-500/10 blur-[150px] pointer-events-none" />
+        
+        <div className="container mx-auto max-w-4xl text-center relative z-10">
+          <p className="text-zinc-500 text-sm font-bold uppercase tracking-widest mb-12">Gateways & Confiança</p>
+          <div className="flex flex-wrap justify-center gap-10 md:gap-16 items-center">
+             <div className="group relative">
+               <div className="absolute inset-0 bg-blue-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+               <img src="https://logodownload.org/wp-content/uploads/2019/06/mercado-pago-logo.png" alt="Mercado Pago" className="h-10 md:h-14 w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-500" />
+             </div>
+             <div className="group relative">
+               <div className="absolute inset-0 bg-emerald-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+               <img src="https://paggue.io/wp-content/uploads/2023/11/logo-paggue-1.png" alt="Paggue" className="h-10 md:h-14 w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-500" />
+             </div>
+             <div className="group relative">
+               <div className="absolute inset-0 bg-cyan-500/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+               <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Logo_Pix.png/1200px-Logo_Pix.png" alt="PIX" className="h-10 md:h-14 w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-500" />
+             </div>
+             <div className="group relative">
+               <div className="absolute inset-0 bg-white/20 blur-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+               <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google" className="h-10 md:h-14 w-auto object-contain brightness-0 invert group-hover:brightness-100 group-hover:invert-0 transition-all duration-500" />
+             </div>
           </div>
         </div>
       </section>
