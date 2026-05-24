@@ -39,7 +39,7 @@ serve(async (req) => {
 
       const { data: order, error: orderError } = await supabaseClient
         .from("orders")
-        .select("*, campaigns(title)")
+        .select("*, campaigns(title), profiles(name, email)")
         .eq("id", orderId)
         .single()
 
@@ -88,9 +88,9 @@ serve(async (req) => {
             description: `Rifa - ${order.campaigns?.title || 'Pedido'} - ${orderId.slice(0, 8)}`,
             payment_method_id: "pix",
             payer: {
-              email: "cliente@rifapro.com",
-              first_name: "Cliente",
-              last_name: "RifaPro"
+              email: order.profiles?.email || "cliente@rifapro.com",
+              first_name: (order.profiles?.name || "Cliente").split(" ")[0],
+              last_name: (order.profiles?.name || "").split(" ").slice(1).join(" ") || "RifaPro"
             },
             external_reference: orderId,
             notification_url: `${Deno.env.get("SUPABASE_URL")}/functions/v1/pix-payment?path=webhook`
@@ -101,9 +101,7 @@ serve(async (req) => {
         
         // Handle specifically "locked" error (idempotency key match)
         if (response.status === 423) {
-           console.log(`[PIX Create] Resource already locked (MP status 423) for order ${orderId}. This usually means it was already created.`);
-           // We could try to fetch the existing payment from MP or wait for webhook
-           // For now, let's try to return what's in our DB or a descriptive error
+           console.log(`[PIX Create] Resource already locked (MP status 423) for order ${orderId}.`);
            if (order.pix_code) {
              return new Response(JSON.stringify({
                pix_code: order.pix_code,
@@ -214,7 +212,7 @@ serve(async (req) => {
     console.error("Function Error:", error.message);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
-      status: 400, // Returning 400 for general errors
+      status: 400,
     })
   }
 })
