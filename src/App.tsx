@@ -75,8 +75,9 @@ const AppContent = () => {
           <Route path="/" element={showSalesPage ? <SalesPage /> : <Index />} />
           <Route path="/demonstracao" element={<Index />} />
           <Route path="/campanhas" element={<Navigate to={showSalesPage ? "/demonstracao" : "/"} replace />} />
-          <Route path="/rifa/:id" element={<CampaignDetail />} />
-          <Route path="/rifas/:id" element={<Navigate to="/rifa/:id" replace />} />
+          <Route path="/campanha/:id" element={<CampaignDetail />} />
+          <Route path="/rifa/:id" element={<Navigate to="/campanha/:id" replace />} />
+          <Route path="/rifas/:id" element={<Navigate to="/campanha/:id" replace />} />
           <Route path="/cadastrar" element={<Register />} />
           <Route path="/entrar" element={<Login />} />
           <Route path="/ganhadores" element={<Winners />} />
