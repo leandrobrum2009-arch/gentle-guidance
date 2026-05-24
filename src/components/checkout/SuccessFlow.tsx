@@ -143,7 +143,20 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   };
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-4">
+      {/* Mini Stepper */}
+      <div className="flex items-center justify-center gap-2 mb-2">
+        {[1, 6, 2, 5].map((s) => (
+          <div 
+            key={s} 
+            className={cn(
+              "h-1.5 rounded-full transition-all duration-300",
+              step === s ? "w-8 bg-primary" : "w-2 bg-white/10"
+            )}
+          />
+        ))}
+      </div>
+
       <AnimatePresence mode="wait">
         {step === 0 && (
           <motion.div key="step0" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
@@ -214,7 +227,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   </div>
                 </div>
 
-                <div className="flex flex-col items-center gap-2">
+                <div className="flex flex-col items-center gap-4">
                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                     <motion.div 
                       initial={{ width: 0 }} 
@@ -223,9 +236,18 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       className="h-full bg-primary"
                     />
                   </div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white/30 animate-pulse">
-                    Verificando seus prêmios instantâneos...
-                  </p>
+                  <div className="space-y-3 w-full">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-white/30 animate-pulse text-center">
+                      Verificando seus prêmios instantâneos...
+                    </p>
+                    <Button 
+                      variant="ghost" 
+                      className="w-full text-[9px] font-black uppercase tracking-[0.2em] text-white/40 hover:text-white"
+                      onClick={() => setStep(6)}
+                    >
+                      Pular espera e ver comprovante
+                    </Button>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -329,16 +351,39 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                     </Button>
                   </div>
 
+                  <div className="grid grid-cols-2 gap-3">
+                    <Button 
+                      className="h-14 rounded-2xl bg-amber-500 hover:bg-amber-600 text-white font-black uppercase italic tracking-widest text-[10px] shadow-lg"
+                      onClick={() => setStep(2)}
+                      disabled={availableSpins === 0}
+                    >
+                      <RotateCw className="mr-2 h-4 w-4" /> ROALETA ({availableSpins})
+                    </Button>
+                    <Button 
+                      className="h-14 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-white font-black uppercase italic tracking-widest text-[10px] shadow-lg"
+                      onClick={() => setStep(5)}
+                      disabled={availableScratchCards === 0}
+                    >
+                      <Sparkles className="mr-2 h-4 w-4" /> RASPRA ({availableScratchCards})
+                    </Button>
+                  </div>
+
                   <Button 
-                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-lg hover:scale-[1.02] transition-transform"
+                    className="w-full h-16 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform animate-button-flash"
                     onClick={() => {
                       if (availableSpins > 0) setStep(2);
                       else if (availableScratchCards > 0) setStep(5);
-                      else setStep(3);
+                      else onClose?.();
                     }}
                   >
                     TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
+                  
+                  {onClose && (
+                    <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>
+                      Fechar Modal
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>

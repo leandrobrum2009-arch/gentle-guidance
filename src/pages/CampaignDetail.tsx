@@ -821,33 +821,34 @@ const CampaignDetail = () => {
       />
       <Footer />
       
-      {/* Sticky Mobile Purchase Bar */}
+      {/* Sticky Purchase Buttons */}
       <AnimatePresence>
-        {showStickyBar && (
-          <motion.div 
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            exit={{ y: 100 }}
-            className="fixed bottom-0 left-0 right-0 z-50 p-4 bg-background/80 backdrop-blur-lg border-t lg:hidden"
-          >
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <p className="text-[10px] font-black uppercase tracking-widest text-foreground/70">Valor cota</p>
-                <p className="text-lg font-black text-primary">R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}</p>
-              </div>
-              <Button 
-                className="flex-[2] h-12 rounded-2xl font-black uppercase shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30 animate-button-flash"
-                disabled={campaign.status !== "active"}
-                onClick={() => {
-                  const element = document.getElementById('purchase-tabs');
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center gap-3 px-6 pointer-events-none"
+        >
+          {/* Desktop "Participe Agora" Float */}
+          <div className="hidden lg:block pointer-events-auto">
+             <Button 
+                size="lg"
+                className="h-16 px-10 rounded-full font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black hover:scale-110 transition-all animate-button-flash"
+                onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                {campaign.status === "active" ? "PARTICIPAR AGORA" : "VENDAS SUSPENSAS"}
+                PARTICIPE AGORA <Zap className="ml-2 h-5 w-5 fill-current" />
               </Button>
-            </div>
-          </motion.div>
-        )}
+          </div>
+
+          {/* Mobile "Quero Participar" Float */}
+          <div className="lg:hidden w-full pointer-events-auto">
+             <Button 
+                className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all animate-button-flash text-lg"
+                onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                QUERO PARTICIPAR <Sparkles className="ml-2 h-6 w-6" />
+              </Button>
+          </div>
+        </motion.div>
       </AnimatePresence>
     </div>
   );
