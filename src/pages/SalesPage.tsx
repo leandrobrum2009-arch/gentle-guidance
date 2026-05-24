@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { 
   CheckCircle2, MessageSquare, Shield, Zap, TrendingUp, Users, Smartphone, 
   Globe, ArrowRight, Play, Palette, Sparkles, Star, Lock, CreditCard, 
   BarChart3, ChevronRight, Gift, Trophy, Gamepad2, Layout, Video, 
-  Share2, Headphones, Layers, Eye, Target, MousePointer2, Database
+  Share2, Headphones, Layers, Eye, Target, MousePointer2, Database,
+  Settings, Terminal, Bell, Mail, Search, Award
 } from "lucide-react";
 import { useSiteSettings } from "@/hooks/useData";
 import { SEO } from "@/components/SEO";
@@ -112,10 +113,10 @@ export default function SalesPage() {
             A única plataforma que une sorteios, gamificação e um CRM potente em um só lugar. Venda mais com Roleta, Raspadinha e Sorteios da Federal automáticos.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button size="lg" onClick={handleWhatsApp} className="h-14 px-8 text-lg rounded-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold">
+            <Button size="lg" onClick={handleWhatsApp} className="h-14 px-8 text-lg rounded-full bg-emerald-500 hover:bg-emerald-600 text-black font-bold shadow-2xl shadow-emerald-500/20 hover:scale-105 transition-all">
               Quero minha plataforma agora
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-14 px-8 text-lg rounded-full border-zinc-800 hover:bg-zinc-800">
+            <Button size="lg" variant="outline" onClick={() => navigate("/campanhas")} className="h-14 px-8 text-lg rounded-full border-zinc-800 hover:bg-zinc-800 backdrop-blur-sm transition-all">
               Ver demonstração <ChevronRight className="ml-2 w-4 h-4" />
             </Button>
           </div>
@@ -320,7 +321,7 @@ export default function SalesPage() {
                    </div>
                  ))}
               </div>
-              <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-emerald-500 text-black hover:bg-emerald-600 shadow-2xl glow-emerald">
+              <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-emerald-500 text-black hover:bg-emerald-600 shadow-2xl shadow-emerald-500/50 hover:scale-105 transition-all animate-pulse">
                 Solicitar projeto personalizado
               </Button>
            </div>
@@ -341,7 +342,7 @@ export default function SalesPage() {
                   { title: "Escalabilidade Sem Travamentos", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números com fluidez total." },
                   { title: "Vídeos e Sliders", desc: "Personalize sua página de venda com vídeos do YouTube/Vimeo e sliders de imagens em alta definição." },
                   { title: "Baixa Automática PIX", desc: "O sistema detecta o pagamento via QR Code e envia os números no WhatsApp do cliente em segundos." },
-                  { title: "Recuperação de Carrinho", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra." }
+                  { title: "Recuperação de Carrinho & Utmify", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra e rastreio avançado de UTM." }
                 ].map((item, i) => (
                   <div key={i} className="flex gap-4">
                     <div className="mt-1">
