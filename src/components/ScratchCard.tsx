@@ -223,6 +223,8 @@ const ScratchCard = ({
       setPrizeLabel(res.is_winner ? (res.prize?.label || "Prêmio!") : "Tente novamente");
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["user-campaign-scratches"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-scratch-card-stats"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
       setIsProcessing(false);
