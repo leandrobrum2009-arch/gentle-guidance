@@ -159,13 +159,13 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
       if (error) throw error;
       const data = response as any;
       if (data.success) {
-        toast.success(data.message);
+        toast.success("Sincronização concluída!");
         fetchRewards();
       } else {
         toast.error(data.message);
       }
     } catch (err: any) {
-      toast.error("Erro: " + err.message);
+      toast.error("Erro ao sincronizar: " + err.message);
     }
   };
 
@@ -410,7 +410,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   
                   <div className="flex flex-col gap-2">
                     <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary" onClick={handleReprocess}>
-                      Atualizar Status do Pedido
+                      Não recebeu seus prêmios? Sincronizar agora
                     </Button>
                     {onClose && (
                       <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>
