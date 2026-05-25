@@ -32,6 +32,7 @@ const ScratchCard = ({
   prizeImage, 
   isWinner: initialIsWinner, 
   onComplete, 
+  onStart, 
   cost = 0,
   potentialPrizes = [],
   isSimulation = false,
