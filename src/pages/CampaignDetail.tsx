@@ -835,6 +835,7 @@ const CampaignDetail = () => {
               isSimulation={!campaign.scratch_cards_enabled}
               cost={campaign.scratch_card_cost || 0}
               campaignId={campaign.id}
+              availableScratches={userScratchesAvailable}
             />
           </div>
         );
