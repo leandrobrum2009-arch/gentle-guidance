@@ -916,6 +916,7 @@ const CampaignDetail = () => {
               </Button>
           </div>
         </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
