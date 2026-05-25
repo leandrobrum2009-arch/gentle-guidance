@@ -219,19 +219,15 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
                                             
                                             if (uploadError) throw uploadError;
                                             
-                                            const { data: { publicUrl } } = supabase.storage
-                                              .from('payment-proofs')
-                                              .getPublicUrl(filePath);
-                                            
                                             const { error: updateError } = await supabase
                                               .from('orders')
-                                              .update({ proof_url: publicUrl })
+                                              .update({ proof_url: filePath })
                                               .eq('id', order.id);
                                             
                                             if (updateError) throw updateError;
                                             
                                             toast.success("Comprovante anexado com sucesso!");
-                                            setOrder(prev => ({ ...prev, proof_url: publicUrl }));
+                                            setOrder(prev => ({ ...prev, proof_url: filePath }));
                                           } catch (err: any) {
                                             toast.error("Erro ao anexar: " + err.message);
                                           } finally {
