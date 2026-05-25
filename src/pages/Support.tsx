@@ -7,11 +7,13 @@ import { Textarea } from "@/components/ui/textarea";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSiteSettings } from "@/hooks/useData";
+import { SEO } from "@/components/SEO";
 
 const Support = () => {
   const { data: siteSettings } = useSiteSettings();
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Suporte" description="Precisa de ajuda? Entre em contato com nossa equipe de suporte." />
       <Header />
       <div className="container py-8">
         <motion.div
