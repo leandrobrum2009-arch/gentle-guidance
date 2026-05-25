@@ -23,6 +23,7 @@ interface ScratchCardProps {
   potentialPrizes?: string[];
   isSimulation?: boolean;
   campaignId?: string;
+  availableScratches?: number;
 }
 
 const ScratchCard = ({ 
