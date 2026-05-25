@@ -10,7 +10,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMysteryBoxWins } from "@/hooks/useData";
+import { useGlobalScratchCardScratches } from "@/hooks/useData";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -39,7 +39,7 @@ const ScratchCard = ({
 }: ScratchCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: globalWins } = useMysteryBoxWins(10);
+  const { data: globalWins } = useGlobalScratchCardScratches(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
 
@@ -48,12 +48,14 @@ const ScratchCard = ({
   const [localHistory, setLocalHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
 
   const history = useMemo(() => {
-    const apiHistory = globalWins?.map(win => ({
+    if (!globalWins || !Array.isArray(globalWins)) return localHistory.slice(0, 10);
+
+    const apiHistory = globalWins.map(win => ({
       name: win.profiles?.name || "Usuário",
-      prize: win.prize_title || "Prêmio",
-      time: formatDistanceToNow(new Date(win.created_at), { addSuffix: true, locale: ptBR }),
-      isWinner: true
-    })) || [];
+      prize: win.prize_label || "Prêmio",
+      time: win.created_at ? formatDistanceToNow(new Date(win.created_at), { addSuffix: true, locale: ptBR }) : "Agora",
+      isWinner: win.is_winner
+    }));
     
     return [...localHistory, ...apiHistory].slice(0, 10);
   }, [globalWins, localHistory]);
@@ -145,12 +147,21 @@ const ScratchCard = ({
       }
     };
 
-    updateSize();
+    // Initial size update
+    const timeoutId = setTimeout(updateSize, 100);
     
-    const observer = new ResizeObserver(updateSize);
-    if (containerRef.current) observer.observe(containerRef.current);
+    const observer = new ResizeObserver(() => {
+      updateSize();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
     
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
   }, []);
 
   const getMousePos = (e: React.MouseEvent | React.TouchEvent) => {
