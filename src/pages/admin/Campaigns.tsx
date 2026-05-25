@@ -18,6 +18,17 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
+const blinkingStyle = `
+  @keyframes blink {
+    0% { opacity: 1; transform: scale(1); box-shadow: 0 0 0px rgba(245, 158, 11, 0); }
+    50% { opacity: 0.7; transform: scale(1.1); box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+    100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0px rgba(245, 158, 11, 0); }
+  }
+  .animate-blink {
+    animation: blink 1.5s infinite ease-in-out;
+  }
+`;
+
 export default function AdminCampaigns() {
   const navigate = useNavigate();
   const { data: campaigns, isLoading } = useAdminCampaigns();
