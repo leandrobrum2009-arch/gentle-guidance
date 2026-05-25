@@ -28,10 +28,28 @@ const SOUND_URLS = {
   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
 };
 
- const Roulette = ({ prizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
-    const { data: globalSpins } = useGlobalRouletteSpins(10);
-    const { data: stats } = useGlobalStats();
-   const [isSpinning, setIsSpinning] = useState(false);
+const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
+  const prizes = useMemo(() => {
+    if (!initialPrizes || initialPrizes.length === 0) {
+      return [{
+        id: 'dummy-loss',
+        campaign_id: campaign.id,
+        label: 'Tente novamente',
+        value: 0,
+        prize_type: 'none',
+        chance_percent: 100,
+        color: '#333333',
+        is_active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      } as RoulettePrize];
+    }
+    return initialPrizes;
+  }, [initialPrizes, campaign.id]);
+
+  const { data: globalSpins } = useGlobalRouletteSpins(10);
+  const { data: stats } = useGlobalStats();
+  const [isSpinning, setIsSpinning] = useState(false);
   const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
   const [wonPrize, setWonPrize] = useState<RoulettePrize | null>(null);
@@ -67,8 +85,7 @@ const SOUND_URLS = {
   };
 
   const spin = async () => {
-    if (isSpinning || prizes.length === 0) {
-      if (prizes.length === 0) toast.error("Nenhum prêmio configurado para esta roleta.");
+    if (isSpinning) {
       return;
     }
     
