@@ -17,6 +17,7 @@ const navLinks = [
   { label: "Ganhadores", href: "/ganhadores" },
   { label: "Federal", href: "/resultado-federal" },
   { label: "Comunicados", href: "/comunicados" },
+  { label: "Suporte", href: "/contato" },
 ];
 
 const Header = () => {
@@ -95,14 +96,25 @@ const Header = () => {
        <div className="container flex items-center justify-between gap-4">
          <div className="flex items-center gap-4 md:gap-8 min-w-0">
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              {siteSettings?.site_logo_url ? (
+              {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
                 <img 
                   src={siteSettings.site_logo_url} 
                   alt={siteSettings?.site_name || "Logo"} 
                   className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain" 
+                  onError={(e) => {
+                    // Fallback if image fails to load
+                    (e.target as HTMLImageElement).style.display = 'none';
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    if (parent) {
+                      const fallback = parent.querySelector('.logo-fallback');
+                      if (fallback) (fallback as HTMLElement).style.display = 'flex';
+                    }
+                  }}
                 />
-              ) : (
-                <div className="flex items-center gap-2">
+              ) : null}
+              
+              {(!siteSettings?.site_logo_url || siteSettings.site_logo_url.trim() === "") && (
+                <div className="flex items-center gap-2 logo-fallback">
                   <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
                     <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
                   </div>
@@ -128,12 +140,6 @@ const Header = () => {
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-           <Link to="/contato" className="hidden sm:block">
-             <Button variant="ghost" size="sm" className="gap-2 text-[11px] font-bold uppercase tracking-wider text-foreground/90">
-               <Activity className="h-4 w-4 text-primary" />
-               Suporte
-             </Button>
-           </Link>
           {user ? (
             <div className="flex items-center gap-3">
               <motion.div 
