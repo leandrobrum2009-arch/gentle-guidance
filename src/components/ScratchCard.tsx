@@ -168,28 +168,36 @@ const ScratchCard = ({
 
     if (!user) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
+      setIsDrawing(false);
       return;
     }
 
     setIsProcessing(true);
     try {
+      // Ensure we have a valid campaignId if possible, or try global scratch
       const { data, error } = await supabase.rpc('process_scratch_card_play', {
         p_campaign_id: campaignId || null,
-        p_cost: cost
+        p_cost: Number(cost) || 0
       });
 
-      if (error) throw error;
+      if (error) {
+        toast.error(error.message || "Erro ao processar a raspadinha");
+        // Reset state so they can try again if it was just a connection/auth issue
+        setHasStarted(false);
+        setIsDrawing(false);
+        throw error;
+      }
 
       const res = data as any;
       setIsWinner(res.is_winner);
-      setPrizeLabel(res.is_winner ? res.prize.label : "Tente novamente");
+      setPrizeLabel(res.is_winner ? (res.prize?.label || "Prêmio!") : "Tente novamente");
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
-      setIsWinner(false);
-      setPrizeLabel("Tente novamente");
-      setIsScratched(true);
+      setIsProcessing(false);
+      setHasStarted(false);
+      setIsDrawing(false);
     } finally {
       setIsProcessing(false);
     }
@@ -201,18 +209,26 @@ const ScratchCard = ({
     if (!hasStarted) {
       setHasStarted(true);
       await startScratch();
+      // If startScratch failed or is still processing, we might want to return
+      // But we can let them "start" scratching visually if we want.
+      // However, if we don't have the result yet, we don't know what's underneath.
+      // So we wait for processing to finish before allowing more scratching.
+      return;
     }
 
+    if (isProcessing) return;
+
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
 
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(x, y, 30, 0, Math.PI * 2);
+    ctx.arc(x, y, 35, 0, Math.PI * 2);
     ctx.fill();
 
-    // Calculate scratch percentage
+    // Calculate scratch percentage (optimized: only every 10 scratches or so, or debounced)
+    // For now, let's keep it simple but use willReadFrequently
     const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixels = imageData.data;
     let transparentPixels = 0;
@@ -222,7 +238,7 @@ const ScratchCard = ({
     const percentage = (transparentPixels / (pixels.length / 4)) * 100;
     setScratchPercentage(percentage);
 
-    if (percentage > 50 && !isScratched) {
+    if (percentage > 45 && !isScratched) {
       reveal();
     }
   };

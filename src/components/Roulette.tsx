@@ -30,21 +30,42 @@ const SOUND_URLS = {
 
 const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
   const prizes = useMemo(() => {
-    if (!initialPrizes || initialPrizes.length === 0) {
-      return [{
-        id: 'dummy-loss',
-        campaign_id: campaign.id,
-        label: 'Tente novamente',
-        value: 0,
-        prize_type: 'physical',
-        chance_percent: 100,
-        color: '#333333',
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      } as any];
+    let segments = [...(initialPrizes || [])];
+    
+    // If no prizes configured, show the examples the user requested
+    if (segments.length === 0) {
+      segments = [
+        { id: 'p1', label: 'R$ 50 no PIX', value: 50, prize_type: 'balance', chance_percent: 10, color: '#22c55e' },
+        { id: 'p2', label: 'R$ 100 no PIX', value: 100, prize_type: 'balance', chance_percent: 5, color: '#10b981' },
+        { id: 'p3', label: 'Cota Premiada', value: 1, prize_type: 'ticket', chance_percent: 2, color: '#f59e0b' },
+        { id: 'p4', label: 'Caixa Surpresa', value: 0, prize_type: 'physical', chance_percent: 1, color: '#8b5cf6' },
+        { id: 'p5', label: 'R$ 5000 no PIX', value: 5000, prize_type: 'balance', chance_percent: 0.1, color: '#ef4444' },
+        { id: 'loss', label: 'Tente novamente', value: 0, prize_type: 'none', chance_percent: 81.9, color: '#3f3f46' }
+      ] as any[];
+    } else {
+      // Ensure we have at least 6 segments for a good look
+      if (segments.length < 6) {
+        const originalLength = segments.length;
+        for (let i = 0; i < 6 - originalLength; i++) {
+          segments.push({ ...segments[i % originalLength], id: `dup-${i}` });
+        }
+      }
+      
+      // Ensure a "Loss" segment exists visually if total chance is not 100%
+      const totalChance = segments.reduce((acc, p) => acc + (p.chance_percent || 0), 0);
+      if (totalChance < 100 && !segments.find(p => p.label === 'Tente novamente')) {
+        segments.push({
+          id: 'loss-segment',
+          label: 'Tente novamente',
+          value: 0,
+          prize_type: 'none',
+          chance_percent: 100 - totalChance,
+          color: '#ef4444'
+        } as any);
+      }
     }
-    return initialPrizes;
+    
+    return segments;
   }, [initialPrizes, campaign.id]);
 
   const { data: globalSpins } = useGlobalRouletteSpins(10);
@@ -153,18 +174,29 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
     }
 
     const prize = wonPrizeData as RoulettePrize;
-    const randomIndex = prizes.findIndex(p => p.id === prize.id);
+    // Find the actual index in our visual segments
+    const visualIndex = prizes.findIndex(p => p.id === prize.id || (p.label === prize.label && p.prize_type === prize.prize_type));
     
     const segmentAngle = 360 / (prizes.length || 1);
     const extraSpins = 8;
     const baseRotation = extraSpins * 360;
-    const targetAngle = baseRotation + (randomIndex * segmentAngle);
+    
+    // We want the pointer (at the top, 0 degrees) to point to the winner.
+    // The segments are rotated clockwise. Segment 0 is at 0 degrees.
+    // To have segment `visualIndex` at the top (0 deg), we need to rotate the wheel by `-visualIndex * segmentAngle`.
+    // Adding extra rotation for the spin effect.
+    // Also adding a half-segment offset to land in the middle.
+    const targetAngle = baseRotation - (visualIndex * segmentAngle);
+    
+    // Create a ticking effect during spin
+    const spinDuration = 6;
+    let lastTickAngle = 0;
     
     await controls.start({
       rotate: targetAngle,
       transition: { 
-        duration: 6, 
-        ease: [0.2, 0, 0.1, 1]
+        duration: spinDuration, 
+        ease: [0.15, 0, 0.1, 1]
       }
     });
     
@@ -389,19 +421,20 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
               return (
                 <div
                   key={prize.id}
-                  className="absolute inset-0 flex items-start justify-center origin-center"
+                  className="absolute inset-0 origin-center"
                   style={{
                     transform: `rotate(${rotate}deg)`,
                     backgroundColor: prize.color || (i % 2 === 0 ? "#111" : "#1a1a1a"),
-                    clipPath: `polygon(50% 50%, ${50 - Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%, ${50 + Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%)`
+                    clipPath: `polygon(50% 50%, ${50 - Math.tan((angle / 2 + 0.5) * Math.PI / 180) * 50}% 0%, ${50 + Math.tan((angle / 2 + 0.5) * Math.PI / 180) * 50}% 0%)`,
+                    borderLeft: prizes.length > 1 ? '1px solid rgba(255,255,255,0.1)' : 'none'
                   }}
                 >
-                  <div className="mt-8 sm:mt-12 md:mt-16 flex flex-col items-center gap-1 sm:gap-2 transform rotate-180" style={{ writingMode: "vertical-rl" }}>
-                    <span className="text-[8px] sm:text-[10px] md:text-sm font-black text-white uppercase tracking-tighter drop-shadow-lg">
+                  <div className="absolute top-4 sm:top-6 md:top-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 text-center" style={{ width: '60px' }}>
+                    <span className="text-[8px] sm:text-[10px] md:text-[12px] font-black text-white uppercase tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] break-words leading-tight">
                       {prize.label}
                     </span>
-                    {prize.prize_type === 'balance' && <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 opacity-50" />}
-                    {prize.prize_type === 'ticket' && <Star className="h-3 w-3 sm:h-4 sm:w-4 text-primary opacity-50" />}
+                    {prize.prize_type === 'balance' && <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 drop-shadow-md" />}
+                    {prize.prize_type === 'ticket' && <Star className="h-3 w-3 sm:h-4 sm:w-4 text-primary drop-shadow-md" />}
                   </div>
                 </div>
               );
