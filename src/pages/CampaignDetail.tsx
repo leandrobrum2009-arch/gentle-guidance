@@ -44,14 +44,29 @@ import { SEO } from "@/components/SEO";
 const CampaignDetail = () => {
   const queryClient = useQueryClient();
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [isPurchaseVisible, setIsPurchaseVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const handleScroll = () => {
       setShowStickyBar(window.scrollY > 400);
     };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsPurchaseVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const purchaseSection = document.getElementById('purchase-tabs');
+    if (purchaseSection) observer.observe(purchaseSection);
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (purchaseSection) observer.unobserve(purchaseSection);
+    };
   }, []);
 
   const { id } = useParams<{ id: string }>();
@@ -866,7 +881,7 @@ const CampaignDetail = () => {
       
       {/* Sticky Purchase Buttons */}
       <AnimatePresence>
-        {!showStickyBar && (
+        {!isPurchaseVisible && (
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
