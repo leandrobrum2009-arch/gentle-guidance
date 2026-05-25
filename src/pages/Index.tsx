@@ -524,55 +524,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Rifas Encerradas Section */}
-          {endedCampaigns.length > 0 && (
-            <section className="container py-12 md:py-20">
-              <SectionHeading 
-                icon={Clock} 
-                title="Rifas Encerradas" 
-                subtitle="Confira o que já rolou por aqui"
-                badge="Histórico"
-              />
-              
-              {/* Visual Cards (Top 5) */}
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
-                {endedCampaigns.slice(0, 5).map((campaign, i) => (
-                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                ))}
-              </div>
-
-              {/* List Format (Remaining) */}
-              {endedCampaigns.length > 5 && (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {endedCampaigns.slice(5).map((campaign) => (
-                    <Link 
-                      key={campaign.id} 
-                      to={`/campanha/${campaign.slug}`} 
-                      className="flex items-center gap-3 p-3 rounded-2xl bg-card/50 border border-border hover:border-primary/50 transition-all group"
-                    >
-                      <div className="h-10 w-10 rounded-lg overflow-hidden flex-shrink-0 border border-border">
-                        <img 
-                          src={campaign.image_url || "/placeholder.svg"} 
-                          alt={campaign.title} 
-                          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-[10px] font-black uppercase tracking-tight truncate leading-none mb-1">{campaign.title}</h4>
-                        <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className="h-4 px-1.5 text-[7px] font-black uppercase tracking-widest border-muted-foreground/30 text-muted-foreground">ENCERRADO</Badge>
-                          <span className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest">
-                            {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : ''}
-                          </span>
-                        </div>
-                      </div>
-                      <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
 
           {/* Ganhadores Cinematic Section - Hall da Fama */}
           <section className="container py-24 md:py-32 relative">
