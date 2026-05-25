@@ -17,6 +17,7 @@ import { DrawCeremony } from "@/components/DrawCeremony";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 
 const blinkingStyle = `
   @keyframes blink {
