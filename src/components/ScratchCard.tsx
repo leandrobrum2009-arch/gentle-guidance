@@ -10,7 +10,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { useQueryClient } from "@tanstack/react-query";
-import { useMysteryBoxWins } from "@/hooks/useData";
+import { useGlobalScratchCardScratches } from "@/hooks/useData";
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
