@@ -252,6 +252,13 @@ export default function AdminCampaigns() {
                  {filteredCampaigns.map((c) => {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
+                   
+                   // Check if draw is needed
+                   const now = new Date();
+                   const endDate = c.timer_end_date ? new Date(c.timer_end_date) : null;
+                   const needsDraw = (endDate && endDate < now && !c.draw_number) || (c.status === 'completed' && !c.draw_number);
+                   const winner = c.winners?.[0];
+
                    return (
                     <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                       <TableCell className="pl-6">
@@ -275,7 +282,7 @@ export default function AdminCampaigns() {
                              <Badge variant="outline" className="text-[8px] py-0 h-4 border-amber-500/30 text-amber-400 bg-amber-500/5 uppercase tracking-tighter">Manual</Badge>
                            )}
                            {c.federal_lottery_draw && (
-                                <Badge variant="outline" className="text-[8px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Federal</Badge>
+                                 <Badge variant="outline" className="text-[8px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Federal</Badge>
                            )}
                          </div>
                          </div>
@@ -300,6 +307,16 @@ export default function AdminCampaigns() {
                          </div>
                          <Progress value={progress} className="h-1.5 bg-secondary/20" />
                        </div>
+                     </TableCell>
+                     <TableCell className="py-4 text-center">
+                       {c.draw_number ? (
+                         <div className="flex flex-col items-center">
+                           <Badge className="bg-primary/20 text-primary border-primary/30 font-black mb-1">{c.draw_number}</Badge>
+                           {winner && <span className="text-[9px] text-muted-foreground uppercase font-bold truncate max-w-[80px]">{winner.winner_name}</span>}
+                         </div>
+                       ) : (
+                         <span className="text-[10px] text-muted-foreground uppercase font-bold italic">Aguardando</span>
+                       )}
                      </TableCell>
                      <TableCell className="text-right pr-6 py-4">
                        <div className="flex items-center justify-end gap-1">
