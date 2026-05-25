@@ -158,15 +158,16 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
       const { data: response, error } = await supabase.rpc('reprocess_order_prizes', { p_order_id: order.id });
       if (error) throw error;
       const data = response as any;
-                     toast.success("Sincronização concluída!");
-                     fetchRewards();
-                   } else {
-                     toast.error(data.message);
-                   }
-                 } catch (err: any) {
-                   toast.error("Erro ao sincronizar: " + err.message);
-                 }
-               };
+      if (data.success) {
+        toast.success("Sincronização concluída!");
+        fetchRewards();
+      } else {
+        toast.error(data.message);
+      }
+    } catch (err: any) {
+      toast.error("Erro ao sincronizar: " + err.message);
+    }
+  };
 
   return (
     <div className="w-full space-y-2 md:space-y-4 max-w-full">
