@@ -34,7 +34,8 @@ const ScratchCard = ({
   cost = 0,
   potentialPrizes = [],
   isSimulation = false,
-  campaignId
+  campaignId,
+  availableScratches = 0
 }: ScratchCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
