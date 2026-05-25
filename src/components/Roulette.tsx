@@ -530,7 +530,6 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
                 <span className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">
                   {wonPrize.label}
                 </span>
-                </span>
               </div>
 
               <div className="flex items-center gap-2 text-white/40 text-xs font-bold uppercase tracking-widest">

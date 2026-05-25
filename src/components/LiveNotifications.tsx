@@ -24,7 +24,7 @@ const LiveNotifications = () => {
   const [isShowing, setIsShowing] = useState(false);
   const [isReady, setIsReady] = useState(false);
 
-  // Initial delay of 20 seconds
+  // Initial delay of 20 seconds as requested by the user
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsReady(true);
