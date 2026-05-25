@@ -20,17 +20,49 @@ interface LiveNotification {
 
 const LiveNotifications = () => {
   const [notifications, setNotifications] = useState<LiveNotification[]>([]);
+  const [queue, setQueue] = useState<Omit<LiveNotification, 'id' | 'timestamp'>[]>([]);
+  const [isShowing, setIsShowing] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
-  const addNotification = (notif: Omit<LiveNotification, 'id' | 'timestamp'>) => {
-    const id = Math.random().toString(36).substr(2, 9);
-    const newNotif = { ...notif, id, timestamp: new Date() };
-    setNotifications(prev => [...prev, newNotif]);
-    
-    // Auto remove after 5 seconds
-    setTimeout(() => {
-      setNotifications(prev => prev.filter(n => n.id !== id));
-    }, 5000);
+  // Initial delay of 20 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, 20000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  const addToQueue = (notif: Omit<LiveNotification, 'id' | 'timestamp'>) => {
+    setQueue(prev => [...prev, notif]);
   };
+
+  // Process queue
+  useEffect(() => {
+    if (!isReady || isShowing || queue.length === 0) return;
+
+    const showNext = () => {
+      setIsShowing(true);
+      const nextNotif = queue[0];
+      setQueue(prev => prev.slice(1));
+      
+      const id = Math.random().toString(36).substr(2, 9);
+      const newNotif = { ...nextNotif, id, timestamp: new Date() };
+      
+      setNotifications([newNotif]); // Only one at a time
+
+      // Hide after 6 seconds
+      setTimeout(() => {
+        setNotifications([]);
+        // Wait another 15-30 seconds before allowing the next one (sporadic)
+        const delay = 15000 + Math.random() * 15000;
+        setTimeout(() => {
+          setIsShowing(false);
+        }, delay);
+      }, 6000);
+    };
+
+    showNext();
+  }, [queue, isShowing, isReady]);
 
   const fetchInitialData = async () => {
     // Get last 3 paid orders
@@ -53,18 +85,16 @@ const LiveNotifications = () => {
       ...(recentWinners?.map(w => ({ ...w, type: 'winner' as const })) || [])
     ].sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
 
-    allRecent.forEach((item, index) => {
-      setTimeout(() => {
-        addNotification({
-          type: item.type,
-          userName: (item as any).profiles?.name || 'Alguém',
-          avatarUrl: (item as any).profiles?.avatar_url,
-          message: item.type === 'purchase' 
-            ? `acabou de comprar ${(item as any).quantity} cotas` 
-            : `ganhou ${(item as any).prize_description} na cota ${(item as any).ticket_number}`,
-          campaignTitle: (item as any).campaigns?.title,
-        });
-      }, index * 3000);
+    allRecent.forEach((item) => {
+      addToQueue({
+        type: item.type,
+        userName: (item as any).profiles?.name || 'Alguém',
+        avatarUrl: (item as any).profiles?.avatar_url,
+        message: item.type === 'purchase' 
+          ? `acabou de comprar ${(item as any).quantity} cotas` 
+          : `ganhou ${(item as any).prize_description} na cota ${(item as any).ticket_number}`,
+        campaignTitle: (item as any).campaigns?.title,
+      });
     });
   };
 
@@ -91,7 +121,7 @@ const LiveNotifications = () => {
             .single();
 
           if (profile && campaign) {
-            addNotification({
+            addToQueue({
               type: 'purchase',
               userName: profile.name || 'Alguém',
               avatarUrl: profile.avatar_url,
@@ -123,7 +153,7 @@ const LiveNotifications = () => {
             .single();
 
           if (profile && campaign) {
-            addNotification({
+            addToQueue({
               type: 'winner',
               userName: profile.name || 'Alguém',
               avatarUrl: profile.avatar_url,
