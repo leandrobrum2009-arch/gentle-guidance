@@ -471,32 +471,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
         </div>
       </div>
 
-       {/* Multipliers & Controls */}
-       <div className="text-center space-y-4 md:space-y-8 z-10 w-full px-6 pb-4">
-         <div className="space-y-2 md:space-y-4">
-            <div className="flex flex-col items-center gap-2 md:gap-3">
-             <span className="text-[10px] font-black text-white/40 uppercase tracking-[0.2em]">Escolha seu Multiplicador</span>
-             <div className="flex items-center gap-2 bg-white/5 p-1 rounded-2xl border border-white/10 backdrop-blur-md">
-               {[1, 2, 5, 10].map((m) => (
-                 <button
-                   key={m}
-                   onClick={() => !isSpinning && setMultiplier(m)}
-                   disabled={isSpinning || m > (campaign.roulette_multiplier_max || 10)}
-                   className={cn(
-                     "px-5 py-2 rounded-xl text-sm font-black transition-all duration-300 uppercase italic tracking-tighter",
-                     multiplier === m 
-                      ? "bg-primary text-white shadow-[0_0_20px_rgba(var(--primary),0.4)] scale-110" 
-                      : "text-white/40 hover:text-white/70 hover:bg-white/5"
-                   )}
-                 >
-                   {m}x
-                 </button>
-               ))}
-             </div>
-           </div>
-        </div>
-        
-        <div className="flex flex-col items-center gap-4">
+        <div className="flex flex-col items-center gap-4 z-10 w-full px-6 pb-4">
           <Button
             onClick={spin}
             disabled={isSpinning}
@@ -519,11 +494,10 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
              <span className="text-xs font-bold uppercase tracking-widest">Gire e ganhe prêmios instantâneos</span>
           </div>
         </div>
-      </div>
 
       {/* Win Modal / Animation */}
       <AnimatePresence>
-        {showWinAnimation && wonPrize && (
+        {showWinAnimation && wonPrize && (wonPrize.prize_type as any) !== 'none' && (
           <motion.div
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -555,7 +529,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
               <div className="bg-white/5 px-8 py-4 rounded-3xl border border-white/10 backdrop-blur-xl">
                 <span className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter">
                   {wonPrize.label}
-                  {multiplier > 1 && <span className="text-primary ml-2">x{multiplier}</span>}
+                </span>
                 </span>
               </div>
 
