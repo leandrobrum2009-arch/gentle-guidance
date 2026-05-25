@@ -108,39 +108,15 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
     console.log("Checking rewards:", { isRouletteEnabled, isScratchEnabled, quantity: order.quantity });
 
     if (isRouletteEnabled) {
-      // Basic rules from campaign
-      const rules = Array.isArray(campaign.roulette_rules) ? campaign.roulette_rules : [];
-      const spinRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
-      
-      if (spinRule) {
-        setAvailableSpins(Number(spinRule.spins));
-      } else if (campaign.roulette_free_tickets > 0) {
-        setAvailableSpins(Math.max(1, Math.floor(order.quantity / campaign.roulette_free_tickets)));
-      } else {
-        // Everyone who buys any quota gets at least 1 spin if enabled
-        setAvailableSpins(1);
-      }
-      
-      // Ensure it's at least 1 if enabled
-      setAvailableSpins(prev => Math.max(prev, 1));
+      // The rule is now: 1 free spin per paid order
+      setAvailableSpins(1);
     } else {
       setAvailableSpins(0);
     }
 
     if (isScratchEnabled) {
-      // Scratch card rule
-      const rules = Array.isArray(campaign.scratch_card_rules) ? campaign.scratch_card_rules : [];
-      const scratchRule = rules.find((r: any) => order.quantity >= Number(r.min_tickets));
-      
-      if (scratchRule) {
-        setAvailableScratchCards(Number(scratchRule.scratches) || 1);
-      } else {
-        // Everyone gets at least 1 scratch card
-        setAvailableScratchCards(1);
-      }
-
-      // Ensure it's at least 1 if enabled
-      setAvailableScratchCards(prev => Math.max(prev, 1));
+      // The rule is now: 1 free scratch per paid order
+      setAvailableScratchCards(1);
     } else {
       setAvailableScratchCards(0);
     }
@@ -429,12 +405,12 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       else onClose?.();
                     }}
                   >
-                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
+                    GIRAR ROLETA AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
                   
                   <div className="flex flex-col gap-2">
                     <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary" onClick={handleReprocess}>
-                      Verificar Novos Prêmios
+                      Atualizar Status do Pedido
                     </Button>
                     {onClose && (
                       <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>

@@ -288,16 +288,16 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
                       {campaign.roulette_rules.map((rule, i) => (
                         <p key={i} className="text-sm text-white/70 leading-relaxed flex items-center gap-2">
                           <Zap className="h-3 w-3 text-primary" />
-                          Compre acima de <span className="text-white font-bold">{rule.min_tickets} cotas</span> e ganhe <span className="text-white font-bold">{rule.spins} {rule.spins > 1 ? 'giros' : 'giro'}</span>.
+                          Ganhe <span className="text-white font-bold">{rule.spins} {rule.spins > 1 ? 'giros' : 'giro'}</span> ao participar!
                         </p>
                       ))}
                     </div>
                   ) : (
                     <p className="text-sm text-white/70 leading-relaxed">
-                      Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente a cada <span className="text-white font-bold">{campaign.roulette_free_tickets} cotas pagas</span> nesta campanha.
+                      Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente ao realizar um pedido nesta campanha.
                     </p>
                   )}
-                  <p className="text-[11px] text-white/40 italic mt-2">Os giros grátis são consumidos prioritariamente antes do seu saldo.</p>
+                  <p className="text-[11px] text-white/40 italic mt-2">Os giros são liberados após a confirmação do pagamento.</p>
                 </div>
                 
                 <div className="space-y-3">
@@ -350,7 +350,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
                       <Info className="h-3 w-3 text-white/20 hover:text-white/40" />
                     </TooltipTrigger>
                     <TooltipContent className="bg-zinc-900 border-white/10 text-[10px] max-w-[200px]">
-                      <p>Compre cotas para ganhar giros grátis nesta campanha.</p>
+                      <p>Participe de qualquer campanha para ganhar giros grátis.</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
@@ -362,21 +362,12 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
             </div>
           </div>
 
-          {campaign.roulette_rules && campaign.roulette_rules.length > 0 ? (
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
-              <Zap className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                Compre e ganhe giros grátis!
-              </span>
-            </div>
-          ) : campaign.roulette_free_tickets > 0 && (
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
-              <Zap className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                Promoção: 1 Giro a cada {campaign.roulette_free_tickets} Cotas!
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
+            <Zap className="h-3 w-3 text-primary" />
+            <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+              Participe e Ganhe Giros Grátis!
+            </span>
+          </div>
          </div>
        </div>
  
