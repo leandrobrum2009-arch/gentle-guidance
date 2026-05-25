@@ -90,6 +90,15 @@ const ScratchCard = ({
 
       // Add logo if available
       const logoUrl = localStorage.getItem('site_logo') || "";
+      
+      const drawText = () => {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
+        ctx.font = "bold 16px Inter";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
+      };
+
       if (logoUrl) {
         const logoImg = new Image();
         logoImg.crossOrigin = "anonymous";
@@ -99,19 +108,13 @@ const ScratchCard = ({
           ctx.globalAlpha = 0.3;
           ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
           ctx.globalAlpha = 1.0;
-          
-          ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-          ctx.font = "bold 16px Inter";
-          ctx.textAlign = "center";
-          ctx.textBaseline = "middle";
-          ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
+          drawText();
+        };
+        logoImg.onerror = () => {
+          drawText();
         };
       } else {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.2)";
-        ctx.font = "bold 20px Inter";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2);
+        drawText();
       }
       
       ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
@@ -387,9 +390,11 @@ const ScratchCard = ({
           </AnimatePresence>
           
           {isProcessing && (
-            <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-              <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Processando Sorte...</p>
+            <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
+              <div className="bg-zinc-900/90 p-6 rounded-3xl border border-white/10 shadow-2xl flex flex-col items-center gap-3 scale-90 md:scale-100">
+                <Loader2 className="h-10 w-10 animate-spin text-primary" />
+                <p className="text-[10px] font-bold text-white uppercase tracking-widest">Validando Sorte...</p>
+              </div>
             </div>
           )}
 
@@ -400,24 +405,23 @@ const ScratchCard = ({
           )}
         </div>
 
-        {!isProcessing && (
-          <canvas
-            ref={canvasRef}
-            width={canvasSize.width}
-            height={canvasSize.height}
-            onMouseDown={handleMouseDown}
-            onMouseMove={handleMouseMove}
-            onMouseUp={handleMouseUp}
-            onMouseLeave={handleMouseUp}
-            onTouchStart={handleMouseDown}
-            onTouchMove={handleMouseMove}
-            onTouchEnd={handleMouseUp}
-            className={cn(
-              "absolute inset-0 z-20 transition-opacity duration-1000",
-              isScratched && "opacity-0 pointer-events-none"
-            )}
-          />
-        )}
+        <canvas
+          ref={canvasRef}
+          width={canvasSize.width}
+          height={canvasSize.height}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseUp}
+          className={cn(
+            "absolute inset-0 z-20 transition-opacity duration-1000",
+            (isScratched) && "opacity-0 pointer-events-none",
+            isProcessing && "cursor-wait"
+          )}
+        />
         
         {!isScratched && !isProcessing && (
           <div className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity">
