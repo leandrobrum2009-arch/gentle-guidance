@@ -1066,13 +1066,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "scratch_card_scratches_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "scratch_card_scratches_user_id_profiles_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -1435,7 +1428,7 @@ export type Database = {
         Returns: Json
       }
       process_scratch_card_play: {
-        Args: { p_campaign_id?: string; p_cost?: number }
+        Args: { p_campaign_id: string; p_cost: number }
         Returns: Json
       }
       release_expired_tickets: { Args: never; Returns: undefined }
