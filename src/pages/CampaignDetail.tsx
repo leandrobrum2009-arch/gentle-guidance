@@ -181,6 +181,11 @@ const CampaignDetail = () => {
     return userSpins.filter((s: any) => !s.prize_label).length;
   }, [userSpins]);
 
+  const userScratchesAvailable = useMemo(() => {
+    if (!userScratches) return 0;
+    return userScratches.filter((s: any) => !s.prize_label).length;
+  }, [userScratches]);
+
   const progress = useMemo(() => {
     if (!campaign) return 0;
     if (campaign.sales_goal && campaign.sales_goal > 0) {
