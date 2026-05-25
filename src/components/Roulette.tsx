@@ -73,6 +73,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
   const [isSpinning, setIsSpinning] = useState(false);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
   const [wonPrize, setWonPrize] = useState<RoulettePrize | null>(null);
+  const [currentRotation, setCurrentRotation] = useState(0);
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const controls = useAnimation();
