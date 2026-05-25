@@ -816,13 +816,13 @@ const CampaignDetail = () => {
         );
 
       case 'scratch_footer':
-        return (campaign.scratch_cards_enabled || sectionsOrder.includes('scratch_footer')) && (
+        return (campaign?.scratch_cards_enabled || sectionsOrder.includes('scratch_footer')) && (
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
               <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">
-                {campaign.scratch_cards_enabled ? "Tente ganhar prêmios reais raspando agora!" : "Experimente nossa nova raspadinha digital e sinta a emoção!"}
+                {campaign?.scratch_cards_enabled ? "Tente ganhar prêmios reais raspando agora!" : "Experimente nossa nova raspadinha digital e sinta a emoção!"}
               </p>
             </div>
             <ScratchCard 
@@ -832,9 +832,9 @@ const CampaignDetail = () => {
                 "R$ 50,00 no PIX",
                 "Giro Grátis na Roleta"
               ]}
-              isSimulation={!campaign.scratch_cards_enabled}
-              cost={campaign.scratch_card_cost || 0}
-              campaignId={campaign.id}
+              isSimulation={!campaign?.scratch_cards_enabled}
+              cost={campaign?.scratch_card_cost || 0}
+              campaignId={campaign?.id}
               availableScratches={userScratchesAvailable}
             />
           </div>
