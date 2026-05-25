@@ -41,7 +41,6 @@ import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
-import { SEO } from "@/components/SEO";
 
  export default function Account() {
    const { user, signOut } = useAuth();
