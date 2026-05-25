@@ -155,30 +155,11 @@ const Index = () => {
 
   const activeCampaigns = useMemo(() => {
     if (!campaigns) return [];
-    const now = new Date().getTime();
     return campaigns
-      .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
+      .filter(c => c.status === "active")
       .sort((a, b) => {
-        // First priority: Featured
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        
-        // Second priority: Draw date
-        if (a.draw_date && b.draw_date) {
-          const aTime = new Date(a.draw_date.replace(' ', 'T')).getTime();
-          const bTime = new Date(b.draw_date.replace(' ', 'T')).getTime();
-          const aIsPast = aTime < now;
-          const bIsPast = bTime < now;
-
-          if (aIsPast && !bIsPast) return 1;
-          if (!aIsPast && bIsPast) return -1;
-          
-          return aTime - bTime;
-        }
-        if (a.draw_date) return -1;
-        if (b.draw_date) return 1;
-        
-        // Third priority: Most recent
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
   }, [campaigns]);
@@ -186,14 +167,14 @@ const Index = () => {
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     return campaigns
-      .filter(c => c.status === "completed" || c.status === "finished")
+      .filter(c => (c.status === "completed" || c.status === "finished") && c.draw_number)
       .sort((a, b) => {
-        // Sort by draw date (most recent first)
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
         }
-        return 0;
-      });
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      })
+      .slice(0, 4);
   }, [campaigns]);
 
   const featuredCampaign = activeCampaigns[0];
