@@ -459,8 +459,8 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Raspadinha da Sorte</h2>
                <div className="flex gap-2">
-                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
-                   Ver Detalhes
+                  <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)} disabled={isGameInProgress}>
+                    Ver Detalhes
                  </Button>
                  <Badge className="bg-primary text-black font-bold h-7">{availableScratchCards} restantes</Badge>
                </div>
