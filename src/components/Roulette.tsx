@@ -362,21 +362,12 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
             </div>
           </div>
 
-          {campaign.roulette_rules && campaign.roulette_rules.length > 0 ? (
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
-              <Zap className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                Compre e ganhe giros grátis!
-              </span>
-            </div>
-          ) : campaign.roulette_free_tickets > 0 && (
-            <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
-              <Zap className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-black text-primary uppercase tracking-widest">
-                Promoção: 1 Giro a cada {campaign.roulette_free_tickets} Cotas!
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 animate-pulse">
+            <Zap className="h-3 w-3 text-primary" />
+            <span className="text-[10px] font-black text-primary uppercase tracking-widest">
+              Participe e Ganhe Giros Grátis!
+            </span>
+          </div>
          </div>
        </div>
  
