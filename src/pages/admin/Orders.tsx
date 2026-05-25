@@ -252,7 +252,22 @@ export default function AdminOrders() {
                                 {o.proof_url && (
                                   <DropdownMenuItem 
                                     className="flex items-center gap-3 focus:bg-emerald-500/10 focus:text-emerald-600 cursor-pointer py-3 rounded-lg font-bold text-xs"
-                                    onClick={() => window.open(o.proof_url, '_blank')}
+                                    onClick={async () => {
+                                      try {
+                                        // proof_url may be a legacy public URL or a storage path
+                                        let path = o.proof_url as string;
+                                        const marker = '/payment-proofs/';
+                                        const idx = path.indexOf(marker);
+                                        if (idx !== -1) path = path.substring(idx + marker.length);
+                                        const { data, error } = await supabase.storage
+                                          .from('payment-proofs')
+                                          .createSignedUrl(path, 300);
+                                        if (error) throw error;
+                                        window.open(data.signedUrl, '_blank');
+                                      } catch (err: any) {
+                                        alert('Erro ao abrir comprovante: ' + err.message);
+                                      }
+                                    }}
                                   >
                                     <FileText className="h-4 w-4" />
                                     Anexo de Pagamento
