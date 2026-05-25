@@ -99,6 +99,8 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [step]);
 
   const fetchRewards = async () => {
+    if (rewardsFetched) return;
+    
     // Check if features are enabled in campaign
     const isRouletteEnabled = campaign.roulette_enabled === true;
     const isScratchEnabled = campaign.scratch_cards_enabled === true;
