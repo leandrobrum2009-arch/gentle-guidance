@@ -19,6 +19,7 @@ interface ScratchCardProps {
   prizeImage?: string;
   isWinner?: boolean;
   onComplete?: () => void;
+  onStart?: () => void;
   cost?: number;
   potentialPrizes?: string[];
   isSimulation?: boolean;
