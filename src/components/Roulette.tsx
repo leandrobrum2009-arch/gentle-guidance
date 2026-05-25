@@ -350,7 +350,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
                       <Info className="h-3 w-3 text-white/20 hover:text-white/40" />
                     </TooltipTrigger>
                     <TooltipContent className="bg-zinc-900 border-white/10 text-[10px] max-w-[200px]">
-                      <p>Compre cotas para ganhar giros grátis nesta campanha.</p>
+                      <p>Participe de qualquer campanha para ganhar giros grátis.</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
