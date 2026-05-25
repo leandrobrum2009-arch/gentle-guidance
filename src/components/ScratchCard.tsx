@@ -168,28 +168,36 @@ const ScratchCard = ({
 
     if (!user) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
+      setIsDrawing(false);
       return;
     }
 
     setIsProcessing(true);
     try {
+      // Ensure we have a valid campaignId if possible, or try global scratch
       const { data, error } = await supabase.rpc('process_scratch_card_play', {
         p_campaign_id: campaignId || null,
-        p_cost: cost
+        p_cost: Number(cost) || 0
       });
 
-      if (error) throw error;
+      if (error) {
+        toast.error(error.message || "Erro ao processar a raspadinha");
+        // Reset state so they can try again if it was just a connection/auth issue
+        setHasStarted(false);
+        setIsDrawing(false);
+        throw error;
+      }
 
       const res = data as any;
       setIsWinner(res.is_winner);
-      setPrizeLabel(res.is_winner ? res.prize.label : "Tente novamente");
+      setPrizeLabel(res.is_winner ? (res.prize?.label || "Prêmio!") : "Tente novamente");
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
-      setIsWinner(false);
-      setPrizeLabel("Tente novamente");
-      setIsScratched(true);
+      setIsProcessing(false);
+      setHasStarted(false);
+      setIsDrawing(false);
     } finally {
       setIsProcessing(false);
     }
