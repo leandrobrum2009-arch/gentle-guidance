@@ -264,7 +264,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                        setLoading(false);
                      }
                    } catch (err: any) {
-                     toast.error("Erro ao verificar: " + err.message);
+                     toast.error("Erro ao sincronizar: " + err.message);
                      setLoading(false);
                    }
                 }}>
