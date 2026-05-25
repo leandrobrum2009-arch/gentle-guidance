@@ -134,17 +134,21 @@ const ScratchCard = ({
   };
 
   useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setCanvasSize({ width, height });
-    }
-  }, []);
+    const updateSize = () => {
+      if (containerRef.current) {
+        const { width, height } = containerRef.current.getBoundingClientRect();
+        if (width > 0 && height > 0) {
+          setCanvasSize({ width, height });
+        }
+      }
+    };
 
-  useEffect(() => {
-    if (containerRef.current) {
-      const { width, height } = containerRef.current.getBoundingClientRect();
-      setCanvasSize({ width, height });
-    }
+    updateSize();
+    
+    const observer = new ResizeObserver(updateSize);
+    if (containerRef.current) observer.observe(containerRef.current);
+    
+    return () => observer.disconnect();
   }, []);
 
   const getMousePos = (e: React.MouseEvent | React.TouchEvent) => {
@@ -245,7 +249,7 @@ const ScratchCard = ({
 
   const reveal = () => {
     setIsScratched(true);
-    if (isWinner) {
+    if (isWinner && prizeLabel !== "Tente novamente") {
       playSound('win');
       confetti({
         particleCount: 100,
@@ -260,6 +264,15 @@ const ScratchCard = ({
         isWinner: true
       };
       setLocalHistory(prev => [newEntry, ...prev].slice(0, 5));
+      
+      if (!isSimulation && user) {
+        supabase.from("notifications").insert({
+          user_id: user.id,
+          title: "Ganhou na raspadinha!",
+          message: `Parabéns! Você ganhou ${prizeLabel} na raspadinha.`,
+          type: "win"
+        }).then();
+      }
     } else {
       const newEntry = {
         name: "Você",

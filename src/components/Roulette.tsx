@@ -71,7 +71,6 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
   const { data: globalSpins } = useGlobalRouletteSpins(10);
   const { data: stats } = useGlobalStats();
   const [isSpinning, setIsSpinning] = useState(false);
-  const [multiplier, setMultiplier] = useState(1);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
   const [wonPrize, setWonPrize] = useState<RoulettePrize | null>(null);
   const { user } = useAuth();
@@ -116,15 +115,14 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
     }
     
     const spinCost = Number(campaign.roulette_spin_cost || 0);
-    const isUsingFreeSpins = availableSpins >= multiplier;
+    const isUsingFreeSpins = availableSpins >= 1;
     
     if (!isSimulation && !isUsingFreeSpins) {
       if (spinCost > 0) {
-        if ((userProfile?.balance || 0) < spinCost * multiplier) {
-          toast.error(`Saldo insuficiente! O giro custa R$ ${(spinCost * multiplier).toFixed(2)}.`);
+        if ((userProfile?.balance || 0) < spinCost) {
+          toast.error(`Saldo insuficiente! O giro custa R$ ${spinCost.toFixed(2)}.`);
           return;
         }
-        // If they have balance, we proceed
       } else {
         toast.error(`Você não possui giros disponíveis! Compre mais cotas para ganhar giros grátis.`);
         return;
@@ -152,7 +150,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
     } else {
       const { data: result, error: spinError } = await supabase.rpc('process_roulette_spin', {
         p_campaign_id: campaign.id,
-        p_multiplier: multiplier
+        p_multiplier: 1
       });
 
       if (spinError) {
@@ -169,7 +167,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
       
       // If no new_balance was returned but we paid with balance, we should update it manually
       if (new_balance === undefined && !is_free && spinCost > 0) {
-        new_balance = Number(userProfile.balance) - (spinCost * multiplier);
+        new_balance = Number(userProfile.balance) - spinCost;
       }
     }
 
@@ -209,27 +207,33 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
       queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
       if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
-      await supabase.from("notifications").insert({
-        user_id: user!.id,
-        title: "Você ganhou na roleta!",
-        message: `Parabéns! Você ganhou ${prize.label}${multiplier > 1 ? ` (x${multiplier})` : ''} na Roleta da Sorte.`,
-        type: "win"
-      });
+      if (prize.prize_type !== 'none') {
+        await supabase.from("notifications").insert({
+          user_id: user!.id,
+          title: "Você ganhou na roleta!",
+          message: `Parabéns! Você ganhou ${prize.label} na Roleta da Sorte.`,
+          type: "win"
+        });
+      }
     }
 
     setIsSpinning(false);
     
-    confetti({
-      particleCount: 150,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: [prize.color || '#FACC15', '#ffffff']
-    });
+    if (prize.prize_type !== 'none') {
+      confetti({
+        particleCount: 150,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: [prize.color || '#FACC15', '#ffffff']
+      });
 
-    if (isSimulation) {
-      toast.success(`[Simulação] Você ganharia: ${prize.label}!`);
+      if (isSimulation) {
+        toast.success(`[Simulação] Você ganharia: ${prize.label}!`);
+      } else {
+        toast.success(`Parabéns! Você ganhou: ${prize.label}!`);
+      }
     } else {
-      toast.success(`Parabéns! Você ganhou: ${prize.label}${multiplier > 1 ? ` x${multiplier}` : ''}!`);
+      toast.info("Não foi dessa vez! Tente novamente.");
     }
     
     setTimeout(() => {
