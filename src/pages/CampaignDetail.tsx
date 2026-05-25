@@ -134,7 +134,6 @@ const CampaignDetail = () => {
   }, [campaignId, luckyNumbersList]);
 
   const { data: campaignRanking } = useCampaignRanking(campaignId, 10);
-  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
   const { data: luckyWinners } = useCampaignLuckyWinners(campaignId);
   const { data: ticketStats } = useCampaignTicketStats(campaignId);
   const { data: userTickets } = useUserTickets(user?.id || "", campaignId);
