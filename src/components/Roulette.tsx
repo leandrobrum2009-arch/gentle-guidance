@@ -17,6 +17,7 @@ import { playSound as playGlobalSound, hapticFeedback } from "@/lib/sounds";
 interface RouletteProps {
   prizes: RoulettePrize[];
   onSpinComplete?: (prize: RoulettePrize) => void;
+  onSpinStart?: () => void;
   campaign: Campaign;
   availableSpins?: number;
   isSimulation?: boolean;
