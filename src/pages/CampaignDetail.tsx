@@ -537,7 +537,9 @@ const CampaignDetail = () => {
                     </div>
 
                     {campaign.roulette_enabled && (
-                      <Dialog>
+                      <Dialog onOpenChange={(open) => {
+                        if (!open && isGameInProgress) return;
+                      }}>
                         <DialogTrigger asChild>
                           <button className="w-full mt-2 flex items-center justify-between p-4 rounded-2xl bg-primary/5 border border-primary/20 hover:border-primary/50 hover:bg-primary/10 transition-all group">
                             <div className="flex items-center gap-3">
@@ -555,8 +557,18 @@ const CampaignDetail = () => {
                             </div>
                           </button>
                         </DialogTrigger>
-                        <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar">
-                          <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} />
+                        <DialogContent 
+                          className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar"
+                          onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                          onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                        >
+                          <Roulette 
+                            prizes={roulettePrizes} 
+                            campaign={campaign} 
+                            availableSpins={userSpinsAvailable}
+                            onSpinStart={() => setIsGameInProgress(true)}
+                            onSpinComplete={() => setIsGameInProgress(false)}
+                          />
                         </DialogContent>
                       </Dialog>
                     )}
