@@ -271,7 +271,9 @@ const ScratchCard = ({
           title: "Ganhou na raspadinha!",
           message: `Parabéns! Você ganhou ${prizeLabel} na raspadinha.`,
           type: "win"
-        }).then();
+        }).then(({ error }) => {
+          if (error) console.error("Error inserting notification:", error);
+        });
       }
     } else {
       const newEntry = {

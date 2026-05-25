@@ -29,6 +29,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [countdown, setCountdown] = useState(300); // 5 minutes
   const [availableSpins, setAvailableSpins] = useState(0);
   const [availableScratchCards, setAvailableScratchCards] = useState(0);
+  const [rewardsFetched, setRewardsFetched] = useState(false);
   const [prizes, setPrizes] = useState<any[]>([]);
   const [localTickets, setLocalTickets] = useState<any[]>([]);
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
@@ -47,8 +48,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   useEffect(() => {
     // We check for 'paid' status, but we also allow if it's already in SuccessFlow 
     // to start fetching rewards even if DB is still updating
-    if (order.payment_status === 'paid' || step === 1) {
+    if (!rewardsFetched && (order.payment_status === 'paid' || step === 1)) {
       fetchRewards();
+      setRewardsFetched(true);
       
       const fetchAllTickets = async () => {
         const { data } = await supabase
@@ -430,7 +432,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   
                   <div className="flex flex-col gap-2">
                     <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-primary/60 hover:text-primary" onClick={handleReprocess}>
-                      Reprocessar Prêmios
+                      Verificar Novos Prêmios
                     </Button>
                     {onClose && (
                       <Button variant="ghost" className="w-full text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={onClose}>

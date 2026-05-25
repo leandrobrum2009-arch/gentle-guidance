@@ -208,12 +208,15 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
       if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
       if ((prize.prize_type as any) !== 'none') {
-        await supabase.from("notifications").insert({
-          user_id: user!.id,
-          title: "Você ganhou na roleta!",
-          message: `Parabéns! Você ganhou ${prize.label} na Roleta da Sorte.`,
-          type: "win"
-        });
+        // We do this after the animation is finished
+        setTimeout(async () => {
+          await supabase.from("notifications").insert({
+            user_id: user!.id,
+            title: "Você ganhou na roleta!",
+            message: `Parabéns! Você ganhou ${prize.label} na Roleta da Sorte.`,
+            type: "win"
+          });
+        }, 100);
       }
     }
 
