@@ -30,27 +30,39 @@ const SOUND_URLS = {
 
 const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
   const prizes = useMemo(() => {
-    const segments = [...(initialPrizes || [])];
+    let segments = [...(initialPrizes || [])];
     
-    // Always add a "Try again" segment if it doesn't exist
-    if (!segments.find(p => p.label === 'Tente novamente')) {
-      segments.push({
-        id: 'loss-segment',
-        campaign_id: campaign.id,
-        label: 'Tente novamente',
-        value: 0,
-        prize_type: 'none',
-        chance_percent: Math.max(0, 100 - segments.reduce((acc, p) => acc + (p.chance_percent || 0), 0)),
-        color: '#ef4444', // Red for loss
-        is_active: true,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      } as any);
-    }
-    
-    // If we still have very few segments, duplicate them to make the wheel look full
-    while (segments.length < 6) {
-      segments.push(...segments.slice(0, 6 - segments.length).map((s, i) => ({ ...s, id: `${s.id}-dup-${i}` })));
+    // If no prizes configured, show the examples the user requested
+    if (segments.length === 0) {
+      segments = [
+        { id: 'p1', label: 'R$ 50 no PIX', value: 50, prize_type: 'balance', chance_percent: 10, color: '#22c55e' },
+        { id: 'p2', label: 'R$ 100 no PIX', value: 100, prize_type: 'balance', chance_percent: 5, color: '#10b981' },
+        { id: 'p3', label: 'Cota Premiada', value: 1, prize_type: 'ticket', chance_percent: 2, color: '#f59e0b' },
+        { id: 'p4', label: 'Caixa Surpresa', value: 0, prize_type: 'physical', chance_percent: 1, color: '#8b5cf6' },
+        { id: 'p5', label: 'R$ 5000 no PIX', value: 5000, prize_type: 'balance', chance_percent: 0.1, color: '#ef4444' },
+        { id: 'loss', label: 'Tente novamente', value: 0, prize_type: 'none', chance_percent: 81.9, color: '#3f3f46' }
+      ] as any[];
+    } else {
+      // Ensure we have at least 6 segments for a good look
+      if (segments.length < 6) {
+        const originalLength = segments.length;
+        for (let i = 0; i < 6 - originalLength; i++) {
+          segments.push({ ...segments[i % originalLength], id: `dup-${i}` });
+        }
+      }
+      
+      // Ensure a "Loss" segment exists visually if total chance is not 100%
+      const totalChance = segments.reduce((acc, p) => acc + (p.chance_percent || 0), 0);
+      if (totalChance < 100 && !segments.find(p => p.label === 'Tente novamente')) {
+        segments.push({
+          id: 'loss-segment',
+          label: 'Tente novamente',
+          value: 0,
+          prize_type: 'none',
+          chance_percent: 100 - totalChance,
+          color: '#ef4444'
+        } as any);
+      }
     }
     
     return segments;
