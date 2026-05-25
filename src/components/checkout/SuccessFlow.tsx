@@ -134,6 +134,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         // Everyone gets at least 1 scratch card
         setAvailableScratchCards(1);
       }
+
+      // Ensure it's at least 1 if enabled
+      setAvailableScratchCards(prev => Math.max(prev, 1));
     } else {
       setAvailableScratchCards(0);
     }
