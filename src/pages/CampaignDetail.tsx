@@ -75,6 +75,8 @@ const CampaignDetail = () => {
   const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
   const campaignId = campaign?.id || "";
+  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
+  const { data: userScratches } = useUserCampaignScratches(user?.id || "", campaignId);
   
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
