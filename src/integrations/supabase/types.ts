@@ -1018,6 +1018,7 @@ export type Database = {
           campaign_id: string | null
           cost: number
           created_at: string
+          description: string | null
           id: string
           is_winner: boolean
           prize_id: string | null
@@ -1030,6 +1031,7 @@ export type Database = {
           campaign_id?: string | null
           cost?: number
           created_at?: string
+          description?: string | null
           id?: string
           is_winner?: boolean
           prize_id?: string | null
@@ -1042,6 +1044,7 @@ export type Database = {
           campaign_id?: string | null
           cost?: number
           created_at?: string
+          description?: string | null
           id?: string
           is_winner?: boolean
           prize_id?: string | null
