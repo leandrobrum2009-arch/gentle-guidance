@@ -4,12 +4,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import WinnerCard from "@/components/WinnerCard";
 import { useWinners } from "@/hooks/useData";
+import { SEO } from "@/components/SEO";
 
 const Winners = () => {
   const { data: winners, isLoading } = useWinners();
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Ganhadores" description="Confira os ganhadores das nossas ações premiadas." />
       <Header />
       <div className="container py-8">
         <motion.div
