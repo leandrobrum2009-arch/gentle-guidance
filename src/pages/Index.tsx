@@ -155,30 +155,11 @@ const Index = () => {
 
   const activeCampaigns = useMemo(() => {
     if (!campaigns) return [];
-    const now = new Date().getTime();
     return campaigns
-      .filter(c => c.status === "active" || c.status === "paused" || c.status === "audit")
+      .filter(c => c.status === "active")
       .sort((a, b) => {
-        // First priority: Featured
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
-        
-        // Second priority: Draw date
-        if (a.draw_date && b.draw_date) {
-          const aTime = new Date(a.draw_date.replace(' ', 'T')).getTime();
-          const bTime = new Date(b.draw_date.replace(' ', 'T')).getTime();
-          const aIsPast = aTime < now;
-          const bIsPast = bTime < now;
-
-          if (aIsPast && !bIsPast) return 1;
-          if (!aIsPast && bIsPast) return -1;
-          
-          return aTime - bTime;
-        }
-        if (a.draw_date) return -1;
-        if (b.draw_date) return 1;
-        
-        // Third priority: Most recent
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       });
   }, [campaigns]);
@@ -186,14 +167,14 @@ const Index = () => {
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     return campaigns
-      .filter(c => c.status === "completed" || c.status === "finished")
+      .filter(c => (c.status === "completed" || c.status === "finished") && c.draw_number)
       .sort((a, b) => {
-        // Sort by draw date (most recent first)
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
         }
-        return 0;
-      });
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      })
+      .slice(0, 4);
   }, [campaigns]);
 
   const featuredCampaign = activeCampaigns[0];
@@ -543,55 +524,6 @@ const Index = () => {
             </div>
           </section>
 
-          {/* Rifas Encerradas Section */}
-          {endedCampaigns.length > 0 && (
-            <section className="container py-12 md:py-20">
-              <SectionHeading 
-                icon={Clock} 
-                title="Rifas Encerradas" 
-                subtitle="Confira o que já rolou por aqui"
-                badge="Histórico"
-              />
-              
-              {/* Visual Cards (Top 5) */}
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 mb-8">
-                {endedCampaigns.slice(0, 5).map((campaign, i) => (
-                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                ))}
-              </div>
-
-              {/* List Format (Remaining) */}
-              {endedCampaigns.length > 5 && (
-                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {endedCampaigns.slice(5).map((campaign) => (
-                    <Link 
-                      key={campaign.id} 
-                      to={`/campanha/${campaign.slug}`} 
-                      className="flex items-center gap-3 p-3 rounded-2xl bg-card/50 border border-border hover:border-primary/50 transition-all group"
-                    >
-                      <div className="h-10 w-10 rounded-lg overflow-hidden flex-shrink-0 border border-border">
-                        <img 
-                          src={campaign.image_url || "/placeholder.svg"} 
-                          alt={campaign.title} 
-                          className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" 
-                        />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h4 className="text-[10px] font-black uppercase tracking-tight truncate leading-none mb-1">{campaign.title}</h4>
-                        <div className="flex items-center gap-1.5">
-                          <Badge variant="outline" className="h-4 px-1.5 text-[7px] font-black uppercase tracking-widest border-muted-foreground/30 text-muted-foreground">ENCERRADO</Badge>
-                          <span className="text-[8px] text-muted-foreground uppercase font-bold tracking-widest">
-                            {campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR') : ''}
-                          </span>
-                        </div>
-                      </div>
-                      <ArrowRight className="h-3 w-3 text-muted-foreground group-hover:text-primary transition-colors" />
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </section>
-          )}
 
           {/* Ganhadores Cinematic Section - Hall da Fama */}
           <section className="container py-24 md:py-32 relative">
@@ -640,6 +572,24 @@ const Index = () => {
               </div>
             )}
           </section>
+
+          {/* Rifas Encerradas Section at the end */}
+          {endedCampaigns.length > 0 && (
+            <section className="container py-12 md:py-20 border-t border-border mt-12">
+              <SectionHeading 
+                icon={Clock} 
+                title="Últimos Ganhadores" 
+                subtitle="Rifas finalizadas recentemente"
+                badge="Encerradas"
+              />
+              
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                {endedCampaigns.map((campaign, i) => (
+                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                ))}
+              </div>
+            </section>
+          )}
 
           <GoogleReviews />
 

@@ -26,7 +26,7 @@ export const useAdminCampaigns = () =>
     queryFn: async () => {
       const { data, error } = await supabase
         .from("campaigns")
-        .select("*")
+        .select("*, winners(*)")
         .order("created_at", { ascending: false });
       if (error) throw error;
        return data;

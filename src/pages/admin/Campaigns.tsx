@@ -17,6 +17,18 @@ import { DrawCeremony } from "@/components/DrawCeremony";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
+
+const blinkingStyle = `
+  @keyframes blink {
+    0% { opacity: 1; transform: scale(1); box-shadow: 0 0 0px rgba(245, 158, 11, 0); }
+    50% { opacity: 0.7; transform: scale(1.1); box-shadow: 0 0 15px rgba(245, 158, 11, 0.5); }
+    100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0px rgba(245, 158, 11, 0); }
+  }
+  .animate-blink {
+    animation: blink 1.5s infinite ease-in-out;
+  }
+`;
 
 export default function AdminCampaigns() {
   const navigate = useNavigate();
@@ -135,6 +147,7 @@ export default function AdminCampaigns() {
 
   return (
     <AdminLayout>
+      <style>{blinkingStyle}</style>
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Campanhas</h1>
@@ -232,6 +245,7 @@ export default function AdminCampaigns() {
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Status</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Valores</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4">Progresso</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-center">Resultado</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px] tracking-widest py-4 text-right pr-6">Ações</TableHead>
                  </TableRow>
                </TableHeader>
@@ -239,6 +253,13 @@ export default function AdminCampaigns() {
                  {filteredCampaigns.map((c) => {
                    const info = statusInfo(c.status);
                    const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
+                   
+                   // Check if draw is needed
+                   const now = new Date();
+                   const endDate = c.timer_end_date ? new Date(c.timer_end_date) : null;
+                   const needsDraw = (endDate && endDate < now && !c.draw_number) || (c.status === 'completed' && !c.draw_number);
+                   const winner = c.winners?.[0];
+
                    return (
                     <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
                       <TableCell className="pl-6">
@@ -262,7 +283,7 @@ export default function AdminCampaigns() {
                              <Badge variant="outline" className="text-[8px] py-0 h-4 border-amber-500/30 text-amber-400 bg-amber-500/5 uppercase tracking-tighter">Manual</Badge>
                            )}
                            {c.federal_lottery_draw && (
-                                <Badge variant="outline" className="text-[8px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Federal</Badge>
+                                 <Badge variant="outline" className="text-[8px] py-0 h-4 border-primary/30 text-primary bg-primary/5 uppercase tracking-tighter">Federal</Badge>
                            )}
                          </div>
                          </div>
@@ -288,31 +309,44 @@ export default function AdminCampaigns() {
                          <Progress value={progress} className="h-1.5 bg-secondary/20" />
                        </div>
                      </TableCell>
+                     <TableCell className="py-4 text-center">
+                       {c.draw_number ? (
+                         <div className="flex flex-col items-center">
+                           <Badge className="bg-primary/20 text-primary border-primary/30 font-black mb-1">{c.draw_number}</Badge>
+                           {winner && <span className="text-[9px] text-muted-foreground uppercase font-bold truncate max-w-[80px]">{winner.winner_name}</span>}
+                         </div>
+                       ) : (
+                         <span className="text-[10px] text-muted-foreground uppercase font-bold italic">Aguardando</span>
+                       )}
+                     </TableCell>
                      <TableCell className="text-right pr-6 py-4">
                        <div className="flex items-center justify-end gap-1">
-                          {c.status === "active" && (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg" 
-                                  title="Realizar Sorteio"
-                                >
-                                  <Trophy className="h-4.5 w-4.5" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48 bg-card border-border">
-                                <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Escolha o Modo</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => startAutoDraw(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
-                                  <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
-                                  <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          )}
+                           {(c.status === "active" || needsDraw) && (
+                             <DropdownMenu>
+                               <DropdownMenuTrigger asChild>
+                                 <Button 
+                                   variant="ghost" 
+                                   size="icon" 
+                                   className={cn(
+                                     "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all",
+                                     needsDraw && "animate-blink bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.4)] border border-amber-500/30 h-10 w-10"
+                                   )}
+                                   title={needsDraw ? "AÇÃO NECESSÁRIA: REALIZAR SORTEIO" : "Realizar Sorteio"}
+                                 >
+                                   <Trophy className={cn("h-4.5 w-4.5", needsDraw && "h-5 w-5")} />
+                                 </Button>
+                               </DropdownMenuTrigger>
+                               <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+                                 <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Escolha o Modo</DropdownMenuLabel>
+                                 <DropdownMenuItem onClick={() => startAutoDraw(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                   <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                   <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
+                                 </DropdownMenuItem>
+                               </DropdownMenuContent>
+                             </DropdownMenu>
+                           )}
                          <Button 
                            variant="ghost" 
                            size="icon" 
