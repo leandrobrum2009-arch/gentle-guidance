@@ -17,7 +17,7 @@ import {
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
   useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
-  useUserTickets
+  useUserTickets, useUserCampaignScratches
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
