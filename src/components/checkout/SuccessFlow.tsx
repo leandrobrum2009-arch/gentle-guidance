@@ -33,6 +33,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [prizes, setPrizes] = useState<any[]>([]);
   const [localTickets, setLocalTickets] = useState<any[]>([]);
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
+  const [isGameInProgress, setIsGameInProgress] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
   const detailsRef = useRef<HTMLDivElement>(null);
@@ -429,8 +430,8 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Sua Sorte Instantânea</h2>
                <div className="flex gap-2">
-                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
-                   Ver Detalhes
+                  <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)} disabled={isGameInProgress}>
+                    Ver Detalhes
                  </Button>
                  <Badge className="bg-primary text-black font-bold h-7">{availableSpins} giros restantes</Badge>
                </div>
@@ -440,13 +441,14 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
               prizes={prizes} 
               campaign={campaign} 
               availableSpins={availableSpins}
+              onSpinStart={() => setIsGameInProgress(true)}
               onSpinComplete={() => {
                 setAvailableSpins(prev => prev - 1);
-                // Don't auto-transition, let user decide if they want to spin again or move on
+                setIsGameInProgress(false);
               }}
             />
             
-            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(5)}>
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(5)} disabled={isGameInProgress}>
               Pular para Raspadinha <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
@@ -457,8 +459,8 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
             <div className="flex items-center justify-between mb-4">
                <h2 className="text-xl font-black uppercase italic tracking-tighter">Raspadinha da Sorte</h2>
                <div className="flex gap-2">
-                 <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)}>
-                   Ver Detalhes
+                  <Button variant="outline" size="sm" className="h-7 text-[8px] font-black uppercase tracking-widest border-white/10" onClick={() => setStep(6)} disabled={isGameInProgress}>
+                    Ver Detalhes
                  </Button>
                  <Badge className="bg-primary text-black font-bold h-7">{availableScratchCards} restantes</Badge>
                </div>
@@ -466,12 +468,14 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
             
             <ScratchCard 
               campaignId={campaign.id}
+              onStart={() => setIsGameInProgress(true)}
               onComplete={() => {
                 setAvailableScratchCards(prev => prev - 1);
+                setIsGameInProgress(false);
               }}
             />
             
-            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(3)}>
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(3)} disabled={isGameInProgress}>
               Continuar para próxima etapa <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>

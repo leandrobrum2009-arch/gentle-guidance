@@ -19,6 +19,7 @@ interface ScratchCardProps {
   prizeImage?: string;
   isWinner?: boolean;
   onComplete?: () => void;
+  onStart?: () => void;
   cost?: number;
   potentialPrizes?: string[];
   isSimulation?: boolean;
@@ -31,6 +32,7 @@ const ScratchCard = ({
   prizeImage, 
   isWinner: initialIsWinner, 
   onComplete, 
+  onStart, 
   cost = 0,
   potentialPrizes = [],
   isSimulation = false,
@@ -190,6 +192,7 @@ const ScratchCard = ({
     }
 
     setIsProcessing(true);
+    if (onStart) onStart();
     try {
       // Ensure we have a valid campaignId if possible, or try global scratch
       const { data, error } = await supabase.rpc('process_scratch_card_play', {

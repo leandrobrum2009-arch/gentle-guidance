@@ -17,6 +17,7 @@ import { playSound as playGlobalSound, hapticFeedback } from "@/lib/sounds";
 interface RouletteProps {
   prizes: RoulettePrize[];
   onSpinComplete?: (prize: RoulettePrize) => void;
+  onSpinStart?: () => void;
   campaign: Campaign;
   availableSpins?: number;
   isSimulation?: boolean;
@@ -28,7 +29,7 @@ const SOUND_URLS = {
   tick: "https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3"
 };
 
-const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
+const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
   const prizes = useMemo(() => {
     let segments = [...(initialPrizes || [])];
     
@@ -131,6 +132,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
     }
 
     setIsSpinning(true);
+    if (onSpinStart) onSpinStart();
     playGlobalSound('shake'); 
     hapticFeedback();
 
@@ -268,7 +270,10 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
           </Badge>
           <Dialog>
             <DialogTrigger asChild>
-              <button className="flex items-center gap-2 text-xs font-bold text-white/60 hover:text-white uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md transition-colors">
+              <button 
+                disabled={isSpinning}
+                className="flex items-center gap-2 text-xs font-bold text-white/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md transition-colors"
+              >
                 <FileText className="h-3.5 w-3.5 text-primary" /> 
                 Regras
               </button>
