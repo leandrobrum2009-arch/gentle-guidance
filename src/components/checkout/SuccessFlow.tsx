@@ -468,12 +468,14 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
             
             <ScratchCard 
               campaignId={campaign.id}
+              onStart={() => setIsGameInProgress(true)}
               onComplete={() => {
                 setAvailableScratchCards(prev => prev - 1);
+                setIsGameInProgress(false);
               }}
             />
             
-            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(3)}>
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(3)} disabled={isGameInProgress}>
               Continuar para próxima etapa <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
