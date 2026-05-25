@@ -849,6 +849,8 @@ const CampaignDetail = () => {
               cost={campaign?.scratch_card_cost || 0}
               campaignId={campaign?.id}
               availableScratches={userScratchesAvailable}
+              onStart={() => setIsGameInProgress(true)}
+              onComplete={() => setIsGameInProgress(false)}
             />
           </div>
         );
