@@ -264,11 +264,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                        setLoading(false);
                      }
                    } catch (err: any) {
-                     toast.error("Erro ao reprocessar: " + err.message);
+                     toast.error("Erro ao verificar: " + err.message);
                      setLoading(false);
                    }
                 }}>
-                  Já paguei? Reprocessar prêmios
+                  Já pagou? Verificar pedido
                 </Button>
               </div>
             </motion.div>
