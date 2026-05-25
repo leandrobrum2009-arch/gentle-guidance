@@ -188,9 +188,16 @@ const ScratchCard = ({
       return;
     }
 
-    if (!user) {
+    if (!user && !isSimulation) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
       setIsDrawing(false);
+      return;
+    }
+
+    if (availableScratches <= 0 && cost <= 0 && !isSimulation) {
+      toast.error("Você não possui raspadinhas disponíveis!");
+      setIsDrawing(false);
+      setHasStarted(false);
       return;
     }
 
@@ -310,6 +317,7 @@ const ScratchCard = ({
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDrawing(true);
     const { x, y } = getMousePos(e);
+    if (isScratched || isProcessing) return;
     scratch(x, y);
     hapticFeedback();
   };
