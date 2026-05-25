@@ -145,12 +145,21 @@ const ScratchCard = ({
       }
     };
 
-    updateSize();
+    // Initial size update
+    const timeoutId = setTimeout(updateSize, 100);
     
-    const observer = new ResizeObserver(updateSize);
-    if (containerRef.current) observer.observe(containerRef.current);
+    const observer = new ResizeObserver(() => {
+      updateSize();
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
     
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timeoutId);
+      observer.disconnect();
+    };
   }, []);
 
   const getMousePos = (e: React.MouseEvent | React.TouchEvent) => {
