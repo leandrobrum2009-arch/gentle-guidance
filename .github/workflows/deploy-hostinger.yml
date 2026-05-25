@@ -21,6 +21,11 @@ jobs:
       - name: Build
         run: bun run build
 
+      - name: Verify build output
+        run: |
+          test -f dist/index.html
+          test -f dist/.htaccess
+
       - name: Deploy via FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -29,4 +34,10 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./dist/
-          server-dir: /public_html/
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/domains/sistemapararifas.site/public_html/' }}
+
+      - name: Verify live domain
+        run: |
+          expected_js="$(grep -o 'assets/[^"]*\.js' dist/index.html | head -n 1)"
+          curl -fsSL -H 'Cache-Control: no-cache' "https://sistemapararifas.site/?deploy_check=${GITHUB_SHA}" -o live-index.html
+          grep -F "$expected_js" live-index.html
