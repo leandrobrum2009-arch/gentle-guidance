@@ -137,7 +137,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <HelmetProvider>
-        <ThemeProvider defaultTheme="light" storageKey="rifas-pro-theme">
+        <ThemeProvider defaultTheme="dark" storageKey="rifas-pro-theme">
           <TooltipProvider>
             <SiteSettingsInjector />
             <Toaster />
