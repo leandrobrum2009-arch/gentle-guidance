@@ -75,10 +75,10 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
       const timer = setTimeout(() => {
         if (premiumTickets.length > 0) {
           setStep(0); // Show premium tickets step
-        } else if (availableSpins > 0) {
-          setStep(2); // Auto-start roulette
-        } else if (availableScratchCards > 0) {
-          setStep(5); // Auto-start scratch card
+        } else if (campaign.roulette_enabled) {
+          setStep(2); // Auto-start roulette if enabled
+        } else if (campaign.scratch_cards_enabled) {
+          setStep(5); // Auto-start scratch card if enabled
         } else {
           setStep(6); // Go to order details
         }
@@ -116,6 +116,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         // Everyone who buys any quota gets at least 1 spin if enabled
         setAvailableSpins(1);
       }
+      
+      // Ensure it's at least 1 if enabled
+      setAvailableSpins(prev => Math.max(prev, 1));
     } else {
       setAvailableSpins(0);
     }
@@ -131,6 +134,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         // Everyone gets at least 1 scratch card
         setAvailableScratchCards(1);
       }
+
+      // Ensure it's at least 1 if enabled
+      setAvailableScratchCards(prev => Math.max(prev, 1));
     } else {
       setAvailableScratchCards(0);
     }

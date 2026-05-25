@@ -186,7 +186,9 @@ const ScratchCard = ({
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
     } catch (error: any) {
-      toast.error("Erro ao processar: " + error.message);
+      console.error("Scratch error:", error);
+      setIsWinner(false);
+      setPrizeLabel("Tente novamente");
       setIsScratched(true);
     } finally {
       setIsProcessing(false);
