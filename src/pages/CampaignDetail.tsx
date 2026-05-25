@@ -147,6 +147,7 @@ const CampaignDetail = () => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isGameInProgress, setIsGameInProgress] = useState(false);
 
   // Sync modal state with URL parameter for "Manter modal ao voltar"
   useEffect(() => {
