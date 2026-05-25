@@ -116,6 +116,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         // Everyone who buys any quota gets at least 1 spin if enabled
         setAvailableSpins(1);
       }
+      
+      // Ensure it's at least 1 if enabled
+      setAvailableSpins(prev => Math.max(prev, 1));
     } else {
       setAvailableSpins(0);
     }

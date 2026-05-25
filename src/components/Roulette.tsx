@@ -1,5 +1,5 @@
 import confetti from 'canvas-confetti';
-import { useState, useRef, useEffect, useCallback } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
  import { RotateCw, Star, Trophy, Users, Zap, ShoppingCart, Sparkles, Coins, Gift, Info, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -36,13 +36,13 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
         campaign_id: campaign.id,
         label: 'Tente novamente',
         value: 0,
-        prize_type: 'none',
+        prize_type: 'physical',
         chance_percent: 100,
         color: '#333333',
         is_active: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      } as RoulettePrize];
+      } as any];
     }
     return initialPrizes;
   }, [initialPrizes, campaign.id]);
