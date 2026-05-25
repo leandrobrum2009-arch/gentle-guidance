@@ -45,7 +45,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [displayTickets]);
 
   useEffect(() => {
-    if (order.payment_status === 'paid') {
+    // We check for 'paid' status, but we also allow if it's already in SuccessFlow 
+    // to start fetching rewards even if DB is still updating
+    if (order.payment_status === 'paid' || step === 1) {
       fetchRewards();
       
       const fetchAllTickets = async () => {
