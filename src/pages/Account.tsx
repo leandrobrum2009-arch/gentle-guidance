@@ -40,6 +40,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
+import { SEO } from "@/components/SEO";
 
  export default function Account() {
    const { user, signOut } = useAuth();
@@ -224,6 +225,7 @@ import { cn } from "@/lib/utils";
         <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-500/10 blur-[120px] rounded-full animate-pulse" style={{ animationDelay: '2s' }} />
       </div>
 
+      <SEO title="Minha Conta" description="Gerencie seus bilhetes, saldo e perfil." />
       <Header />
       <motion.div 
         initial={{ opacity: 0, y: 20 }}

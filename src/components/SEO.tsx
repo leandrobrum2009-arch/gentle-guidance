@@ -24,7 +24,7 @@ export const SEO = ({
   const defaultDescription = settings?.description || "A melhor plataforma de rifas online.";
   const defaultKeywords = settings?.site_keywords || "rifas, sorteios, prêmios, ganhar";
   
-  const seoTitle = title ? `${title} | ${siteName}` : siteName;
+  const seoTitle = !title || title === siteName ? siteName : `${title} | ${siteName}`;
   const seoDescription = description || defaultDescription;
   const seoKeywords = keywords ? `${keywords}, ${defaultKeywords}` : defaultKeywords;
   const seoImage = image || "/placeholder.svg";

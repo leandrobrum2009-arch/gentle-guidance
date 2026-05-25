@@ -191,7 +191,7 @@ const Index = () => {
     return (
      <div className="min-h-screen bg-background relative overflow-hidden">
        <SEO 
-         title={siteSettings?.site_name} 
+         title={undefined} 
          description={siteSettings?.description} 
          keywords={siteSettings?.site_keywords} 
        />

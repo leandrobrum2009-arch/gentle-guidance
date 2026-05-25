@@ -12,6 +12,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
 import { useSiteSettings } from "@/hooks/useData";
+import { SEO } from "@/components/SEO";
 
 const Register = () => {
   const { data: siteSettings } = useSiteSettings();
@@ -76,6 +77,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Cadastrar" description="Crie sua conta para participar dos sorteios." />
       <Header />
       <div className="container flex justify-center py-10">
         <motion.div

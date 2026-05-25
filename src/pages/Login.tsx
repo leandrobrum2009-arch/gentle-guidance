@@ -10,6 +10,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { useSiteSettings } from "@/hooks/useData";
+import { SEO } from "@/components/SEO";
 
 const Login = () => {
   const { data: siteSettings } = useSiteSettings();
@@ -36,6 +37,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO title="Entrar" description="Acesse sua conta para ver seus bilhetes." />
       <Header />
       <div className="container flex justify-center py-10">
         <motion.div
