@@ -34,7 +34,7 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || '/domains/sistemapararifas.site/public_html/' }}
+          server-dir: ${{ secrets.FTP_SERVER_DIR || '/' }}
 
       - name: Verify live domain
         run: |
