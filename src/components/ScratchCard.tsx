@@ -23,6 +23,7 @@ interface ScratchCardProps {
   potentialPrizes?: string[];
   isSimulation?: boolean;
   campaignId?: string;
+  availableScratches?: number;
 }
 
 const ScratchCard = ({ 
@@ -33,7 +34,8 @@ const ScratchCard = ({
   cost = 0,
   potentialPrizes = [],
   isSimulation = false,
-  campaignId
+  campaignId,
+  availableScratches = 0
 }: ScratchCardProps) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -326,9 +328,16 @@ const ScratchCard = ({
         <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight">
           Tente a sua <span className="text-primary neon-text-primary">Sorte</span>!
         </h2>
-        <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
-          Raspe o cartão e descubra seu prêmio instantâneo
-        </p>
+        <div className="flex flex-col items-center gap-1">
+          <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">
+            Raspe o cartão e descubra seu prêmio instantâneo
+          </p>
+          {!isSimulation && (
+            <Badge className="bg-primary/20 text-primary border-primary/20 text-[10px] font-black uppercase italic mt-1">
+              {availableScratches} {availableScratches === 1 ? 'raspadinha disponível' : 'raspadinhas disponíveis'}
+            </Badge>
+          )}
+        </div>
       </div>
 
       <div 

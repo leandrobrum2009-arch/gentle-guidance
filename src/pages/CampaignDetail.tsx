@@ -17,7 +17,7 @@ import {
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
   useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
-  useUserTickets
+  useUserTickets, useUserCampaignScratches
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -75,6 +75,8 @@ const CampaignDetail = () => {
   const { user } = useAuth();
   const { data: campaign, isLoading } = useCampaign(id || "");
   const campaignId = campaign?.id || "";
+  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
+  const { data: userScratches } = useUserCampaignScratches(user?.id || "", campaignId);
   
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
@@ -132,7 +134,6 @@ const CampaignDetail = () => {
   }, [campaignId, luckyNumbersList]);
 
   const { data: campaignRanking } = useCampaignRanking(campaignId, 10);
-  const { data: userSpins } = useUserCampaignSpins(user?.id || "", campaignId);
   const { data: luckyWinners } = useCampaignLuckyWinners(campaignId);
   const { data: ticketStats } = useCampaignTicketStats(campaignId);
   const { data: userTickets } = useUserTickets(user?.id || "", campaignId);
@@ -179,6 +180,11 @@ const CampaignDetail = () => {
     if (!userSpins) return 0;
     return userSpins.filter((s: any) => !s.prize_label).length;
   }, [userSpins]);
+
+  const userScratchesAvailable = useMemo(() => {
+    if (!userScratches) return 0;
+    return userScratches.filter((s: any) => !s.prize_label).length;
+  }, [userScratches]);
 
   const progress = useMemo(() => {
     if (!campaign) return 0;
@@ -829,6 +835,7 @@ const CampaignDetail = () => {
               isSimulation={!campaign.scratch_cards_enabled}
               cost={campaign.scratch_card_cost || 0}
               campaignId={campaign.id}
+              availableScratches={userScratchesAvailable}
             />
           </div>
         );
