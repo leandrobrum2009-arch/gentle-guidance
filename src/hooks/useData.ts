@@ -637,6 +637,21 @@ export const useUserCampaignSpins = (userId: string, campaignId: string) =>
     enabled: !!userId && !!campaignId,
   });
 
+export const useUserCampaignScratches = (userId: string, campaignId: string) =>
+  useQuery({
+    queryKey: ["user-campaign-scratches", userId, campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("scratch_card_scratches")
+        .select("*")
+        .eq("user_id", userId)
+        .eq("campaign_id", campaignId);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!userId && !!campaignId,
+  });
+
 export const useUserNotifications = (userId: string) =>
   useQuery({
     queryKey: ["notifications", userId],
