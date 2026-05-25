@@ -30,21 +30,30 @@ const SOUND_URLS = {
 
 const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
   const prizes = useMemo(() => {
-    if (!initialPrizes || initialPrizes.length === 0) {
-      return [{
-        id: 'dummy-loss',
+    const segments = [...(initialPrizes || [])];
+    
+    // Always add a "Try again" segment if it doesn't exist
+    if (!segments.find(p => p.label === 'Tente novamente')) {
+      segments.push({
+        id: 'loss-segment',
         campaign_id: campaign.id,
         label: 'Tente novamente',
         value: 0,
-        prize_type: 'physical',
-        chance_percent: 100,
-        color: '#333333',
+        prize_type: 'none',
+        chance_percent: Math.max(0, 100 - segments.reduce((acc, p) => acc + (p.chance_percent || 0), 0)),
+        color: '#ef4444', // Red for loss
         is_active: true,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
-      } as any];
+      } as any);
     }
-    return initialPrizes;
+    
+    // If we still have very few segments, duplicate them to make the wheel look full
+    while (segments.length < 6) {
+      segments.push(...segments.slice(0, 6 - segments.length).map((s, i) => ({ ...s, id: `${s.id}-dup-${i}` })));
+    }
+    
+    return segments;
   }, [initialPrizes, campaign.id]);
 
   const { data: globalSpins } = useGlobalRouletteSpins(10);
