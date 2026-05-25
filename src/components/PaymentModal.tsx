@@ -268,7 +268,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                      setLoading(false);
                    }
                 }}>
-                  Já pagou? Verificar pedido
+                  Já paguei pelo PIX! Verificar agora
                 </Button>
               </div>
             </motion.div>
