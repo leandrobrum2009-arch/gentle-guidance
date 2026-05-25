@@ -48,12 +48,14 @@ const ScratchCard = ({
   const [localHistory, setLocalHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
 
   const history = useMemo(() => {
-    const apiHistory = globalWins?.map(win => ({
+    if (!globalWins || !Array.isArray(globalWins)) return localHistory.slice(0, 10);
+
+    const apiHistory = globalWins.map(win => ({
       name: win.profiles?.name || "Usuário",
       prize: win.prize_label || "Prêmio",
       time: win.created_at ? formatDistanceToNow(new Date(win.created_at), { addSuffix: true, locale: ptBR }) : "Agora",
       isWinner: win.is_winner
-    })) || [];
+    }));
     
     return [...localHistory, ...apiHistory].slice(0, 10);
   }, [globalWins, localHistory]);
