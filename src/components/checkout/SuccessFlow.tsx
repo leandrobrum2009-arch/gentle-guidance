@@ -405,7 +405,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                       else onClose?.();
                     }}
                   >
-                    TENTAR MINHA SORTE AGORA <Sparkles className="ml-2 h-5 w-5" />
+                    GIRAR ROLETA AGORA <Sparkles className="ml-2 h-5 w-5" />
                   </Button>
                   
                   <div className="flex flex-col gap-2">
