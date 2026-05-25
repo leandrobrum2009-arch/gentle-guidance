@@ -288,16 +288,16 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
                       {campaign.roulette_rules.map((rule, i) => (
                         <p key={i} className="text-sm text-white/70 leading-relaxed flex items-center gap-2">
                           <Zap className="h-3 w-3 text-primary" />
-                          Compre acima de <span className="text-white font-bold">{rule.min_tickets} cotas</span> e ganhe <span className="text-white font-bold">{rule.spins} {rule.spins > 1 ? 'giros' : 'giro'}</span>.
+                          Ganhe <span className="text-white font-bold">{rule.spins} {rule.spins > 1 ? 'giros' : 'giro'}</span> ao participar!
                         </p>
                       ))}
                     </div>
                   ) : (
                     <p className="text-sm text-white/70 leading-relaxed">
-                      Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente a cada <span className="text-white font-bold">{campaign.roulette_free_tickets} cotas pagas</span> nesta campanha.
+                      Você ganha <span className="text-white font-bold">1 giro grátis</span> automaticamente ao realizar um pedido nesta campanha.
                     </p>
                   )}
-                  <p className="text-[11px] text-white/40 italic mt-2">Os giros grátis são consumidos prioritariamente antes do seu saldo.</p>
+                  <p className="text-[11px] text-white/40 italic mt-2">Os giros são liberados após a confirmação do pagamento.</p>
                 </div>
                 
                 <div className="space-y-3">
