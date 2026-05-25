@@ -132,6 +132,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
     }
 
     setIsSpinning(true);
+    if (onSpinStart) onSpinStart();
     playGlobalSound('shake'); 
     hapticFeedback();
 
