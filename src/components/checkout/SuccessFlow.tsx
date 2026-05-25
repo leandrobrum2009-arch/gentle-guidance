@@ -45,7 +45,9 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   }, [displayTickets]);
 
   useEffect(() => {
-    if (order.payment_status === 'paid') {
+    // We check for 'paid' status, but we also allow if it's already in SuccessFlow 
+    // to start fetching rewards even if DB is still updating
+    if (order.payment_status === 'paid' || step === 1) {
       fetchRewards();
       
       const fetchAllTickets = async () => {
@@ -65,7 +67,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
 
       fetchAllTickets();
     }
-  }, [order]);
+  }, [order, step]);
 
   // Handle automatic transitions
   useEffect(() => {
@@ -182,7 +184,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   };
 
   return (
-    <div className="w-full space-y-4 max-w-full">
+    <div className="w-full space-y-2 md:space-y-4 max-w-full">
       {/* Mini Stepper */}
       <div className="flex items-center justify-center gap-2 mb-1">
         {[1, 6, 2, 5].map((s) => (
@@ -200,7 +202,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         {step === 0 && (
           <motion.div key="step0" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-8 text-center space-y-6">
+              <CardContent className="p-4 md:p-8 text-center space-y-4 md:space-y-6">
                 <motion.div 
                   initial={{ scale: 0 }} 
                   animate={{ scale: [1, 1.2, 1] }} 
@@ -243,7 +245,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
         {step === 1 && (
           <motion.div key="step1" variants={containerVariants} initial="initial" animate="animate" exit="exit" className="space-y-6">
             <Card className="border-none bg-black/40 backdrop-blur-xl border border-white/5 overflow-hidden rounded-3xl">
-              <CardContent className="p-3 md:p-8 text-center space-y-3 md:space-y-6">
+              <CardContent className="p-4 md:p-8 text-center space-y-3 md:space-y-6">
                 <motion.div 
                   initial={{ scale: 0, rotate: -180 }} 
                   animate={{ scale: 1, rotate: 0 }} 
