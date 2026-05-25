@@ -33,6 +33,7 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [prizes, setPrizes] = useState<any[]>([]);
   const [localTickets, setLocalTickets] = useState<any[]>([]);
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
+  const [isGameInProgress, setIsGameInProgress] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
   const detailsRef = useRef<HTMLDivElement>(null);
