@@ -573,6 +573,24 @@ const Index = () => {
             )}
           </section>
 
+          {/* Rifas Encerradas Section at the end */}
+          {endedCampaigns.length > 0 && (
+            <section className="container py-12 md:py-20 border-t border-border mt-12">
+              <SectionHeading 
+                icon={Clock} 
+                title="Últimos Ganhadores" 
+                subtitle="Rifas finalizadas recentemente"
+                badge="Encerradas"
+              />
+              
+              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                {endedCampaigns.map((campaign, i) => (
+                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                ))}
+              </div>
+            </section>
+          )}
+
           <GoogleReviews />
 
           {/* Social Proof / Security */}
