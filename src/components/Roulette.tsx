@@ -409,19 +409,20 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
               return (
                 <div
                   key={prize.id}
-                  className="absolute inset-0 flex items-start justify-center origin-center"
+                  className="absolute inset-0 origin-center"
                   style={{
                     transform: `rotate(${rotate}deg)`,
                     backgroundColor: prize.color || (i % 2 === 0 ? "#111" : "#1a1a1a"),
-                    clipPath: `polygon(50% 50%, ${50 - Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%, ${50 + Math.tan((angle / 2) * Math.PI / 180) * 50}% 0%)`
+                    clipPath: `polygon(50% 50%, ${50 - Math.tan((angle / 2 + 0.5) * Math.PI / 180) * 50}% 0%, ${50 + Math.tan((angle / 2 + 0.5) * Math.PI / 180) * 50}% 0%)`,
+                    borderLeft: prizes.length > 1 ? '1px solid rgba(255,255,255,0.1)' : 'none'
                   }}
                 >
-                  <div className="mt-8 sm:mt-12 md:mt-16 flex flex-col items-center gap-1 sm:gap-2 transform rotate-180" style={{ writingMode: "vertical-rl" }}>
-                    <span className="text-[8px] sm:text-[10px] md:text-sm font-black text-white uppercase tracking-tighter drop-shadow-lg">
+                  <div className="absolute top-4 sm:top-6 md:top-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-1 sm:gap-2 text-center" style={{ width: '60px' }}>
+                    <span className="text-[8px] sm:text-[10px] md:text-[12px] font-black text-white uppercase tracking-tighter drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] break-words leading-tight">
                       {prize.label}
                     </span>
-                    {prize.prize_type === 'balance' && <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 opacity-50" />}
-                    {prize.prize_type === 'ticket' && <Star className="h-3 w-3 sm:h-4 sm:w-4 text-primary opacity-50" />}
+                    {prize.prize_type === 'balance' && <Coins className="h-3 w-3 sm:h-4 sm:w-4 text-yellow-400 drop-shadow-md" />}
+                    {prize.prize_type === 'ticket' && <Star className="h-3 w-3 sm:h-4 sm:w-4 text-primary drop-shadow-md" />}
                   </div>
                 </div>
               );
