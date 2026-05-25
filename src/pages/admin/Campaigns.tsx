@@ -321,29 +321,32 @@ export default function AdminCampaigns() {
                      </TableCell>
                      <TableCell className="text-right pr-6 py-4">
                        <div className="flex items-center justify-end gap-1">
-                          {c.status === "active" && (
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button 
-                                  variant="ghost" 
-                                  size="icon" 
-                                  className="text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg" 
-                                  title="Realizar Sorteio"
-                                >
-                                  <Trophy className="h-4.5 w-4.5" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end" className="w-48 bg-card border-border">
-                                <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Escolha o Modo</DropdownMenuLabel>
-                                <DropdownMenuItem onClick={() => startAutoDraw(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
-                                  <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
-                                  <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          )}
+                           {(c.status === "active" || needsDraw) && (
+                             <DropdownMenu>
+                               <DropdownMenuTrigger asChild>
+                                 <Button 
+                                   variant="ghost" 
+                                   size="icon" 
+                                   className={cn(
+                                     "text-amber-500 hover:text-amber-400 hover:bg-amber-500/10 rounded-lg transition-all",
+                                     needsDraw && "animate-blink bg-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.4)] border border-amber-500/30 h-10 w-10"
+                                   )}
+                                   title={needsDraw ? "AÇÃO NECESSÁRIA: REALIZAR SORTEIO" : "Realizar Sorteio"}
+                                 >
+                                   <Trophy className={cn("h-4.5 w-4.5", needsDraw && "h-5 w-5")} />
+                                 </Button>
+                               </DropdownMenuTrigger>
+                               <DropdownMenuContent align="end" className="w-48 bg-card border-border">
+                                 <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Escolha o Modo</DropdownMenuLabel>
+                                 <DropdownMenuItem onClick={() => startAutoDraw(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                   <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
+                                 </DropdownMenuItem>
+                                 <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
+                                   <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
+                                 </DropdownMenuItem>
+                               </DropdownMenuContent>
+                             </DropdownMenu>
+                           )}
                          <Button 
                            variant="ghost" 
                            size="icon" 
