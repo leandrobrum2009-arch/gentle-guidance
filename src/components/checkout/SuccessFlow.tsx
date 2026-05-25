@@ -462,14 +462,12 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
               availableSpins={availableSpins}
               onSpinComplete={() => {
                 setAvailableSpins(prev => prev - 1);
-                if (availableSpins <= 1) {
-                  setTimeout(() => setStep(5), 5000);
-                }
+                // Don't auto-transition, let user decide if they want to spin again or move on
               }}
             />
             
-            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(5)}>
-              Ir para Raspadinha
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(5)}>
+              Pular para Raspadinha <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
         )}
@@ -490,14 +488,11 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
               campaignId={campaign.id}
               onComplete={() => {
                 setAvailableScratchCards(prev => prev - 1);
-                if (availableScratchCards <= 1) {
-                  setTimeout(() => setStep(3), 3000);
-                }
               }}
             />
             
-            <Button variant="outline" className="w-full rounded-2xl border-white/10 text-white/60" onClick={() => setStep(3)}>
-              Continuar para próxima etapa
+            <Button variant="outline" className="w-full h-12 rounded-2xl border-white/10 text-white/60 font-bold uppercase tracking-widest text-xs" onClick={() => setStep(3)}>
+              Continuar para próxima etapa <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </motion.div>
         )}
@@ -559,11 +554,12 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                   </div>
 
                   <div className="space-y-4">
-                    <Link to={`/campanha/${campaign.slug}?upsell=true`}>
-                      <Button className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20">
-                        GARANTIR MAIS CHANCES AGORA
-                      </Button>
-                    </Link>
+                    <Button 
+                      className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20"
+                      onClick={() => navigate(`/campanha/${campaign.slug}?upsell=true`)}
+                    >
+                      GARANTIR MAIS CHANCES AGORA
+                    </Button>
                     
                     <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(4)}>
                       Ver meus números e entrar no grupo

@@ -150,11 +150,20 @@ const CampaignDetail = () => {
   // Sync modal state with URL parameter for "Manter modal ao voltar"
   useEffect(() => {
     const orderId = searchParams.get('order');
+    const upsell = searchParams.get('upsell');
+    
     if (orderId && orderId !== currentOrderId) {
       setCurrentOrderId(orderId);
       setIsPaymentModalOpen(true);
     } else if (!orderId && isPaymentModalOpen) {
       setIsPaymentModalOpen(false);
+    }
+
+    if (upsell === 'true') {
+      const element = document.getElementById('purchase-tabs');
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }, [searchParams, isPaymentModalOpen, currentOrderId]);
 
