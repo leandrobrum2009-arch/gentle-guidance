@@ -207,7 +207,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
       queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
       if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
-      if (prize.prize_type !== 'none') {
+      if ((prize.prize_type as any) !== 'none') {
         await supabase.from("notifications").insert({
           user_id: user!.id,
           title: "Você ganhou na roleta!",
@@ -219,7 +219,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
 
     setIsSpinning(false);
     
-    if (prize.prize_type !== 'none') {
+    if ((prize.prize_type as any) !== 'none') {
       confetti({
         particleCount: 150,
         spread: 70,
