@@ -162,18 +162,29 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
     }
 
     const prize = wonPrizeData as RoulettePrize;
-    const randomIndex = prizes.findIndex(p => p.id === prize.id);
+    // Find the actual index in our visual segments
+    const visualIndex = prizes.findIndex(p => p.id === prize.id || (p.label === prize.label && p.prize_type === prize.prize_type));
     
     const segmentAngle = 360 / (prizes.length || 1);
     const extraSpins = 8;
     const baseRotation = extraSpins * 360;
-    const targetAngle = baseRotation + (randomIndex * segmentAngle);
+    
+    // We want the pointer (at the top, 0 degrees) to point to the winner.
+    // The segments are rotated clockwise. Segment 0 is at 0 degrees.
+    // To have segment `visualIndex` at the top (0 deg), we need to rotate the wheel by `-visualIndex * segmentAngle`.
+    // Adding extra rotation for the spin effect.
+    // Also adding a half-segment offset to land in the middle.
+    const targetAngle = baseRotation - (visualIndex * segmentAngle);
+    
+    // Create a ticking effect during spin
+    const spinDuration = 6;
+    let lastTickAngle = 0;
     
     await controls.start({
       rotate: targetAngle,
       transition: { 
-        duration: 6, 
-        ease: [0.2, 0, 0.1, 1]
+        duration: spinDuration, 
+        ease: [0.15, 0, 0.1, 1]
       }
     });
     
