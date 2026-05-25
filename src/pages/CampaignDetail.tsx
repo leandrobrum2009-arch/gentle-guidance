@@ -130,6 +130,7 @@ const CampaignDetail = () => {
   const [pendingPurchase, setPendingPurchase] = useState<number | string[] | null>(null);
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
   const [currentOrderId, setCurrentOrderId] = useState<string | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   // Sync modal state with URL parameter for "Manter modal ao voltar"
   useEffect(() => {
@@ -169,6 +170,20 @@ const CampaignDetail = () => {
       prev.includes(number) ? prev.filter(n => n !== number) : [...prev, number]
     );
   };
+
+  const handlePaymentSuccess = useCallback(() => {
+    // Just invalidate queries, don't navigate yet so user can see SuccessFlow
+    queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
+    queryClient.invalidateQueries({ queryKey: ["campaign"] });
+  }, [queryClient]);
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsPaymentModalOpen(open);
+    if (!open) {
+      setSearchParams({}, { replace: true });
+      setCurrentOrderId(null);
+    }
+  }, [setSearchParams]);
 
   const handleBuy = async (quantityOrNumbers: number | string[]) => {
     if (!user) {
@@ -843,20 +858,9 @@ const CampaignDetail = () => {
       />
       <PaymentModal 
         isOpen={isPaymentModalOpen} 
-        onOpenChange={(open) => {
-          setIsPaymentModalOpen(open);
-          if (!open) {
-            setSearchParams({}, { replace: true });
-          }
-        }} 
+        onOpenChange={handleOpenChange} 
         orderId={currentOrderId} 
-
-        onPaymentSuccess={() => {
-          // Just invalidate queries, don't navigate yet so user can see SuccessFlow
-          queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
-          queryClient.invalidateQueries({ queryKey: ["campaign"] });
-        }} 
-
+        onPaymentSuccess={handlePaymentSuccess} 
       />
       <Footer />
       

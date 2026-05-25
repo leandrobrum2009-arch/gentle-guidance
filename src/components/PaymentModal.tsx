@@ -95,8 +95,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   useEffect(() => {
     if (isOpen && orderId) {
-      setLoading(true);
-      setStatus('pending');
+      // Only set loading and pending if we're not already in a 'paid' state for this order
+      if (status !== 'paid') {
+        setLoading(true);
+        setStatus('pending');
+      }
       fetchOrder();
 
       const channel = supabase.channel(`payment-${orderId}`)
@@ -180,6 +183,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
       if (data.success) {
         toast.success(data.message || "Pagamento realizado com sucesso!");
         setStatus('paid');
+        // Update local order state immediately to avoid UI lag/skipping steps
+        setOrder((prev: any) => ({ ...prev, payment_status: 'paid', paid_at: new Date().toISOString() }));
         // Re-fetch to get updated tickets and order info
         fetchOrder();
         onPaymentSuccess();
