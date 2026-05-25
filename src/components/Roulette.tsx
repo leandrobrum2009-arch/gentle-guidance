@@ -268,7 +268,10 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, campaign, availableSp
           </Badge>
           <Dialog>
             <DialogTrigger asChild>
-              <button className="flex items-center gap-2 text-xs font-bold text-white/60 hover:text-white uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md transition-colors">
+              <button 
+                disabled={isSpinning}
+                className="flex items-center gap-2 text-xs font-bold text-white/60 hover:text-white disabled:opacity-50 disabled:cursor-not-allowed uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full border border-white/10 backdrop-blur-md transition-colors"
+              >
                 <FileText className="h-3.5 w-3.5 text-primary" /> 
                 Regras
               </button>
