@@ -44,14 +44,29 @@ import { SEO } from "@/components/SEO";
 const CampaignDetail = () => {
   const queryClient = useQueryClient();
   const [showStickyBar, setShowStickyBar] = useState(false);
+  const [isPurchaseVisible, setIsPurchaseVisible] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
     const handleScroll = () => {
       setShowStickyBar(window.scrollY > 400);
     };
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsPurchaseVisible(entry.isIntersecting);
+      },
+      { threshold: 0.1 }
+    );
+
+    const purchaseSection = document.getElementById('purchase-tabs');
+    if (purchaseSection) observer.observe(purchaseSection);
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (purchaseSection) observer.unobserve(purchaseSection);
+    };
   }, []);
 
   const { id } = useParams<{ id: string }>();
@@ -866,16 +881,18 @@ const CampaignDetail = () => {
       
       {/* Sticky Purchase Buttons */}
       <AnimatePresence>
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center gap-3 px-6 pointer-events-none"
-        >
+        {!isPurchaseVisible && (
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center gap-3 px-6 pointer-events-none"
+          >
           {/* Desktop "Participe Agora" Float */}
           <div className="hidden lg:block pointer-events-auto">
              <Button 
-                size="lg"
-                className="h-16 px-10 rounded-full font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black hover:scale-110 transition-all animate-button-flash"
+                size="sm"
+                className="h-12 px-8 rounded-full font-black uppercase tracking-widest shadow-xl shadow-primary/20 border-2 border-white/20 bg-primary text-black hover:scale-105 transition-all"
                 onClick={() => {
                   const bundles = campaign?.price_bundles || [];
                   const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
@@ -896,7 +913,7 @@ const CampaignDetail = () => {
           {/* Mobile "Quero Participar" Float */}
           <div className="lg:hidden w-full pointer-events-auto">
               <Button 
-                className="w-full h-16 rounded-2xl font-black uppercase tracking-widest shadow-2xl shadow-primary/40 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all animate-button-flash text-lg"
+                className="w-full h-12 rounded-xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all text-sm"
                 onClick={() => {
                   const bundles = campaign?.price_bundles || [];
                   const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
@@ -914,6 +931,7 @@ const CampaignDetail = () => {
               </Button>
           </div>
         </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
