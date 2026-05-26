@@ -44,10 +44,14 @@ const ScratchCard = ({
   const { data: globalWins } = useGlobalScratchCardScratches(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [apiReady, setApiReady] = useState(false);
 
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
   const [localHistory, setLocalHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
+  
+  // Create a 3x3 grid of symbols for credibility
+  const [gridSymbols, setGridSymbols] = useState<string[]>([]);
 
   const history = useMemo(() => {
     if (!globalWins || !Array.isArray(globalWins)) return localHistory.slice(0, 10);
@@ -68,6 +72,7 @@ const ScratchCard = ({
   const [scratchPercentage, setScratchPercentage] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [lastPos, setLastPos] = useState<{x: number, y: number} | null>(null);
 
   const initCanvas = useCallback(() => {
     if (canvasRef.current && canvasSize.width > 0) {
@@ -79,51 +84,61 @@ const ScratchCard = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = "source-over";
 
-      // Fill with "scratchable" layer
-      const gradient = ctx.createLinearGradient(0, 0, canvasSize.width, canvasSize.height);
-      gradient.addColorStop(0, "#333");
-      gradient.addColorStop(0.5, "#555");
-      gradient.addColorStop(1, "#222");
-      
-      ctx.fillStyle = gradient;
+      // Fill with a more realistic "silver/metallic" scratchable layer
+      // Base metallic gray
+      ctx.fillStyle = "#A0A0A0";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
-      // Add logo if available
-      const logoUrl = localStorage.getItem('site_logo') || "";
-      
+      // Add noise/texture
+      for (let i = 0; i < 5000; i++) {
+        const x = Math.random() * canvasSize.width;
+        const y = Math.random() * canvasSize.height;
+        const size = Math.random() * 2;
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)";
+        ctx.fillRect(x, y, size, size);
+      }
+
+      // Add "brushed metal" effect
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvasSize.width; i += 4) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + 20, canvasSize.height);
+        ctx.stroke();
+      }
+
+      // Add a border frame
+      ctx.strokeStyle = "rgba(0,0,0,0.3)";
+      ctx.lineWidth = 10;
+      ctx.strokeRect(0, 0, canvasSize.width, canvasSize.height);
+
       const drawText = () => {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.font = "bold 16px Inter";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.font = "bold 20px Inter";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
+        ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
+        ctx.shadowBlur = 2;
+        ctx.fillText("RASPE COM CUIDADO", canvasSize.width / 2, canvasSize.height / 2 + 40);
+        ctx.shadowBlur = 0;
       };
 
+      const logoUrl = localStorage.getItem('site_logo') || "";
       if (logoUrl) {
         const logoImg = new Image();
         logoImg.crossOrigin = "anonymous";
         logoImg.src = logoUrl;
         logoImg.onload = () => {
-          const logoSize = 60;
-          ctx.globalAlpha = 0.3;
+          const logoSize = 80;
+          ctx.globalAlpha = 0.5;
           ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
           ctx.globalAlpha = 1.0;
           drawText();
         };
-        logoImg.onerror = () => {
-          drawText();
-        };
+        logoImg.onerror = () => drawText();
       } else {
         drawText();
-      }
-      
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < canvasSize.width; i += 20) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvasSize.height);
-        ctx.stroke();
       }
     }
   }, [canvasSize]);
@@ -132,13 +147,58 @@ const ScratchCard = ({
     initCanvas();
   }, [canvasSize, initCanvas]);
 
+  const generateGrid = useCallback((winner: boolean, label: string) => {
+    const symbols = Array(9).fill("Tente novamente");
+    const otherPrizes = (potentialPrizes && potentialPrizes.length > 0) 
+      ? potentialPrizes.filter(p => p !== label)
+      : ["R$ 5", "R$ 10", "Giro Grátis", "VIP"];
+
+    if (winner && label) {
+      // Place 3 winning symbols in random positions
+      const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
+      symbols[positions[0]] = label;
+      symbols[positions[1]] = label;
+      symbols[positions[2]] = label;
+      
+      // Fill the rest with random stuff
+      for (let i = 3; i < 9; i++) {
+        symbols[positions[i]] = otherPrizes[Math.floor(Math.random() * otherPrizes.length)];
+      }
+    } else {
+      // Fill with random stuff but no 3-matches
+      const usedCounts: Record<string, number> = {};
+      for (let i = 0; i < 9; i++) {
+        let pool = [...otherPrizes, "Tente novamente"];
+        let choice = pool[Math.floor(Math.random() * pool.length)];
+        
+        // Ensure no 3 matches
+        while (usedCounts[choice] >= 2) {
+          choice = pool[Math.floor(Math.random() * pool.length)];
+        }
+        
+        symbols[i] = choice;
+        usedCounts[choice] = (usedCounts[choice] || 0) + 1;
+      }
+    }
+    setGridSymbols(symbols);
+  }, [potentialPrizes]);
+
+  useEffect(() => {
+    // Initial random grid
+    if (gridSymbols.length === 0) {
+      generateGrid(false, "");
+    }
+  }, [generateGrid, gridSymbols.length]);
+
   const resetScratchCard = () => {
     setHasStarted(false);
     setIsScratched(false);
+    setApiReady(false);
     setScratchPercentage(0);
     setIsDrawing(false);
     setPrizeLabel("");
     setIsWinner(false);
+    setGridSymbols([]);
     initCanvas();
   };
 
@@ -183,18 +243,22 @@ const ScratchCard = ({
   const startScratch = async () => {
     if (isSimulation) {
       const winner = Math.random() > 0.7;
+      const label = winner ? "R$ 10,00 Simulado" : "Tente novamente";
       setIsWinner(winner);
-      setPrizeLabel(winner ? "R$ 10,00 Simulado" : "Tente novamente");
+      setPrizeLabel(label);
+      generateGrid(winner, label);
+      setApiReady(true);
       return;
     }
 
-    if (!user && !isSimulation) {
+    if (!user) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
       setIsDrawing(false);
+      setHasStarted(false);
       return;
     }
 
-    if (availableScratches <= 0 && cost <= 0 && !isSimulation) {
+    if (availableScratches <= 0 && cost <= 0) {
       toast.error("Você não possui raspadinhas disponíveis!");
       setIsDrawing(false);
       setHasStarted(false);
@@ -204,7 +268,6 @@ const ScratchCard = ({
     setIsProcessing(true);
     if (onStart) onStart();
     try {
-      // Ensure we have a valid campaignId if possible, or try global scratch
       const { data, error } = await supabase.rpc('process_scratch_card_play', {
         p_campaign_id: campaignId || null,
         p_cost: Number(cost) || 0
@@ -212,22 +275,25 @@ const ScratchCard = ({
 
       if (error) {
         toast.error(error.message || "Erro ao processar a raspadinha");
-        // Reset state so they can try again if it was just a connection/auth issue
         setHasStarted(false);
         setIsDrawing(false);
         throw error;
       }
 
       const res = data as any;
-      setIsWinner(res.is_winner);
-      setPrizeLabel(res.is_winner ? (res.prize?.label || "Prêmio!") : "Tente novamente");
+      const winner = res.is_winner;
+      const label = winner ? (res.prize?.label || "Prêmio!") : "Tente novamente";
+      
+      setIsWinner(winner);
+      setPrizeLabel(label);
+      generateGrid(winner, label);
+      setApiReady(true);
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["user-campaign-scratches"] });
       queryClient.invalidateQueries({ queryKey: ["admin-scratch-card-stats"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
-      setIsProcessing(false);
       setHasStarted(false);
       setIsDrawing(false);
     } finally {
@@ -236,47 +302,55 @@ const ScratchCard = ({
   };
 
   const scratch = async (x: number, y: number) => {
-    if (!canvasRef.current || isScratched || isProcessing) return;
+    if (!canvasRef.current || isScratched) return;
 
     if (!hasStarted) {
       setHasStarted(true);
-      await startScratch();
-      // If startScratch failed or is still processing, we might want to return
-      // But we can let them "start" scratching visually if we want.
-      // However, if we don't have the result yet, we don't know what's underneath.
-      // So we wait for processing to finish before allowing more scratching.
-      return;
+      startScratch(); // Don't await, let it run in background
     }
-
-    if (isProcessing) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
 
     ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x, y, 35, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.lineWidth = 60; // Larger brush for better scratching feel
 
-    // Calculate scratch percentage (optimized: only every 10 scratches or so, or debounced)
-    // For now, let's keep it simple but use willReadFrequently
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let transparentPixels = 0;
-    for (let i = 3; i < pixels.length; i += 4) {
-      if (pixels[i] === 0) transparentPixels++;
+    if (lastPos) {
+      ctx.beginPath();
+      ctx.moveTo(lastPos.x, lastPos.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, 30, 0, Math.PI * 2);
+      ctx.fill();
     }
-    const percentage = (transparentPixels / (pixels.length / 4)) * 100;
-    setScratchPercentage(percentage);
+    
+    setLastPos({ x, y });
 
-    if (percentage > 45 && !isScratched) {
-      reveal();
+    // Calculate scratch percentage every few calls to save performance
+    if (Math.random() > 0.8) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const pixels = imageData.data;
+      let transparentPixels = 0;
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] === 0) transparentPixels++;
+      }
+      const percentage = (transparentPixels / (pixels.length / 4)) * 100;
+      setScratchPercentage(percentage);
+
+      if (percentage > 45 && !isScratched) {
+        reveal();
+      }
     }
   };
 
   const reveal = () => {
     setIsScratched(true);
+    setLastPos(null);
     if (isWinner && prizeLabel !== "Tente novamente") {
       playSound('win');
       confetti({
@@ -319,7 +393,7 @@ const ScratchCard = ({
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDrawing(true);
     const { x, y } = getMousePos(e);
-    if (isScratched || isProcessing) return;
+    if (isScratched) return;
     scratch(x, y);
     hapticFeedback();
   };
@@ -332,6 +406,7 @@ const ScratchCard = ({
 
   const handleMouseUp = () => {
     setIsDrawing(false);
+    setLastPos(null);
   };
 
   return (
@@ -372,9 +447,34 @@ const ScratchCard = ({
         className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-zinc-800 bg-zinc-950 group"
         style={{ cursor: isScratched ? "default" : "crosshair" }}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-zinc-900 to-black">
+        {/* The Grid of hidden items */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2 p-2 bg-zinc-900">
+          {gridSymbols.map((symbol, i) => (
+            <div key={i} className="flex flex-col items-center justify-center bg-zinc-800 rounded-lg border border-white/5 p-1 text-center">
+              <div className={cn(
+                "h-8 w-8 md:h-10 md:w-10 rounded-full mb-1 flex items-center justify-center",
+                symbol === "Tente novamente" ? "bg-zinc-700/50" : "bg-primary/20 shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
+              )}>
+                {symbol === "Tente novamente" ? (
+                  <Zap className="h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
+                ) : (
+                  <Gift className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                )}
+              </div>
+              <span className={cn(
+                "text-[7px] md:text-[9px] font-black uppercase leading-tight",
+                symbol === "Tente novamente" ? "text-zinc-500" : "text-white"
+              )}>
+                {symbol}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-10">
           <AnimatePresence>
-            {isScratched && !isProcessing && (
+            {isScratched && (
+
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
@@ -399,7 +499,7 @@ const ScratchCard = ({
             )}
           </AnimatePresence>
           
-          {isProcessing && (
+          {isProcessing && !apiReady && scratchPercentage > 40 && (
             <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
               <div className="bg-zinc-900/90 p-6 rounded-3xl border border-white/10 shadow-2xl flex flex-col items-center gap-3 scale-90 md:scale-100">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
