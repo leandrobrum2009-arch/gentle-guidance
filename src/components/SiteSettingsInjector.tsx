@@ -20,6 +20,21 @@ export const SiteSettingsInjector = () => {
       if (twitterTitle) twitterTitle.setAttribute('content', siteTitle);
     }
 
+    // Apply Site Description
+    if (settings.site_description) {
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) metaDescription.setAttribute('content', settings.site_description);
+      
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      if (ogDescription) ogDescription.setAttribute('content', settings.site_description);
+    }
+
+    // Apply Site Keywords
+    if (settings.site_keywords) {
+      const metaKeywords = document.querySelector('meta[name="keywords"]');
+      if (metaKeywords) metaKeywords.setAttribute('content', settings.site_keywords);
+    }
+
     // Apply Primary Color
     if (settings.primary_color) {
       const hex = settings.primary_color;
