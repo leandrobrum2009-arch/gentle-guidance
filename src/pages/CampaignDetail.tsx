@@ -827,9 +827,6 @@ const CampaignDetail = () => {
               ))}
             </div>
 
-            <div className="mt-8 border-t border-border pt-8">
-              <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={0} isSimulation={true} />
-            </div>
           </div>
         );
 
