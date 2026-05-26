@@ -111,7 +111,7 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
                   {luckyNumbers.filter(p => !soldTickets.includes(p.number)).map((p, i) => (
                     <div 
                       key={i} 
-                      className="group flex items-center justify-between p-4 rounded-2xl border border-white/10 bg-[#0d0d0f]/50 hover:border-green-500/50 hover:bg-white/5 shadow-lg transition-all duration-300"
+                      className="group flex items-center justify-between p-4 rounded-2xl border border-border bg-card/50 hover:border-green-500/50 hover:bg-secondary transition-all duration-300 shadow-sm"
                     >
                       <div className="flex items-center gap-4">
                         <div className="h-10 w-10 rounded-xl bg-green-500 text-white flex items-center justify-center font-mono font-black text-sm shadow-inner group-hover:scale-110 transition-transform duration-300">
@@ -176,7 +176,7 @@ const CampaignPrizes = ({ mainPrizes, instantPrizes, roulettePrizes, showInstant
             {roulettePrizes.map((p, i) => (
               <div 
                 key={i} 
-                className="group flex items-center gap-4 p-4 rounded-2xl border border-white/10 bg-[#0d0d0f]/50 hover:border-purple-500/50 hover:bg-white/5 transition-all duration-300"
+                className="group flex items-center gap-4 p-4 rounded-2xl border border-border bg-card/50 hover:border-purple-500/50 hover:bg-secondary transition-all duration-300 shadow-sm"
               >
                 <div 
                   className="h-10 w-10 rounded-xl flex items-center justify-center shadow-inner"

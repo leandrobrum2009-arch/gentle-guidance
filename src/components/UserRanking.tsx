@@ -381,7 +381,7 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
           rank === 2 ? "from-slate-300 to-slate-500 -rotate-3" : 
           "from-amber-600 to-amber-900 rotate-6"
         )}>
-          <div className="h-full w-full rounded-[1.4rem] bg-[#0d0d0f] p-1">
+          <div className="h-full w-full rounded-[1.4rem] bg-card p-1">
             <Avatar className="h-full w-full rounded-2xl border-none">
               <AvatarImage src={user.avatar_url || ""} />
               <AvatarFallback className="bg-zinc-800 text-white font-black text-xl">
