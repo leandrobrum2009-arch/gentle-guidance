@@ -41,6 +41,11 @@ export default function AdminSettings() {
     site_logo_height_mobile: "Altura do Logo (Mobile)",
     site_favicon_url: "Ícone da Aba (Favicon)",
     site_title: "Título do Navegador (SEO)",
+    facebook_pixel_id: "ID do Pixel do Facebook",
+    google_analytics_id: "ID do Google Analytics (GA4)",
+    google_tag_manager_id: "ID do Google Tag Manager",
+    custom_header_scripts: "Scripts Personalizados (Header)",
+    custom_body_scripts: "Scripts Personalizados (Body)",
     enable_download_app: "Habilitar Botão 'Baixar App'",
     app_download_link: "Link para Baixar App (Direto ou APK)",
     
@@ -146,6 +151,7 @@ export default function AdminSettings() {
     if (key.includes('hero_style') || key.includes('marquee')) return <Layout className="h-4 w-4" />;
     if (key.includes('site_name') || key.includes('company_name') || key.includes('site_title')) return <Globe className="h-4 w-4" />;
     if (key.includes('logo') || key.includes('favicon')) return <ImageIcon className="h-4 w-4" />;
+    if (key.includes('pixel') || key.includes('analytics') || key.includes('tag_manager') || key.includes('scripts')) return <TrendingUp className="h-4 w-4" />;
     if (key.includes('app')) return <Smartphone className="h-4 w-4" />;
     if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
     if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;
@@ -240,24 +246,17 @@ export default function AdminSettings() {
                   />
                 </div>
 
-                <div className="pt-2">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_favicon_url')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_favicon_url']}
-                    getIcon={getIcon}
-                    onUpload={handleUpload}
-                    uploading={uploading === 'site_favicon_url'}
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_title')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_title']}
-                    getIcon={getIcon}
-                  />
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-primary">Favicon e Título SEO</h4>
+                    <p className="text-[10px] text-muted-foreground font-medium">Agora configurados na aba <strong>SEO & Google</strong> para melhor organização.</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    const seoTrigger = document.querySelector('[value="seo"]') as HTMLElement;
+                    seoTrigger?.click();
+                  }} className="text-xs font-bold border-primary/20 hover:bg-primary/10 transition-colors h-8">
+                    Ir para SEO
+                  </Button>
                 </div>
 
                 <Separator className="my-4 bg-primary/10" />
@@ -398,45 +397,120 @@ export default function AdminSettings() {
           </div>
         </TabsContent>
         <TabsContent value="seo" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
-            <CardHeader className="pb-4 bg-primary/5">
-              <CardTitle className="flex items-center gap-3 text-xl">
-                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
-                  <Search className="h-5 w-5" />
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+              <CardHeader className="pb-4 bg-primary/5">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                    <Search className="h-5 w-5" />
+                  </div>
+                  Otimização para Buscadores (SEO)
+                </CardTitle>
+                <CardDescription className="font-medium">Configure como o Google e outras IAs veem seu site</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-6">
+                <div className="grid gap-6">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_title')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_title']}
+                    getIcon={getIcon}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_favicon_url')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_favicon_url']}
+                    getIcon={getIcon}
+                    onUpload={handleUpload}
+                    uploading={uploading === 'site_favicon_url'}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_keywords')} 
+                    onUpdate={handleUpdate} 
+                    label="Palavras-chave do Site (Separadas por vírgula)"
+                    getIcon={() => <Search className="h-4 w-4" />}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_description')} 
+                    onUpdate={handleUpdate} 
+                    label="Descrição Meta do Site (Recomendado 160 caracteres)"
+                    getIcon={() => <FileText className="h-4 w-4" />}
+                    type="textarea"
+                  />
                 </div>
-                Otimização para Buscadores (SEO)
-              </CardTitle>
-              <CardDescription className="font-medium">Configure como o Google e outras IAs veem seu site</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 pt-6">
-              <div className="grid gap-6">
-                <SettingField 
-                  s={settings.find(s => s.key === 'site_keywords')} 
-                  onUpdate={handleUpdate} 
-                  label="Palavras-chave do Site (Separadas por vírgula)"
-                  getIcon={() => <Search className="h-4 w-4" />}
-                />
-                <SettingField 
-                  s={settings.find(s => s.key === 'site_description')} 
-                  onUpdate={handleUpdate} 
-                  label="Descrição Meta do Site (Recomendado 160 caracteres)"
-                  getIcon={() => <FileText className="h-4 w-4" />}
-                  type="textarea"
-                />
-              </div>
 
-              <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
-                <div className="flex items-center gap-2 text-amber-600">
-                  <Zap className="h-4 w-4" />
-                  <span className="text-xs font-black uppercase tracking-wider">Dica SEO</span>
+                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
+                  <div className="flex items-center gap-2 text-amber-600">
+                    <Zap className="h-4 w-4" />
+                    <span className="text-xs font-black uppercase tracking-wider">Dica SEO</span>
+                  </div>
+                  <p className="text-[11px] text-amber-800 font-bold leading-relaxed">
+                    As URLs amigáveis em português já estão ativadas automaticamente em todo o site. 
+                    Para cada rifa, o slug (URL personalizada) é usado para ranquear no Google.
+                  </p>
                 </div>
-                <p className="text-[11px] text-amber-800 font-bold leading-relaxed">
-                  As URLs amigáveis em português já estão ativadas automaticamente em todo o site. 
-                  Para cada rifa, o slug (URL personalizada) é usado para ranquear no Google.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+              <CardHeader className="pb-4 bg-primary/5">
+                <CardTitle className="flex items-center gap-3 text-xl">
+                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                    <TrendingUp className="h-5 w-5" />
+                  </div>
+                  Métricas & Rastreamento
+                </CardTitle>
+                <CardDescription className="font-medium">Acompanhe suas vendas com Pixels e Analytics</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6 pt-6">
+                <div className="grid gap-6">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'facebook_pixel_id')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['facebook_pixel_id']}
+                    getIcon={getIcon}
+                    placeholder="Ex: 1234567890"
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'google_analytics_id')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['google_analytics_id']}
+                    getIcon={getIcon}
+                    placeholder="Ex: G-XXXXXXXXXX"
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'google_tag_manager_id')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['google_tag_manager_id']}
+                    getIcon={getIcon}
+                    placeholder="Ex: GTM-XXXXXXX"
+                  />
+                </div>
+
+
+                <Separator className="my-4 bg-primary/10" />
+
+                <div className="space-y-4">
+                   <SettingField 
+                    s={settings.find(s => s.key === 'custom_header_scripts')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['custom_header_scripts']}
+                    getIcon={getIcon}
+                    type="textarea"
+                    placeholder="Scripts para inserir dentro do <head>..."
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'custom_body_scripts')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['custom_body_scripts']}
+                    getIcon={getIcon}
+                    type="textarea"
+                    placeholder="Scripts para inserir no final do <body>..."
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </TabsContent>
 
 
