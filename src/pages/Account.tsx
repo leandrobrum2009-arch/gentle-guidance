@@ -583,7 +583,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Depositar via PIX</h3>
                             <p className="text-sm text-foreground/60 font-medium">Crédito instantâneo na sua carteira.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 active:scale-95 transition-all">Depositar Agora</Button>
+                            <Button onClick={() => setIsDepositOpen(true)} className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 active:scale-95 transition-all">Depositar Agora</Button>
                         </div>
                      </Card>
 
