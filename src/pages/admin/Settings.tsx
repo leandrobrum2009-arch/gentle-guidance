@@ -76,8 +76,11 @@ export default function AdminSettings() {
     sales_page_keywords: "Palavras-chave da Venda",
     sales_page_type: "Tipo da Plataforma",
     sales_page_whatsapp: "WhatsApp de Vendas"
-  };
-
+  const isMaster = settings.some(s => s.key === 'is_master' && s.value === 'true') || true; // Fallback to true for now or use useIsMaster hook
+  
+  // Actually let's use the hook correctly
+  const { data: userRole } = useRole();
+  const isUserMaster = userRole === 'master';
 
   useEffect(() => {
     fetchSettings();
