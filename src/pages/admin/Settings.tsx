@@ -246,25 +246,6 @@ export default function AdminSettings() {
                   />
                 </div>
 
-                <div className="pt-2">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_favicon_url')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_favicon_url']}
-                    getIcon={getIcon}
-                    onUpload={handleUpload}
-                    uploading={uploading === 'site_favicon_url'}
-                  />
-                </div>
-
-                <div className="pt-2">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_title')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_title']}
-                    getIcon={getIcon}
-                  />
-                </div>
 
                 <Separator className="my-4 bg-primary/10" />
 
