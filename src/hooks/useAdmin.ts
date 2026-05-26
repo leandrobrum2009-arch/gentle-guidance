@@ -1,7 +1,30 @@
- import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
- import { toast } from "sonner";
+import { toast } from "sonner";
+
+export const useRole = () => {
+  const { user } = useAuth();
+  return useQuery({
+    queryKey: ["user-role", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      
+      if (error) throw error;
+      return data?.[0]?.role as string | null;
+    },
+    enabled: !!user,
+  });
+};
+
+export const useIsMaster = () => {
+  const { data: role } = useRole();
+  return role === "master";
+};
 
 export const useIsAdmin = () => {
   const { user } = useAuth();
@@ -14,9 +37,58 @@ export const useIsAdmin = () => {
         _role: "admin",
       });
       if (error) throw error;
-      return data as boolean;
+      
+      // Also check for master or client_admin
+      const { data: moreRoles } = await supabase
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", user.id);
+      
+      const roles = moreRoles?.map(r => r.role) || [];
+      return data || roles.includes("master") || roles.includes("client_admin");
     },
     enabled: !!user,
+  });
+};
+
+export const useFeatureAccess = () => {
+  const { user } = useAuth();
+  const { data: role } = useRole();
+  
+  return useQuery({
+    queryKey: ["feature-access", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      
+      // Master has access to everything
+      if (role === "master") {
+        return {
+          scratch_cards_enabled: true,
+          lucky_numbers_enabled: true,
+          roulette_enabled: true,
+          page_editing_enabled: true,
+          sales_page_models_enabled: true
+        };
+      }
+
+      const { data, error } = await supabase
+        .from("admin_features_config")
+        .select("*")
+        .eq("user_id", user.id)
+        .single();
+      
+      if (error && error.code !== "PGRST116") throw error;
+      
+      // Default to true if no config found (or maybe false if we want strict)
+      return data || {
+        scratch_cards_enabled: true,
+        lucky_numbers_enabled: true,
+        roulette_enabled: true,
+        page_editing_enabled: true,
+        sales_page_models_enabled: true
+      };
+    },
+    enabled: !!user && !!role,
   });
 };
 
