@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download, Settings } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -34,6 +34,7 @@ const LogoFallback = ({ siteName }: { siteName?: string }) => (
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [logoError, setLogoError] = useState(false);
   const { user, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
   const [profile, setProfile] = useState<any>(null);
@@ -138,29 +139,16 @@ const Header = () => {
        <div className="container flex items-center justify-between gap-4 h-full">
           <div className="flex items-center gap-4 md:gap-8 min-w-0">
              <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
-                 <>
-                   <img 
-                     src={siteSettings.site_logo_url} 
-                     alt={siteSettings?.site_name || "Logo"} 
-                     className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
-                     onError={(e) => {
-                       (e.target as HTMLImageElement).style.display = 'none';
-                       const fallback = document.querySelector('.logo-fallback-container');
-                       if (fallback) fallback.classList.remove('hidden');
-                     }}
-                     onLoad={(e) => {
-                       const fallback = document.querySelector('.logo-fallback-container');
-                       if (fallback) fallback.classList.add('hidden');
-                     }}
-                   />
-                   <div className="logo-fallback-container hidden">
-                     <LogoFallback siteName={siteSettings?.site_name} />
-                   </div>
-                 </>
-               ) : (
-                 <LogoFallback siteName={siteSettings?.site_name} />
-               )}
+                {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
+                  <img 
+                    src={siteSettings.site_logo_url} 
+                    alt={siteSettings?.site_name || "Logo"} 
+                    className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <LogoFallback siteName={siteSettings?.site_name} />
+                )}
              </Link>
 
  
@@ -201,10 +189,10 @@ const Header = () => {
 
               <div className="flex items-center gap-2">
                 {isAdmin && (
-                  <Link to="/admin" className="hidden sm:block">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
-                      <Zap className="h-4 w-4 text-primary" />
-                      Admin
+                  <Link to="/admin" className="flex items-center">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic group">
+                      <Settings className="h-4 w-4 text-primary group-hover:rotate-90 transition-transform duration-500" />
+                      <span className="hidden sm:inline">Painel Admin</span>
                     </Button>
                   </Link>
                 )}
@@ -277,7 +265,7 @@ const Header = () => {
                   className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
                 >
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4" />
+                    <Settings className="h-4 w-4" />
                     Painel Administrativo
                   </div>
                   <ArrowRight className="h-3.5 w-3.5" />
