@@ -575,15 +575,13 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
                       <Button 
                         className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20"
                         onClick={() => {
-                          if (onBuyMore && campaign.price_bundles?.length > 0) {
+                          if (onBuyMore) {
                             setShowUpsellBundles(true);
-                          } else if (onBuyMore) {
-                            // If no bundles, just try to buy 100 or something
-                            onBuyMore(100);
                           } else {
                             navigate(`/campanha/${campaign.slug}?upsell=true`);
                           }
                         }}
+
                       >
                         GARANTIR MAIS CHANCES AGORA
                       </Button>
