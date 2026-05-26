@@ -13,10 +13,20 @@ interface DrawCeremonyProps {
   onOpenChange: (open: boolean) => void;
   campaign: any;
   manualNumber?: string;
+  prizeIndex?: number;
+  allowUnassigned?: boolean;
   onFinished: (winnerId: string) => void;
 }
 
-export const DrawCeremony = ({ isOpen, onOpenChange, campaign, manualNumber, onFinished }: DrawCeremonyProps) => {
+export const DrawCeremony = ({ 
+  isOpen, 
+  onOpenChange, 
+  campaign, 
+  manualNumber, 
+  prizeIndex = 1, 
+  allowUnassigned = false, 
+  onFinished 
+}: DrawCeremonyProps) => {
   const [phase, setStatus] = useState<'countdown' | 'rolling' | 'winner'>('countdown');
   const [countdown, setCountdown] = useState(5);
   const [rollingNumber, setRollingNumber] = useState("");
@@ -88,11 +98,14 @@ export const DrawCeremony = ({ isOpen, onOpenChange, campaign, manualNumber, onF
       if (manualNumber) {
         result = await supabase.rpc('manual_perform_draw', {
           p_campaign_id: campaign.id,
-          p_ticket_number: manualNumber
+          p_ticket_number: manualNumber,
+          p_prize_index: prizeIndex
         });
       } else {
         result = await supabase.rpc('perform_draw', {
-          p_campaign_id: campaign.id
+          p_campaign_id: campaign.id,
+          p_prize_index: prizeIndex,
+          p_allow_unassigned: allowUnassigned
         });
       }
 
