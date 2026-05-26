@@ -502,6 +502,32 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
       </div>
 
         <div className="flex flex-col items-center gap-4 z-10 w-full px-6 pb-4">
+          <div className="w-full md:w-72 space-y-3 mb-2">
+            <div className="flex items-center justify-between">
+              <span className="text-[10px] font-black uppercase text-white/40 tracking-widest flex items-center gap-2">
+                <Gauge className="h-3 w-3" />
+                Potência do Giro
+              </span>
+              <span className={cn(
+                "text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-tighter transition-colors",
+                spinPower < 4 ? "bg-blue-500/20 text-blue-400" : 
+                spinPower < 8 ? "bg-primary/20 text-primary" : 
+                "bg-red-500/20 text-red-400"
+              )}>
+                {spinPower < 4 ? "Fraco" : spinPower < 8 ? "Moderado" : "Forte"}
+              </span>
+            </div>
+            <Slider 
+              value={[spinPower]} 
+              max={10} 
+              min={1}
+              step={1} 
+              onValueChange={(v) => setSpinPower(v[0])}
+              disabled={isSpinning}
+              className="py-2"
+            />
+          </div>
+
           <Button
             onClick={spin}
             disabled={isSpinning}
@@ -521,7 +547,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
           
           <div className="flex items-center gap-2 text-white/40">
              <Zap className="h-4 w-4" />
-             <span className="text-xs font-bold uppercase tracking-widest">Gire e ganhe prêmios instantâneos</span>
+             <span className="text-xs font-bold uppercase tracking-widest text-center">Gire e ganhe prêmios instantâneos</span>
           </div>
         </div>
 
