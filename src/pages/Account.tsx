@@ -965,8 +965,35 @@ import { PaymentModal } from "@/components/PaymentModal";
              </Tabs>
            </main>
          </div>
-       </motion.div>
-       <Footer />
-     </div>
+      </motion.div>
+
+      <DepositModal 
+        isOpen={isDepositOpen} 
+        onOpenChange={setIsDepositOpen}
+        onSuccess={(orderId) => {
+          setPendingOrderId(orderId);
+          setIsPaymentOpen(true);
+        }}
+      />
+
+      <WithdrawModal
+        isOpen={isWithdrawOpen}
+        onOpenChange={setIsWithdrawOpen}
+        userBalance={Number(profile?.balance || 0)}
+        onSuccess={() => queryClient.invalidateQueries({ queryKey: ["profile", user?.id] })}
+      />
+
+      <PaymentModal
+        orderId={pendingOrderId}
+        isOpen={isPaymentOpen}
+        onOpenChange={setIsPaymentOpen}
+        onPaymentSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+          queryClient.invalidateQueries({ queryKey: ["user-wallet-transactions", user?.id] });
+        }}
+      />
+
+      <Footer />
+    </div>
   );
 }
