@@ -47,6 +47,7 @@ export default function AdminSettings() {
     custom_header_scripts: "Scripts Personalizados (Header)",
     custom_body_scripts: "Scripts Personalizados (Body)",
     enable_download_app: "Habilitar Botão 'Baixar App'",
+    app_download_link: "Link para Baixar App (Direto ou APK)",
     
     support_whatsapp: "WhatsApp de Atendimento",
     cashback_percent: "% de Cashback por Compra",
