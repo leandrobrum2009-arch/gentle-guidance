@@ -130,6 +130,7 @@ export default function AdminUsers() {
               <TableHeader>
                 <TableRow className="border-border hover:bg-transparent">
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Usuário / ID</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Role</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Telefone</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Saldo</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Membro desde</TableHead>
