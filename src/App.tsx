@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
+import PWAInstallBanner from "./components/PWAInstallBanner";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
 import ScratchCard from "./pages/ScratchCard";
@@ -143,6 +144,7 @@ const App = () => {
             <Toaster />
             <Sonner />
             <LiveNotifications />
+            <PWAInstallBanner />
             <AppContent />
           </TooltipProvider>
         </ThemeProvider>
