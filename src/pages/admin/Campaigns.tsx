@@ -132,6 +132,8 @@ export default function AdminCampaigns() {
     setSelectedCampaign(campaign);
     setManualTicketNumber("");
     setSelectedPrizeIndex(1);
+    setSelectedInstantPrize(null);
+    setTicketSearch("");
     setIsManualDrawDialogOpen(true);
   };
 
