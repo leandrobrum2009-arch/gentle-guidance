@@ -176,7 +176,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
 
                   {stats.lowestTickets[0] ? (
                     <div className="flex items-center gap-5">
-                      <div className="h-16 w-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-2xl font-black italic text-foreground">
+                      <div className="h-16 min-w-[4rem] w-auto px-4 rounded-2xl bg-secondary border border-border flex items-center justify-center text-2xl font-black italic text-foreground flex-shrink-0">
                         #{stats.lowestTickets[0].number}
                       </div>
                       <div className="flex flex-col">
