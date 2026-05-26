@@ -83,14 +83,33 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                 <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
                   <Star className="h-4 w-4 text-green-500" />
                 </div>
-                <h3 className="text-xs font-black uppercase tracking-widest italic">Meus números comprados</h3>
+                <h3 className="text-xs font-black uppercase tracking-widest italic">Meus números (Maior e Menor)</h3>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {stats.userTickets.map((ticket, idx) => (
-                  <Badge key={idx} variant="outline" className="h-8 px-4 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic">
-                    #{ticket.number}
-                  </Badge>
-                ))}
+              <div className="flex flex-wrap gap-3">
+                {(() => {
+                  const sorted = [...stats.userTickets].sort((a, b) => Number(a.number) - Number(b.number));
+                  const lowest = sorted[0];
+                  const highest = sorted[sorted.length - 1];
+                  
+                  return (
+                    <>
+                      <div className="flex flex-col gap-1">
+                        <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Menor</span>
+                        <Badge variant="outline" className="h-10 px-6 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic text-sm">
+                          #{lowest.number}
+                        </Badge>
+                      </div>
+                      {sorted.length > 1 && (
+                        <div className="flex flex-col gap-1">
+                          <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Maior</span>
+                          <Badge variant="outline" className="h-10 px-6 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic text-sm">
+                            #{highest.number}
+                          </Badge>
+                        </div>
+                      )}
+                    </>
+                  );
+                })()}
               </div>
             </div>
           )}
