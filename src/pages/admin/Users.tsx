@@ -19,6 +19,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
+  const isMaster = useIsMaster();
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -26,7 +27,14 @@ export default function AdminUsers() {
   const queryClient = useQueryClient();
 
   const handleEdit = (user: any) => {
-    setEditingUser({ ...user });
+    setEditingUser({ 
+      ...user,
+      scratch_cards_enabled: user.features?.scratch_cards_enabled ?? true,
+      lucky_numbers_enabled: user.features?.lucky_numbers_enabled ?? true,
+      roulette_enabled: user.features?.roulette_enabled ?? true,
+      page_editing_enabled: user.features?.page_editing_enabled ?? true,
+      sales_page_models_enabled: user.features?.sales_page_models_enabled ?? true,
+    });
     setIsEditDialogOpen(true);
   };
 
@@ -34,7 +42,8 @@ export default function AdminUsers() {
     if (!editingUser) return;
     setSaving(true);
     try {
-      const { error } = await supabase
+      // 1. Update Profile
+      const { error: profileError } = await supabase
         .from("profiles")
         .update({
           name: editingUser.name,
@@ -44,7 +53,40 @@ export default function AdminUsers() {
         })
         .eq("id", editingUser.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      if (isMaster) {
+        // 2. Update Role (Master only)
+        if (editingUser.role) {
+          const { error: roleError } = await supabase
+            .from("user_roles")
+            .upsert({ 
+              user_id: editingUser.user_id, 
+              role: editingUser.role 
+            }, { onConflict: 'user_id,role' });
+          
+          if (roleError) {
+             // If unique constraint fails because they already have another role, we might need to handle it.
+             // Usually user_roles has (user_id, role) unique.
+             console.error("Role update error:", roleError);
+          }
+        }
+
+        // 3. Update Feature Config (Master only)
+        const { error: featureError } = await supabase
+          .from("admin_features_config")
+          .upsert({
+            user_id: editingUser.user_id,
+            scratch_cards_enabled: editingUser.scratch_cards_enabled,
+            lucky_numbers_enabled: editingUser.lucky_numbers_enabled,
+            roulette_enabled: editingUser.roulette_enabled,
+            page_editing_enabled: editingUser.page_editing_enabled,
+            sales_page_models_enabled: editingUser.sales_page_models_enabled,
+          }, { onConflict: 'user_id' });
+
+        if (featureError) throw featureError;
+      }
+
       toast.success("Usuário atualizado com sucesso!");
       setIsEditDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
