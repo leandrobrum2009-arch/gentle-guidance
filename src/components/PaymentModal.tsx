@@ -99,12 +99,14 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
 
   useEffect(() => {
     if (isOpen && orderId) {
-      // Only set loading and pending if we're not already in a 'paid' state for this order
-      if (status !== 'paid') {
+      // If orderId changed, reset status to pending
+      if (orderId !== lastProcessedOrderId) {
         setLoading(true);
         setStatus('pending');
+        setLastProcessedOrderId(orderId);
       }
       fetchOrder();
+
 
       const channel = supabase.channel(`payment-${orderId}`)
         .on('postgres_changes', { 
