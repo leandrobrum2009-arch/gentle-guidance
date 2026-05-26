@@ -75,6 +75,8 @@ export default function AdminCampaignEdit() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { data: features } = useFeatureAccess();
+  const { data: userRole } = useRole();
   const [form, setForm] = useState<CampaignForm>(empty);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
