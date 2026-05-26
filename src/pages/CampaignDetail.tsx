@@ -83,6 +83,7 @@ const CampaignDetail = () => {
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: allWinners } = useWinners();
+  const raffleWinners = allWinners?.filter(w => w.campaign_id === campaignId && w.winner_type === 'raffle') || [];
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const allLuckyNumbers = useMemo(() => {
