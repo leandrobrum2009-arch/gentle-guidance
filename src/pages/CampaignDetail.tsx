@@ -796,6 +796,7 @@ const CampaignDetail = () => {
             <UserRanking 
               title="Maiores e menores cotas" 
               stats={ticketStats ? { ...ticketStats, userTickets } : null} 
+              users={campaignRanking?.slice(0, 5)}
             />
           </div>
         );
