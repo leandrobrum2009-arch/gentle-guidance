@@ -68,7 +68,9 @@ export const SiteSettingsInjector = () => {
     // Logo Height
     if (settings.site_logo_height) document.documentElement.style.setProperty('--logo-height-desktop', `${settings.site_logo_height}px`);
     if (settings.site_logo_height_mobile) document.documentElement.style.setProperty('--logo-height-mobile', `${settings.site_logo_height_mobile}px`);
-
+    
+    // Inject Custom Scripts
+    injectTrackingScripts(settings);
 
   }, [settings]);
 
