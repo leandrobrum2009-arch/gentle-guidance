@@ -262,13 +262,26 @@ const Header = () => {
                   <Ticket className="h-3.5 w-3.5 opacity-50" />
                 </Link>
               )}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    Painel Administrativo
+                  </div>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
               {siteSettings?.enable_download_app === 'true' && (
                 <button
                   onClick={() => {
                     handleInstallApp();
                     setMobileOpen(false);
                   }}
-                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-muted-foreground transition-all hover:bg-primary/10 active:scale-[0.98] border border-border mt-2"
                 >
                   <div className="flex items-center gap-2">
                     <Smartphone className="h-4 w-4" />
