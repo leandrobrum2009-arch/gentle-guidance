@@ -70,6 +70,11 @@ import { PaymentModal } from "@/components/PaymentModal";
     const { data: siteSettings } = useSiteSettings();
 
    const [isLoading, setIsLoading] = useState(true);
+   const [isDepositOpen, setIsDepositOpen] = useState(false);
+   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
