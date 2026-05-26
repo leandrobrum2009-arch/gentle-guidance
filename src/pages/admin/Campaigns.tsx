@@ -128,6 +128,7 @@ export default function AdminCampaigns() {
   const openManualDrawDialog = (campaign: any) => {
     setSelectedCampaign(campaign);
     setManualTicketNumber("");
+    setSelectedPrizeIndex(1);
     setIsManualDrawDialogOpen(true);
   };
 
