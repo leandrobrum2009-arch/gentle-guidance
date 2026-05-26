@@ -152,6 +152,7 @@ export type Database = {
           gallery_urls: Json | null
           id: string
           image_url: string | null
+          live_stream_url: string | null
           ltp_code: string | null
           lucky_numbers_prizes: Json | null
           main_prizes: Json | null
@@ -208,6 +209,7 @@ export type Database = {
           gallery_urls?: Json | null
           id?: string
           image_url?: string | null
+          live_stream_url?: string | null
           ltp_code?: string | null
           lucky_numbers_prizes?: Json | null
           main_prizes?: Json | null
@@ -264,6 +266,7 @@ export type Database = {
           gallery_urls?: Json | null
           id?: string
           image_url?: string | null
+          live_stream_url?: string | null
           ltp_code?: string | null
           lucky_numbers_prizes?: Json | null
           main_prizes?: Json | null
