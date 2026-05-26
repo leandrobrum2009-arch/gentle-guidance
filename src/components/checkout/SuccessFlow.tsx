@@ -190,9 +190,37 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
 
   return (
     <div className="w-full space-y-2 md:space-y-4 max-w-full">
+      {/* Top Games Bar (only if available) */}
+      {(availableSpins > 0 || availableScratchCards > 0) && (
+        <div className="flex items-center justify-center gap-2 mb-2">
+          {availableSpins > 0 && (
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 rounded-full bg-amber-500/10 border-amber-500/20 text-[8px] font-black uppercase tracking-widest text-amber-500 hover:bg-amber-500/20"
+              onClick={() => setStep(2)}
+              disabled={isGameInProgress}
+            >
+              <RotateCw className="mr-1.5 h-3 w-3" /> ROLETA DISPONÍVEL
+            </Button>
+          )}
+          {availableScratchCards > 0 && (
+            <Button 
+              size="sm" 
+              variant="outline" 
+              className="h-8 rounded-full bg-emerald-500/10 border-emerald-500/20 text-[8px] font-black uppercase tracking-widest text-emerald-500 hover:bg-emerald-500/20"
+              onClick={() => setStep(5)}
+              disabled={isGameInProgress}
+            >
+              <Sparkles className="mr-1.5 h-3 w-3" /> RASPARDINHA DISPONÍVEL
+            </Button>
+          )}
+        </div>
+      )}
+
       {/* Mini Stepper */}
       <div className="flex items-center justify-center gap-2 mb-1">
-        {[1, 6, 2, 5].map((s) => (
+        {[1, 3, 6, 2, 5].map((s) => (
           <div 
             key={s} 
             className={cn(
