@@ -23,7 +23,15 @@ const PWAInstallBanner = () => {
       const timer = setTimeout(() => {
         setIsVisible(true);
       }, 5000); // Show after 5 seconds
-      return () => clearTimeout(timer);
+      
+      const hideTimer = setTimeout(() => {
+        setIsVisible(false);
+      }, 25000); // Auto-hide after 25 seconds total (20s after showing)
+
+      return () => {
+        clearTimeout(timer);
+        clearTimeout(hideTimer);
+      };
     }
   }, [siteSettings]);
 
