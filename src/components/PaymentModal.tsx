@@ -18,7 +18,7 @@ interface PaymentModalProps {
 }
 
 
-export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }: PaymentModalProps) => {
+export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, onBuyMore }: PaymentModalProps) => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generatingPix, setGeneratingPix] = useState(false);
