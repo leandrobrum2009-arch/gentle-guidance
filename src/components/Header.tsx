@@ -1,5 +1,5 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download, Settings } from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -34,6 +34,7 @@ const LogoFallback = ({ siteName }: { siteName?: string }) => (
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+  const [logoError, setLogoError] = useState(false);
   const { user, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
   const [profile, setProfile] = useState<any>(null);
@@ -134,33 +135,43 @@ const Header = () => {
   };
 
   return (
-      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-6'}`}>
-       <div className="container flex items-center justify-between gap-4 h-full">
+    <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
+      {/* Configurable Marquee Strip at the very top */}
+      {siteSettings?.home_marquee_enabled === 'true' && !scrolled && (
+        <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-b border-primary/30 py-2 pointer-events-none">
+          <motion.div 
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            className="flex whitespace-nowrap gap-12 items-center will-change-transform"
+          >
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
+                {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
+                  <React.Fragment key={idx}>
+                    <span>{text}</span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      )}
+
+      <div className={`transition-all duration-500 ${scrolled ? 'py-2' : 'py-6'}`}>
+        <div className="container flex items-center justify-between gap-4 h-full">
           <div className="flex items-center gap-4 md:gap-8 min-w-0">
              <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
-                 <>
-                   <img 
-                     src={siteSettings.site_logo_url} 
-                     alt={siteSettings?.site_name || "Logo"} 
-                     className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
-                     onError={(e) => {
-                       (e.target as HTMLImageElement).style.display = 'none';
-                       const fallback = document.querySelector('.logo-fallback-container');
-                       if (fallback) fallback.classList.remove('hidden');
-                     }}
-                     onLoad={(e) => {
-                       const fallback = document.querySelector('.logo-fallback-container');
-                       if (fallback) fallback.classList.add('hidden');
-                     }}
-                   />
-                   <div className="logo-fallback-container hidden">
-                     <LogoFallback siteName={siteSettings?.site_name} />
-                   </div>
-                 </>
-               ) : (
-                 <LogoFallback siteName={siteSettings?.site_name} />
-               )}
+                {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
+                  <img 
+                    src={siteSettings.site_logo_url} 
+                    alt={siteSettings?.site_name || "Logo"} 
+                    className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <LogoFallback siteName={siteSettings?.site_name} />
+                )}
              </Link>
 
  
@@ -201,10 +212,10 @@ const Header = () => {
 
               <div className="flex items-center gap-2">
                 {isAdmin && (
-                  <Link to="/admin" className="hidden sm:block">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
-                      <Zap className="h-4 w-4 text-primary" />
-                      Admin
+                  <Link to="/admin" className="flex items-center">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic group">
+                      <Settings className="h-4 w-4 text-primary group-hover:rotate-90 transition-transform duration-500" />
+                      <span className="hidden sm:inline">Painel Admin</span>
                     </Button>
                   </Link>
                 )}
@@ -239,6 +250,7 @@ const Header = () => {
           </button>
         </div>
       </div>
+    </div>
 
       <AnimatePresence>
         {mobileOpen && (
@@ -277,7 +289,7 @@ const Header = () => {
                   className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
                 >
                   <div className="flex items-center gap-2">
-                    <Zap className="h-4 w-4" />
+                    <Settings className="h-4 w-4" />
                     Painel Administrativo
                   </div>
                   <ArrowRight className="h-3.5 w-3.5" />
