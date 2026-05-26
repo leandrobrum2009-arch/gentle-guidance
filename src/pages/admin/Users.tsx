@@ -154,6 +154,12 @@ export default function AdminUsers() {
                         </div>
                       </div>
                     </TableCell>
+                     <TableCell>
+                       {u.role === 'master' && <Badge className="bg-purple-500 text-[10px] font-black italic">MASTER</Badge>}
+                       {u.role === 'client_admin' && <Badge className="bg-blue-500 text-[10px] font-black italic">CLIENT ADMIN</Badge>}
+                       {u.role === 'admin' && <Badge className="bg-orange-500 text-[10px] font-black italic">ADMIN</Badge>}
+                       {(!u.role || u.role === 'user') && <Badge variant="outline" className="text-[10px] font-bold">USER</Badge>}
+                     </TableCell>
                      <TableCell className="text-foreground font-medium">{u.phone || "-"}</TableCell>
                      <TableCell className="text-emerald-500 font-bold font-mono text-xs">
                        R$ {Number(u.balance || 0).toFixed(2)}
