@@ -97,7 +97,7 @@ export default function AdminUsers() {
     }
   };
 
-   const filtered = users?.filter(u => 
+   const filtered = (users as any[])?.filter(u => 
      u.name?.toLowerCase().includes(search.toLowerCase()) || 
      u.phone?.includes(search)
    );
