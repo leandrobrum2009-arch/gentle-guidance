@@ -28,7 +28,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
   const [category, setCategory] = useState<'points' | 'xp'>('points');
   const { data: globalRanking, isLoading } = useRanking(15, category);
 
-  const ranking = users || globalRanking || [];
+  const ranking = users || (stats ? [] : globalRanking) || [];
   const podium = ranking.slice(0, 3) || [];
   const rest = ranking.slice(3) || [];
 
