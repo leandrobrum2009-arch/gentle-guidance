@@ -20,6 +20,17 @@ const navLinks = [
   { label: "Suporte", href: "/contato" },
 ];
 
+const LogoFallback = ({ siteName }: { siteName?: string }) => (
+  <div className="flex items-center gap-2 logo-fallback">
+    <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
+      <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+    </div>
+    <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
+      {siteName?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteName?.split(' ').slice(1).join(' ') || "Pro"}</span>
+    </span>
+  </div>
+);
+
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
