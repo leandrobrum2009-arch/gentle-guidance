@@ -26,7 +26,7 @@ interface SuccessFlowProps {
 }
 
 
-export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowProps) {
+export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: SuccessFlowProps) {
   const [step, setStep] = useState(1);
   const [countdown, setCountdown] = useState(300); // 5 minutes
   const [availableSpins, setAvailableSpins] = useState(0);
@@ -36,8 +36,10 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [localTickets, setLocalTickets] = useState<any[]>([]);
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
   const [isGameInProgress, setIsGameInProgress] = useState(false);
+  const [showUpsellBundles, setShowUpsellBundles] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
+
   const detailsRef = useRef<HTMLDivElement>(null);
 
   const displayTickets = useMemo(() => {
