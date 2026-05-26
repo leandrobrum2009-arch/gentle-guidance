@@ -7,16 +7,17 @@ export const SiteSettingsInjector = () => {
   useEffect(() => {
     if (!settings) return;
 
-    // Apply Site Name to Title
-    if (settings.site_name) {
-      document.title = settings.site_name;
+    // Apply Site Name or Site Title to Title
+    const siteTitle = settings.site_title || settings.site_name || "Plataforma de Rifas";
+    if (siteTitle) {
+      document.title = siteTitle;
       
       // Update Meta Tags
       const metaTitle = document.querySelector('meta[property="og:title"]');
-      if (metaTitle) metaTitle.setAttribute('content', settings.site_name);
+      if (metaTitle) metaTitle.setAttribute('content', siteTitle);
       
       const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-      if (twitterTitle) twitterTitle.setAttribute('content', settings.site_name);
+      if (twitterTitle) twitterTitle.setAttribute('content', siteTitle);
     }
 
     // Apply Primary Color
@@ -35,9 +36,9 @@ export const SiteSettingsInjector = () => {
         }
       }
       
-      // Update favicon if site_logo_url is present
-      if (settings.site_logo_url) {
-        const logoUrl = settings.site_logo_url;
+      // Update favicon if site_favicon_url or site_logo_url is present
+      const logoUrl = settings.site_favicon_url || settings.site_logo_url;
+      if (logoUrl) {
         
         // Update all icon types
         const iconTypes = ["icon", "shortcut icon", "apple-touch-icon"];

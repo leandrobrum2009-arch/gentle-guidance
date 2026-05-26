@@ -1,4 +1,4 @@
-import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight } from "lucide-react";
+import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download } from "lucide-react";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
@@ -22,12 +22,43 @@ const navLinks = [
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const { user, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
   const [profile, setProfile] = useState<any>(null);
   const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const { data: siteSettings } = useSiteSettings();
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallApp = async () => {
+    if (siteSettings?.app_download_link) {
+      window.open(siteSettings.app_download_link, '_blank');
+      return;
+    }
+
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    } else {
+      toast.info("Para baixar o app, use a opção 'Adicionar à tela de início' no menu do seu navegador.");
+    }
+  };
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -230,6 +261,21 @@ const Header = () => {
                   Meus Títulos
                   <Ticket className="h-3.5 w-3.5 opacity-50" />
                 </Link>
+              )}
+              {siteSettings?.enable_download_app === 'true' && (
+                <button
+                  onClick={() => {
+                    handleInstallApp();
+                    setMobileOpen(false);
+                  }}
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Smartphone className="h-4 w-4" />
+                    Baixar Aplicativo
+                  </div>
+                  <Download className="h-3.5 w-3.5" />
+                </button>
               )}
               <div className="mt-4 flex flex-col gap-2 border-t border-border pt-6">
                 {user ? (
