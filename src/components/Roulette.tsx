@@ -1,11 +1,11 @@
 import confetti from 'canvas-confetti';
 import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import { motion, useAnimation, AnimatePresence } from "framer-motion";
- import { RotateCw, Star, Trophy, Users, Zap, ShoppingCart, Sparkles, Coins, Gift, Info, FileText } from "lucide-react";
+import { RotateCw, Star, Trophy, Users, Zap, ShoppingCart, Sparkles, Coins, Gift, Info, FileText, Gauge } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
- import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
- import { RoulettePrize, Campaign, useGlobalRouletteSpins, useGlobalStats } from "@/hooks/useData";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { RoulettePrize, Campaign, useGlobalRouletteSpins, useGlobalStats } from "@/hooks/useData";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +13,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { playSound as playGlobalSound, hapticFeedback } from "@/lib/sounds";
+import { Slider } from "@/components/ui/slider";
+
 
 interface RouletteProps {
   prizes: RoulettePrize[];
