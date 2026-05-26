@@ -151,6 +151,7 @@ export default function AdminSettings() {
     if (key.includes('hero_style') || key.includes('marquee')) return <Layout className="h-4 w-4" />;
     if (key.includes('site_name') || key.includes('company_name') || key.includes('site_title')) return <Globe className="h-4 w-4" />;
     if (key.includes('logo') || key.includes('favicon')) return <ImageIcon className="h-4 w-4" />;
+    if (key.includes('pixel') || key.includes('analytics') || key.includes('tag_manager') || key.includes('scripts')) return <TrendingUp className="h-4 w-4" />;
     if (key.includes('app')) return <Smartphone className="h-4 w-4" />;
     if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
     if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;
