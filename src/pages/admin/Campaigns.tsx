@@ -44,7 +44,10 @@ export default function AdminCampaigns() {
   const [isCeremonyOpen, setIsCeremonyOpen] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<any>(null);
   const [isManualDrawDialogOpen, setIsManualDrawDialogOpen] = useState(false);
+  const [isAutoDrawConfigOpen, setIsAutoDrawConfigOpen] = useState(false);
   const [manualTicketNumber, setManualTicketNumber] = useState("");
+  const [selectedPrizeIndex, setSelectedPrizeIndex] = useState(1);
+  const [allowUnassigned, setAllowUnassigned] = useState(false);
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esta campanha?")) return;
@@ -117,12 +120,15 @@ export default function AdminCampaigns() {
   const startAutoDraw = (campaign: any) => {
     setSelectedCampaign(campaign);
     setManualTicketNumber("");
-    setIsCeremonyOpen(true);
+    setSelectedPrizeIndex(1);
+    setAllowUnassigned(false);
+    setIsAutoDrawConfigOpen(true);
   };
 
   const openManualDrawDialog = (campaign: any) => {
     setSelectedCampaign(campaign);
     setManualTicketNumber("");
+    setSelectedPrizeIndex(1);
     setIsManualDrawDialogOpen(true);
   };
 
@@ -259,8 +265,9 @@ export default function AdminCampaigns() {
                    // Check if draw is needed
                    const now = new Date();
                    const endDate = c.timer_end_date ? new Date(c.timer_end_date) : null;
-                   const needsDraw = (endDate && endDate < now && !c.draw_number) || (c.status === 'completed' && !c.draw_number);
-                   const winner = c.winners?.[0];
+                    const needsDraw = (endDate && endDate < now && !c.draw_number) || (c.status === 'completed' && !c.draw_number);
+                    const raffleWinners = c.winners?.filter(w => w.winner_type === 'raffle') || [];
+                    const winner = raffleWinners.find(w => w.prize_index === 1) || raffleWinners[0];
 
                    return (
                     <TableRow key={c.id} className="border-border hover:bg-card/[0.02] transition-colors group">
@@ -404,6 +411,59 @@ export default function AdminCampaigns() {
         </CardContent>
       </Card>
       
+      <Dialog open={isAutoDrawConfigOpen} onOpenChange={setIsAutoDrawConfigOpen}>
+        <DialogContent className="sm:max-w-[400px] bg-card border-border rounded-3xl p-0 overflow-hidden">
+          <div className="bg-primary/10 p-6 flex flex-col items-center text-center gap-2 border-b border-primary/10">
+            <div className="h-12 w-12 rounded-2xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 mb-2">
+              <Zap className="h-6 w-6 text-foreground" />
+            </div>
+            <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+              Configurar <span className="text-primary">Sorteio</span>
+            </DialogTitle>
+          </div>
+
+          <div className="p-6 space-y-6">
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Qual prêmio sortear?</Label>
+                <select 
+                  className="w-full h-12 rounded-xl bg-secondary/50 border border-border px-4 font-bold text-sm focus:border-primary/50"
+                  value={selectedPrizeIndex}
+                  onChange={(e) => setSelectedPrizeIndex(Number(e.target.value))}
+                >
+                  <option value={1}>1º Prêmio (Principal)</option>
+                  <option value={2}>2º Prêmio</option>
+                  <option value={3}>3º Prêmio</option>
+                  <option value={4}>4º Prêmio</option>
+                  <option value={5}>5º Prêmio</option>
+                </select>
+              </div>
+
+              <div className="flex items-center space-x-2 bg-secondary/30 p-4 rounded-xl border border-border">
+                <Checkbox 
+                  id="allowUnassigned" 
+                  checked={allowUnassigned} 
+                  onCheckedChange={(checked) => setAllowUnassigned(!!checked)}
+                />
+                <Label htmlFor="allowUnassigned" className="text-sm font-bold cursor-pointer">
+                  Sortear entre TODOS os números (Pode dar "Sem Ganhador")
+                </Label>
+              </div>
+            </div>
+
+            <Button 
+              onClick={() => {
+                setIsAutoDrawConfigOpen(false);
+                setIsCeremonyOpen(true);
+              }} 
+              className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest gap-2 bg-primary hover:bg-primary/90 text-foreground shadow-lg shadow-primary/20"
+            >
+              INICIAR SORTEIO <Zap className="h-5 w-5" />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      
       <Dialog open={isManualDrawDialogOpen} onOpenChange={setIsManualDrawDialogOpen}>
         <DialogContent className="sm:max-w-[400px] bg-card border-border rounded-3xl p-0 overflow-hidden">
           <div className="bg-amber-500/10 p-6 flex flex-col items-center text-center gap-2 border-b border-amber-500/10">
@@ -413,21 +473,34 @@ export default function AdminCampaigns() {
             <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-foreground">
               Sorteio <span className="text-amber-500">Manual</span>
             </DialogTitle>
-            <DialogDescription className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-              Defina o bilhete vencedor da campanha
-            </DialogDescription>
           </div>
 
           <div className="p-6 space-y-6">
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Número do Bilhete Premiado</Label>
-              <Input
-                placeholder="Ex: 123456"
-                value={manualTicketNumber}
-                onChange={(e) => setManualTicketNumber(e.target.value)}
-                className="h-14 rounded-xl bg-secondary/50 border-border focus:border-amber-500/50 font-mono text-center text-2xl font-black text-amber-500 tracking-tighter"
-              />
-              <p className="text-[10px] text-muted-foreground font-medium italic text-center">* O bilhete deve pertencer a uma compra confirmada.</p>
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Para qual prêmio?</Label>
+                <select 
+                  className="w-full h-12 rounded-xl bg-secondary/50 border border-border px-4 font-bold text-sm focus:border-amber-500/50"
+                  value={selectedPrizeIndex}
+                  onChange={(e) => setSelectedPrizeIndex(Number(e.target.value))}
+                >
+                  <option value={1}>1º Prêmio (Principal)</option>
+                  <option value={2}>2º Prêmio</option>
+                  <option value={3}>3º Prêmio</option>
+                  <option value={4}>4º Prêmio</option>
+                  <option value={5}>5º Prêmio</option>
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Número do Bilhete Premiado</Label>
+                <Input
+                  placeholder="Ex: 123456"
+                  value={manualTicketNumber}
+                  onChange={(e) => setManualTicketNumber(e.target.value)}
+                  className="h-14 rounded-xl bg-secondary/50 border-border focus:border-amber-500/50 font-mono text-center text-2xl font-black text-amber-500 tracking-tighter"
+                />
+              </div>
             </div>
 
             <Button 
@@ -445,6 +518,8 @@ export default function AdminCampaigns() {
         onOpenChange={setIsCeremonyOpen}
         campaign={selectedCampaign}
         manualNumber={manualTicketNumber}
+        prizeIndex={selectedPrizeIndex}
+        allowUnassigned={allowUnassigned}
         onFinished={() => {
           queryClient.invalidateQueries({ queryKey: ["admin-campaigns"] });
           queryClient.invalidateQueries({ queryKey: ["winners"] });

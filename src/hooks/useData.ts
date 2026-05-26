@@ -142,6 +142,7 @@ export const useCampaignStats = (campaignId: string) =>
    draw_date: string;
     campaigns?: { title: string } | null;
     winner_type?: 'raffle' | 'roulette' | 'scratchcard' | 'lucky_number';
+    prize_index?: number;
   }
  
  export interface WalletTransaction {

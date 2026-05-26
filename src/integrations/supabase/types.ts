@@ -1327,6 +1327,8 @@ export type Database = {
           id: string
           phone_masked: string | null
           prize_description: string
+          prize_index: number | null
+          prize_name: string | null
           ticket_number: string
           user_id: string | null
           video_url: string | null
@@ -1341,6 +1343,8 @@ export type Database = {
           id?: string
           phone_masked?: string | null
           prize_description: string
+          prize_index?: number | null
+          prize_name?: string | null
           ticket_number: string
           user_id?: string | null
           video_url?: string | null
@@ -1355,6 +1359,8 @@ export type Database = {
           id?: string
           phone_masked?: string | null
           prize_description?: string
+          prize_index?: number | null
+          prize_name?: string | null
           ticket_number?: string
           user_id?: string | null
           video_url?: string | null
@@ -1416,7 +1422,11 @@ export type Database = {
         Returns: undefined
       }
       manual_perform_draw: {
-        Args: { p_campaign_id: string; p_ticket_number: string }
+        Args: {
+          p_campaign_id: string
+          p_prize_index?: number
+          p_ticket_number: string
+        }
         Returns: string
       }
       notify_campaign_draw: {
@@ -1428,7 +1438,12 @@ export type Database = {
         Returns: Json
       }
       perform_draw: {
-        Args: { p_campaign_id: string; p_executed_by?: string }
+        Args: {
+          p_allow_unassigned?: boolean
+          p_campaign_id: string
+          p_executed_by?: string
+          p_prize_index?: number
+        }
         Returns: string
       }
       process_roulette_spin: {
