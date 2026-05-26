@@ -187,36 +187,48 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
     }
 
     const prize = wonPrizeData as RoulettePrize;
-    // Find the actual index in our visual segments
-    const visualIndex = prizes.findIndex(p => p.id === prize.id || (p.label === prize.label && p.prize_type === prize.prize_type));
+    
+    // Find all matching indices in our visual segments
+    const matchingIndices = prizes.reduce((acc: number[], p, idx) => {
+      // For real prizes, match by ID or Label+Type
+      if ((prize.prize_type as any) !== 'none') {
+        if (p.id === prize.id || (p.label === prize.label && p.prize_type === prize.prize_type)) {
+          acc.push(idx);
+        }
+      } else {
+        // For losses, match all loss segments
+        if ((p.prize_type as any) === 'none' || p.label === 'Tente novamente') {
+          acc.push(idx);
+        }
+      }
+      return acc;
+    }, []);
+    
+    // Pick one at random if there are multiple segments (likely for "Tente novamente")
+    const visualIndex = matchingIndices.length > 0 
+      ? matchingIndices[Math.floor(Math.random() * matchingIndices.length)] 
+      : 0;
     
     const segmentAngle = 360 / (prizes.length || 1);
-    const extraSpins = 8;
+    const extraSpins = 10 + Math.floor(spinPower); // User power affects number of spins
     
-    // We want the pointer (at the top, 0 degrees) to point to the winner.
-    // The wheel is at currentRotation.
-    // We calculate how much we need to rotate to get visualIndex to 0 degrees (the top).
-    // The current rotation might be something like 2880.
-    // We want the final rotation to be: currentRotation + (some full spins) + offset
-    const currentAngleMod = currentRotation % 360;
-    const offsetToTarget = (visualIndex * segmentAngle);
-    
-    // Final angle should be:
-    // (Next multiple of 360 that is at least extraSpins away) - offsetToTarget
-    const targetAngle = (Math.ceil(currentRotation / 360) + extraSpins) * 360 - offsetToTarget;
+    const targetAngle = (Math.ceil(currentRotation / 360) + extraSpins) * 360 - (visualIndex * segmentAngle);
     
     setCurrentRotation(targetAngle);
     
-    // Create a ticking effect during spin
-    const spinDuration = 6;
+    // Higher power means faster spin but potentially longer duration
+    const spinDuration = 6 + (spinPower / 2.5); // 6.4s to 10s
     
     await controls.start({
       rotate: targetAngle,
       transition: { 
         duration: spinDuration, 
-        ease: [0.15, 0, 0.1, 1]
+        ease: [0.1, 0, 0, 1] // Very smooth decelerating ease
       }
     });
+    
+    // WAIT for the wheel to fully settle before showing any message
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     playGlobalSound('win');
     setWonPrize(prize);
@@ -228,7 +240,6 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
       if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
       if ((prize.prize_type as any) !== 'none') {
-        // We do this after the animation is finished
         setTimeout(async () => {
           await supabase.from("notifications").insert({
             user_id: user!.id,
