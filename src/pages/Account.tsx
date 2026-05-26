@@ -594,7 +594,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Solicitar Saque</h3>
                             <p className="text-sm text-foreground/60 font-medium">Resgate seu saldo para seu banco.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald active:scale-95 transition-all">Efetuar Saque</Button>
+                            <Button onClick={() => setIsWithdrawOpen(true)} className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald active:scale-95 transition-all">Efetuar Saque</Button>
                         </div>
                      </Card>
                   </div>
