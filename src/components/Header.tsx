@@ -123,8 +123,8 @@ const Header = () => {
   };
 
   return (
-      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-4'}`}>
-       <div className="container flex items-center justify-between gap-4">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-6'}`}>
+       <div className="container flex items-center justify-between gap-4 h-full">
          <div className="flex items-center gap-4 md:gap-8 min-w-0">
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
@@ -193,8 +193,8 @@ const Header = () => {
 
               <div className="flex items-center gap-2">
                 {isAdmin && (
-                  <Link to="/admin">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic hidden lg:flex">
+                  <Link to="/admin" className="hidden sm:block">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
                       <Zap className="h-4 w-4 text-primary" />
                       Admin
                     </Button>
@@ -262,13 +262,26 @@ const Header = () => {
                   <Ticket className="h-3.5 w-3.5 opacity-50" />
                 </Link>
               )}
+              {isAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Zap className="h-4 w-4" />
+                    Painel Administrativo
+                  </div>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
               {siteSettings?.enable_download_app === 'true' && (
                 <button
                   onClick={() => {
                     handleInstallApp();
                     setMobileOpen(false);
                   }}
-                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-primary transition-all hover:bg-primary/10 active:scale-[0.98] border border-primary/20 bg-primary/5 mt-2"
+                  className="flex items-center justify-between rounded-xl px-4 py-3.5 text-xs font-black uppercase tracking-widest text-muted-foreground transition-all hover:bg-primary/10 active:scale-[0.98] border border-border mt-2"
                 >
                   <div className="flex items-center gap-2">
                     <Smartphone className="h-4 w-4" />

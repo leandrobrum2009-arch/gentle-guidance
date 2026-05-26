@@ -202,7 +202,7 @@ const Index = () => {
        </div>
 
        <Header />
-        <div className="h-16 md:h-20" />
+        <div className="h-20 md:h-28" />
 
         {/* Configurable Marquee Strip Moved to top */}
         {siteSettings?.home_marquee_enabled === 'true' && (

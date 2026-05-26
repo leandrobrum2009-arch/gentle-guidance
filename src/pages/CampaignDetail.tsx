@@ -914,6 +914,7 @@ const CampaignDetail = () => {
         type="article"
       />
       <Header />
+      <div className="h-20 md:h-28" />
       <LiveNotifications />
 
       

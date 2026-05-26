@@ -13,6 +13,7 @@ const Winners = () => {
     <div className="min-h-screen bg-background">
       <SEO title="Ganhadores" description="Confira os ganhadores das nossas ações premiadas." />
       <Header />
+      <div className="h-24 md:h-32" />
       <div className="container py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

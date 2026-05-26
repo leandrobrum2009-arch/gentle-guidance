@@ -32,20 +32,22 @@ export const useIsAdmin = () => {
     queryKey: ["is-admin", user?.id],
     queryFn: async () => {
       if (!user) return false;
-      const { data, error } = await supabase.rpc("has_role", {
-        _user_id: user.id,
-        _role: "admin",
-      });
-      if (error) throw error;
       
-      // Also check for master or client_admin
-      const { data: moreRoles } = await supabase
+      // Check user_roles table directly for any administrative role
+      const { data: rolesData, error } = await supabase
         .from("user_roles")
         .select("role")
         .eq("user_id", user.id);
       
-      const roles = moreRoles?.map(r => r.role) || [];
-      return data || roles.includes("master") || roles.includes("client_admin");
+      if (error) {
+        console.error("Error fetching user roles:", error);
+        return false;
+      }
+      
+      const roles = rolesData?.map(r => r.role) || [];
+      const isAdmin = roles.some(role => ["admin", "master", "client_admin"].includes(role));
+      
+      return isAdmin;
     },
     enabled: !!user,
   });
