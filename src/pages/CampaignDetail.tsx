@@ -921,7 +921,9 @@ const CampaignDetail = () => {
         onOpenChange={handleOpenChange} 
         orderId={currentOrderId} 
         onPaymentSuccess={handlePaymentSuccess} 
+        onBuyMore={(qty) => handleBuy(qty)}
       />
+
       <Footer />
       
     </div>

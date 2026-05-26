@@ -22,9 +22,11 @@ interface SuccessFlowProps {
   order: any;
   campaign: any;
   onClose?: () => void;
+  onBuyMore?: (quantity: number) => void;
 }
 
-export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowProps) {
+
+export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: SuccessFlowProps) {
   const [step, setStep] = useState(1);
   const [countdown, setCountdown] = useState(300); // 5 minutes
   const [availableSpins, setAvailableSpins] = useState(0);
@@ -34,8 +36,10 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
   const [localTickets, setLocalTickets] = useState<any[]>([]);
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
   const [isGameInProgress, setIsGameInProgress] = useState(false);
+  const [showUpsellBundles, setShowUpsellBundles] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
+
   const detailsRef = useRef<HTMLDivElement>(null);
 
   const displayTickets = useMemo(() => {
@@ -520,36 +524,75 @@ export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowPro
                     </p>
                   </div>
 
-                  <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-4">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                          <Percent className="h-4 w-4 text-primary" />
-                        </div>
-                        <span className="text-xs font-black uppercase text-white/70">Desconto Exclusivo Liberado</span>
-                      </div>
-                      <Badge className="bg-green-500 text-white font-black italic">ATIVO!</Badge>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-primary" />
-                      <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Sua probabilidade de vitória subiu para 90%</span>
-                    </div>
-                    <Progress value={90} className="h-3 bg-white/5" indicatorClassName="bg-primary" />
-                  </div>
+                  {showUpsellBundles ? (
+                    <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                      {(campaign.price_bundles && campaign.price_bundles.length > 0 ? campaign.price_bundles : [
+                        { quantity: 50, price: 45.00 },
+                        { quantity: 100, price: 80.00 },
+                        { quantity: 200, price: 150.00 },
+                        { quantity: 500, price: 350.00 }
+                      ]).slice(0, 4).map((bundle: any) => (
 
-                  <div className="space-y-4">
-                    <Button 
-                      className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20"
-                      onClick={() => navigate(`/campanha/${campaign.slug}?upsell=true`)}
-                    >
-                      GARANTIR MAIS CHANCES AGORA
-                    </Button>
-                    
-                    <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(4)}>
-                      Ver meus números e entrar no grupo
-                    </Button>
-                  </div>
+                        <Button 
+                          key={bundle.quantity}
+                          variant="outline"
+                          className="h-20 rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10 flex flex-col items-center justify-center gap-1 group transition-all"
+                          onClick={() => onBuyMore?.(bundle.quantity)}
+                        >
+                          <span className="text-xl font-black italic tracking-tighter text-white group-hover:scale-110 transition-transform">+{bundle.quantity}</span>
+                          <span className="text-[10px] font-black uppercase text-primary tracking-widest">R$ {Number(bundle.price).toFixed(2).replace('.', ',')}</span>
+                        </Button>
+                      ))}
+                      <Button 
+                        variant="ghost" 
+                        className="col-span-2 text-[10px] font-black uppercase tracking-widest text-white/30"
+                        onClick={() => setShowUpsellBundles(false)}
+                      >
+                        Voltar
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-4">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
+                            <Percent className="h-4 w-4 text-primary" />
+                          </div>
+                          <span className="text-xs font-black uppercase text-white/70">Desconto Exclusivo Liberado</span>
+                        </div>
+                        <Badge className="bg-green-500 text-white font-black italic">ATIVO!</Badge>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <TrendingUp className="h-4 w-4 text-primary" />
+                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Sua probabilidade de vitória subiu para 90%</span>
+                      </div>
+                      <Progress value={90} className="h-3 bg-white/5" indicatorClassName="bg-primary" />
+                    </div>
+                  )}
+
+                  {!showUpsellBundles && (
+                    <div className="space-y-4">
+                      <Button 
+                        className="w-full h-20 rounded-2xl bg-primary text-black font-black uppercase italic tracking-widest text-xl shadow-[0_15px_30px_rgba(var(--primary-rgb),0.4)] hover:scale-[1.02] transition-transform animate-pulse border-b-4 border-black/20"
+                        onClick={() => {
+                          if (onBuyMore) {
+                            setShowUpsellBundles(true);
+                          } else {
+                            navigate(`/campanha/${campaign.slug}?upsell=true`);
+                          }
+                        }}
+
+                      >
+                        GARANTIR MAIS CHANCES AGORA
+                      </Button>
+                      
+                      <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(4)}>
+                        Ver meus números e entrar no grupo
+                      </Button>
+                    </div>
+                  )}
                 </div>
+
               </CardContent>
             </Card>
           </motion.div>

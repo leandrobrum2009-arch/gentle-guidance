@@ -14,9 +14,11 @@ interface PaymentModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onPaymentSuccess: () => void;
+  onBuyMore?: (quantity: number) => void;
 }
 
-export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }: PaymentModalProps) => {
+
+export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, onBuyMore }: PaymentModalProps) => {
   const [order, setOrder] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [generatingPix, setGeneratingPix] = useState(false);
@@ -24,6 +26,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
   const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [pixError, setPixError] = useState<string | null>(null);
+  const [lastProcessedOrderId, setLastProcessedOrderId] = useState<string | null>(null);
+
 
   const fetchOrder = useCallback(async (retryCount = 0) => {
     if (!orderId) return;
@@ -95,12 +99,14 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
 
   useEffect(() => {
     if (isOpen && orderId) {
-      // Only set loading and pending if we're not already in a 'paid' state for this order
-      if (status !== 'paid') {
+      // If orderId changed, reset status to pending
+      if (orderId !== lastProcessedOrderId) {
         setLoading(true);
         setStatus('pending');
+        setLastProcessedOrderId(orderId);
       }
       fetchOrder();
+
 
       const channel = supabase.channel(`payment-${orderId}`)
         .on('postgres_changes', { 
@@ -284,7 +290,9 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }
                   order={order} 
                   campaign={order.campaigns} 
                   onClose={() => onOpenChange(false)} 
+                  onBuyMore={onBuyMore}
                 />
+
               </div>
             </motion.div>
           ) : status === 'expired' ? (
