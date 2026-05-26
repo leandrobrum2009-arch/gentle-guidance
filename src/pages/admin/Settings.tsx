@@ -191,13 +191,14 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-14 w-full md:w-auto justify-start overflow-x-auto overflow-y-hidden border border-border/50">
-          <TabsTrigger value="visual" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Design</TabsTrigger>
-          <TabsTrigger value="seo" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Google</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
-          <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
-          <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
-          <TabsTrigger value="sales" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Vendas</TabsTrigger>
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap w-full md:w-auto justify-start border border-border/50">
+          <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
+          <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
+          <TabsTrigger value="tracking" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pixels & Analytics</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
+          <TabsTrigger value="finance" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
+          <TabsTrigger value="company" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
