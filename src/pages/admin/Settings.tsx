@@ -262,24 +262,17 @@ export default function AdminSettings() {
 
                 <Separator className="my-4 bg-primary/10" />
 
-                <div className="space-y-4 pt-2 bg-primary/5 p-4 rounded-2xl border border-primary/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Smartphone className="h-5 w-5 text-primary" />
-                    <h3 className="font-bold text-sm">Configurações de Aplicativo (PWA)</h3>
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-primary">Configurar Aplicativo (PWA)</h4>
+                    <p className="text-[10px] text-muted-foreground font-medium">Ative o banner de download e o ícone de instalação mobile.</p>
                   </div>
-                  <SettingField 
-                    s={settings.find(s => s.key === 'enable_download_app')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['enable_download_app']}
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'app_download_link')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['app_download_link']}
-                    getIcon={getIcon}
-                    placeholder="Link para o arquivo .apk ou página de instruções"
-                  />
+                  <Button variant="outline" size="sm" onClick={() => {
+                    const pwaTrigger = document.querySelector('[value="pwa"]') as HTMLElement;
+                    pwaTrigger?.click();
+                  }} className="text-xs font-bold border-primary/20 hover:bg-primary/10 transition-colors h-8">
+                    Ir para App
+                  </Button>
                 </div>
               </CardContent>
             </Card>
