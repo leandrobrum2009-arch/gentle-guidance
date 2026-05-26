@@ -526,7 +526,13 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
 
                   {showUpsellBundles ? (
                     <div className="grid grid-cols-2 gap-3 animate-in fade-in slide-in-from-bottom-4 duration-500">
-                      {(campaign.price_bundles || []).slice(0, 4).map((bundle: any) => (
+                      {(campaign.price_bundles && campaign.price_bundles.length > 0 ? campaign.price_bundles : [
+                        { quantity: 50, price: 45.00 },
+                        { quantity: 100, price: 80.00 },
+                        { quantity: 200, price: 150.00 },
+                        { quantity: 500, price: 350.00 }
+                      ]).slice(0, 4).map((bundle: any) => (
+
                         <Button 
                           key={bundle.quantity}
                           variant="outline"
