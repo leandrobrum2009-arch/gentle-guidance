@@ -193,10 +193,12 @@ const ScratchCard = ({
   const resetScratchCard = () => {
     setHasStarted(false);
     setIsScratched(false);
+    setApiReady(false);
     setScratchPercentage(0);
     setIsDrawing(false);
     setPrizeLabel("");
     setIsWinner(false);
+    setGridSymbols([]);
     initCanvas();
   };
 
