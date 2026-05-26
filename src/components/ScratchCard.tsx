@@ -497,7 +497,7 @@ const ScratchCard = ({
             )}
           </AnimatePresence>
           
-          {isProcessing && (
+          {isProcessing && !apiReady && scratchPercentage > 40 && (
             <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
               <div className="bg-zinc-900/90 p-6 rounded-3xl border border-white/10 shadow-2xl flex flex-col items-center gap-3 scale-90 md:scale-100">
                 <Loader2 className="h-10 w-10 animate-spin text-primary" />
