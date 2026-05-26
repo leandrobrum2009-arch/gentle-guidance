@@ -250,7 +250,7 @@ const Header = () => {
           </button>
         </div>
       </div>
-    </div>
+    </header>
 
       <AnimatePresence>
         {mobileOpen && (
