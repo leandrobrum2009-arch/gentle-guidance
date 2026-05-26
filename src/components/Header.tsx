@@ -241,6 +241,7 @@ const Header = () => {
               </Link>
             </div>
           )}
+        </div>
            <button
              onClick={() => setMobileOpen(!mobileOpen)}
              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
@@ -249,6 +250,7 @@ const Header = () => {
           </button>
         </div>
       </div>
+
 
 
 
