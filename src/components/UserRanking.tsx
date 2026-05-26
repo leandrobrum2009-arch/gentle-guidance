@@ -93,9 +93,11 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Maior</span>
-                      <Badge variant="outline" className="h-10 px-6 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic text-sm">
-                        #{highest.number}
-                      </Badge>
+                      <div className="h-10 min-w-[3rem] w-auto px-4 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-center shadow-sm">
+                        <span className="text-primary font-black italic text-sm">
+                          #{highest.number}
+                        </span>
+                      </div>
                     </div>
                   );
                 })()}
