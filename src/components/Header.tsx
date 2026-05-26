@@ -1,5 +1,5 @@
 import { Menu, X, User, Ticket, LogOut, Bell, Wallet, Search, Zap, Activity, ArrowRight, Smartphone, Download, Settings } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
