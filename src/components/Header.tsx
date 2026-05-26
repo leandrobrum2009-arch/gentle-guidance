@@ -20,6 +20,17 @@ const navLinks = [
   { label: "Suporte", href: "/contato" },
 ];
 
+const LogoFallback = ({ siteName }: { siteName?: string }) => (
+  <div className="flex items-center gap-2 logo-fallback">
+    <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
+      <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
+    </div>
+    <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
+      {siteName?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteName?.split(' ').slice(1).join(' ') || "Pro"}</span>
+    </span>
+  </div>
+);
+
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
@@ -125,36 +136,33 @@ const Header = () => {
   return (
       <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-6'}`}>
        <div className="container flex items-center justify-between gap-4 h-full">
-         <div className="flex items-center gap-4 md:gap-8 min-w-0">
-            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
-                <img 
-                  src={siteSettings.site_logo_url} 
-                  alt={siteSettings?.site_name || "Logo"} 
-                  className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain" 
-                  onError={(e) => {
-                    // Fallback if image fails to load
-                    (e.target as HTMLImageElement).style.display = 'none';
-                    const parent = (e.target as HTMLImageElement).parentElement;
-                    if (parent) {
-                      const fallback = parent.querySelector('.logo-fallback');
-                      if (fallback) (fallback as HTMLElement).style.display = 'flex';
-                    }
-                  }}
-                />
-              ) : null}
-              
-              {(!siteSettings?.site_logo_url || siteSettings.site_logo_url.trim() === "") && (
-                <div className="flex items-center gap-2 logo-fallback">
-                  <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
-                    <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
-                  </div>
-                  <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
-                    {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
-                  </span>
-                </div>
-              )}
-            </Link>
+          <div className="flex items-center gap-4 md:gap-8 min-w-0">
+             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
+                 <>
+                   <img 
+                     src={siteSettings.site_logo_url} 
+                     alt={siteSettings?.site_name || "Logo"} 
+                     className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
+                     onError={(e) => {
+                       (e.target as HTMLImageElement).style.display = 'none';
+                       const fallback = document.querySelector('.logo-fallback-container');
+                       if (fallback) fallback.classList.remove('hidden');
+                     }}
+                     onLoad={(e) => {
+                       const fallback = document.querySelector('.logo-fallback-container');
+                       if (fallback) fallback.classList.add('hidden');
+                     }}
+                   />
+                   <div className="logo-fallback-container hidden">
+                     <LogoFallback siteName={siteSettings?.site_name} />
+                   </div>
+                 </>
+               ) : (
+                 <LogoFallback siteName={siteSettings?.site_name} />
+               )}
+             </Link>
+
  
            <nav className="hidden items-center gap-6 lg:flex">
              {navLinks.map((link) => (

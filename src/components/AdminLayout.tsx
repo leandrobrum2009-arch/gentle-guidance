@@ -99,7 +99,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
       
       // Role-based restrictions
-      if (item.title === "Sistema" && userRole !== 'master') return false; 
+      if (item.title === "Sistema" && userRole !== 'master' && userRole !== 'client_admin') return false; 
       if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'client_admin') return false;
       if (item.title === "Diagnóstico" && userRole !== 'master') return false;
       

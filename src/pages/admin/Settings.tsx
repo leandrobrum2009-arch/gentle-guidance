@@ -12,6 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRole } from "@/hooks/useAdmin";
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
@@ -20,6 +21,9 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
+
+  const { data: userRole } = useRole();
+  const isUserMaster = userRole === 'master';
 
   const settingNames: Record<string, string> = {
     hero_transition_speed: "Velocidade do Slide (ms)",
@@ -77,7 +81,6 @@ export default function AdminSettings() {
     sales_page_type: "Tipo da Plataforma",
     sales_page_whatsapp: "WhatsApp de Vendas"
   };
-
 
   useEffect(() => {
     fetchSettings();
@@ -191,13 +194,14 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-14 w-full md:w-auto justify-start overflow-x-auto overflow-y-hidden border border-border/50">
-          <TabsTrigger value="visual" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Design</TabsTrigger>
-          <TabsTrigger value="seo" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Google</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
-          <TabsTrigger value="finance" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
-          <TabsTrigger value="company" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
-          <TabsTrigger value="sales" className="rounded-xl px-8 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Vendas</TabsTrigger>
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap w-full md:w-auto justify-start border border-border/50">
+          <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
+          <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
+          <TabsTrigger value="tracking" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pixels & Analytics</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
+          <TabsTrigger value="finance" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
+          <TabsTrigger value="company" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
@@ -261,29 +265,22 @@ export default function AdminSettings() {
 
                 <Separator className="my-4 bg-primary/10" />
 
-                <div className="space-y-4 pt-2 bg-primary/5 p-4 rounded-2xl border border-primary/10">
-                  <div className="flex items-center gap-2 mb-2">
-                    <Smartphone className="h-5 w-5 text-primary" />
-                    <h3 className="font-bold text-sm">Configurações de Aplicativo (PWA)</h3>
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-primary">Configurar Aplicativo (PWA)</h4>
+                    <p className="text-[10px] text-muted-foreground font-medium">Ative o banner de download e o ícone de instalação mobile.</p>
                   </div>
-                  <SettingField 
-                    s={settings.find(s => s.key === 'enable_download_app')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['enable_download_app']}
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'app_download_link')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['app_download_link']}
-                    getIcon={getIcon}
-                    placeholder="Link para o arquivo .apk ou página de instruções"
-                  />
+                  <Button variant="outline" size="sm" onClick={() => {
+                    const pwaTrigger = document.querySelector('[value="pwa"]') as HTMLElement;
+                    pwaTrigger?.click();
+                  }} className="text-xs font-bold border-primary/20 hover:bg-primary/10 transition-colors h-8">
+                    Ir para App
+                  </Button>
                 </div>
               </CardContent>
             </Card>
 
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm md:col-span-2 border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
               <CardHeader className="pb-4 bg-primary/5">
                 <CardTitle className="flex items-center gap-3 text-xl">
                   <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
@@ -396,121 +393,147 @@ export default function AdminSettings() {
             </Card>
           </div>
         </TabsContent>
+        <TabsContent value="pwa" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <Smartphone className="h-5 w-5" />
+                </div>
+                Aplicativo Mobile (PWA)
+              </CardTitle>
+              <CardDescription className="font-medium">Habilite a função de baixar aplicativo e o banner flutuante</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <SettingField 
+                  s={settings.find(s => s.key === 'enable_download_app')} 
+                  onUpdate={handleUpdate} 
+                  label="Habilitar Banner de Download do App"
+                  getIcon={getIcon}
+                  type="select"
+                  options={[
+                    { label: "Sim, mostrar banner e botão", value: "true" },
+                    { label: "Não, ocultar função de app", value: "false" }
+                  ]}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'app_download_link')} 
+                  onUpdate={handleUpdate} 
+                  label="Link Direto para o App (Opcional)"
+                  getIcon={getIcon}
+                  placeholder="Ex: link do seu .apk ou página de download"
+                />
+              </div>
+              
+              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+                <p className="text-xs text-muted-foreground leading-relaxed font-medium">
+                  <strong>Nota:</strong> Quando habilitado, um banner flutuante aparecerá para os usuários sugerindo a instalação do aplicativo em seus telefones. No Android, o navegador pedirá a instalação direta. No iOS, o banner mostrará instruções de como adicionar à tela de início.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="seo" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
-              <CardHeader className="pb-4 bg-primary/5">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
-                    <Search className="h-5 w-5" />
-                  </div>
-                  Otimização para Buscadores (SEO)
-                </CardTitle>
-                <CardDescription className="font-medium">Configure como o Google e outras IAs veem seu site</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 pt-6">
-                <div className="grid gap-6">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_title')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_title']}
-                    getIcon={getIcon}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_favicon_url')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['site_favicon_url']}
-                    getIcon={getIcon}
-                    onUpload={handleUpload}
-                    uploading={uploading === 'site_favicon_url'}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_keywords')} 
-                    onUpdate={handleUpdate} 
-                    label="Palavras-chave do Site (Separadas por vírgula)"
-                    getIcon={() => <Search className="h-4 w-4" />}
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'site_description')} 
-                    onUpdate={handleUpdate} 
-                    label="Descrição Meta do Site (Recomendado 160 caracteres)"
-                    getIcon={() => <FileText className="h-4 w-4" />}
-                    type="textarea"
-                  />
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <Globe className="h-5 w-5" />
                 </div>
+                SEO & Favicon
+              </CardTitle>
+              <CardDescription className="font-medium">Configure como seu site aparece no Google e nas abas do navegador</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_title')} 
+                  onUpdate={handleUpdate} 
+                  label="Título da Página (Aparece na aba do navegador)"
+                  getIcon={getIcon}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_favicon_url')} 
+                  onUpdate={handleUpdate} 
+                  label="Favicon (Ícone da Aba - 32x32 ou 64x64)"
+                  getIcon={getIcon}
+                  onUpload={handleUpload}
+                  uploading={uploading === 'site_favicon_url'}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_keywords')} 
+                  onUpdate={handleUpdate} 
+                  label="Palavras-chave (SEO)"
+                  getIcon={() => <Search className="h-4 w-4" />}
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'site_description')} 
+                  onUpdate={handleUpdate} 
+                  label="Descrição para o Google"
+                  getIcon={() => <FileText className="h-4 w-4" />}
+                  type="textarea"
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
 
-                <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 space-y-2">
-                  <div className="flex items-center gap-2 text-amber-600">
-                    <Zap className="h-4 w-4" />
-                    <span className="text-xs font-black uppercase tracking-wider">Dica SEO</span>
-                  </div>
-                  <p className="text-[11px] text-amber-800 font-bold leading-relaxed">
-                    As URLs amigáveis em português já estão ativadas automaticamente em todo o site. 
-                    Para cada rifa, o slug (URL personalizada) é usado para ranquear no Google.
-                  </p>
+        <TabsContent value="tracking" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <CardHeader className="pb-4 bg-primary/5">
+              <CardTitle className="flex items-center gap-3 text-xl">
+                <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
+                  <TrendingUp className="h-5 w-5" />
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
-              <CardHeader className="pb-4 bg-primary/5">
-                <CardTitle className="flex items-center gap-3 text-xl">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
-                    <TrendingUp className="h-5 w-5" />
-                  </div>
-                  Métricas & Rastreamento
-                </CardTitle>
-                <CardDescription className="font-medium">Acompanhe suas vendas com Pixels e Analytics</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-6 pt-6">
-                <div className="grid gap-6">
-                  <SettingField 
-                    s={settings.find(s => s.key === 'facebook_pixel_id')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['facebook_pixel_id']}
-                    getIcon={getIcon}
-                    placeholder="Ex: 1234567890"
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'google_analytics_id')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['google_analytics_id']}
-                    getIcon={getIcon}
-                    placeholder="Ex: G-XXXXXXXXXX"
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'google_tag_manager_id')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['google_tag_manager_id']}
-                    getIcon={getIcon}
-                    placeholder="Ex: GTM-XXXXXXX"
-                  />
-                </div>
-
-
-                <Separator className="my-4 bg-primary/10" />
-
-                <div className="space-y-4">
-                   <SettingField 
-                    s={settings.find(s => s.key === 'custom_header_scripts')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['custom_header_scripts']}
-                    getIcon={getIcon}
-                    type="textarea"
-                    placeholder="Scripts para inserir dentro do <head>..."
-                  />
-                  <SettingField 
-                    s={settings.find(s => s.key === 'custom_body_scripts')} 
-                    onUpdate={handleUpdate} 
-                    label={settingNames['custom_body_scripts']}
-                    getIcon={getIcon}
-                    type="textarea"
-                    placeholder="Scripts para inserir no final do <body>..."
-                  />
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                Pixels & Rastreamento
+              </CardTitle>
+              <CardDescription className="font-medium">Conecte sua conta do Facebook e Google para acompanhar métricas</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6 pt-6">
+              <div className="grid gap-6">
+                <SettingField 
+                  s={settings.find(s => s.key === 'facebook_pixel_id')} 
+                  onUpdate={handleUpdate} 
+                  label="Facebook Pixel ID"
+                  getIcon={getIcon}
+                  placeholder="Apenas os números do ID"
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'google_analytics_id')} 
+                  onUpdate={handleUpdate} 
+                  label="Google Analytics ID (GA4)"
+                  getIcon={getIcon}
+                  placeholder="Ex: G-XXXXXXXX"
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'google_tag_manager_id')} 
+                  onUpdate={handleUpdate} 
+                  label="Google Tag Manager ID (GTM)"
+                  getIcon={getIcon}
+                  placeholder="Ex: GTM-XXXXXXX"
+                />
+                
+                <Separator className="my-2" />
+                
+                <SettingField 
+                  s={settings.find(s => s.key === 'custom_header_scripts')} 
+                  onUpdate={handleUpdate} 
+                  label="Scripts Adicionais no Header (<head>)"
+                  getIcon={getIcon}
+                  type="textarea"
+                />
+                <SettingField 
+                  s={settings.find(s => s.key === 'custom_body_scripts')} 
+                  onUpdate={handleUpdate} 
+                  label="Scripts Adicionais no Body (Final do <body>)"
+                  getIcon={getIcon}
+                  type="textarea"
+                />
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
 
