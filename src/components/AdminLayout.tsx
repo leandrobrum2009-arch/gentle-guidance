@@ -87,16 +87,22 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     );
   }
 
-  // Filter navigation based on features
+  // Filter navigation based on features and roles
   const filteredNavItems = navItems.map(group => ({
     ...group,
     items: group.items.filter(item => {
+      // Feature-based restrictions
       if (item.title === "Roletas" && features && !features.roulette_enabled) return false;
       if (item.title === "Raspadinhas" && features && !features.scratch_cards_enabled) return false;
       if (item.title === "Banners" && features && !features.page_editing_enabled) return false;
-      if (item.title === "Sistema" && userRole !== 'master') return false; // Only master can edit system settings
-      if (item.title === "Usuários" && userRole !== 'master') return false; // Only master can manage users
-      if (item.title === "Diagnóstico" && userRole !== 'master') return false; // Only master can see diagnostics
+      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false; // Prized quotas
+      if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
+      
+      // Role-based restrictions
+      if (item.title === "Sistema" && userRole !== 'master') return false; 
+      if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'client_admin') return false;
+      if (item.title === "Diagnóstico" && userRole !== 'master') return false;
+      
       return true;
     })
   })).filter(group => group.items.length > 0);
