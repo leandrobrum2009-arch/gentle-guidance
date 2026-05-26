@@ -374,7 +374,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
               </motion.div>
             </AnimatePresence>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
