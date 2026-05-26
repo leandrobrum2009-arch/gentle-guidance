@@ -105,18 +105,33 @@ export const useAdminCampaigns = () =>
      },
    });
  
- export const useAdminUsers = () =>
-   useQuery({
-     queryKey: ["admin-users"],
+ export const useAdminUsers = () => {
+   const { data: role } = useRole();
+   return useQuery({
+     queryKey: ["admin-users", role],
      queryFn: async () => {
-       const { data, error } = await supabase
+       const { data: profiles, error } = await supabase
          .from("profiles")
          .select("*")
          .order("created_at", { ascending: false });
        if (error) throw error;
-       return data;
+       
+       if (role === "master") {
+         // Fetch roles and feature configs for all users if master
+         const { data: userRoles } = await supabase.from("user_roles").select("*");
+         const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
+         
+         return profiles.map(profile => ({
+           ...profile,
+           role: userRoles?.find(r => r.user_id === profile.user_id)?.role || "user",
+           features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
+         }));
+       }
+       
+       return profiles;
      },
    });
+ };
  
  export const useAdminAffiliates = () =>
    useQuery({
