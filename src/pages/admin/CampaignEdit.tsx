@@ -581,7 +581,6 @@ export default function AdminCampaignEdit() {
                   </div>
                ) : (
                 <div className="grid gap-3">
-               )}
                  {form.lucky_numbers_prizes.map((p, i) => (
                    <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-2xl border border-border transition-all hover:border-amber-200">
                      <div className="w-32">
