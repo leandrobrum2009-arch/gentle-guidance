@@ -292,7 +292,7 @@ import { SEO } from "@/components/SEO";
                   <item.icon className="h-4 w-4" /> {item.label}
                 </Button>
               ))}
-              <Separator className="bg-white/5 my-4" />
+              <Separator className="bg-border my-4" />
               <Button variant="ghost" className="w-full justify-start gap-3 text-rose-400 hover:text-rose-300 rounded-xl hover:bg-rose-500/10" onClick={() => signOut()}>
                 <LogOut className="h-4 w-4" /> Sair
               </Button>
@@ -309,7 +309,7 @@ import { SEO } from "@/components/SEO";
               ].map((stat, i) => (
                 <Card key={i} className="bg-card border-border p-4 group hover:bg-secondary/50 transition-all duration-300">
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <div className="h-10 w-10 rounded-xl bg-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform">
                        <stat.icon className={`h-5 w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
                     </div>
                     <div>
@@ -319,13 +319,13 @@ import { SEO } from "@/components/SEO";
                   </div>
 
                       {referrals && referrals.length > 0 && (
-                        <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+                        <div className="mt-8 pt-8 border-t border-border space-y-4">
                           <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                             <Users className="h-3 w-3" /> Seus Convidados ({referrals.length})
                           </h4>
                           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                             {referrals.map((ref: any, i: number) => (
-                              <div key={i} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5">
+                              <div key={i} className="flex items-center gap-3 p-3 bg-secondary/30 rounded-xl border border-border">
                                 <div className="h-8 w-8 rounded-lg overflow-hidden bg-zinc-800">
                                   <img src={ref.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${ref.name}`} className="h-full w-full object-cover" />
                                 </div>
@@ -340,7 +340,7 @@ import { SEO } from "@/components/SEO";
                       )}
 
                       {commissions && commissions.length > 0 && (
-                        <div className="mt-8 pt-8 border-t border-white/5 space-y-4">
+                        <div className="mt-8 pt-8 border-t border-border space-y-4">
                           <div className="flex items-center justify-between">
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
                               <TrendingUp className="h-3 w-3" /> Histórico de Comissões
@@ -369,7 +369,7 @@ import { SEO } from "@/components/SEO";
                           </div>
                           <div className="space-y-2">
                             {commissions.slice((commissionsPage - 1) * ITEMS_PER_PAGE, commissionsPage * ITEMS_PER_PAGE).map((comm, i) => (
-                              <div key={i} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                              <div key={i} className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl border border-border">
                                 <div className="flex items-center gap-3">
                                   <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                                     <ArrowUpRight className="h-4 w-4 text-emerald-400" />
@@ -431,7 +431,7 @@ import { SEO } from "@/components/SEO";
                     </CardHeader>
                     <div className="space-y-3 max-h-[200px] overflow-auto pr-2 custom-scrollbar">
                       {achievements?.length ? achievements.map((a: any) => (
-                        <div key={a.id} className="flex items-center gap-3 p-3 bg-white/5 rounded-xl border border-white/5 hover:border-amber-500/30 transition-all">
+                        <div key={a.id} className="flex items-center gap-3 p-3 bg-secondary/30 rounded-xl border border-border hover:border-amber-500/30 transition-all">
                           <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
                             <Star className="h-5 w-5 text-amber-400" />
                           </div>
@@ -744,7 +744,7 @@ import { SEO } from "@/components/SEO";
                    </Card>
 
                    {/* Rewards Section */}
-                   <Card className="bg-gradient-to-br from-purple-500/10 to-transparent border-white/5 p-6 backdrop-blur-xl">
+                   <Card className="bg-gradient-to-br from-purple-500/10 to-transparent border-border p-6 backdrop-blur-xl">
                       <CardHeader className="p-0 mb-6">
                          <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                              <Gift className="h-4 w-4 text-primary" /> Loja de Recompensas
@@ -758,15 +758,15 @@ import { SEO } from "@/components/SEO";
                           { title: 'Giro de Elite', cost: 500, icon: RotateCw, color: 'text-primary' },
                           { title: 'Sorte em Dobro', cost: 2000, icon: Zap, color: 'text-amber-400' },
                         ].map((reward, i) => (
-                          <div key={i} className="bg-white/5 border border-white/10 rounded-2xl p-4 space-y-4 hover:border-primary/30 transition-all group">
-                            <div className="h-12 w-12 rounded-xl bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+                          <div key={i} className="bg-secondary/30 border border-border rounded-2xl p-4 space-y-4 hover:border-primary/30 transition-all group">
+                            <div className="h-12 w-12 rounded-xl bg-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform">
                               <reward.icon className={cn("h-6 w-6", reward.color)} />
                             </div>
                             <div>
                               <p className="text-xs font-black uppercase tracking-tight">{reward.title}</p>
                               <p className="text-[10px] text-primary font-black">{reward.cost} PONTOS</p>
                             </div>
-                            <Button size="sm" className="w-full h-8 text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 text-white border-white/10" disabled={(profile?.points || 0) < reward.cost}>
+                            <Button size="sm" className="w-full h-8 text-[10px] font-black uppercase tracking-widest bg-secondary/50 hover:bg-secondary text-foreground border-border" disabled={(profile?.points || 0) < reward.cost}>
                               Resgatar
                             </Button>
                           </div>
@@ -777,11 +777,11 @@ import { SEO } from "@/components/SEO";
 
                 <TabsContent value="games" className="space-y-6">
                    <div className="grid gap-4 sm:grid-cols-3">
-                      <Card className="bg-white/5 border-white/10 p-4">
+                      <Card className="bg-secondary/30 border-border p-4">
                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Giros Totais</p>
                          <p className="text-2xl font-black italic">{spins?.length || 0}</p>
                       </Card>
-                      <Card className="bg-white/5 border-white/10 p-4">
+                      <Card className="bg-secondary/30 border-border p-4">
                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Caixas Abertas</p>
                          <p className="text-2xl font-black italic">{boxWins?.length || 0}</p>
                       </Card>
@@ -795,7 +795,7 @@ import { SEO } from "@/components/SEO";
                    </div>
 
                    <div className="grid lg:grid-cols-2 gap-6">
-                      <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                          <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                  <RotateCw className="h-4 w-4 text-primary" /> Últimos Giros
@@ -824,7 +824,7 @@ import { SEO } from "@/components/SEO";
                          </CardHeader>
                          <div className="space-y-3">
                             {spins?.length ? spins.slice((spinsPage - 1) * ITEMS_PER_PAGE, spinsPage * ITEMS_PER_PAGE).map((s: any) => (
-                                <div key={s.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                <div key={s.id} className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl border border-border">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{s.prize_label}</p>
                                         <p className="text-[9px] text-muted-foreground font-bold uppercase">{s.campaigns?.title}</p>
@@ -835,7 +835,7 @@ import { SEO } from "@/components/SEO";
                          </div>
                       </Card>
 
-                      <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                      <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                          <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                                  <Package className="h-4 w-4 text-orange-400" /> Caixas Abertas
@@ -864,7 +864,7 @@ import { SEO } from "@/components/SEO";
                          </CardHeader>
                          <div className="space-y-3">
                             {boxWins?.length ? boxWins.slice((boxesPage - 1) * ITEMS_PER_PAGE, boxesPage * ITEMS_PER_PAGE).map((bw: any) => (
-                                <div key={bw.id} className="flex items-center justify-between p-3 bg-white/5 rounded-xl border border-white/5">
+                                <div key={bw.id} className="flex items-center justify-between p-3 bg-secondary/30 rounded-xl border border-border">
                                     <div>
                                         <p className="text-xs font-black uppercase tracking-tight">{bw.prize_title}</p>
                                         <p className="text-[9px] text-muted-foreground font-bold uppercase">{format(new Date(bw.created_at), 'dd/MM HH:mm')}</p>
@@ -878,7 +878,7 @@ import { SEO } from "@/components/SEO";
                 </TabsContent>
 
                 <TabsContent value="notifications" className="space-y-6">
-                   <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                   <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                       <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
                          <div>
                              <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
@@ -904,7 +904,7 @@ import { SEO } from "@/components/SEO";
                                            toast.error("Seu navegador não suporta notificações");
                                          }
                                      }}
-                                     className="text-[10px] font-black uppercase tracking-widest border-white/10 hover:bg-white/5"
+                                     className="text-[10px] font-black uppercase tracking-widest border-border hover:bg-secondary/50"
                                  >
                                      Ativar Push
                                  </Button>
@@ -918,7 +918,7 @@ import { SEO } from "@/components/SEO";
                          {notifications?.length ? notifications.map((n: any) => (
                              <div key={n.id} className={cn(
                                  "flex items-center justify-between p-4 rounded-2xl border transition-all",
-                                 n.is_read ? "bg-white/[0.02] border-white/5" : "bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
+                                 n.is_read ? "bg-secondary/20 border-border" : "bg-primary/5 border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)]"
                              )}>
                                  <div className="flex items-center gap-4">
                                      <div className={cn(
@@ -950,7 +950,7 @@ import { SEO } from "@/components/SEO";
                 </TabsContent>
 
                 <TabsContent value="ranking" className="space-y-6">
-                   <div className="bg-[#0d0d0f]/50 border border-white/5 rounded-[40px] p-6 md:p-10 backdrop-blur-2xl">
+                   <div className="bg-card/50 border border-border rounded-[40px] p-6 md:p-10 backdrop-blur-2xl">
                      <UserRanking />
                    </div>
                 </TabsContent>
