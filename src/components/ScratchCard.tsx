@@ -44,10 +44,14 @@ const ScratchCard = ({
   const { data: globalWins } = useGlobalScratchCardScratches(10);
   const [isProcessing, setIsProcessing] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const [apiReady, setApiReady] = useState(false);
 
   const [prizeLabel, setPrizeLabel] = useState(initialPrizeLabel || "");
   const [isWinner, setIsWinner] = useState(initialIsWinner ?? false);
   const [localHistory, setLocalHistory] = useState<{name: string, prize: string, time: string, isWinner: boolean}[]>([]);
+  
+  // Create a 3x3 grid of symbols for credibility
+  const [gridSymbols, setGridSymbols] = useState<string[]>([]);
 
   const history = useMemo(() => {
     if (!globalWins || !Array.isArray(globalWins)) return localHistory.slice(0, 10);
@@ -68,6 +72,7 @@ const ScratchCard = ({
   const [scratchPercentage, setScratchPercentage] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+  const [lastPos, setLastPos] = useState<{x: number, y: number} | null>(null);
 
   const initCanvas = useCallback(() => {
     if (canvasRef.current && canvasSize.width > 0) {
