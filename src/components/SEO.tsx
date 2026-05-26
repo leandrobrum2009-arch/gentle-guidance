@@ -20,7 +20,7 @@ export const SEO = ({
 }: SEOProps) => {
   const { data: settings } = useSiteSettings();
 
-  const siteName = settings?.site_name || "Rifas Pro";
+  const siteName = settings?.site_title || settings?.site_name || "Rifas Pro";
   const defaultDescription = settings?.description || "A melhor plataforma de rifas online.";
   const defaultKeywords = settings?.site_keywords || "rifas, sorteios, prêmios, ganhar";
   
