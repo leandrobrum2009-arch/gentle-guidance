@@ -39,7 +39,11 @@ export default function AdminSettings() {
     site_logo_url: "Logotipo Principal",
     site_logo_height: "Altura do Logo (Desktop)",
     site_logo_height_mobile: "Altura do Logo (Mobile)",
-
+    site_favicon_url: "Ícone da Aba (Favicon)",
+    site_title: "Título do Navegador (SEO)",
+    enable_download_app: "Habilitar Botão 'Baixar App'",
+    app_download_link: "Link para Baixar App (Direto ou APK)",
+    
     support_whatsapp: "WhatsApp de Atendimento",
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
@@ -140,8 +144,9 @@ export default function AdminSettings() {
     if (key.includes('amount') || key.includes('withdrawal')) return <DollarSign className="h-4 w-4" />;
     if (key.includes('whatsapp') || key.includes('support') || key.includes('phone')) return <MessageSquare className="h-4 w-4" />;
     if (key.includes('hero_style') || key.includes('marquee')) return <Layout className="h-4 w-4" />;
-    if (key.includes('site_name') || key.includes('company_name')) return <Globe className="h-4 w-4" />;
-    if (key.includes('logo')) return <ImageIcon className="h-4 w-4" />;
+    if (key.includes('site_name') || key.includes('company_name') || key.includes('site_title')) return <Globe className="h-4 w-4" />;
+    if (key.includes('logo') || key.includes('favicon')) return <ImageIcon className="h-4 w-4" />;
+    if (key.includes('app')) return <Smartphone className="h-4 w-4" />;
     if (key.includes('transition') || key.includes('speed')) return <Zap className="h-4 w-4" />;
     if (key.includes('shimmer') || key.includes('glow')) return <Sparkles className="h-4 w-4" />;
     if (key.includes('hover')) return <MousePointer2 className="h-4 w-4" />;
@@ -235,7 +240,47 @@ export default function AdminSettings() {
                   />
                 </div>
 
+                <div className="pt-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_favicon_url')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_favicon_url']}
+                    getIcon={getIcon}
+                    onUpload={handleUpload}
+                    uploading={uploading === 'site_favicon_url'}
+                  />
+                </div>
 
+                <div className="pt-2">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_title')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_title']}
+                    getIcon={getIcon}
+                  />
+                </div>
+
+                <Separator className="my-4 bg-primary/10" />
+
+                <div className="space-y-4 pt-2 bg-primary/5 p-4 rounded-2xl border border-primary/10">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Smartphone className="h-5 w-5 text-primary" />
+                    <h3 className="font-bold text-sm">Configurações de Aplicativo (PWA)</h3>
+                  </div>
+                  <SettingField 
+                    s={settings.find(s => s.key === 'enable_download_app')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['enable_download_app']}
+                    getIcon={getIcon}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'app_download_link')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['app_download_link']}
+                    getIcon={getIcon}
+                    placeholder="Link para o arquivo .apk ou página de instruções"
+                  />
+                </div>
               </CardContent>
             </Card>
 
@@ -717,9 +762,9 @@ function SettingField({
 }) {
   if (!s) return null;
 
-  const isBoolean = s.value === 'true' || s.value === 'false';
+  const isBoolean = s.value === 'true' || s.value === 'false' || s.key.includes('enable');
   const isColor = s.key.includes('color') || s.key.includes('shimmer_primary') || s.key.includes('shimmer_secondary');
-  const isImage = (s.key.includes('logo') && s.key.includes('url')) || s.key.includes('image_url');
+  const isImage = (s.key.includes('logo') && s.key.includes('url')) || s.key.includes('favicon') || s.key.includes('image_url');
 
   const renderInput = () => {
     if (isBoolean) {
