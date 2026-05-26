@@ -645,7 +645,8 @@ export default function AdminCampaignEdit() {
                      <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>
                    </div>
                  )}
-               </div>
+                </div>
+               )}
              </Card>
 
              <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
