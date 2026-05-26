@@ -39,6 +39,8 @@ import ScratchCard from "@/components/ScratchCard";
 import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 import { SEO } from "@/components/SEO";
+import CampaignLiveDraw from "@/components/CampaignLiveDraw";
+
 
 
 const CampaignDetail = () => {
@@ -323,7 +325,10 @@ const CampaignDetail = () => {
                 <Ticket className="mr-2 h-3 w-3" /> Ver meus títulos
               </Button>
             </Link>
+            
+            <CampaignLiveDraw campaign={campaign} />
           </div>
+
         );
       
       case 'header':
