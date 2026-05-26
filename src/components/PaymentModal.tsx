@@ -286,7 +286,9 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
                   order={order} 
                   campaign={order.campaigns} 
                   onClose={() => onOpenChange(false)} 
+                  onBuyMore={onBuyMore}
                 />
+
               </div>
             </motion.div>
           ) : status === 'expired' ? (
