@@ -1469,7 +1469,7 @@ export type Database = {
       sync_federal_lottery: { Args: never; Returns: undefined }
     }
     Enums: {
-      app_role: "admin" | "moderator" | "user"
+      app_role: "admin" | "moderator" | "user" | "master" | "client_admin"
       mystery_box_rarity: "common" | "rare" | "epic" | "legendary"
     }
     CompositeTypes: {
@@ -1598,7 +1598,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "moderator", "user"],
+      app_role: ["admin", "moderator", "user", "master", "client_admin"],
       mystery_box_rarity: ["common", "rare", "epic", "legendary"],
     },
   },
