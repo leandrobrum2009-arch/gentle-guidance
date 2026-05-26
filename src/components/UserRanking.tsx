@@ -216,7 +216,9 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                     return (
                       <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
+                          <div className="h-12 min-w-[3rem] w-auto px-3 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-black italic text-primary">#{ticket.number}</span>
+                          </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
                             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o maior número</span>
