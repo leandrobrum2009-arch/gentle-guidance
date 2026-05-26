@@ -22,7 +22,9 @@ interface SuccessFlowProps {
   order: any;
   campaign: any;
   onClose?: () => void;
+  onBuyMore?: (quantity: number) => void;
 }
+
 
 export default function SuccessFlow({ order, campaign, onClose }: SuccessFlowProps) {
   const [step, setStep] = useState(1);
