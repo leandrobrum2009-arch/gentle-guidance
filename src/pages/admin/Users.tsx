@@ -206,7 +206,80 @@ export default function AdminUsers() {
             </DialogDescription>
           </div>
 
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            {isMaster && (
+              <div className="p-4 bg-secondary/30 rounded-2xl border border-border space-y-4 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Nível de Acesso Master</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cargo / Role</Label>
+                  <Select 
+                    value={editingUser?.role || "user"} 
+                    onValueChange={(val) => setEditingUser({ ...editingUser, role: val })}
+                  >
+                    <SelectTrigger className="h-12 rounded-xl bg-background border-border focus:ring-primary/20 font-bold">
+                      <SelectValue placeholder="Selecione o cargo" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card border-border">
+                      <SelectItem value="user">Usuário Comum</SelectItem>
+                      <SelectItem value="client_admin">Client Admin (Restrito)</SelectItem>
+                      <SelectItem value="admin">Administrador Total</SelectItem>
+                      <SelectItem value="master">Master (Dono)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {(editingUser?.role === 'client_admin' || editingUser?.role === 'admin') && (
+                  <div className="space-y-3 pt-2 border-t border-border mt-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Permissões de Recursos</p>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Raspadinhas</Label>
+                      <Switch 
+                        checked={editingUser?.scratch_cards_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, scratch_cards_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Roleta</Label>
+                      <Switch 
+                        checked={editingUser?.roulette_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, roulette_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Cotas Premiadas</Label>
+                      <Switch 
+                        checked={editingUser?.lucky_numbers_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, lucky_numbers_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Edição de Páginas</Label>
+                      <Switch 
+                        checked={editingUser?.page_editing_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, page_editing_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Modelos de Venda</Label>
+                      <Switch 
+                        checked={editingUser?.sales_page_models_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, sales_page_models_enabled: val })}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nome Completo</Label>
               <Input
