@@ -84,51 +84,61 @@ const ScratchCard = ({
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = "source-over";
 
-      // Fill with "scratchable" layer
-      const gradient = ctx.createLinearGradient(0, 0, canvasSize.width, canvasSize.height);
-      gradient.addColorStop(0, "#333");
-      gradient.addColorStop(0.5, "#555");
-      gradient.addColorStop(1, "#222");
-      
-      ctx.fillStyle = gradient;
+      // Fill with a more realistic "silver/metallic" scratchable layer
+      // Base metallic gray
+      ctx.fillStyle = "#A0A0A0";
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
-      // Add logo if available
-      const logoUrl = localStorage.getItem('site_logo') || "";
-      
+      // Add noise/texture
+      for (let i = 0; i < 5000; i++) {
+        const x = Math.random() * canvasSize.width;
+        const y = Math.random() * canvasSize.height;
+        const size = Math.random() * 2;
+        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)";
+        ctx.fillRect(x, y, size, size);
+      }
+
+      // Add "brushed metal" effect
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
+      ctx.lineWidth = 1;
+      for (let i = 0; i < canvasSize.width; i += 4) {
+        ctx.beginPath();
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i + 20, canvasSize.height);
+        ctx.stroke();
+      }
+
+      // Add a border frame
+      ctx.strokeStyle = "rgba(0,0,0,0.3)";
+      ctx.lineWidth = 10;
+      ctx.strokeRect(0, 0, canvasSize.width, canvasSize.height);
+
       const drawText = () => {
-        ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
-        ctx.font = "bold 16px Inter";
+        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
+        ctx.font = "bold 20px Inter";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 + 40);
+        ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
+        ctx.shadowBlur = 2;
+        ctx.fillText("RASPE COM CUIDADO", canvasSize.width / 2, canvasSize.height / 2 + 40);
+        ctx.shadowBlur = 0;
       };
 
+      const logoUrl = localStorage.getItem('site_logo') || "";
       if (logoUrl) {
         const logoImg = new Image();
         logoImg.crossOrigin = "anonymous";
         logoImg.src = logoUrl;
         logoImg.onload = () => {
-          const logoSize = 60;
-          ctx.globalAlpha = 0.3;
+          const logoSize = 80;
+          ctx.globalAlpha = 0.5;
           ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
           ctx.globalAlpha = 1.0;
           drawText();
         };
-        logoImg.onerror = () => {
-          drawText();
-        };
+        logoImg.onerror = () => drawText();
       } else {
         drawText();
-      }
-      
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.05)";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < canvasSize.width; i += 20) {
-        ctx.beginPath();
-        ctx.moveTo(i, 0);
-        ctx.lineTo(i, canvasSize.height);
-        ctx.stroke();
       }
     }
   }, [canvasSize]);
@@ -136,6 +146,49 @@ const ScratchCard = ({
   useEffect(() => {
     initCanvas();
   }, [canvasSize, initCanvas]);
+
+  const generateGrid = useCallback((winner: boolean, label: string) => {
+    const symbols = Array(9).fill("Tente novamente");
+    const otherPrizes = (potentialPrizes && potentialPrizes.length > 0) 
+      ? potentialPrizes.filter(p => p !== label)
+      : ["R$ 5", "R$ 10", "Giro Grátis", "VIP"];
+
+    if (winner && label) {
+      // Place 3 winning symbols in random positions
+      const positions = [0, 1, 2, 3, 4, 5, 6, 7, 8].sort(() => Math.random() - 0.5);
+      symbols[positions[0]] = label;
+      symbols[positions[1]] = label;
+      symbols[positions[2]] = label;
+      
+      // Fill the rest with random stuff
+      for (let i = 3; i < 9; i++) {
+        symbols[positions[i]] = otherPrizes[Math.floor(Math.random() * otherPrizes.length)];
+      }
+    } else {
+      // Fill with random stuff but no 3-matches
+      const usedCounts: Record<string, number> = {};
+      for (let i = 0; i < 9; i++) {
+        let pool = [...otherPrizes, "Tente novamente"];
+        let choice = pool[Math.floor(Math.random() * pool.length)];
+        
+        // Ensure no 3 matches
+        while (usedCounts[choice] >= 2) {
+          choice = pool[Math.floor(Math.random() * pool.length)];
+        }
+        
+        symbols[i] = choice;
+        usedCounts[choice] = (usedCounts[choice] || 0) + 1;
+      }
+    }
+    setGridSymbols(symbols);
+  }, [potentialPrizes]);
+
+  useEffect(() => {
+    // Initial random grid
+    if (gridSymbols.length === 0) {
+      generateGrid(false, "");
+    }
+  }, [generateGrid, gridSymbols.length]);
 
   const resetScratchCard = () => {
     setHasStarted(false);
