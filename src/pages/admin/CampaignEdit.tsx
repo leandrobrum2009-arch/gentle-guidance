@@ -38,7 +38,9 @@ interface CampaignForm {
   upsell_video_url: string; upsell_offer_text: string;
   upsell_enabled: boolean; upsell_probability: string;
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
+  live_stream_url: string; concurso: string;
 }
+
 
 const empty: CampaignForm = {
   title: "", slug: "", subtitle: "", description: "", image_url: "",
@@ -62,7 +64,10 @@ const empty: CampaignForm = {
   upsell_enabled: false,
   upsell_probability: "98%",
   ranking_prizes: [],
+  live_stream_url: "",
+  concurso: "",
 };
+
 
 export default function AdminCampaignEdit() {
   const { id } = useParams();
@@ -1011,6 +1016,15 @@ export default function AdminCampaignEdit() {
                     </div>
                     <Switch checked={form.federal_lottery_draw} onCheckedChange={(v) => set("federal_lottery_draw", v)} />
                   </div>
+                  <div className="space-y-2">
+                    <Label>Concurso da Federal</Label>
+                    <Input value={form.concurso} onChange={(e) => set("concurso", e.target.value)} placeholder="Ex: 5867" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Link do Sorteio ao Vivo (YouTube)</Label>
+                    <Input value={form.live_stream_url} onChange={(e) => set("live_stream_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
+                  </div>
+
                   <div className="space-y-2">
                     <Label>Mínimo de Cotas por Pedido</Label>
                     <Input type="number" value={form.min_tickets} onChange={(e) => set("min_tickets", Number(e.target.value))} />
