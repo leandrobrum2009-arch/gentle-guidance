@@ -241,18 +241,22 @@ const ScratchCard = ({
   const startScratch = async () => {
     if (isSimulation) {
       const winner = Math.random() > 0.7;
+      const label = winner ? "R$ 10,00 Simulado" : "Tente novamente";
       setIsWinner(winner);
-      setPrizeLabel(winner ? "R$ 10,00 Simulado" : "Tente novamente");
+      setPrizeLabel(label);
+      generateGrid(winner, label);
+      setApiReady(true);
       return;
     }
 
-    if (!user && !isSimulation) {
+    if (!user) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
       setIsDrawing(false);
+      setHasStarted(false);
       return;
     }
 
-    if (availableScratches <= 0 && cost <= 0 && !isSimulation) {
+    if (availableScratches <= 0 && cost <= 0) {
       toast.error("Você não possui raspadinhas disponíveis!");
       setIsDrawing(false);
       setHasStarted(false);
@@ -262,7 +266,6 @@ const ScratchCard = ({
     setIsProcessing(true);
     if (onStart) onStart();
     try {
-      // Ensure we have a valid campaignId if possible, or try global scratch
       const { data, error } = await supabase.rpc('process_scratch_card_play', {
         p_campaign_id: campaignId || null,
         p_cost: Number(cost) || 0
@@ -270,22 +273,25 @@ const ScratchCard = ({
 
       if (error) {
         toast.error(error.message || "Erro ao processar a raspadinha");
-        // Reset state so they can try again if it was just a connection/auth issue
         setHasStarted(false);
         setIsDrawing(false);
         throw error;
       }
 
       const res = data as any;
-      setIsWinner(res.is_winner);
-      setPrizeLabel(res.is_winner ? (res.prize?.label || "Prêmio!") : "Tente novamente");
+      const winner = res.is_winner;
+      const label = winner ? (res.prize?.label || "Prêmio!") : "Tente novamente";
+      
+      setIsWinner(winner);
+      setPrizeLabel(label);
+      generateGrid(winner, label);
+      setApiReady(true);
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["user-campaign-scratches"] });
       queryClient.invalidateQueries({ queryKey: ["admin-scratch-card-stats"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
-      setIsProcessing(false);
       setHasStarted(false);
       setIsDrawing(false);
     } finally {
@@ -294,32 +300,38 @@ const ScratchCard = ({
   };
 
   const scratch = async (x: number, y: number) => {
-    if (!canvasRef.current || isScratched || isProcessing) return;
+    if (!canvasRef.current || isScratched) return;
 
     if (!hasStarted) {
       setHasStarted(true);
-      await startScratch();
-      // If startScratch failed or is still processing, we might want to return
-      // But we can let them "start" scratching visually if we want.
-      // However, if we don't have the result yet, we don't know what's underneath.
-      // So we wait for processing to finish before allowing more scratching.
-      return;
+      startScratch(); // Don't await, let it run in background
     }
-
-    if (isProcessing) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d", { willReadFrequently: true });
     if (!ctx) return;
 
     ctx.globalCompositeOperation = "destination-out";
-    ctx.beginPath();
-    ctx.arc(x, y, 35, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+    ctx.lineWidth = 60; // Larger brush for better scratching feel
 
-    // Calculate scratch percentage (optimized: only every 10 scratches or so, or debounced)
-    // For now, let's keep it simple but use willReadFrequently
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    if (lastPos) {
+      ctx.beginPath();
+      ctx.moveTo(lastPos.x, lastPos.y);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    } else {
+      ctx.beginPath();
+      ctx.arc(x, y, 30, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    
+    setLastPos({ x, y });
+
+    // Calculate scratch percentage every few calls to save performance
+    if (Math.random() > 0.8) {
+      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
     const pixels = imageData.data;
     let transparentPixels = 0;
     for (let i = 3; i < pixels.length; i += 4) {
