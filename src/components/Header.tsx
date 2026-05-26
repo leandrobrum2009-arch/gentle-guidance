@@ -123,8 +123,8 @@ const Header = () => {
   };
 
   return (
-      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-4'}`}>
-       <div className="container flex items-center justify-between gap-4">
+      <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl py-2 shadow-lg' : 'bg-transparent py-6'}`}>
+       <div className="container flex items-center justify-between gap-4 h-full">
          <div className="flex items-center gap-4 md:gap-8 min-w-0">
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" ? (
