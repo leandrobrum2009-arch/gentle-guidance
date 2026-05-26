@@ -26,6 +26,8 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
   const [isPayingWithBalance, setIsPayingWithBalance] = useState(false);
   const [userBalance, setUserBalance] = useState(0);
   const [pixError, setPixError] = useState<string | null>(null);
+  const [lastProcessedOrderId, setLastProcessedOrderId] = useState<string | null>(null);
+
 
   const fetchOrder = useCallback(async (retryCount = 0) => {
     if (!orderId) return;
