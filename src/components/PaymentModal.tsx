@@ -14,7 +14,9 @@ interface PaymentModalProps {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   onPaymentSuccess: () => void;
+  onBuyMore?: (quantity: number) => void;
 }
+
 
 export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess }: PaymentModalProps) => {
   const [order, setOrder] = useState<any>(null);
