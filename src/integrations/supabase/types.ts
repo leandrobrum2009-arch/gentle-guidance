@@ -14,6 +14,50 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_features_config: {
+        Row: {
+          created_at: string | null
+          id: string
+          lucky_numbers_enabled: boolean | null
+          page_editing_enabled: boolean | null
+          roulette_enabled: boolean | null
+          sales_page_models_enabled: boolean | null
+          scratch_cards_enabled: boolean | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          lucky_numbers_enabled?: boolean | null
+          page_editing_enabled?: boolean | null
+          roulette_enabled?: boolean | null
+          sales_page_models_enabled?: boolean | null
+          scratch_cards_enabled?: boolean | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          lucky_numbers_enabled?: boolean | null
+          page_editing_enabled?: boolean | null
+          roulette_enabled?: boolean | null
+          sales_page_models_enabled?: boolean | null
+          scratch_cards_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "admin_features_config_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       affiliate_commissions: {
         Row: {
           affiliate_id: string | null
