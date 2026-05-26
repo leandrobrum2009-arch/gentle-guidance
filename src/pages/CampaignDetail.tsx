@@ -630,7 +630,7 @@ const CampaignDetail = () => {
         const wonPrizes = luckyNumbers.filter(p => luckyNumbersStatus[p.number]);
 
         return luckyNumbers.length > 0 && (
-          <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-8">
+          <div key={section} id="prizes" className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-8">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="space-y-1">
                 <h3 className="text-xl font-black uppercase italic tracking-tighter flex items-center gap-3">
