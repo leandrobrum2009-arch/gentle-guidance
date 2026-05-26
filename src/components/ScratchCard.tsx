@@ -332,21 +332,23 @@ const ScratchCard = ({
     // Calculate scratch percentage every few calls to save performance
     if (Math.random() > 0.8) {
       const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const pixels = imageData.data;
-    let transparentPixels = 0;
-    for (let i = 3; i < pixels.length; i += 4) {
-      if (pixels[i] === 0) transparentPixels++;
-    }
-    const percentage = (transparentPixels / (pixels.length / 4)) * 100;
-    setScratchPercentage(percentage);
+      const pixels = imageData.data;
+      let transparentPixels = 0;
+      for (let i = 3; i < pixels.length; i += 4) {
+        if (pixels[i] === 0) transparentPixels++;
+      }
+      const percentage = (transparentPixels / (pixels.length / 4)) * 100;
+      setScratchPercentage(percentage);
 
-    if (percentage > 45 && !isScratched) {
-      reveal();
+      if (percentage > 45 && !isScratched) {
+        reveal();
+      }
     }
   };
 
   const reveal = () => {
     setIsScratched(true);
+    setLastPos(null);
     if (isWinner && prizeLabel !== "Tente novamente") {
       playSound('win');
       confetti({
@@ -389,7 +391,7 @@ const ScratchCard = ({
   const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
     setIsDrawing(true);
     const { x, y } = getMousePos(e);
-    if (isScratched || isProcessing) return;
+    if (isScratched) return;
     scratch(x, y);
     hapticFeedback();
   };
@@ -402,6 +404,7 @@ const ScratchCard = ({
 
   const handleMouseUp = () => {
     setIsDrawing(false);
+    setLastPos(null);
   };
 
   return (
@@ -442,9 +445,34 @@ const ScratchCard = ({
         className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-zinc-800 bg-zinc-950 group"
         style={{ cursor: isScratched ? "default" : "crosshair" }}
       >
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-zinc-900 to-black">
+        {/* The Grid of hidden items */}
+        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2 p-2 bg-zinc-900">
+          {gridSymbols.map((symbol, i) => (
+            <div key={i} className="flex flex-col items-center justify-center bg-zinc-800 rounded-lg border border-white/5 p-1 text-center">
+              <div className={cn(
+                "h-8 w-8 md:h-10 md:w-10 rounded-full mb-1 flex items-center justify-center",
+                symbol === "Tente novamente" ? "bg-zinc-700/50" : "bg-primary/20 shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
+              )}>
+                {symbol === "Tente novamente" ? (
+                  <Zap className="h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
+                ) : (
+                  <Gift className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                )}
+              </div>
+              <span className={cn(
+                "text-[7px] md:text-[9px] font-black uppercase leading-tight",
+                symbol === "Tente novamente" ? "text-zinc-500" : "text-white"
+              )}>
+                {symbol}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-10">
           <AnimatePresence>
-            {isScratched && !isProcessing && (
+            {isScratched && (
+
               <motion.div
                 initial={{ scale: 0.5, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
