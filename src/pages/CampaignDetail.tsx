@@ -229,7 +229,7 @@ const CampaignDetail = () => {
     }
   }, [setSearchParams]);
 
-  const handleBuy = async (quantityOrNumbers: number | string[]) => {
+  const handleBuy = async (quantityOrNumbers: number | string[], isUpsell = false) => {
     if (!user) {
       setPendingPurchase(quantityOrNumbers);
       setIsQuickRegisterOpen(true);
@@ -262,8 +262,10 @@ const CampaignDetail = () => {
       
       // Open payment modal immediately as requested
       setIsPaymentModalOpen(true);
-      // We still show the success animation briefly in the background or as a flash
-      setShowSuccess(true);
+      // We only show the success animation for new purchases, not for upsells within the modal
+      if (!isUpsell) {
+        setShowSuccess(true);
+      }
 
     } catch (error: any) {
       setIsPurchasing(false);
@@ -921,7 +923,7 @@ const CampaignDetail = () => {
         onOpenChange={handleOpenChange} 
         orderId={currentOrderId} 
         onPaymentSuccess={handlePaymentSuccess} 
-        onBuyMore={(qty) => handleBuy(qty)}
+        onBuyMore={(qty) => handleBuy(qty, true)}
       />
 
       <Footer />
