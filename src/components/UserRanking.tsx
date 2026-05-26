@@ -276,8 +276,17 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
       </div>
       )}
 
-      {!stats && (
-        <>
+      {(!stats || (users && users.length > 0)) && (
+        <div className="space-y-6">
+          {(users && users.length > 0) && (
+            <div className="flex items-center gap-2 mb-2">
+              <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <Crown className="h-4 w-4 text-amber-500" />
+              </div>
+              <h3 className="text-xs font-black uppercase tracking-widest italic">Top 5 Compradores</h3>
+            </div>
+          )}
+
           {/* Podium View */}
           <div className="grid grid-cols-3 gap-2 md:gap-6 items-end pt-10 pb-4">
             {/* Second Place */}
