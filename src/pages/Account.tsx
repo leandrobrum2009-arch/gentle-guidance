@@ -31,8 +31,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserRanking from "@/components/UserRanking";
 import { Button } from "@/components/ui/button";
- import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
- import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -41,6 +41,9 @@ import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
+import { DepositModal } from "@/components/DepositModal";
+import { WithdrawModal } from "@/components/WithdrawModal";
+import { PaymentModal } from "@/components/PaymentModal";
 
  export default function Account() {
    const { user, signOut } = useAuth();
