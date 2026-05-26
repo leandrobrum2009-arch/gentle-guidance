@@ -31,8 +31,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserRanking from "@/components/UserRanking";
 import { Button } from "@/components/ui/button";
- import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
- import { toast } from "sonner";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -41,6 +41,9 @@ import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
+import { DepositModal } from "@/components/DepositModal";
+import { WithdrawModal } from "@/components/WithdrawModal";
+import { PaymentModal } from "@/components/PaymentModal";
 
  export default function Account() {
    const { user, signOut } = useAuth();
@@ -67,6 +70,11 @@ import { SEO } from "@/components/SEO";
     const { data: siteSettings } = useSiteSettings();
 
    const [isLoading, setIsLoading] = useState(true);
+   const [isDepositOpen, setIsDepositOpen] = useState(false);
+   const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
+   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
+   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
@@ -575,7 +583,7 @@ import { SEO } from "@/components/SEO";
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Depositar via PIX</h3>
                             <p className="text-sm text-foreground/60 font-medium">Crédito instantâneo na sua carteira.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 active:scale-95 transition-all">Depositar Agora</Button>
+                            <Button onClick={() => setIsDepositOpen(true)} className="h-12 px-6 rounded-xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 active:scale-95 transition-all">Depositar Agora</Button>
                         </div>
                      </Card>
 
@@ -586,7 +594,7 @@ import { SEO } from "@/components/SEO";
                         <div className="relative z-10 space-y-4">
                             <h3 className="text-xl font-black uppercase italic tracking-tighter">Solicitar Saque</h3>
                             <p className="text-sm text-foreground/60 font-medium">Resgate seu saldo para seu banco.</p>
-                            <Button className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald active:scale-95 transition-all">Efetuar Saque</Button>
+                            <Button onClick={() => setIsWithdrawOpen(true)} className="h-12 px-6 rounded-xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 glow-emerald active:scale-95 transition-all">Efetuar Saque</Button>
                         </div>
                      </Card>
                   </div>
@@ -957,8 +965,35 @@ import { SEO } from "@/components/SEO";
              </Tabs>
            </main>
          </div>
-       </motion.div>
-       <Footer />
-     </div>
+      </motion.div>
+
+      <DepositModal 
+        isOpen={isDepositOpen} 
+        onOpenChange={setIsDepositOpen}
+        onSuccess={(orderId) => {
+          setPendingOrderId(orderId);
+          setIsPaymentOpen(true);
+        }}
+      />
+
+      <WithdrawModal
+        isOpen={isWithdrawOpen}
+        onOpenChange={setIsWithdrawOpen}
+        userBalance={Number(profile?.balance || 0)}
+        onSuccess={() => queryClient.invalidateQueries({ queryKey: ["profile", user?.id] })}
+      />
+
+      <PaymentModal
+        orderId={pendingOrderId}
+        isOpen={isPaymentOpen}
+        onOpenChange={setIsPaymentOpen}
+        onPaymentSuccess={() => {
+          queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+          queryClient.invalidateQueries({ queryKey: ["user-wallet-transactions", user?.id] });
+        }}
+      />
+
+      <Footer />
+    </div>
   );
 }
