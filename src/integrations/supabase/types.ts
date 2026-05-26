@@ -1466,6 +1466,7 @@ export type Database = {
         Args: { amount: number; user_uuid: string }
         Returns: undefined
       }
+      is_admin: { Args: { _user_id: string }; Returns: boolean }
       manual_perform_draw: {
         Args: {
           p_campaign_id: string
