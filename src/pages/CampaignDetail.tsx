@@ -910,60 +910,6 @@ const CampaignDetail = () => {
       />
       <Footer />
       
-      {/* Sticky Purchase Buttons */}
-      <AnimatePresence>
-        {!isPurchaseVisible && (
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-6 left-0 right-0 z-50 flex flex-col items-center gap-3 px-6 pointer-events-none"
-          >
-          {/* Desktop "Participe Agora" Float */}
-          <div className="hidden lg:block pointer-events-auto">
-             <Button 
-                size="sm"
-                className="h-12 px-8 rounded-full font-black uppercase tracking-widest shadow-xl shadow-primary/20 border-2 border-white/20 bg-primary text-black hover:scale-105 transition-all"
-                onClick={() => {
-                  const bundles = campaign?.price_bundles || [];
-                  const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
-                  if (popularBundle) {
-                    handleBuy(popularBundle.quantity);
-                  } else {
-                    const element = document.getElementById('purchase-tabs');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }
-                }}
-              >
-                PARTICIPE AGORA <Zap className="ml-2 h-5 w-5 fill-current" />
-              </Button>
-          </div>
-
-          {/* Mobile "Quero Participar" Float */}
-          <div className="lg:hidden w-full pointer-events-auto">
-              <Button 
-                className="w-full h-12 rounded-xl font-black uppercase tracking-widest shadow-xl shadow-primary/20 border-2 border-white/20 bg-primary text-black active:scale-95 transition-all text-sm"
-                onClick={() => {
-                  const bundles = campaign?.price_bundles || [];
-                  const popularBundle = bundles.find((b: any) => b.is_popular) || bundles[0];
-                  if (popularBundle) {
-                    handleBuy(popularBundle.quantity);
-                  } else {
-                    const element = document.getElementById('purchase-tabs');
-                    if (element) {
-                      element.scrollIntoView({ behavior: 'smooth' });
-                    }
-                  }
-                }}
-              >
-                QUERO PARTICIPAR <Sparkles className="ml-2 h-6 w-6" />
-              </Button>
-          </div>
-        </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };

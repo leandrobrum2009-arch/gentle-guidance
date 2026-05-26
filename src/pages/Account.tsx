@@ -212,7 +212,7 @@ import { SEO } from "@/components/SEO";
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#0a0a0c] flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="h-10 w-10 animate-spin text-primary" />
       </div>
     );
@@ -392,7 +392,7 @@ import { SEO } from "@/components/SEO";
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsContent value="overview" className="space-y-6">
                 <div className="grid lg:grid-cols-2 gap-6">
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                  <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                     <CardHeader className="p-0 mb-6">
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
@@ -409,7 +409,12 @@ import { SEO } from "@/components/SEO";
                             </linearGradient>
                           </defs>
                           <Tooltip 
-                            contentStyle={{ backgroundColor: '#0d0d0f', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px' }}
+                            contentStyle={{ 
+                              backgroundColor: 'hsl(var(--card))', 
+                              border: '1px solid hsl(var(--border))', 
+                              borderRadius: '12px',
+                              color: 'hsl(var(--foreground))'
+                            }}
                             itemStyle={{ color: '#8b5cf6', fontWeight: 'bold' }}
                           />
                           <Area type="monotone" dataKey="amount" stroke="#8b5cf6" strokeWidth={3} fillOpacity={1} fill="url(#colorAmt)" />
@@ -418,7 +423,7 @@ import { SEO } from "@/components/SEO";
                     </div>
                   </Card>
 
-                  <Card className="bg-[#0d0d0f]/50 border-white/5 p-6 backdrop-blur-xl">
+                  <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                     <CardHeader className="p-0 mb-6">
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <Star className="h-4 w-4 text-amber-400" /> Suas Conquistas
