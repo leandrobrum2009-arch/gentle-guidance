@@ -31,39 +31,51 @@ const SOUND_URLS = {
 
 const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign, availableSpins = 0, isSimulation = false }: RouletteProps) => {
   const prizes = useMemo(() => {
-    let segments = [...(initialPrizes || [])];
+    let basePrizes = [...(initialPrizes || [])];
     
-    // If no prizes configured, show the examples the user requested
-    if (segments.length === 0) {
-      segments = [
+    // If no prizes configured, show example list
+    if (basePrizes.length === 0) {
+      basePrizes = [
         { id: 'p1', label: 'R$ 50 no PIX', value: 50, prize_type: 'balance', chance_percent: 10, color: '#22c55e' },
         { id: 'p2', label: 'R$ 100 no PIX', value: 100, prize_type: 'balance', chance_percent: 5, color: '#10b981' },
         { id: 'p3', label: 'Cota Premiada', value: 1, prize_type: 'ticket', chance_percent: 2, color: '#f59e0b' },
         { id: 'p4', label: 'Caixa Surpresa', value: 0, prize_type: 'physical', chance_percent: 1, color: '#8b5cf6' },
         { id: 'p5', label: 'R$ 5000 no PIX', value: 5000, prize_type: 'balance', chance_percent: 0.1, color: '#ef4444' },
-        { id: 'loss', label: 'Tente novamente', value: 0, prize_type: 'none', chance_percent: 81.9, color: '#3f3f46' }
       ] as any[];
+    }
+
+    // Filter out existing "Tente novamente" to interperse them manually
+    const realPrizes = basePrizes.filter(p => (p.prize_type as any) !== 'none' && p.label !== 'Tente novamente');
+    
+    // Calculate total chance of real prizes
+    const totalRealChance = realPrizes.reduce((acc, p) => acc + (Number(p.chance_percent) || 0), 0);
+    const lossChancePerSegment = Math.max(0, (100 - totalRealChance) / Math.max(1, realPrizes.length));
+    
+    // Create segments: Real Prize -> Loss -> Real Prize -> Loss ...
+    let segments: any[] = [];
+    
+    if (realPrizes.length === 0) {
+        segments = [{ id: 'loss-1', label: 'Tente novamente', value: 0, prize_type: 'none', chance_percent: 100, color: '#3f3f46' }];
     } else {
-      // Ensure we have at least 6 segments for a good look
-      if (segments.length < 6) {
-        const originalLength = segments.length;
-        for (let i = 0; i < 6 - originalLength; i++) {
-          segments.push({ ...segments[i % originalLength], id: `dup-${i}` });
+        realPrizes.forEach((p, i) => {
+            segments.push({ ...p });
+            segments.push({
+                id: `loss-${i}-${Date.now()}`,
+                label: 'Tente novamente',
+                value: 0,
+                prize_type: 'none',
+                chance_percent: lossChancePerSegment,
+                color: i % 2 === 0 ? '#1f1f23' : '#313135'
+            });
+        });
+    }
+    
+    // Ensure we have at least 8 segments for a good look
+    if (segments.length < 8 && segments.length > 0) {
+        const pattern = [...segments];
+        while (segments.length < 8) {
+            segments = [...segments, ...pattern.map((p, idx) => ({ ...p, id: `${p.id}-dup-${segments.length + idx}` }))];
         }
-      }
-      
-      // Ensure a "Loss" segment exists visually if total chance is not 100%
-      const totalChance = segments.reduce((acc, p) => acc + (p.chance_percent || 0), 0);
-      if (totalChance < 100 && !segments.find(p => p.label === 'Tente novamente')) {
-        segments.push({
-          id: 'loss-segment',
-          label: 'Tente novamente',
-          value: 0,
-          prize_type: 'none',
-          chance_percent: 100 - totalChance,
-          color: '#ef4444'
-        } as any);
-      }
     }
     
     return segments;
@@ -72,6 +84,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
   const { data: globalSpins } = useGlobalRouletteSpins(10);
   const { data: stats } = useGlobalStats();
   const [isSpinning, setIsSpinning] = useState(false);
+  const [spinPower, setSpinPower] = useState(5);
   const [showWinAnimation, setShowWinAnimation] = useState(false);
   const [wonPrize, setWonPrize] = useState<RoulettePrize | null>(null);
   const [currentRotation, setCurrentRotation] = useState(0);
@@ -91,7 +104,6 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
     const { data } = await supabase.from('profiles').select('*').eq('user_id', user?.id).single();
     setUserProfile(data);
   };
-
 
   const getWeightedPrize = () => {
     const totalWeight = prizes.reduce((acc, p) => acc + (Number(p.chance_percent) || 0), 0);
