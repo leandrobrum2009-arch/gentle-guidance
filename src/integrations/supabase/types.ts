@@ -1419,6 +1419,10 @@ export type Database = {
         Args: { p_campaign_id: string; p_ticket_number: string }
         Returns: string
       }
+      notify_campaign_draw: {
+        Args: { p_campaign_id: string }
+        Returns: undefined
+      }
       pay_with_balance: {
         Args: { p_order_id: string; p_user_id: string }
         Returns: Json
