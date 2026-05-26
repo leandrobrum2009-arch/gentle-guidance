@@ -22,6 +22,9 @@ export default function AdminSettings() {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState<string | null>(null);
 
+  const { data: userRole } = useRole();
+  const isUserMaster = userRole === 'master';
+
   const settingNames: Record<string, string> = {
     hero_transition_speed: "Velocidade do Slide (ms)",
     button_glow_speed: "Velocidade do Brilho do Botão",
@@ -77,11 +80,7 @@ export default function AdminSettings() {
     sales_page_keywords: "Palavras-chave da Venda",
     sales_page_type: "Tipo da Plataforma",
     sales_page_whatsapp: "WhatsApp de Vendas"
-  const isMaster = settings.some(s => s.key === 'is_master' && s.value === 'true') || true; // Fallback to true for now or use useIsMaster hook
-  
-  // Actually let's use the hook correctly
-  const { data: userRole } = useRole();
-  const isUserMaster = userRole === 'master';
+  };
 
   useEffect(() => {
     fetchSettings();
@@ -281,7 +280,7 @@ export default function AdminSettings() {
               </CardContent>
             </Card>
 
-            <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
+            <Card className="border-border/50 bg-card/50 backdrop-blur-sm md:col-span-2 border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
               <CardHeader className="pb-4 bg-primary/5">
                 <CardTitle className="flex items-center gap-3 text-xl">
                   <div className="p-2 rounded-xl bg-primary/10 text-primary shadow-sm">
