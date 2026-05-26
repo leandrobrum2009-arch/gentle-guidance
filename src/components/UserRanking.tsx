@@ -93,9 +93,11 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                   return (
                     <div className="flex flex-col gap-1">
                       <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Maior</span>
-                      <Badge variant="outline" className="h-10 px-6 rounded-xl border-primary/20 bg-primary/5 text-primary font-black italic text-sm">
-                        #{highest.number}
-                      </Badge>
+                      <div className="h-10 min-w-[3rem] w-auto px-4 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-center shadow-sm">
+                        <span className="text-primary font-black italic text-sm">
+                          #{highest.number}
+                        </span>
+                      </div>
                     </div>
                   );
                 })()}
@@ -141,7 +143,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                   
                   {stats.highestTickets[0] ? (
                     <div className="flex items-center gap-5">
-                      <div className="h-16 w-16 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-black italic shadow-xl shadow-primary/20">
+                      <div className="h-16 min-w-[4rem] w-auto px-4 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl font-black italic shadow-xl shadow-primary/20 flex-shrink-0">
                         #{stats.highestTickets[0].number}
                       </div>
                       <div className="flex flex-col">
@@ -174,7 +176,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
 
                   {stats.lowestTickets[0] ? (
                     <div className="flex items-center gap-5">
-                      <div className="h-16 w-16 rounded-2xl bg-secondary border border-border flex items-center justify-center text-2xl font-black italic text-foreground">
+                      <div className="h-16 min-w-[4rem] w-auto px-4 rounded-2xl bg-secondary border border-border flex items-center justify-center text-2xl font-black italic text-foreground flex-shrink-0">
                         #{stats.lowestTickets[0].number}
                       </div>
                       <div className="flex flex-col">
@@ -214,7 +216,9 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                     return (
                       <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-black italic text-primary">#{ticket.number}</span>
+                          <div className="h-12 min-w-[3rem] w-auto px-3 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-black italic text-primary">#{ticket.number}</span>
+                          </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
                             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o maior número</span>
@@ -244,7 +248,9 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                     return (
                       <div key={idx} className="bg-secondary/30 border border-border p-4 rounded-2xl flex items-center justify-between group hover:bg-secondary/50 transition-all">
                         <div className="flex items-center gap-3">
-                          <span className="text-lg font-black italic text-foreground/80">#{ticket.number}</span>
+                          <div className="h-12 min-w-[3rem] w-auto px-3 rounded-xl bg-secondary border border-border flex items-center justify-center flex-shrink-0">
+                            <span className="text-sm font-black italic text-foreground/80">#{ticket.number}</span>
+                          </div>
                           <div className="flex flex-col">
                             <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
                             <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o menor número</span>
