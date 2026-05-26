@@ -111,23 +111,31 @@ export const useAdminCampaigns = () =>
    const { data: role } = useRole();
    return useQuery({
      queryKey: ["admin-users", role],
-    queryFn: async () => {
-      const { data: profiles, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .order("created_at", { ascending: false });
-      if (error) throw error;
-      
-      // Fetch roles and feature configs
-      const { data: userRoles } = await supabase.from("user_roles").select("*");
-      const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
-      
-      return profiles.map(profile => ({
-        ...profile,
-        role: userRoles?.find(r => r.user_id === profile.user_id)?.role || "user",
-        features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
-      }));
-    },
+     queryFn: async () => {
+       const { data: profiles, error } = await supabase
+         .from("profiles")
+         .select("*")
+         .order("created_at", { ascending: false });
+       if (error) throw error;
+       
+       // Fetch roles and feature configs
+       const { data: userRoles } = await supabase.from("user_roles").select("*");
+       const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
+       
+       let results = profiles.map(profile => ({
+         ...profile,
+         role: userRoles?.find(r => r.user_id === profile.user_id)?.role || "user",
+         features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
+       }));
+
+       // Hide 'master' users if the current user is not a 'master'
+       if (role !== "master") {
+         results = results.filter(u => u.role !== "master");
+       }
+       
+       return results;
+     },
+     enabled: !!role,
    });
  };
  
