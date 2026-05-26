@@ -187,18 +187,25 @@ const CampaignDetail = () => {
     return userScratches.filter((s: any) => !s.prize_label).length;
   }, [userScratches]);
 
-  const progress = useMemo(() => {
-    if (!campaign) return 0;
+  const progressData = useMemo(() => {
+    if (!campaign) return { bar: 0, text: "0" };
+    
+    let val = 0;
     if (campaign.sales_goal && campaign.sales_goal > 0) {
       const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
-      const val = (currentSales / campaign.sales_goal) * 100;
-      if (val > 0 && val < 1) return 0.1;
-      return Math.min(100, Math.round(val));
+      val = (currentSales / campaign.sales_goal) * 100;
+    } else {
+      val = (campaign.sold_tickets / campaign.total_tickets) * 100;
     }
-    const val = (campaign.sold_tickets / campaign.total_tickets) * 100;
-    if (val > 0 && val < 1) return 0.1;
-    return Math.round(val);
+
+    const rounded = Math.round(val);
+    const text = val > 0 && val < 1 ? val.toFixed(2) : String(rounded);
+    const bar = Math.min(100, Math.max(val, val > 0 ? 0.5 : 0));
+    
+    return { bar, text };
   }, [campaign]);
+
+  const progress = progressData.text;
 
   const handleToggleTicket = (number: string) => {
     setSelectedTickets(prev => 
@@ -392,7 +399,7 @@ const CampaignDetail = () => {
             <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
               <motion.div 
                 initial={{ width: 0 }} 
-                animate={{ width: `${progress}%` }} 
+                animate={{ width: `${progressData.bar}%` }} 
                 transition={{ duration: 1.5 }}
                 className="h-full bg-primary rounded-full"
               />

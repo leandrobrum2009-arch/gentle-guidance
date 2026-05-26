@@ -252,7 +252,9 @@ export default function AdminCampaigns() {
                <TableBody>
                  {filteredCampaigns.map((c) => {
                    const info = statusInfo(c.status);
-                   const progress = Math.min(Math.round((c.sold_tickets / c.total_tickets) * 100), 100);
+                    const rawProgress = (c.sold_tickets / c.total_tickets) * 100;
+                    const progress = Math.min(Math.round(rawProgress), 100);
+                    const progressDisplay = rawProgress > 0 && rawProgress < 1 ? rawProgress.toFixed(2) : progress;
                    
                    // Check if draw is needed
                    const now = new Date();
@@ -304,7 +306,7 @@ export default function AdminCampaigns() {
                        <div className="flex flex-col gap-1.5">
                          <div className="flex justify-between items-center text-[10px] font-bold">
                            <span className="text-muted-foreground uppercase tracking-tighter">{c.sold_tickets.toLocaleString()} VENDIDOS</span>
-                           <span className="text-primary">{progress}%</span>
+                           <span className="text-primary">{progressDisplay}%</span>
                          </div>
                          <Progress value={progress} className="h-1.5 bg-secondary/20" />
                        </div>

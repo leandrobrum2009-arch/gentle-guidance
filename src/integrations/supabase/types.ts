@@ -1420,12 +1420,10 @@ export type Database = {
         Args: { p_order_id: string; p_user_id: string }
         Returns: Json
       }
-      perform_draw:
-        | { Args: { p_campaign_id: string }; Returns: string }
-        | {
-            Args: { p_campaign_id: string; p_executed_by?: string }
-            Returns: string
-          }
+      perform_draw: {
+        Args: { p_campaign_id: string; p_executed_by?: string }
+        Returns: string
+      }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
         Returns: Json
