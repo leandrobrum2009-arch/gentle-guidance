@@ -218,7 +218,7 @@ export default function AdminDashboard() {
                         <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.1} />
                     <XAxis 
                       dataKey="date" 
                       axisLine={false} 
@@ -234,15 +234,15 @@ export default function AdminDashboard() {
                     />
                     <Tooltip 
                       contentStyle={{ 
-                        backgroundColor: '#ffffff', 
-                        border: '1px solid #e2e8f0', 
+                        backgroundColor: 'hsl(var(--card))', 
+                        border: '1px solid hsl(var(--border))', 
                         borderRadius: '16px',
-                        boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.1)',
                         padding: '12px'
                       }}
                       itemStyle={{ color: 'hsl(var(--foreground))', fontSize: '14px', fontWeight: 800 }}
                       labelStyle={{ color: '#94a3b8', marginBottom: '8px', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em' }}
-                      cursor={{ stroke: 'rgba(255,255,255,0.1)', strokeWidth: 2 }}
+                      cursor={{ stroke: 'hsl(var(--primary))', strokeWidth: 1, strokeDasharray: '4 4' }}
                     />
                     <Area 
                       type="monotone" 
@@ -271,7 +271,7 @@ export default function AdminDashboard() {
                     { name: 'Roleta', value: rouletteStats?.totalSpins ?? 0 },
                     { name: 'Caixas', value: 86 }
                   ]}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.03)" />
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(var(--border))" opacity={0.1} />
                     <XAxis 
                       dataKey="name" 
                       axisLine={false} 
@@ -280,7 +280,7 @@ export default function AdminDashboard() {
                     />
                     <YAxis axisLine={false} tickLine={false} hide />
                     <Tooltip 
-                       contentStyle={{ backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px' }}
+                       contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '16px', color: 'hsl(var(--foreground))' }}
                     />
                      <Bar dataKey="value" radius={[8, 8, 0, 0]} barSize={40}>
                         { [0, 1, 2].map((_, index) => (
