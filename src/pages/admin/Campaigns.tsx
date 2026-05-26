@@ -484,15 +484,90 @@ export default function AdminCampaigns() {
                 <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Para qual prêmio?</Label>
                 <select 
                   className="w-full h-12 rounded-xl bg-secondary/50 border border-border px-4 font-bold text-sm focus:border-amber-500/50"
-                  value={selectedPrizeIndex}
-                  onChange={(e) => setSelectedPrizeIndex(Number(e.target.value))}
+                  value={selectedPrizeIndex === 0 ? "instant" : selectedPrizeIndex}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "instant") {
+                      setSelectedPrizeIndex(0);
+                      setSelectedInstantPrize(selectedCampaign?.lucky_numbers_prizes?.[0] || null);
+                    } else {
+                      setSelectedPrizeIndex(Number(val));
+                      setSelectedInstantPrize(null);
+                    }
+                  }}
                 >
-                  <option value={1}>1º Prêmio (Principal)</option>
-                  <option value={2}>2º Prêmio</option>
-                  <option value={3}>3º Prêmio</option>
-                  <option value={4}>4º Prêmio</option>
-                  <option value={5}>5º Prêmio</option>
+                  <optgroup label="Sorteio da Rifa">
+                    <option value={1}>1º Prêmio (Principal)</option>
+                    <option value={2}>2º Prêmio</option>
+                    <option value={3}>3º Prêmio</option>
+                    <option value={4}>4º Prêmio</option>
+                    <option value={5}>5º Prêmio</option>
+                  </optgroup>
+                  {selectedCampaign?.lucky_numbers_prizes?.length > 0 && (
+                    <optgroup label="Cotas Premiadas">
+                      <option value="instant">Escolher Cota Premiada</option>
+                    </optgroup>
+                  )}
                 </select>
+              </div>
+
+              {selectedPrizeIndex === 0 && selectedCampaign?.lucky_numbers_prizes?.length > 0 && (
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Qual Cota Premiada?</Label>
+                  <select 
+                    className="w-full h-12 rounded-xl bg-secondary/50 border border-border px-4 font-bold text-sm focus:border-amber-500/50"
+                    value={selectedInstantPrize?.number || ""}
+                    onChange={(e) => {
+                      const prize = selectedCampaign.lucky_numbers_prizes.find((p: any) => p.number === e.target.value);
+                      setSelectedInstantPrize(prize);
+                      if (prize) setManualTicketNumber(prize.number);
+                    }}
+                  >
+                    {selectedCampaign.lucky_numbers_prizes.map((p: any) => (
+                      <option key={p.number} value={p.number}>{p.number} - {p.prize}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Buscar Bilhete Vendido (Número ou Nome)</Label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  <Input
+                    placeholder="Buscar bilhete..."
+                    value={ticketSearch}
+                    onChange={(e) => setTicketSearch(e.target.value)}
+                    className="pl-10 h-12 rounded-xl bg-secondary/20 border-border focus:border-amber-500/50"
+                  />
+                </div>
+                
+                {ticketSearch && (
+                  <div className="mt-2 max-h-40 overflow-y-auto border border-border rounded-xl bg-secondary/10 divide-y divide-border">
+                    {isLoadingTickets ? (
+                      <div className="p-4 text-center text-xs text-muted-foreground">Carregando...</div>
+                    ) : tickets?.length === 0 ? (
+                      <div className="p-4 text-center text-xs text-muted-foreground">Nenhum bilhete encontrado</div>
+                    ) : (
+                      tickets?.map((t: any) => (
+                        <button
+                          key={t.id}
+                          className="w-full p-3 text-left hover:bg-amber-500/10 transition-colors flex justify-between items-center"
+                          onClick={() => {
+                            setManualTicketNumber(t.number);
+                            setTicketSearch("");
+                          }}
+                        >
+                          <div className="flex flex-col">
+                            <span className="text-xs font-bold text-foreground">{t.profiles?.name || "Sem Nome"}</span>
+                            <span className="text-[10px] text-muted-foreground">{t.profiles?.phone || "Sem Telefone"}</span>
+                          </div>
+                          <Badge variant="outline" className="font-mono font-bold text-amber-500 border-amber-500/20">{t.number}</Badge>
+                        </button>
+                      ))
+                    )}
+                  </div>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -507,10 +582,65 @@ export default function AdminCampaigns() {
             </div>
 
             <Button 
-              onClick={startManualDraw} 
+              onClick={async () => {
+                if (selectedPrizeIndex === 0) {
+                  // Instant Prize assignment logic
+                  if (!manualTicketNumber || !selectedInstantPrize) {
+                    toast({ title: "Erro", description: "Informe o número e a cota.", variant: "destructive" });
+                    return;
+                  }
+                  
+                  setSaving(true);
+                  try {
+                    // Find the ticket and user
+                    const { data: ticketData, error: ticketError } = await supabase
+                      .from('tickets')
+                      .select('*, profiles(name, phone)')
+                      .eq('campaign_id', selectedCampaign.id)
+                      .eq('number', manualTicketNumber)
+                      .single();
+                      
+                    if (ticketError || !ticketData) {
+                      throw new Error("Bilhete não encontrado ou não vendido.");
+                    }
+
+                    // Register winner
+                    const { error: winnerError } = await supabase
+                      .from('winners')
+                      .insert({
+                        campaign_id: selectedCampaign.id,
+                        user_id: ticketData.user_id,
+                        winner_name: ticketData.profiles.name,
+                        ticket_number: manualTicketNumber,
+                        prize_description: `Cota Premiada ${manualTicketNumber} - ${selectedInstantPrize.prize}`,
+                        draw_date: new Date().toISOString().split('T')[0],
+                        winner_type: 'instant',
+                        phone_masked: ticketData.profiles.phone ? ticketData.profiles.phone.slice(0, 5) + "****" + ticketData.profiles.phone.slice(-2) : null
+                      });
+                      
+                    if (winnerError) throw winnerError;
+                    
+                    toast({ title: "Sucesso!", description: "Ganhador da cota premiada registrado." });
+                    setIsManualDrawDialogOpen(false);
+                    queryClient.invalidateQueries({ queryKey: ["admin-winners"] });
+                    queryClient.invalidateQueries({ queryKey: ["winners"] });
+                  } catch (err: any) {
+                    toast({ title: "Erro", description: err.message, variant: "destructive" });
+                  } finally {
+                    setSaving(false);
+                  }
+                } else {
+                  startManualDraw();
+                }
+              }} 
+              disabled={saving}
               className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest gap-2 bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/20"
             >
-              INICIAR CERIMÔNIA <Trophy className="h-5 w-5" />
+              {saving ? <Loader2 className="h-5 w-5 animate-spin" /> : (
+                <>
+                  {selectedPrizeIndex === 0 ? "REGISTRAR GANHADOR" : "INICIAR CERIMÔNIA"} <Trophy className="h-5 w-5" />
+                </>
+              )}
             </Button>
           </div>
         </DialogContent>
