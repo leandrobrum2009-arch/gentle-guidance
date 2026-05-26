@@ -242,15 +242,10 @@ const Header = () => {
             </div>
           )}
 
-           <button
-             onClick={() => setMobileOpen(!mobileOpen)}
-             className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
-           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
-    </header>
+
 
       <AnimatePresence>
         {mobileOpen && (
