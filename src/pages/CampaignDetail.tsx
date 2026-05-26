@@ -493,20 +493,46 @@ const CampaignDetail = () => {
                       <div className="space-y-2">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prêmios Principais</p>
                         <div className="grid grid-cols-1 gap-2">
-                          {campaign.main_prizes.sort((a, b) => a.position - b.position).map((p, idx) => (
-                            <div key={idx} className="flex items-center justify-between p-3 rounded-xl bg-primary/5 border border-primary/20">
-                              <div className="flex items-center gap-3">
-                                <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
-                                  {idx === 0 ? <Crown className="h-4 w-4 text-primary" /> : <Trophy className="h-4 w-4 text-primary" />}
+                          {campaign.main_prizes.sort((a, b) => a.position - b.position).map((p, idx) => {
+                            const prizeWinner = raffleWinners.find(w => w.prize_index === p.position);
+                            return (
+                              <div key={idx} className="flex flex-col gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20">
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center gap-3">
+                                    <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center">
+                                      {idx === 0 ? <Crown className="h-4 w-4 text-primary" /> : <Trophy className="h-4 w-4 text-primary" />}
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="text-[10px] font-black uppercase text-foreground">{p.position}º Prêmio</span>
+                                      <span className="text-xs font-bold text-primary italic">{p.prize}</span>
+                                    </div>
+                                  </div>
+                                  <Badge className={cn("border-none text-[8px] font-black uppercase", prizeWinner ? "bg-emerald-500 text-white" : "bg-primary text-white")}>
+                                    {prizeWinner ? "SORTEADO" : "SORTEIO"}
+                                  </Badge>
                                 </div>
-                                <div className="flex flex-col">
-                                  <span className="text-[10px] font-black uppercase text-foreground">{p.position}º Prêmio</span>
-                                  <span className="text-xs font-bold text-primary italic">{p.prize}</span>
-                                </div>
+                                
+                                {prizeWinner && (
+                                  <div className="flex items-center justify-between mt-1 pt-2 border-t border-primary/10">
+                                    <div className="flex items-center gap-2">
+                                      <Avatar className="h-6 w-6 border border-primary/20">
+                                        <AvatarImage src={prizeWinner.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${prizeWinner.winner_name}`} />
+                                        <AvatarFallback className="text-[8px] bg-primary/10 text-primary font-black">{prizeWinner.winner_name.substring(0, 1)}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex flex-col">
+                                        <span className="text-[9px] font-black text-foreground uppercase truncate max-w-[120px]">{prizeWinner.winner_name}</span>
+                                        <span className="text-[7px] font-bold text-muted-foreground uppercase leading-none">Vencedor do prêmio</span>
+                                      </div>
+                                    </div>
+                                    <div className="text-right">
+                                      <p className="text-[10px] font-black text-primary font-mono tracking-tighter">#{prizeWinner.ticket_number}</p>
+                                      <p className="text-[7px] font-bold text-muted-foreground uppercase tracking-widest">Bilhete</p>
+                                    </div>
+                                  </div>
+                                )}
                               </div>
-                              <Badge className="bg-primary text-white border-none text-[8px] font-black uppercase">SORTEIO</Badge>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}
