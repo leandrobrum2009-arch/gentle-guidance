@@ -246,6 +246,18 @@ export default function AdminSettings() {
                   />
                 </div>
 
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex items-center justify-between">
+                  <div>
+                    <h4 className="font-bold text-sm text-primary">Favicon e Título SEO</h4>
+                    <p className="text-[10px] text-muted-foreground font-medium">Agora configurados na aba <strong>SEO & Google</strong> para melhor organização.</p>
+                  </div>
+                  <Button variant="outline" size="sm" onClick={() => {
+                    const seoTrigger = document.querySelector('[value="seo"]') as HTMLElement;
+                    seoTrigger?.click();
+                  }} className="text-xs font-bold border-primary/20 hover:bg-primary/10 transition-colors h-8">
+                    Ir para SEO
+                  </Button>
+                </div>
 
                 <Separator className="my-4 bg-primary/10" />
 
