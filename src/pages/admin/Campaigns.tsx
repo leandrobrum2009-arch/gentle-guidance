@@ -47,7 +47,10 @@ export default function AdminCampaigns() {
   const [isAutoDrawConfigOpen, setIsAutoDrawConfigOpen] = useState(false);
   const [manualTicketNumber, setManualTicketNumber] = useState("");
   const [selectedPrizeIndex, setSelectedPrizeIndex] = useState(1);
+  const [selectedInstantPrize, setSelectedInstantPrize] = useState<any>(null);
   const [allowUnassigned, setAllowUnassigned] = useState(false);
+  const [ticketSearch, setTicketSearch] = useState("");
+  const { data: tickets, isLoading: isLoadingTickets } = useAdminTickets(selectedCampaign?.id || "", ticketSearch);
 
   const remove = async (id: string) => {
     if (!confirm("Excluir esta campanha?")) return;
