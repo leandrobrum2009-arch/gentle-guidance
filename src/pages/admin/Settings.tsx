@@ -749,7 +749,8 @@ function SettingField({
   type = "text", 
   options = [],
   onUpload,
-  uploading
+  uploading,
+  placeholder
 }: { 
   s: any, 
   onUpdate: any, 
@@ -758,7 +759,8 @@ function SettingField({
   type?: "text" | "password" | "select" | "boolean" | "color" | "number" | "textarea",
   options?: { label: string, value: string }[],
   onUpload?: (key: string, file: File) => void,
-  uploading?: boolean
+  uploading?: boolean,
+  placeholder?: string
 }) {
   if (!s) return null;
 
@@ -879,6 +881,7 @@ function SettingField({
       <Input 
         type={type}
         value={s.value} 
+        placeholder={placeholder}
         onChange={(e) => onUpdate(s.key, e.target.value)} 
         className="bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-bold" 
       />
