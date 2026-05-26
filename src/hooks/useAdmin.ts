@@ -355,3 +355,25 @@ export const useAdminWinners = () =>
       return data;
     },
   });
+
+export const useAdminTickets = (campaignId: string, search?: string) =>
+  useQuery({
+    queryKey: ["admin-tickets", campaignId, search],
+    queryFn: async () => {
+      if (!campaignId) return [];
+      let query = supabase
+        .from("tickets")
+        .select("*, profiles!user_id(name, phone)")
+        .eq("campaign_id", campaignId)
+        .in("status", ["confirmed", "paid"]);
+      
+      if (search) {
+        query = query.or(`number.ilike.%${search}%`);
+      }
+
+      const { data, error } = await query.limit(50);
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!campaignId,
+  });
