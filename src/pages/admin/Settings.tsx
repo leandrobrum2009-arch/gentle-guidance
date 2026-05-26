@@ -41,8 +41,12 @@ export default function AdminSettings() {
     site_logo_height_mobile: "Altura do Logo (Mobile)",
     site_favicon_url: "Ícone da Aba (Favicon)",
     site_title: "Título do Navegador (SEO)",
+    facebook_pixel_id: "ID do Pixel do Facebook",
+    google_analytics_id: "ID do Google Analytics (GA4)",
+    google_tag_manager_id: "ID do Google Tag Manager",
+    custom_header_scripts: "Scripts Personalizados (Header)",
+    custom_body_scripts: "Scripts Personalizados (Body)",
     enable_download_app: "Habilitar Botão 'Baixar App'",
-    app_download_link: "Link para Baixar App (Direto ou APK)",
     
     support_whatsapp: "WhatsApp de Atendimento",
     cashback_percent: "% de Cashback por Compra",
