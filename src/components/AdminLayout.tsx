@@ -1,7 +1,7 @@
 import { ReactNode, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin } from "@/hooks/useAdmin";
+import { useIsAdmin, useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
@@ -46,6 +46,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const { data: userRole } = useRole();
+  const { data: features } = useFeatureAccess();
   const { data: siteSettings } = useSiteSettings();
   const [profile, setProfile] = useState<any>(null);
 
@@ -85,6 +87,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     );
   }
 
+  // Filter navigation based on features
+  const filteredNavItems = navItems.map(group => ({
+    ...group,
+    items: group.items.filter(item => {
+      if (item.title === "Roletas" && features && !features.roulette_enabled) return false;
+      if (item.title === "Raspadinhas" && features && !features.scratch_cards_enabled) return false;
+      if (item.title === "Banners" && features && !features.page_editing_enabled) return false;
+      if (item.title === "Sistema" && userRole !== 'master') return false; // Only master can edit system settings
+      if (item.title === "Usuários" && userRole !== 'master') return false; // Only master can manage users
+      if (item.title === "Diagnóstico" && userRole !== 'master') return false; // Only master can see diagnostics
+      return true;
+    })
+  })).filter(group => group.items.length > 0);
+
   const SidebarContent = () => (
     <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground">
       <div className="flex items-center gap-3 border-b border-sidebar-border p-6">
@@ -98,15 +114,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
         )}
         <div className="min-w-0 flex-1">
-          <span className="block font-display text-sm font-bold tracking-tight truncate">
-            {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
-          </span>
-          <span className="text-[10px] font-black uppercase tracking-widest text-primary italic">Painel Admin</span>
+          <div className="flex flex-col">
+            <span className="block font-display text-sm font-bold tracking-tight truncate">
+              {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
+            </span>
+            {userRole && (
+              <span className="text-[9px] font-black uppercase tracking-widest text-primary/70 italic leading-tight">
+                {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
+              </span>
+            )}
+          </div>
         </div>
       </div>
 
       <nav className="flex-1 space-y-4 overflow-y-auto p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-        {navItems.map((group) => (
+        {filteredNavItems.map((group) => (
           <div key={group.category} className="space-y-1">
             <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
               {group.category}

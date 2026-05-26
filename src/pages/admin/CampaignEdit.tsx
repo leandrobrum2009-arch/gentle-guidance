@@ -13,8 +13,9 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X, TrendingUp } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X, TrendingUp, ShieldAlert } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
+import { useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -74,6 +75,8 @@ export default function AdminCampaignEdit() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { toast } = useToast();
+  const { data: features } = useFeatureAccess();
+  const { data: userRole } = useRole();
   const [form, setForm] = useState<CampaignForm>(empty);
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -281,10 +284,16 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
-            <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            {features?.roulette_enabled || features?.scratch_cards_enabled ? (
+              <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+            ) : null}
             <TabsTrigger value="success_flow" className="rounded-xl px-6 gap-2"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
-            <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
+            {features?.page_editing_enabled && (
+              <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
+            )}
+            {userRole === 'master' && (
+              <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
+            )}
           </TabsList>
 
           <TabsContent value="general" className="mt-6 space-y-6">
@@ -548,7 +557,7 @@ export default function AdminCampaignEdit() {
                 </div>
              </Card>
 
-            <Card className="p-6 rounded-2xl border-border shadow-sm overflow-hidden">
+             <Card className="p-6 rounded-2xl border-border shadow-sm overflow-hidden">
                <div className="flex justify-between items-center mb-6">
                  <div className="space-y-1">
                    <Label className="text-lg font-bold flex items-center gap-2">
@@ -557,12 +566,21 @@ export default function AdminCampaignEdit() {
                    </Label>
                    <p className="text-xs text-muted-foreground">Números que ganham prêmios no momento da compra.</p>
                  </div>
-                 <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: "", protected: true}])}>
-                   <Plus className="h-4 w-4 mr-2" /> Nova Cota
-                 </Button>
+                 {features?.lucky_numbers_enabled && (
+                   <Button size="sm" onClick={() => set("lucky_numbers_prizes", [...form.lucky_numbers_prizes, {number: "", prize: "", protected: true}])}>
+                     <Plus className="h-4 w-4 mr-2" /> Nova Cota
+                   </Button>
+                 )}
                </div>
                
-               <div className="grid gap-3">
+               {!features?.lucky_numbers_enabled ? (
+                  <div className="text-center py-12 bg-secondary/20 rounded-3xl border border-dashed border-border">
+                    <ShieldAlert className="h-10 w-10 text-muted-foreground mx-auto mb-4 opacity-30" />
+                    <p className="text-sm font-bold text-muted-foreground">Recurso Desabilitado</p>
+                    <p className="text-[10px] text-muted-foreground/60 max-w-xs mx-auto mt-1 uppercase font-black italic">Entre em contato com o suporte para ativar as cotas premiadas.</p>
+                  </div>
+               ) : (
+                <div className="grid gap-3">
                  {form.lucky_numbers_prizes.map((p, i) => (
                    <div key={i} className="flex gap-4 items-center bg-secondary/50 p-4 rounded-2xl border border-border transition-all hover:border-amber-200">
                      <div className="w-32">
@@ -627,7 +645,8 @@ export default function AdminCampaignEdit() {
                      <p className="text-[10px] mt-1">Clique em "Nova Cota" para começar a premiar seus clientes!</p>
                    </div>
                  )}
-               </div>
+                </div>
+               )}
              </Card>
 
              <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">

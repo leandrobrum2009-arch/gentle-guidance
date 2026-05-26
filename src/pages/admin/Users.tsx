@@ -1,8 +1,8 @@
 import AdminLayout from "@/components/AdminLayout";
-import { useAdminUsers } from "@/hooks/useAdmin";
+import { useAdminUsers, useIsMaster } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck } from "lucide-react";
+import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -13,9 +13,13 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useQueryClient } from "@tanstack/react-query";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
 
 export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
+  const isMaster = useIsMaster();
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -23,7 +27,14 @@ export default function AdminUsers() {
   const queryClient = useQueryClient();
 
   const handleEdit = (user: any) => {
-    setEditingUser({ ...user });
+    setEditingUser({ 
+      ...user,
+      scratch_cards_enabled: user.features?.scratch_cards_enabled ?? true,
+      lucky_numbers_enabled: user.features?.lucky_numbers_enabled ?? true,
+      roulette_enabled: user.features?.roulette_enabled ?? true,
+      page_editing_enabled: user.features?.page_editing_enabled ?? true,
+      sales_page_models_enabled: user.features?.sales_page_models_enabled ?? true,
+    });
     setIsEditDialogOpen(true);
   };
 
@@ -31,7 +42,8 @@ export default function AdminUsers() {
     if (!editingUser) return;
     setSaving(true);
     try {
-      const { error } = await supabase
+      // 1. Update Profile
+      const { error: profileError } = await supabase
         .from("profiles")
         .update({
           name: editingUser.name,
@@ -41,7 +53,40 @@ export default function AdminUsers() {
         })
         .eq("id", editingUser.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
+
+      if (isMaster) {
+        // 2. Update Role (Master only)
+        if (editingUser.role) {
+          const { error: roleError } = await supabase
+            .from("user_roles")
+            .upsert({ 
+              user_id: editingUser.user_id, 
+              role: editingUser.role 
+            }, { onConflict: 'user_id,role' });
+          
+          if (roleError) {
+             // If unique constraint fails because they already have another role, we might need to handle it.
+             // Usually user_roles has (user_id, role) unique.
+             console.error("Role update error:", roleError);
+          }
+        }
+
+        // 3. Update Feature Config (Master only)
+        const { error: featureError } = await supabase
+          .from("admin_features_config")
+          .upsert({
+            user_id: editingUser.user_id,
+            scratch_cards_enabled: editingUser.scratch_cards_enabled,
+            lucky_numbers_enabled: editingUser.lucky_numbers_enabled,
+            roulette_enabled: editingUser.roulette_enabled,
+            page_editing_enabled: editingUser.page_editing_enabled,
+            sales_page_models_enabled: editingUser.sales_page_models_enabled,
+          }, { onConflict: 'user_id' });
+
+        if (featureError) throw featureError;
+      }
+
       toast.success("Usuário atualizado com sucesso!");
       setIsEditDialogOpen(false);
       queryClient.invalidateQueries({ queryKey: ["admin-users"] });
@@ -52,7 +97,7 @@ export default function AdminUsers() {
     }
   };
 
-   const filtered = users?.filter(u => 
+   const filtered = (users as any[])?.filter(u => 
      u.name?.toLowerCase().includes(search.toLowerCase()) || 
      u.phone?.includes(search)
    );
@@ -85,6 +130,7 @@ export default function AdminUsers() {
               <TableHeader>
                 <TableRow className="border-border hover:bg-transparent">
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Usuário / ID</TableHead>
+                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Role</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Telefone</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Saldo</TableHead>
                    <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Membro desde</TableHead>
@@ -108,6 +154,12 @@ export default function AdminUsers() {
                         </div>
                       </div>
                     </TableCell>
+                     <TableCell>
+                       {u.role === 'master' && <Badge className="bg-purple-500 text-[10px] font-black italic">MASTER</Badge>}
+                       {u.role === 'client_admin' && <Badge className="bg-blue-500 text-[10px] font-black italic">CLIENT ADMIN</Badge>}
+                       {u.role === 'admin' && <Badge className="bg-orange-500 text-[10px] font-black italic">ADMIN</Badge>}
+                       {(!u.role || u.role === 'user') && <Badge variant="outline" className="text-[10px] font-bold">USER</Badge>}
+                     </TableCell>
                      <TableCell className="text-foreground font-medium">{u.phone || "-"}</TableCell>
                      <TableCell className="text-emerald-500 font-bold font-mono text-xs">
                        R$ {Number(u.balance || 0).toFixed(2)}
@@ -154,7 +206,80 @@ export default function AdminUsers() {
             </DialogDescription>
           </div>
 
-          <div className="p-6 space-y-4">
+          <div className="p-6 space-y-4 max-h-[70vh] overflow-y-auto custom-scrollbar">
+            {isMaster && (
+              <div className="p-4 bg-secondary/30 rounded-2xl border border-border space-y-4 mb-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <ShieldCheck className="h-4 w-4 text-primary" />
+                  <span className="text-[10px] font-black uppercase tracking-widest text-primary">Nível de Acesso Master</span>
+                </div>
+                
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Cargo / Role</Label>
+                  <Select 
+                    value={editingUser?.role || "user"} 
+                    onValueChange={(val) => setEditingUser({ ...editingUser, role: val })}
+                  >
+                    <SelectTrigger className="h-12 rounded-xl bg-background border-border focus:ring-primary/20 font-bold">
+                      <SelectValue placeholder="Selecione o cargo" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-card border-border">
+                      <SelectItem value="user">Usuário Comum</SelectItem>
+                      <SelectItem value="client_admin">Client Admin (Restrito)</SelectItem>
+                      <SelectItem value="admin">Administrador Total</SelectItem>
+                      <SelectItem value="master">Master (Dono)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {(editingUser?.role === 'client_admin' || editingUser?.role === 'admin') && (
+                  <div className="space-y-3 pt-2 border-t border-border mt-2">
+                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Permissões de Recursos</p>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Raspadinhas</Label>
+                      <Switch 
+                        checked={editingUser?.scratch_cards_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, scratch_cards_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Roleta</Label>
+                      <Switch 
+                        checked={editingUser?.roulette_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, roulette_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Cotas Premiadas</Label>
+                      <Switch 
+                        checked={editingUser?.lucky_numbers_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, lucky_numbers_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Edição de Páginas</Label>
+                      <Switch 
+                        checked={editingUser?.page_editing_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, page_editing_enabled: val })}
+                      />
+                    </div>
+                    
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Modelos de Venda</Label>
+                      <Switch 
+                        checked={editingUser?.sales_page_models_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, sales_page_models_enabled: val })}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nome Completo</Label>
               <Input
