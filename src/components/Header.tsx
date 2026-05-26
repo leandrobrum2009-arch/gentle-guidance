@@ -193,8 +193,8 @@ const Header = () => {
 
               <div className="flex items-center gap-2">
                 {isAdmin && (
-                  <Link to="/admin">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic hidden lg:flex">
+                  <Link to="/admin" className="hidden sm:block">
+                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic">
                       <Zap className="h-4 w-4 text-primary" />
                       Admin
                     </Button>
