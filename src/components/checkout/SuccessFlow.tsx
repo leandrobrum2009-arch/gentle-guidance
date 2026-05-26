@@ -37,6 +37,7 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
   const [hasCheckedLucky, setHasCheckedLucky] = useState(false);
   const [isGameInProgress, setIsGameInProgress] = useState(false);
   const [showUpsellBundles, setShowUpsellBundles] = useState(false);
+  const [upsellAlreadyShown, setUpsellAlreadyShown] = useState(false);
   const { data: otherCampaigns } = useCampaigns();
   const navigate = useNavigate();
 
@@ -51,6 +52,13 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
   }, [displayTickets]);
 
   useEffect(() => {
+    // Check if upsell was already shown in this session for this campaign
+    const shownKey = `upsell_shown_${campaign.id}`;
+    const wasShown = sessionStorage.getItem(shownKey);
+    if (wasShown) {
+      setUpsellAlreadyShown(true);
+    }
+
     // We check for 'paid' status, but we also allow if it's already in SuccessFlow 
     // to start fetching rewards even if DB is still updating
     if (!rewardsFetched && (order.payment_status === 'paid' || step === 1)) {
@@ -80,11 +88,17 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
   useEffect(() => {
     if (step === 1 && hasCheckedLucky) {
       const timer = setTimeout(() => {
-        if (premiumTickets.length > 0) {
+        // First priority: Upsell if enabled and not already shown
+        if (campaign.upsell_enabled && !upsellAlreadyShown) {
+          setStep(3);
+          const shownKey = `upsell_shown_${campaign.id}`;
+          sessionStorage.setItem(shownKey, 'true');
+          setUpsellAlreadyShown(true);
+        } else if (premiumTickets.length > 0) {
           setStep(0); // Show premium tickets step
-        } else if (campaign.roulette_enabled) {
+        } else if (campaign.roulette_enabled && availableSpins > 0) {
           setStep(2); // Auto-start roulette if enabled
-        } else if (campaign.scratch_cards_enabled) {
+        } else if (campaign.scratch_cards_enabled && availableScratchCards > 0) {
           setStep(5); // Auto-start scratch card if enabled
         } else {
           setStep(6); // Go to order details
@@ -92,7 +106,7 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
       }, 3000); // Wait 3 seconds on "Payment Identified" screen
       return () => clearTimeout(timer);
     }
-  }, [step, hasCheckedLucky, premiumTickets, availableSpins, availableScratchCards]);
+  }, [step, hasCheckedLucky, premiumTickets, availableSpins, availableScratchCards, campaign.upsell_enabled, upsellAlreadyShown]);
 
   useEffect(() => {
     if (step === 3) {
@@ -520,7 +534,7 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
                       <span className="text-primary text-animate-gradient">ESTRATÉGIA DE CHANCES ATIVADA!</span>
                     </h2>
                     <p className="text-sm text-white/80 font-bold leading-relaxed">
-                      O sistema identificou que você está no 'Fluxo de Sorte'. Comprar mais cotas AGORA aumenta em <span className="text-primary">90% suas chances de ser sorteado</span> e ser o grande vencedor!
+                      O sistema identificou que você está no 'Fluxo de Sorte'. Comprar mais cotas AGORA aumenta em <span className="text-primary">{campaign.upsell_probability || "98%"} suas chances de ser sorteado</span> e ser o grande vencedor!
                     </p>
                   </div>
 
@@ -564,9 +578,9 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
                       </div>
                       <div className="flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-primary" />
-                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Sua probabilidade de vitória subiu para 90%</span>
+                        <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Sua probabilidade de vitória subiu para {campaign.upsell_probability || "98%"}</span>
                       </div>
-                      <Progress value={90} className="h-3 bg-white/5" indicatorClassName="bg-primary" />
+                      <Progress value={parseInt(campaign.upsell_probability) || 98} className="h-3 bg-white/5" indicatorClassName="bg-primary" />
                     </div>
                   )}
 
@@ -586,9 +600,28 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
                         GARANTIR MAIS CHANCES AGORA
                       </Button>
                       
-                      <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(4)}>
+                      <Button variant="ghost" className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" onClick={() => setStep(6)}>
                         Ver meus números e entrar no grupo
                       </Button>
+
+                      <div className="grid grid-cols-2 gap-2 pt-4">
+                        <Button 
+                          variant="outline" 
+                          className="h-12 rounded-xl border-white/10 bg-white/5 text-[9px] font-black uppercase tracking-widest"
+                          onClick={() => setStep(2)}
+                          disabled={availableSpins === 0}
+                        >
+                          <RotateCw className="mr-2 h-3 w-3 text-primary" /> ROLETA ({availableSpins})
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="h-12 rounded-xl border-white/10 bg-white/5 text-[9px] font-black uppercase tracking-widest"
+                          onClick={() => setStep(5)}
+                          disabled={availableScratchCards === 0}
+                        >
+                          <Sparkles className="mr-2 h-3 w-3 text-primary" /> RASPARDINHA ({availableScratchCards})
+                        </Button>
+                      </div>
                     </div>
                   )}
                 </div>
