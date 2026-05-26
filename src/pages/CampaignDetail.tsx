@@ -191,9 +191,13 @@ const CampaignDetail = () => {
     if (!campaign) return 0;
     if (campaign.sales_goal && campaign.sales_goal > 0) {
       const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
-      return Math.min(100, Math.round((currentSales / campaign.sales_goal) * 100));
+      const val = (currentSales / campaign.sales_goal) * 100;
+      if (val > 0 && val < 1) return 0.1;
+      return Math.min(100, Math.round(val));
     }
-    return Math.round((campaign.sold_tickets / campaign.total_tickets) * 100);
+    const val = (campaign.sold_tickets / campaign.total_tickets) * 100;
+    if (val > 0 && val < 1) return 0.1;
+    return Math.round(val);
   }, [campaign]);
 
   const handleToggleTicket = (number: string) => {
