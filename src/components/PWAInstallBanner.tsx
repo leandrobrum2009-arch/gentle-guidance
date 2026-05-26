@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Smartphone, Download, Share, PlusSquare } from "lucide-react";
+import { X, Smartphone, Download, Share, PlusSquare, Menu, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSiteSettings } from "@/hooks/useData";
 import { usePWA } from "@/hooks/usePWA";
@@ -79,7 +79,9 @@ const PWAInstallBanner = () => {
                 <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
                   {isIOS 
                     ? "Toque no ícone de compartilhar e depois em 'Adicionar à Tela de Início' para instalar."
-                    : "Instale nosso aplicativo para uma experiência mais rápida e segura."
+                    : isInstallable || siteSettings?.app_download_link
+                      ? "Instale nosso aplicativo para uma experiência mais rápida e segura."
+                      : "Abra o menu do seu navegador e selecione 'Instalar Aplicativo' ou 'Adicionar à tela inicial'."
                   }
                 </p>
               </div>
@@ -98,14 +100,23 @@ const PWAInstallBanner = () => {
                     <span className="text-[10px] font-bold text-primary">2. Add Início</span>
                   </div>
                 </div>
-              ) : (
+              ) : isInstallable || siteSettings?.app_download_link ? (
                 <Button 
                   onClick={handleInstall}
                   className="w-full gap-2 rounded-xl glow-primary font-black uppercase tracking-widest text-[10px]"
                 >
                   <Download className="h-3.5 w-3.5" />
-                  Baixar Agora
+                  {siteSettings?.app_download_link ? 'Baixar App' : 'Instalar Agora'}
                 </Button>
+              ) : (
+                <div className="flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-primary/30 bg-primary/5 py-3 px-3">
+                   <div className="flex items-center gap-2 text-primary font-bold text-[10px]">
+                      <Menu className="h-3.5 w-3.5" />
+                      <span>Menu do Navegador</span>
+                      <ArrowRight className="h-3 w-3" />
+                      <span>Instalar</span>
+                   </div>
+                </div>
               )}
             </div>
           </motion.div>
