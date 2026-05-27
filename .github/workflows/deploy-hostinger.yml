@@ -43,7 +43,7 @@ jobs:
           grep -F "$expected_js" live-index.html
 
       - name: Deploy to Vercel (sortedomilhao.app)
-              env:
-                        VERCEL_ORG_ID: team_vNzpUbIvVNtHWLq3rlFMkHBP
-                                  VERCEL_PROJECT_ID: prj_qh9FmzfUS1OtuKx4aHyBfTHVMEF0
-                                          run: npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
+        env:
+          VERCEL_ORG_ID: team_vNzpUbIvVNtHWLq3rlFMkHBP
+          VERCEL_PROJECT_ID: prj_qh9FmzfUS1OtuKx4aHyBfTHVMEF0
+        run: npx vercel deploy --prod --token ${{ secrets.VERCEL_TOKEN }} --yes
