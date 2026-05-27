@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
+import { logAuthEvent } from "@/lib/audit";
 
 interface AuthContextType {
   session: Session | null;
@@ -28,6 +29,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       setSession(refreshedSession);
       setUser(refreshedSession?.user ?? null);
+      
+      if (refreshedSession?.user) {
+        logAuthEvent({
+          event: 'session_refresh',
+          status: 'success',
+          userId: refreshedSession.user.id
+        });
+      }
     } catch (error) {
       console.error("Error refreshing session:", error);
       setSession(null);
@@ -46,7 +55,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(session?.user ?? null);
       setLoading(false);
       
+      if (_event === 'SIGNED_IN' && session?.user) {
+        logAuthEvent({
+          event: 'login',
+          status: 'success',
+          userId: session.user.id,
+          details: { method: 'automatic' }
+        });
+      }
+
       if (_event === 'SIGNED_OUT') {
+        logAuthEvent({
+          event: 'logout',
+          status: 'success',
+          details: { reason: 'manual' }
+        });
         setSession(null);
         setUser(null);
       }
@@ -87,7 +110,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error, data } = await supabase.auth.signInWithPassword({ email, password });
+    
+    if (error) {
+      logAuthEvent({
+        event: 'login',
+        status: 'failure',
+        details: { email, error: error.message }
+      });
+    } else if (data?.user) {
+      logAuthEvent({
+        event: 'login',
+        status: 'success',
+        userId: data.user.id,
+        details: { method: 'password' }
+      });
+    }
+    
     return { error: error as Error | null };
   };
 
