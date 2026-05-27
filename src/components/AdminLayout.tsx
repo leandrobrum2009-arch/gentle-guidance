@@ -111,25 +111,25 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
     return (
-      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full relative">
+      <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground">
         {/* Header / Logo Section */}
-        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar/80 backdrop-blur-md z-20">
+        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar">
           {siteSettings?.site_logo_url ? (
-            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm border border-sidebar-border/50 transition-transform hover:scale-105">
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm border border-sidebar-border/50">
               <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
             </div>
           ) : (
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/20 transition-transform hover:scale-105">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/20">
               <Ticket className="h-6 w-6 text-primary-foreground" />
             </div>
           )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-col">
-              <span className="block font-display text-sm font-bold tracking-tight truncate leading-tight">
+              <span className="block font-display text-sm font-bold tracking-tight truncate">
                 {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
               </span>
               {userRole && (
-                <span className="text-[10px] font-black uppercase tracking-widest text-primary/80 italic leading-tight mt-0.5">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/80 italic mt-0.5">
                   {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
                 </span>
               )}
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Menu Items Section */}
-        <nav className="flex-1 overflow-y-auto no-scrollbar py-6 px-4 space-y-8 scroll-smooth">
+        <nav className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 space-y-8 pointer-events-auto">
           {filteredNavItems.map((group) => (
             <div key={group.category} className="space-y-3">
               <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.25em] text-sidebar-foreground/30 mb-2">
@@ -152,14 +152,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                       key={item.url}
                       to={item.url}
                       onClick={onItemClick}
-                      className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 relative ${
+                      className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 relative pointer-events-auto ${
                         active
-                          ? "bg-primary text-primary-foreground shadow-xl shadow-primary/25 z-10 translate-x-1"
-                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground hover:translate-x-1"
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 z-10"
+                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                       }`}
                     >
-                      <item.icon className={`h-5 w-5 shrink-0 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
-                      <span className={active ? "font-bold tracking-tight" : "font-medium"}>{item.title}</span>
+                      <item.icon className={`h-5 w-5 shrink-0 ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
+                      <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
                       {active && (
                         <div className="absolute inset-y-2 left-0 w-1 bg-white/30 rounded-full" />
                       )}
@@ -172,11 +172,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Footer Actions */}
-        <div className="mt-auto border-t border-sidebar-border p-5 space-y-2 bg-sidebar/80 backdrop-blur-md shrink-0">
+        <div className="mt-auto border-t border-sidebar-border p-5 space-y-2 bg-sidebar shrink-0">
           <Link
             to="/"
             onClick={onItemClick}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground transition-all duration-200 group"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200 group pointer-events-auto"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span className="font-semibold">Voltar ao site</span>
@@ -186,7 +186,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               if (onItemClick) onItemClick();
               signOut();
             }}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-rose-500/10 hover:text-rose-500 transition-all duration-200 text-left group"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-rose-500/10 hover:text-rose-500 transition-all duration-200 text-left group pointer-events-auto"
           >
             <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             <span className="font-semibold">Sair do Sistema</span>
