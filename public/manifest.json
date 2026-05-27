@@ -1,10 +1,10 @@
 {
-  "name": "Rifas Pro",
-  "short_name": "RifasPro",
+  "name": "Plataforma de Rifas",
+  "short_name": "Rifas",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
-  "theme_color": "#e0b000",
+  "theme_color": "#22c55e",
   "icons": [
     {
       "src": "/favicon.ico",
