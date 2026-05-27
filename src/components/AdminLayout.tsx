@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
-  const { data: userRole } = useRole();
+  const { data: userRole, isLoading: userRoleLoading } = useRole();
   const { data: features } = useFeatureAccess();
   const { data: siteSettings } = useSiteSettings();
   const [profile, setProfile] = useState<any>(null);
@@ -62,7 +62,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     }
   }, [user]);
 
-  if (authLoading || roleLoading) {
+  if (authLoading || roleLoading || userRoleLoading) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <Loader2 className="h-8 w-8 animate-spin text-primary" />
@@ -134,7 +134,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
         {filteredNavItems.map((group) => (
           <div key={group.category} className="space-y-1">
             <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
@@ -183,7 +183,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   );
 
   return (
-    <div className="flex min-h-screen w-full bg-background text-foreground">
+    <div className="flex h-screen w-full bg-background text-foreground overflow-hidden">
       {/* Desktop Sidebar */}
       <aside className="sticky top-0 hidden h-screen w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-sm">
         <SidebarContent />

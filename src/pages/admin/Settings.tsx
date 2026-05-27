@@ -90,8 +90,11 @@ export default function AdminSettings() {
     setLoading(true);
     const { data, error } = await supabase.from("site_settings").select("*");
     if (!error) {
-      setSettings(data);
-      setInitialSettings(JSON.parse(JSON.stringify(data)));
+      setSettings(data || []);
+      setInitialSettings(JSON.parse(JSON.stringify(data || [])));
+    } else {
+      console.error("Error fetching settings:", error);
+      toast.error("Erro ao carregar configurações: " + error.message);
     }
     setLoading(false);
   };
