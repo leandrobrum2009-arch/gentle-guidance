@@ -24,6 +24,8 @@ export default function AdminDiagnostics() {
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
   const [inconsistencies, setInconsistencies] = useState<any[]>([]);
   const [drawLogs, setDrawLogs] = useState<any[]>([]);
+  const [permissions, setPermissions] = useState<any[]>([]);
+  const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
 
   const runDiagnostics = async () => {
     setLoading(true);
@@ -59,13 +61,11 @@ export default function AdminDiagnostics() {
       setSettingsStatus('error');
     }
 
-    // 3. Check Edge Functions (via simple ping or just metadata check)
+    // 3. Check Edge Functions
     const functions = ['pix-payment', 'mercadopago-payment'];
     for (const fn of functions) {
       try {
-        // We just check if we can invoke it (it might return 400/404 but if it responds it exists)
         const { error } = await supabase.functions.invoke(fn, { body: { path: 'health' } });
-        // If it's not a connection error, it's probably fine
         if (error && error.message?.includes('Failed to fetch')) {
           setEdgeFunctionsStatus(prev => ({ ...prev, [fn]: 'error' }));
         } else {
@@ -96,6 +96,22 @@ export default function AdminDiagnostics() {
       if (data) setDrawLogs(data);
     } catch (err) {
       console.error('Draw Logs Error:', err);
+    }
+
+    // 6. Permissions Diagnostic
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (user.user) {
+        const { data: roleData } = await supabase.from('user_roles').select('role').eq('user_id', user.user.id).maybeSingle();
+        setCurrentUserRole(roleData?.role || 'user');
+      }
+
+      const { data: perms, error: permError } = await supabase.rpc('diagnose_table_permissions');
+      if (!permError && perms) {
+        setPermissions(perms);
+      }
+    } catch (err) {
+      console.error('Permissions Error:', err);
     }
 
     setLoading(false);
