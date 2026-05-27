@@ -5,11 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <link rel="manifest" href="/manifest.json" />
-    <title>Plataforma</title>
+    <title>Carregando...</title>
     <script>
       (function() {
         const cachedColor = localStorage.getItem('cached_primary_color');
-        const cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        let cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        
+        // Prevent old branding from appearing
+        if (cachedName && (cachedName.toLowerCase().includes('rifa pro') || cachedName.toLowerCase().includes('rifapro'))) {
+          cachedName = null;
+        }
         
         if (cachedColor) {
           const hexToHsl = (hex) => {
@@ -50,18 +55,18 @@
         }
       })();
     </script>
-    <meta name="description" content="Plataforma de Rifas Online">
-    <meta name="keywords" content="rifas, sorteios">
-    <meta name="author" content="Plataforma" />
+    <meta name="description" content="Carregando...">
+    <meta name="keywords" content="">
+    <meta name="author" content="" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Plataforma">
-    <meta property="og:description" content="Plataforma de Rifas Online">
+    <meta property="og:title" content="Carregando...">
+    <meta property="og:description" content="Carregando...">
     <meta property="og:image" content="/placeholder.svg">
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Plataforma">
-    <meta name="twitter:description" content="Plataforma de Rifas Online">
+    <meta name="twitter:title" content="Carregando...">
+    <meta name="twitter:description" content="Carregando...">
     <meta name="twitter:image" content="/placeholder.svg">
   </head>
 
