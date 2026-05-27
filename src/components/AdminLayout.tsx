@@ -11,103 +11,36 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useSiteSettings } from "@/hooks/useData";
 
- const navItems = [
-   { category: "Início", items: [
-     { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-     { title: "Preview Site", url: "/preview", icon: ImageIcon },
-   ]},
-   { category: "Vendas", items: [
-     { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-      { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
-      { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
-     { title: "Cupons", url: "/admin/cupons", icon: Percent },
-     { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
-   ]},
-   { category: "Prêmios & Jogos", items: [
-     { title: "Roletas", url: "/admin/roletas", icon: Dices },
-     { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
-     { title: "Raspadinhas", url: "/admin/raspadinhas", icon: Zap },
-     { title: "Federal", url: "/admin/federal", icon: Star },
-   ]},
-   { category: "Comunidade", items: [
-     { title: "Usuários", url: "/admin/usuarios", icon: Users },
-     { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
-     { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
-   ]},
-    { category: "Configurações", items: [
-      { title: "Banners", url: "/admin/banners", icon: ImageIcon },
-      { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
-      { title: "Logs de Segurança", url: "/admin/audit-logs", icon: ShieldAlert },
-      { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
-    ]},
-  ];
-
-export default function AdminLayout({ children }: { children: ReactNode }) {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { user, loading: authLoading, signOut } = useAuth();
-  const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
-  const { data: userRole, isLoading: userRoleLoading } = useRole();
-  const { data: features } = useFeatureAccess();
-  const { data: siteSettings } = useSiteSettings();
-  const [profile, setProfile] = useState<any>(null);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    if (user) {
-      const fetchProfile = async () => {
-        const { data } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-        setProfile(data);
-      };
-      fetchProfile();
-    }
-  }, [user]);
-
-  if (authLoading || roleLoading || userRoleLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-background">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    navigate("/entrar");
-    return null;
-  }
-
-  if (!isAdmin) {
-    return (
-      <div className="flex h-screen flex-col items-center justify-center gap-4 bg-background">
-        <ShieldAlert className="h-16 w-16 text-destructive" />
-        <h1 className="font-display text-2xl font-bold">Acesso Negado</h1>
-        <p className="text-muted-foreground">Você não tem permissão de administrador.</p>
-        <Button variant="outline" onClick={() => navigate("/")}>
-          <ArrowLeft className="mr-2 h-4 w-4" /> Voltar ao site
-        </Button>
-      </div>
-    );
-  }
-
-  // Filter navigation based on features and roles
-  const filteredNavItems = navItems.map(group => ({
-    ...group,
-    items: group.items.filter(item => {
-      // Feature-based restrictions
-      if (item.title === "Roletas" && features && !features.roulette_enabled) return false;
-      if (item.title === "Raspadinhas" && features && !features.scratch_cards_enabled) return false;
-      if (item.title === "Banners" && features && !features.page_editing_enabled) return false;
-      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false; // Prized quotas
-      if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
-      
-      // Role-based restrictions
-      if (item.title === "Sistema" && userRole !== 'master' && userRole !== 'client_admin') return false; 
-      if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'client_admin') return false;
-      if (item.title === "Diagnóstico" && userRole !== 'master') return false;
-      
-      return true;
-    })
-  })).filter(group => group.items.length > 0);
+const navItems = [
+  { category: "Início", items: [
+    { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
+    { title: "Preview Site", url: "/preview", icon: ImageIcon },
+  ]},
+  { category: "Vendas", items: [
+    { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
+    { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+    { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
+    { title: "Cupons", url: "/admin/cupons", icon: Percent },
+    { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
+  ]},
+  { category: "Prêmios & Jogos", items: [
+    { title: "Roletas", url: "/admin/roletas", icon: Dices },
+    { title: "Caixas Misteriosas", url: "/admin/caixas", icon: Gift },
+    { title: "Raspadinhas", url: "/admin/raspadinhas", icon: Zap },
+    { title: "Federal", url: "/admin/federal", icon: Star },
+  ]},
+  { category: "Comunidade", items: [
+    { title: "Usuários", url: "/admin/usuarios", icon: Users },
+    { title: "Afiliados", url: "/admin/afiliados", icon: UsersRound },
+    { title: "Notificações", url: "/admin/notificacoes", icon: Bell },
+  ]},
+  { category: "Configurações", items: [
+    { title: "Banners", url: "/admin/banners", icon: ImageIcon },
+    { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+    { title: "Logs de Segurança", url: "/admin/audit-logs", icon: ShieldAlert },
+    { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
+  ]},
+];
 
 const SidebarContent = ({ 
   pathname, 
@@ -263,7 +196,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       if (item.title === "Roletas" && features && !features.roulette_enabled) return false;
       if (item.title === "Raspadinhas" && features && !features.scratch_cards_enabled) return false;
       if (item.title === "Banners" && features && !features.page_editing_enabled) return false;
-      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false; // Prized quotas
+      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false;
       if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
       
       // Role-based restrictions
@@ -290,7 +223,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         />
       </aside>
 
-      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen w-full">
+      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen w-full overflow-hidden">
         {/* Mobile Header */}
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
