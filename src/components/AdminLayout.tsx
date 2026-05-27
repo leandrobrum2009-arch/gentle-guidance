@@ -191,11 +191,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-sm shrink-0 h-screen max-h-screen sticky top-0">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-xl">
         <SidebarContent />
       </aside>
 
-      <div className="flex flex-1 flex-col min-h-screen">
+      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen">
         {/* Mobile Header */}
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
@@ -213,21 +213,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </span>
           </div>
           
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-10 w-10 text-sidebar-foreground">
+              <Button variant="ghost" size="icon" className="h-10 w-10 text-sidebar-foreground hover:bg-sidebar-accent">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
-              <SidebarContent />
+              <SidebarContent onItemClick={() => setIsMobileMenuOpen(false)} />
             </SheetContent>
           </Sheet>
         </header>
 
         {/* Main */}
-        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8">
-          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8 overflow-x-hidden">
+          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500 pb-20">
             {children}
           </div>
         </main>
