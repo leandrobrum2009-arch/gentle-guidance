@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from "react";
+import { ReactNode, useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
@@ -11,27 +11,27 @@ interface ProtectedRouteProps {
 }
 
 export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
-  const { user, loading: authLoading, refreshSession } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
   const location = useLocation();
+  const loggedRef = useRef<string | null>(null);
 
   useEffect(() => {
-    // Re-verify session when entering protected routes
-    if (user && adminOnly) {
-      refreshSession();
-      
-      // Log successful admin access (or attempt)
-      if (!roleLoading) {
-        logAuthEvent({
-          event: isAdmin ? 'admin_access' : 'unauthorized_attempt',
-          resource: location.pathname,
-          status: isAdmin ? 'success' : 'failure',
-          userId: user.id,
-          details: { path: location.pathname }
-        });
-      }
-    }
-  }, [location.pathname, adminOnly, user, refreshSession, isAdmin, roleLoading]);
+    // Only log once per route+user combination, never in a loop
+    if (!user || !adminOnly || roleLoading) return;
+    
+    const logKey = `${user.id}-${location.pathname}`;
+    if (loggedRef.current === logKey) return;
+    loggedRef.current = logKey;
+
+    logAuthEvent({
+      event: isAdmin ? 'admin_access' : 'unauthorized_attempt',
+      resource: location.pathname,
+      status: isAdmin ? 'success' : 'failure',
+      userId: user.id,
+      details: { path: location.pathname }
+    });
+  }, [location.pathname, adminOnly, user?.id, isAdmin, roleLoading]);
 
   if (authLoading || (adminOnly && roleLoading)) {
     return (
@@ -47,7 +47,6 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
   }
 
   if (!user) {
-    // Redirect to login but save the attempted URL
     return <Navigate to="/entrar" state={{ from: location }} replace />;
   }
 
