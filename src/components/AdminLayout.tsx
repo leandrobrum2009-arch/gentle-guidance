@@ -227,7 +227,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0 flex flex-col h-full overflow-hidden">
+            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0 flex flex-col h-full">
               <SidebarContent onItemClick={() => setIsMobileMenuOpen(false)} />
             </SheetContent>
           </Sheet>
