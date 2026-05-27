@@ -9,7 +9,12 @@
     <script>
       (function() {
         const cachedColor = localStorage.getItem('cached_primary_color');
-        const cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        let cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        
+        // Prevent old branding from appearing
+        if (cachedName && (cachedName.toLowerCase().includes('rifa pro') || cachedName.toLowerCase().includes('rifapro'))) {
+          cachedName = null;
+        }
         
         if (cachedColor) {
           const hexToHsl = (hex) => {

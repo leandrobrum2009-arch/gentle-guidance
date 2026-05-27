@@ -21,8 +21,8 @@ export const SEO = ({
   const { data: settings } = useSiteSettings();
 
   const siteName = settings?.site_title || settings?.site_name || "";
-  const defaultDescription = settings?.description || "Plataforma de rifas online.";
-  const defaultKeywords = settings?.site_keywords || "rifas, sorteios, prêmios, ganhar";
+  const defaultDescription = settings?.description || "Plataforma Online";
+  const defaultKeywords = settings?.site_keywords || "sorteios, prêmios";
   
   const seoTitle = !title || title === siteName ? siteName : `${title} | ${siteName}`;
   const seoDescription = description || defaultDescription;
