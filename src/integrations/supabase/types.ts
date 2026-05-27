@@ -151,6 +151,50 @@ export type Database = {
         }
         Relationships: []
       }
+      auth_audit_logs: {
+        Row: {
+          created_at: string
+          details: Json | null
+          event: string
+          id: string
+          ip_address: string | null
+          resource: string | null
+          status: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          details?: Json | null
+          event: string
+          id?: string
+          ip_address?: string | null
+          resource?: string | null
+          status: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          details?: Json | null
+          event?: string
+          id?: string
+          ip_address?: string | null
+          resource?: string | null
+          status?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "auth_audit_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       banners: {
         Row: {
           created_at: string | null

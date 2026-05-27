@@ -3,6 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { Loader2 } from "lucide-react";
+import { logAuthEvent } from "@/lib/audit";
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -18,8 +19,19 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
     // Re-verify session when entering protected routes
     if (user && adminOnly) {
       refreshSession();
+      
+      // Log successful admin access (or attempt)
+      if (!roleLoading) {
+        logAuthEvent({
+          event: isAdmin ? 'admin_access' : 'unauthorized_attempt',
+          resource: location.pathname,
+          status: isAdmin ? 'success' : 'failure',
+          userId: user.id,
+          details: { path: location.pathname }
+        });
+      }
     }
-  }, [location.pathname, adminOnly, user, refreshSession]);
+  }, [location.pathname, adminOnly, user, refreshSession, isAdmin, roleLoading]);
 
   if (authLoading || (adminOnly && roleLoading)) {
     return (
