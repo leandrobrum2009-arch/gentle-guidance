@@ -51,6 +51,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const { data: features } = useFeatureAccess();
   const { data: siteSettings } = useSiteSettings();
   const [profile, setProfile] = useState<any>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
