@@ -108,9 +108,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     })
   })).filter(group => group.items.length > 0);
 
-  const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground min-h-0 overflow-hidden relative">
-      <div className="flex items-center gap-3 border-b border-sidebar-border p-6">
+  const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => (
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground relative">
+      <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0">
         {siteSettings?.site_logo_url ? (
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
             <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
@@ -134,7 +134,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto p-4 min-h-0 scrollbar-thin scrollbar-thumb-sidebar-border">
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
         {filteredNavItems.map((group) => (
           <div key={group.category} className="space-y-1">
             <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
@@ -147,6 +147,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   <Link
                     key={item.url}
                     to={item.url}
+                    onClick={onItemClick}
                     className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                       active
                         ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
@@ -163,16 +164,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-sidebar-border p-4">
+      <div className="space-y-1 border-t border-sidebar-border p-4 shrink-0">
         <Link
           to="/"
+          onClick={onItemClick}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar ao site
         </Link>
         <button
-          onClick={signOut}
+          onClick={() => {
+            if (onItemClick) onItemClick();
+            signOut();
+          }}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors"
         >
           <LogOut className="h-4 w-4" />
