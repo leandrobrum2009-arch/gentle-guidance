@@ -29,7 +29,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useSiteSettings } from "@/hooks/useData";
 
@@ -58,6 +58,19 @@ const queryClient = new QueryClient();
 const CampaignRedirect = () => {
   const { id } = useParams();
   return <Navigate to={`/campanha/${id}`} replace />;
+};
+
+const RouteExtras = () => {
+  const { pathname } = useLocation();
+
+  if (pathname.startsWith("/admin")) return null;
+
+  return (
+    <>
+      <LiveNotifications />
+      <PWAInstallBanner />
+    </>
+  );
 };
 
 const AppContent = () => {
@@ -90,6 +103,7 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <RouteExtras />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={showSalesPage ? <SalesPage /> : <Index />} />
@@ -158,8 +172,6 @@ const App = () => {
             <SiteSettingsInjector />
             <Toaster />
             <Sonner />
-            <LiveNotifications />
-            <PWAInstallBanner />
             <AppContent />
           </TooltipProvider>
         </ThemeProvider>

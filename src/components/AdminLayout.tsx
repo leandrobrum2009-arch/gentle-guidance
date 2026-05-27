@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin, useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
@@ -148,11 +148,14 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 {group.items.map((item) => {
                   const active = pathname === item.url;
                   return (
-                    <Link
+                    <button
+                      type="button"
                       key={item.url}
-                      to={item.url}
-                      onClick={onItemClick}
-                      className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-200 relative pointer-events-auto ${
+                      onClick={() => {
+                        onItemClick?.();
+                        navigate(item.url);
+                      }}
+                      className={`group flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm transition-all duration-200 relative pointer-events-auto ${
                         active
                           ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 z-10"
                           : "text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
@@ -163,7 +166,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                       {active && (
                         <div className="absolute inset-y-2 left-0 w-1 bg-white/30 rounded-full" />
                       )}
-                    </Link>
+                    </button>
                   );
                 })}
               </div>
@@ -173,14 +176,17 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
         {/* Footer Actions */}
         <div className="border-t border-sidebar-border p-5 space-y-2 bg-sidebar">
-          <Link
-            to="/"
-            onClick={onItemClick}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200 group pointer-events-auto"
+          <button
+            type="button"
+            onClick={() => {
+              onItemClick?.();
+              navigate("/");
+            }}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent hover:text-sidebar-foreground transition-all duration-200 group pointer-events-auto"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             <span className="font-semibold">Voltar ao site</span>
-          </Link>
+          </button>
           <button
             onClick={() => {
               if (onItemClick) onItemClick();
