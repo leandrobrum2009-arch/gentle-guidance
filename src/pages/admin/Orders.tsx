@@ -22,7 +22,13 @@ import {
 export default function AdminOrders() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
-  const { data: orders, isLoading, refetch } = useAdminOrders();
+  const { data: orders, isLoading, refetch, error } = useAdminOrders();
+  
+  useEffect(() => {
+    if (error) {
+      toast.error("Erro ao carregar pedidos: " + (error as any).message);
+    }
+  }, [error]);
   const { mutate: updateStatus, isPending: isUpdating } = useUpdateOrderStatus();
   const { mutate: deleteOrder } = useDeleteOrder();
 
