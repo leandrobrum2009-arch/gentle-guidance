@@ -26,7 +26,14 @@ const LogoFallback = ({ siteName }: { siteName?: string }) => (
       <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
     </div>
     <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
-      {siteName?.split(' ')[0] || "Rifas"}<span className="text-primary">{siteName?.split(' ').slice(1).join(' ') || "Pro"}</span>
+      {siteName ? (
+        <>
+          {siteName.split(' ')[0]}
+          <span className="text-primary">{siteName.split(' ').slice(1).join(' ')}</span>
+        </>
+      ) : (
+        <span className="opacity-0">Plataforma</span>
+      )}
     </span>
   </div>
 );
