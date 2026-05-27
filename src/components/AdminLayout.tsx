@@ -111,7 +111,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
     return (
-      <div className="flex flex-col h-full bg-sidebar text-sidebar-foreground relative overflow-hidden">
+      <div className="flex flex-col h-full min-h-0 bg-sidebar text-sidebar-foreground relative overflow-hidden">
         {/* Header / Logo Section */}
         <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar z-20">
           {siteSettings?.site_logo_url ? (
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Menu Items Section */}
-        <nav className="flex-1 overflow-y-auto custom-scrollbar py-6 px-4 space-y-8 z-10 pointer-events-auto overscroll-behavior-contain">
+        <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain py-6 px-4 space-y-8 z-10 pointer-events-auto [scrollbar-width:thin]">
           {filteredNavItems.map((group) => (
             <div key={group.category} className="space-y-3">
               <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.25em] text-sidebar-foreground/30 mb-2">
