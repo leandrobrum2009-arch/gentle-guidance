@@ -111,9 +111,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
     return (
-      <div className="flex flex-col h-full min-h-0 bg-sidebar text-sidebar-foreground relative overflow-hidden">
+      <div className="min-h-full bg-sidebar text-sidebar-foreground relative pointer-events-auto">
         {/* Header / Logo Section */}
-        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar z-20">
+        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 bg-sidebar">
           {siteSettings?.site_logo_url ? (
             <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm border border-sidebar-border/50">
               <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
@@ -138,7 +138,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Menu Items Section */}
-        <nav className="flex-1 min-h-0 overflow-y-auto overscroll-contain py-6 px-4 space-y-8 z-10 pointer-events-auto [scrollbar-width:thin]">
+        <nav className="py-6 px-4 space-y-8 pointer-events-auto">
           {filteredNavItems.map((group) => (
             <div key={group.category} className="space-y-3">
               <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.25em] text-sidebar-foreground/30 mb-2">
@@ -172,7 +172,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Footer Actions */}
-        <div className="mt-auto border-t border-sidebar-border p-5 space-y-2 bg-sidebar shrink-0 z-20">
+        <div className="border-t border-sidebar-border p-5 space-y-2 bg-sidebar">
           <Link
             to="/"
             onClick={onItemClick}
@@ -199,7 +199,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-[999] hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-2xl pointer-events-auto">
+      <aside className="fixed inset-y-0 left-0 z-[999] hidden h-dvh w-64 overflow-y-auto overscroll-contain border-r border-sidebar-border bg-sidebar shadow-2xl pointer-events-auto [scrollbar-width:thin] lg:block">
         <SidebarContent />
       </aside>
 
@@ -227,7 +227,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0 flex flex-col h-full">
+            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0 h-dvh overflow-y-auto overscroll-contain [scrollbar-width:thin]">
               <SidebarContent onItemClick={() => setIsMobileMenuOpen(false)} />
             </SheetContent>
           </Sheet>
