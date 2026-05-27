@@ -990,6 +990,18 @@ function SettingField({
     );
   };
 
+  if (!s) {
+    return (
+      <div className="space-y-3 p-4 rounded-xl border border-dashed border-muted-foreground/20 bg-muted/5">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-muted/10 text-muted-foreground"><Settings className="h-4 w-4" /></div>
+          <Label className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">{label || "Configuração Ausente"}</Label>
+        </div>
+        <p className="text-xs text-muted-foreground italic">Chave não encontrada no banco de dados.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2">
