@@ -134,7 +134,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto p-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 scrollbar-thin scrollbar-thumb-sidebar-border hover:scrollbar-thumb-sidebar-accent-foreground/20">
         {filteredNavItems.map((group) => (
           <div key={group.category} className="space-y-1">
             <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
