@@ -199,7 +199,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-[100] hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-2xl overflow-hidden pointer-events-auto">
+      <aside className="fixed inset-y-0 left-0 z-[999] hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-2xl pointer-events-auto">
         <SidebarContent />
       </aside>
 
