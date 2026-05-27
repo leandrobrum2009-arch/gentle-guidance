@@ -357,4 +357,22 @@ aside:has(a[href*="lovable.dev"]) {
     .animate-light-sweep {
       animation: light-sweep 3s infinite linear;
     }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: hsl(var(--sidebar-border));
+      border-radius: 10px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: hsl(var(--sidebar-foreground) / 0.2);
+    }
+    .custom-scrollbar {
+      scrollbar-width: thin;
+      scrollbar-color: hsl(var(--sidebar-border)) transparent;
+    }
 }
