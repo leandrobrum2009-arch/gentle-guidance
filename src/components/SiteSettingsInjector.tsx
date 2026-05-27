@@ -5,6 +5,7 @@ export const SiteSettingsInjector = () => {
   const { data: settings } = useSiteSettings();
 
   useEffect(() => {
+    if (!settings) return;
 
     // Cache basic settings for early injection on next load
     if (settings.primary_color) localStorage.setItem('cached_primary_color', settings.primary_color);
