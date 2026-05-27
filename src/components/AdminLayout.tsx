@@ -47,7 +47,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
   const { user, loading: authLoading, signOut } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
-  const { data: userRole } = useRole();
+  const { data: userRole, isLoading: userRoleLoading } = useRole();
   const { data: features } = useFeatureAccess();
   const { data: siteSettings } = useSiteSettings();
   const [profile, setProfile] = useState<any>(null);
