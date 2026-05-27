@@ -32,7 +32,7 @@ export const QuickRegisterDialog = ({ isOpen, onOpenChange, onSuccess }: QuickRe
     setIsLoading(true);
     
     // Create a dummy email for auth using the phone number
-    const dummyEmail = `${cleanPhone}@rifapro.com.br`;
+    const dummyEmail = `${cleanPhone}@sistema.com.br`;
     const dummyPassword = cleanPhone; // Use phone as initial password
 
     try {
