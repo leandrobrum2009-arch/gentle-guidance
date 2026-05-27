@@ -1436,6 +1436,16 @@ export type Database = {
       audit_all_paid_orders: { Args: never; Returns: Json }
       check_is_master: { Args: { user_id: string }; Returns: boolean }
       cleanup_expired_reservations: { Args: never; Returns: undefined }
+      diagnose_table_permissions: {
+        Args: never
+        Returns: {
+          can_delete: boolean
+          can_insert: boolean
+          can_select: boolean
+          can_update: boolean
+          table_name: string
+        }[]
+      }
       duplicate_campaign: { Args: { p_campaign_id: string }; Returns: string }
       get_order_inconsistencies: {
         Args: never

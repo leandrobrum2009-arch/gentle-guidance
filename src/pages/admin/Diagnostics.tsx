@@ -24,6 +24,8 @@ export default function AdminDiagnostics() {
   const [lastCheck, setLastCheck] = useState<Date | null>(null);
   const [inconsistencies, setInconsistencies] = useState<any[]>([]);
   const [drawLogs, setDrawLogs] = useState<any[]>([]);
+  const [permissions, setPermissions] = useState<any[]>([]);
+  const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
 
   const runDiagnostics = async () => {
     setLoading(true);
@@ -59,13 +61,11 @@ export default function AdminDiagnostics() {
       setSettingsStatus('error');
     }
 
-    // 3. Check Edge Functions (via simple ping or just metadata check)
+    // 3. Check Edge Functions
     const functions = ['pix-payment', 'mercadopago-payment'];
     for (const fn of functions) {
       try {
-        // We just check if we can invoke it (it might return 400/404 but if it responds it exists)
         const { error } = await supabase.functions.invoke(fn, { body: { path: 'health' } });
-        // If it's not a connection error, it's probably fine
         if (error && error.message?.includes('Failed to fetch')) {
           setEdgeFunctionsStatus(prev => ({ ...prev, [fn]: 'error' }));
         } else {
@@ -96,6 +96,22 @@ export default function AdminDiagnostics() {
       if (data) setDrawLogs(data);
     } catch (err) {
       console.error('Draw Logs Error:', err);
+    }
+
+    // 6. Permissions Diagnostic
+    try {
+      const { data: user } = await supabase.auth.getUser();
+      if (user.user) {
+        const { data: roleData } = await supabase.from('user_roles').select('role').eq('user_id', user.user.id).maybeSingle();
+        setCurrentUserRole(roleData?.role || 'user');
+      }
+
+      const { data: perms, error: permError } = await supabase.rpc('diagnose_table_permissions');
+      if (!permError && perms) {
+        setPermissions(perms);
+      }
+    } catch (err) {
+      console.error('Permissions Error:', err);
     }
 
     setLoading(false);
@@ -338,7 +354,84 @@ export default function AdminDiagnostics() {
           </CardContent>
         </Card>
 
-        {/* Webhook Events & Retry Queue - New Section */}
+        {/* Permissions Diagnostic - New Section */}
+        <Card className="border-border bg-card shadow-sm md:col-span-2">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle className="text-lg">Diagnóstico de Permissões</CardTitle>
+                <CardDescription className="text-xs">Verifica se as permissões de acesso às tabelas estão configuradas corretamente.</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="flex items-center gap-4 p-4 rounded-xl bg-secondary/30 border border-border">
+              <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Server className="h-5 w-5 text-primary" />
+              </div>
+              <div className="space-y-0.5">
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Seu Papel Atual</p>
+                <p className="text-sm font-black uppercase italic tracking-tighter text-foreground">
+                  {currentUserRole || 'Carregando...'}
+                </p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-border overflow-hidden">
+              <table className="w-full text-[10px] text-left">
+                <thead className="bg-secondary/50 text-muted-foreground uppercase font-black tracking-widest border-b border-border">
+                  <tr>
+                    <th className="px-4 py-3">Tabela</th>
+                    <th className="px-4 py-3 text-center">SELECT</th>
+                    <th className="px-4 py-3 text-center">INSERT</th>
+                    <th className="px-4 py-3 text-center">UPDATE</th>
+                    <th className="px-4 py-3 text-center">DELETE</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {permissions.map((p) => (
+                    <tr key={p.table_name} className="hover:bg-secondary/20 transition-colors">
+                      <td className="px-4 py-3 font-bold text-foreground uppercase">{p.table_name}</td>
+                      <td className="px-4 py-3 text-center">
+                        {p.can_select ? <Badge className="bg-emerald-500/10 text-emerald-500 border-none">SIM</Badge> : <Badge variant="destructive">NÃO</Badge>}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {p.can_insert ? <Badge className="bg-emerald-500/10 text-emerald-500 border-none">SIM</Badge> : <Badge variant="destructive">NÃO</Badge>}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {p.can_update ? <Badge className="bg-emerald-500/10 text-emerald-500 border-none">SIM</Badge> : <Badge variant="destructive">NÃO</Badge>}
+                      </td>
+                      <td className="px-4 py-3 text-center">
+                        {p.can_delete ? <Badge className="bg-emerald-500/10 text-emerald-500 border-none">SIM</Badge> : <Badge variant="destructive">NÃO</Badge>}
+                      </td>
+                    </tr>
+                  ))}
+                  {permissions.length === 0 && (
+                    <tr>
+                      <td colSpan={5} className="px-4 py-10 text-center text-muted-foreground animate-pulse font-bold uppercase">
+                        Executando diagnóstico de segurança...
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="p-4 rounded-xl bg-amber-500/5 border border-amber-500/10 flex items-start gap-4">
+              <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
+              <div className="space-y-1">
+                <p className="text-xs font-bold text-foreground">Importante</p>
+                <p className="text-[10px] text-muted-foreground leading-relaxed italic">
+                  Este diagnóstico verifica as permissões brutas (GRANTs) no nível do banco de dados para a API (PostgREST). 
+                  Mesmo se uma tabela permitir "SELECT", os dados reais retornados podem ser limitados pelas políticas de Row Level Security (RLS) dependendo do seu nível de acesso.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Webhook Events & Retry Queue */}
         <Card className="border-border bg-card shadow-sm md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="flex items-center gap-2">
