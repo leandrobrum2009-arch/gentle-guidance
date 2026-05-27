@@ -207,7 +207,7 @@ export default function AdminSettings() {
           <TabsTrigger value="company" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="visual" className="space-y-8 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="visual" className="space-y-8 outline-none">
           <div className="grid gap-6 md:grid-cols-2">
             <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
               <CardHeader className="pb-4 bg-primary/5">
