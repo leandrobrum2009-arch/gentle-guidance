@@ -61,8 +61,21 @@ const CampaignRedirect = () => {
 };
 
 const AppContent = () => {
-  const { data: settings } = useSiteSettings();
+  const { data: settings, isLoading } = useSiteSettings();
   const showSalesPage = String(settings?.show_sales_page) === "true";
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center bg-[#0a0a0a]">
+        <div className="flex flex-col items-center gap-4">
+          <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-800 border-t-primary" />
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-gray-500 animate-pulse italic">
+            Carregando...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
 
 
