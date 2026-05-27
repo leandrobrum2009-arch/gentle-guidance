@@ -64,6 +64,14 @@ const AppContent = () => {
   const { data: settings, isLoading } = useSiteSettings();
   const showSalesPage = String(settings?.show_sales_page) === "true";
 
+  useEffect(() => {
+    runContrastAudit();
+    initContrastShortcut();
+
+    const timeout = setTimeout(runContrastAudit, 2000);
+    return () => clearTimeout(timeout);
+  }, []);
+
   if (isLoading) {
     return (
       <div className="flex h-screen w-screen items-center justify-center bg-[#0a0a0a]">
@@ -78,14 +86,6 @@ const AppContent = () => {
   }
 
 
-
-  useEffect(() => {
-    runContrastAudit();
-    initContrastShortcut();
-    
-    const timeout = setTimeout(runContrastAudit, 2000);
-    return () => clearTimeout(timeout);
-  }, []);
 
   return (
     <BrowserRouter>
