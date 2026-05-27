@@ -396,7 +396,7 @@ export default function AdminSettings() {
             </Card>
           </div>
         </TabsContent>
-        <TabsContent value="pwa" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="pwa" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
             <CardHeader className="pb-4 bg-primary/5">
               <CardTitle className="flex items-center gap-3 text-xl">
@@ -438,7 +438,7 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="seo" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="seo" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
             <CardHeader className="pb-4 bg-primary/5">
               <CardTitle className="flex items-center gap-3 text-xl">
@@ -483,7 +483,7 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="tracking" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="tracking" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
             <CardHeader className="pb-4 bg-primary/5">
               <CardTitle className="flex items-center gap-3 text-xl">
@@ -540,7 +540,7 @@ export default function AdminSettings() {
         </TabsContent>
 
 
-        <TabsContent value="payment" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="payment" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm overflow-hidden border-2 border-primary/20 rounded-3xl shadow-sm">
              <div className="bg-primary/5 p-6 border-b border-primary/10">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
@@ -745,7 +745,7 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="finance" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="finance" className="space-y-6 outline-none">
            <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl p-6 shadow-sm border-2">
              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
                 {['cashback_percent', 'affiliate_commission_percent', 'min_withdrawal_amount', 'support_whatsapp'].map(key => (
@@ -762,7 +762,7 @@ export default function AdminSettings() {
            </Card>
         </TabsContent>
 
-        <TabsContent value="company" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="company" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden border-2 shadow-sm">
             <CardHeader className="bg-primary/5">
               <CardTitle className="text-xl">Informações Legais & Contato</CardTitle>
@@ -782,7 +782,7 @@ export default function AdminSettings() {
           </Card>
         </TabsContent>
 
-        <TabsContent value="sales" className="space-y-6 outline-none animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <TabsContent value="sales" className="space-y-6 outline-none">
           <Card className="border-border/50 bg-card/50 backdrop-blur-sm border-2 hover:border-primary/20 transition-all duration-300 rounded-3xl overflow-hidden shadow-sm">
             <CardHeader className="pb-4 bg-primary/5">
               <CardTitle className="flex items-center gap-3 text-xl">
