@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -9,6 +9,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, name: string, cpf?: string, phone?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
+  refreshSession: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({} as AuthContextType);
@@ -20,21 +21,50 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const refreshSession = useCallback(async () => {
+    try {
+      const { data: { session: refreshedSession }, error } = await supabase.auth.getSession();
+      if (error) throw error;
+      
+      setSession(refreshedSession);
+      setUser(refreshedSession?.user ?? null);
+    } catch (error) {
+      console.error("Error refreshing session:", error);
+      setSession(null);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
+    // Initial session fetch
+    refreshSession();
+
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      if (_event === 'SIGNED_OUT') {
+        // Clear everything on sign out
+        setSession(null);
+        setUser(null);
+      }
     });
 
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      setLoading(false);
-    });
+    // Auto-revalidate session every 5 minutes
+    const interval = setInterval(() => {
+      if (supabase.auth.getSession()) {
+        supabase.auth.getUser(); // This triggers token refresh if needed
+      }
+    }, 1000 * 60 * 5);
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => {
+      subscription.unsubscribe();
+      clearInterval(interval);
+    };
+  }, [refreshSession]);
 
   const signUp = async (email: string, password: string, name: string, cpf?: string, phone?: string) => {
     const { error } = await supabase.auth.signUp({
@@ -43,8 +73,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       options: { data: { name, cpf, phone } },
     });
     
-    if (!error && cpf || phone) {
-      // Update profile with CPF and phone after signup
+    if (!error && (cpf || phone)) {
       const { data: { user: newUser } } = await supabase.auth.getUser();
       if (newUser) {
         await supabase.from("profiles").update({ cpf, phone }).eq("user_id", newUser.id);
@@ -61,10 +90,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    setSession(null);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ session, user, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, loading, signUp, signIn, signOut, refreshSession }}>
       {children}
     </AuthContext.Provider>
   );
