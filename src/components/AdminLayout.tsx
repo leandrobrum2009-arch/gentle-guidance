@@ -109,84 +109,89 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     })
   })).filter(group => group.items.length > 0);
 
-  const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground relative">
-      <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0">
-        {siteSettings?.site_logo_url ? (
-          <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
-            <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
-          </div>
-        ) : (
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
-            <Ticket className="h-6 w-6 text-primary-foreground" />
-          </div>
-        )}
-        <div className="min-w-0 flex-1">
-          <div className="flex flex-col">
-            <span className="block font-display text-sm font-bold tracking-tight truncate">
-              {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
-            </span>
-            {userRole && (
-              <span className="text-[9px] font-black uppercase tracking-widest text-primary/70 italic leading-tight">
-                {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
-              </span>
-            )}
-          </div>
-        </div>
-      </div>
+  const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
+    const handleItemClick = (url: string) => {
+      if (onItemClick) onItemClick();
+      navigate(url);
+    };
 
-      <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
-        {filteredNavItems.map((group) => (
-          <div key={group.category} className="space-y-1">
-            <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
-              {group.category}
-            </h3>
-            <div className="space-y-0.5">
-              {group.items.map((item) => {
-                const active = pathname === item.url;
-                return (
-                  <Link
-                    key={item.url}
-                    to={item.url}
-                    onClick={onItemClick}
-                    className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
-                      active
-                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                        : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
-                    }`}
-                  >
-                    <item.icon className={`h-4 w-4 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
-                    <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
-                  </Link>
-                );
-              })}
+    return (
+      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full overflow-hidden">
+        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0">
+          {siteSettings?.site_logo_url ? (
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
+              <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
+            </div>
+          ) : (
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+              <Ticket className="h-6 w-6 text-primary-foreground" />
+            </div>
+          )}
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-col">
+              <span className="block font-display text-sm font-bold tracking-tight truncate">
+                {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
+              </span>
+              {userRole && (
+                <span className="text-[9px] font-black uppercase tracking-widest text-primary/70 italic leading-tight">
+                  {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
+                </span>
+              )}
             </div>
           </div>
-        ))}
-      </nav>
+        </div>
 
-      <div className="space-y-1 border-t border-sidebar-border p-4 shrink-0">
-        <Link
-          to="/"
-          onClick={onItemClick}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Voltar ao site
-        </Link>
-        <button
-          onClick={() => {
-            if (onItemClick) onItemClick();
-            signOut();
-          }}
-          className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors"
-        >
-          <LogOut className="h-4 w-4" />
-          Sair do Sistema
-        </button>
+        <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar overscroll-contain">
+          {filteredNavItems.map((group) => (
+            <div key={group.category} className="space-y-1">
+              <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
+                {group.category}
+              </h3>
+              <div className="space-y-0.5">
+                {group.items.map((item) => {
+                  const active = pathname === item.url;
+                  return (
+                    <button
+                      key={item.url}
+                      onClick={() => handleItemClick(item.url)}
+                      className={`group w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-left ${
+                        active
+                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
+                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                      }`}
+                    >
+                      <item.icon className={`h-4 w-4 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
+                      <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </nav>
+
+        <div className="space-y-1 border-t border-sidebar-border p-4 shrink-0">
+          <button
+            onClick={() => handleItemClick("/")}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors text-left"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar ao site
+          </button>
+          <button
+            onClick={() => {
+              if (onItemClick) onItemClick();
+              signOut();
+            }}
+            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors text-left"
+          >
+            <LogOut className="h-4 w-4" />
+            Sair do Sistema
+          </button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
@@ -219,7 +224,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
+            <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0 flex flex-col h-full overflow-hidden">
               <SidebarContent onItemClick={() => setIsMobileMenuOpen(false)} />
             </SheetContent>
           </Sheet>

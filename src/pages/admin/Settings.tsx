@@ -197,7 +197,7 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap w-full md:w-auto justify-start border border-border/50">
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-nowrap overflow-x-auto w-full justify-start border border-border/50 no-scrollbar">
           <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
           <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
           <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
@@ -989,6 +989,18 @@ function SettingField({
       />
     );
   };
+
+  if (!s) {
+    return (
+      <div className="space-y-3 p-4 rounded-xl border border-dashed border-muted-foreground/20 bg-muted/5">
+        <div className="flex items-center gap-2">
+          <div className="p-1.5 rounded-lg bg-muted/10 text-muted-foreground"><Settings className="h-4 w-4" /></div>
+          <Label className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/60">{label || "Configuração Ausente"}</Label>
+        </div>
+        <p className="text-xs text-muted-foreground italic">Chave não encontrada no banco de dados.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
