@@ -110,20 +110,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   })).filter(group => group.items.length > 0);
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
-    const handleItemClick = (url: string) => {
-      if (onItemClick) onItemClick();
-      navigate(url);
-    };
-
     return (
-      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full overflow-hidden">
-        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0">
+      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full">
+        {/* Header / Logo Section */}
+        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar/50 backdrop-blur-sm z-10">
           {siteSettings?.site_logo_url ? (
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
+            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm border border-sidebar-border/50">
               <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
             </div>
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-purple-600 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
               <Ticket className="h-6 w-6 text-primary-foreground" />
             </div>
           )}
@@ -141,28 +137,33 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar overscroll-contain">
+        {/* Menu Items Section */}
+        <nav className="flex-1 overflow-y-auto no-scrollbar py-4 px-3 overscroll-contain space-y-6">
           {filteredNavItems.map((group) => (
             <div key={group.category} className="space-y-1">
-              <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
+              <h3 className="px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/30">
                 {group.category}
               </h3>
-              <div className="space-y-0.5">
+              <div className="space-y-1">
                 {group.items.map((item) => {
                   const active = pathname === item.url;
                   return (
-                    <button
+                    <Link
                       key={item.url}
-                      onClick={() => handleItemClick(item.url)}
-                      className={`group w-full flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 text-left ${
+                      to={item.url}
+                      onClick={onItemClick}
+                      className={`group flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all duration-300 relative overflow-hidden ${
                         active
-                          ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
-                          : "text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 translate-x-1"
+                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground hover:translate-x-1"
                       }`}
                     >
-                      <item.icon className={`h-4 w-4 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
+                      <item.icon className={`h-4.5 w-4.5 shrink-0 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
                       <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
-                    </button>
+                      {active && (
+                        <div className="absolute inset-y-0 left-0 w-1 bg-white/20 rounded-full" />
+                      )}
+                    </Link>
                   );
                 })}
               </div>
@@ -170,23 +171,25 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
           ))}
         </nav>
 
-        <div className="space-y-1 border-t border-sidebar-border p-4 shrink-0">
-          <button
-            onClick={() => handleItemClick("/")}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors text-left"
+        {/* Footer Actions */}
+        <div className="mt-auto border-t border-sidebar-border p-4 space-y-1 bg-sidebar/50 backdrop-blur-sm shrink-0">
+          <Link
+            to="/"
+            onClick={onItemClick}
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all duration-200"
           >
             <ArrowLeft className="h-4 w-4" />
-            Voltar ao site
-          </button>
+            <span className="font-medium">Voltar ao site</span>
+          </Link>
           <button
             onClick={() => {
               if (onItemClick) onItemClick();
               signOut();
             }}
-            className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors text-left"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-all duration-200 text-left"
           >
             <LogOut className="h-4 w-4" />
-            Sair do Sistema
+            <span className="font-medium">Sair do Sistema</span>
           </button>
         </div>
       </div>
