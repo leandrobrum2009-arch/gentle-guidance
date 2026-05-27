@@ -199,13 +199,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-xl">
+      <aside className="fixed inset-y-0 left-0 z-[100] hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-2xl overflow-hidden pointer-events-auto">
         <SidebarContent />
       </aside>
 
-      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen">
+      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen relative z-10">
         {/* Mobile Header */}
-        <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
+        <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
              {siteSettings?.site_logo_url ? (
                <div className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-lg bg-white p-1">
