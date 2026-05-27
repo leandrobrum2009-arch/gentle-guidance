@@ -111,7 +111,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
     return (
-      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full select-none">
+      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full relative">
         {/* Header / Logo Section */}
         <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar/80 backdrop-blur-md z-20">
           {siteSettings?.site_logo_url ? (
