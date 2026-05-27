@@ -197,7 +197,7 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap w-full md:w-auto justify-start border border-border/50">
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-nowrap overflow-x-auto w-full justify-start border border-border/50 no-scrollbar">
           <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
           <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
           <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
