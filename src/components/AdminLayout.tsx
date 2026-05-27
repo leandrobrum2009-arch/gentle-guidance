@@ -51,6 +51,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const { data: features } = useFeatureAccess();
   const { data: siteSettings } = useSiteSettings();
   const [profile, setProfile] = useState<any>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -108,9 +109,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
     })
   })).filter(group => group.items.length > 0);
 
-  const SidebarContent = () => (
-    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground min-h-0 overflow-hidden relative">
-      <div className="flex items-center gap-3 border-b border-sidebar-border p-6">
+  const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => (
+    <div className="flex h-full flex-col bg-sidebar text-sidebar-foreground relative">
+      <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0">
         {siteSettings?.site_logo_url ? (
           <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm">
             <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
@@ -134,7 +135,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       </div>
 
-      <nav className="flex-1 space-y-4 overflow-y-auto p-4 min-h-0 scrollbar-thin scrollbar-thumb-sidebar-border">
+      <nav className="flex-1 space-y-4 overflow-y-auto p-4 custom-scrollbar">
         {filteredNavItems.map((group) => (
           <div key={group.category} className="space-y-1">
             <h3 className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/40">
@@ -147,6 +148,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                   <Link
                     key={item.url}
                     to={item.url}
+                    onClick={onItemClick}
                     className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all duration-200 ${
                       active
                         ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20"
@@ -163,16 +165,20 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         ))}
       </nav>
 
-      <div className="space-y-1 border-t border-sidebar-border p-4">
+      <div className="space-y-1 border-t border-sidebar-border p-4 shrink-0">
         <Link
           to="/"
+          onClick={onItemClick}
           className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
           Voltar ao site
         </Link>
         <button
-          onClick={signOut}
+          onClick={() => {
+            if (onItemClick) onItemClick();
+            signOut();
+          }}
           className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-sidebar-foreground/80 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-colors"
         >
           <LogOut className="h-4 w-4" />
@@ -185,11 +191,11 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen w-full bg-background text-foreground">
       {/* Desktop Sidebar */}
-      <aside className="hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-sm shrink-0 h-screen max-h-screen sticky top-0">
+      <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col border-r border-sidebar-border bg-sidebar lg:flex shadow-xl">
         <SidebarContent />
       </aside>
 
-      <div className="flex flex-1 flex-col min-h-screen">
+      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen">
         {/* Mobile Header */}
         <header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
@@ -207,21 +213,21 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </span>
           </div>
           
-          <Sheet>
+          <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="h-10 w-10 text-sidebar-foreground">
+              <Button variant="ghost" size="icon" className="h-10 w-10 text-sidebar-foreground hover:bg-sidebar-accent">
                 <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="w-72 border-r border-sidebar-border bg-sidebar p-0">
-              <SidebarContent />
+              <SidebarContent onItemClick={() => setIsMobileMenuOpen(false)} />
             </SheetContent>
           </Sheet>
         </header>
 
         {/* Main */}
-        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8">
-          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500">
+        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8 overflow-x-hidden">
+          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500 pb-20">
             {children}
           </div>
         </main>
