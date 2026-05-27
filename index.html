@@ -5,19 +5,63 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/favicon.ico" />
     <link rel="manifest" href="/manifest.json" />
-    <title>Plataforma de Rifas Online</title>
-    <meta name="description" content="Participe dos melhores sorteios e ganhe prêmios incríveis na maior plataforma de rifas online.">
-    <meta name="keywords" content="rifas, sorteios, prêmios, ganhar, rifa digital, sorteio online">
-    <meta name="author" content="Sistema de Rifas" />
+    <title>Plataforma</title>
+    <script>
+      (function() {
+        const cachedColor = localStorage.getItem('cached_primary_color');
+        const cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        
+        if (cachedColor) {
+          const hexToHsl = (hex) => {
+            hex = hex.replace(/^#/, '');
+            let r = 0, g = 0, b = 0;
+            if (hex.length === 3) {
+              r = parseInt(hex[0] + hex[0], 16);
+              g = parseInt(hex[1] + hex[1], 16);
+              b = parseInt(hex[2] + hex[2], 16);
+            } else if (hex.length === 6) {
+              r = parseInt(hex.substring(0, 2), 16);
+              g = parseInt(hex.substring(2, 4), 16);
+              b = parseInt(hex.substring(4, 6), 16);
+            } else return null;
+            r /= 255; g /= 255; b /= 255;
+            const max = Math.max(r, g, b), min = Math.min(r, g, b);
+            let h = 0, s, l = (max + min) / 2;
+            if (max === min) { h = s = 0; } else {
+              const d = max - min;
+              s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+              switch (max) {
+                case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+                case g: h = (b - r) / d + 2; break;
+                case b: h = (r - g) / d + 4; break;
+              }
+              h /= 6;
+            }
+            return { h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+          };
+          const hsl = hexToHsl(cachedColor);
+          if (hsl) {
+            document.documentElement.style.setProperty('--primary', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+            document.documentElement.style.setProperty('--ring', `${hsl.h} ${hsl.s}% ${hsl.l}%`);
+          }
+        }
+        if (cachedName) {
+          document.title = cachedName;
+        }
+      })();
+    </script>
+    <meta name="description" content="Plataforma de Rifas Online">
+    <meta name="keywords" content="rifas, sorteios">
+    <meta name="author" content="Plataforma" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="Plataforma de Rifas Online">
-    <meta property="og:description" content="Participe dos melhores sorteios e ganhe prêmios incríveis na maior plataforma de rifas online.">
+    <meta property="og:title" content="Plataforma">
+    <meta property="og:description" content="Plataforma de Rifas Online">
     <meta property="og:image" content="/placeholder.svg">
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Plataforma de Rifas Online">
-    <meta name="twitter:description" content="Participe dos melhores sorteios e ganhe prêmios incríveis na maior plataforma de rifas online.">
+    <meta name="twitter:title" content="Plataforma">
+    <meta name="twitter:description" content="Plataforma de Rifas Online">
     <meta name="twitter:image" content="/placeholder.svg">
   </head>
 

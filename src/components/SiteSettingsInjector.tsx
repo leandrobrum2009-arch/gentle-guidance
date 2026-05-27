@@ -5,10 +5,15 @@ export const SiteSettingsInjector = () => {
   const { data: settings } = useSiteSettings();
 
   useEffect(() => {
-    if (!settings) return;
+
+    // Cache basic settings for early injection on next load
+    if (settings.primary_color) localStorage.setItem('cached_primary_color', settings.primary_color);
+    if (settings.site_name) localStorage.setItem('cached_site_name', settings.site_name);
+    if (settings.site_title) localStorage.setItem('cached_site_title', settings.site_title);
+    if (settings.site_logo_url) localStorage.setItem('cached_site_logo', settings.site_logo_url);
 
     // Apply Site Name or Site Title to Title
-    const siteTitle = settings.site_title || settings.site_name || "Plataforma de Rifas";
+    const siteTitle = settings.site_title || settings.site_name || "Carregando...";
     if (siteTitle) {
       document.title = siteTitle;
       

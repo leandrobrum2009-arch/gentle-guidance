@@ -41,13 +41,20 @@ const Footer = () => {
                     <Ticket className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
-                    {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary neon-text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
+                    {siteSettings?.site_name ? (
+                      <>
+                        {siteSettings.site_name.split(' ')[0]}
+                        <span className="text-primary neon-text-primary">{siteSettings.site_name.split(' ').slice(1).join(' ')}</span>
+                      </>
+                    ) : (
+                      <span className="opacity-0">Plataforma</span>
+                    )}
                   </span>
                 </>
               )}
             </a>
             <p className="max-w-xs text-xs font-bold leading-relaxed text-foreground uppercase tracking-widest opacity-80">
-              A maior e mais segura plataforma de ações online da {siteSettings?.site_name || "Sua Empresa"}. Prêmios instantâneos e sorteios garantidos.
+              A maior e mais segura plataforma de ações online. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
               {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
