@@ -98,6 +98,13 @@ export type Database = {
             referencedRelation: "orders"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "affiliate_commissions_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders_public_ranking"
+            referencedColumns: ["id"]
+          },
         ]
       }
       affiliates: {
@@ -1242,6 +1249,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "tickets_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders_public_ranking"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "tickets_user_id_profiles_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -1474,7 +1488,83 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      orders_public_ranking: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          id: string | null
+          paid_at: string | null
+          quantity: number | null
+          user_id: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          paid_at?: string | null
+          quantity?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          paid_at?: string | null
+          quantity?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_orders_campaigns"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_orders_profiles"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      tickets_public: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          id: string | null
+          is_lucky: boolean | null
+          number: string | null
+          status: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_lucky?: boolean | null
+          number?: string | null
+          status?: string | null
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          id?: string | null
+          is_lucky?: boolean | null
+          number?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tickets_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       audit_all_paid_orders: { Args: never; Returns: Json }
