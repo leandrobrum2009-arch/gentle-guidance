@@ -41,7 +41,14 @@ const Footer = () => {
                     <Ticket className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
-                    {siteSettings?.site_name?.split(' ')[0] || "Rifas"}<span className="text-primary neon-text-primary">{siteSettings?.site_name?.split(' ').slice(1).join(' ') || "Pro"}</span>
+                    {siteSettings?.site_name ? (
+                      <>
+                        {siteSettings.site_name.split(' ')[0]}
+                        <span className="text-primary neon-text-primary">{siteSettings.site_name.split(' ').slice(1).join(' ')}</span>
+                      </>
+                    ) : (
+                      <span className="opacity-0">Plataforma</span>
+                    )}
                   </span>
                 </>
               )}
