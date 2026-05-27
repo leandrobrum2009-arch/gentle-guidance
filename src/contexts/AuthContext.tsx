@@ -47,22 +47,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
       
       if (_event === 'SIGNED_OUT') {
-        // Clear everything on sign out
         setSession(null);
         setUser(null);
       }
     });
 
-    // Auto-revalidate session every 5 minutes
-    const interval = setInterval(() => {
+    // Auto-revalidate session every 5 minutes and on window focus
+    const revalidate = () => {
       if (supabase.auth.getSession()) {
-        supabase.auth.getUser(); // This triggers token refresh if needed
+        supabase.auth.getUser(); 
       }
-    }, 1000 * 60 * 5);
+    };
+
+    const interval = setInterval(revalidate, 1000 * 60 * 5);
+    window.addEventListener('focus', revalidate);
 
     return () => {
       subscription.unsubscribe();
       clearInterval(interval);
+      window.removeEventListener('focus', revalidate);
     };
   }, [refreshSession]);
 
