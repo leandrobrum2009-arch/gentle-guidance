@@ -111,25 +111,25 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
 
   const SidebarContent = ({ onItemClick }: { onItemClick?: () => void }) => {
     return (
-      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full">
+      <div className="flex flex-col bg-sidebar text-sidebar-foreground h-full select-none">
         {/* Header / Logo Section */}
-        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar/50 backdrop-blur-sm z-10">
+        <div className="flex items-center gap-3 border-b border-sidebar-border p-6 shrink-0 bg-sidebar/80 backdrop-blur-md z-20">
           {siteSettings?.site_logo_url ? (
-            <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-xl bg-white p-1 shadow-sm border border-sidebar-border/50">
+            <div className="flex h-11 w-11 items-center justify-center overflow-hidden rounded-2xl bg-white p-1.5 shadow-sm border border-sidebar-border/50 transition-transform hover:scale-105">
               <img src={siteSettings.site_logo_url} alt="Logo" className="h-full w-full object-contain" />
             </div>
           ) : (
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-primary to-primary/60 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-primary/60 shadow-lg shadow-primary/20 transition-transform hover:scale-105">
               <Ticket className="h-6 w-6 text-primary-foreground" />
             </div>
           )}
           <div className="min-w-0 flex-1">
             <div className="flex flex-col">
-              <span className="block font-display text-sm font-bold tracking-tight truncate">
+              <span className="block font-display text-sm font-bold tracking-tight truncate leading-tight">
                 {profile?.name || user.user_metadata?.name?.split(' ')[0] || "Administrador"}
               </span>
               {userRole && (
-                <span className="text-[9px] font-black uppercase tracking-widest text-primary/70 italic leading-tight">
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary/80 italic leading-tight mt-0.5">
                   {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
                 </span>
               )}
@@ -138,13 +138,13 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </div>
 
         {/* Menu Items Section */}
-        <nav className="flex-1 overflow-y-auto no-scrollbar py-4 px-3 overscroll-contain space-y-6">
+        <nav className="flex-1 overflow-y-auto no-scrollbar py-6 px-4 space-y-8 scroll-smooth">
           {filteredNavItems.map((group) => (
-            <div key={group.category} className="space-y-1">
-              <h3 className="px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-sidebar-foreground/30">
+            <div key={group.category} className="space-y-3">
+              <h3 className="px-4 text-[10px] font-black uppercase tracking-[0.25em] text-sidebar-foreground/30 mb-2">
                 {group.category}
               </h3>
-              <div className="space-y-1">
+              <div className="space-y-1.5">
                 {group.items.map((item) => {
                   const active = pathname === item.url;
                   return (
@@ -152,16 +152,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
                       key={item.url}
                       to={item.url}
                       onClick={onItemClick}
-                      className={`group flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm transition-all duration-300 relative overflow-hidden ${
+                      className={`group flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition-all duration-300 relative ${
                         active
-                          ? "bg-primary text-primary-foreground shadow-md shadow-primary/20 translate-x-1"
-                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground hover:translate-x-1"
+                          ? "bg-primary text-primary-foreground shadow-xl shadow-primary/25 z-10 translate-x-1"
+                          : "text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground hover:translate-x-1"
                       }`}
                     >
-                      <item.icon className={`h-4.5 w-4.5 shrink-0 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
-                      <span className={active ? "font-bold" : "font-medium"}>{item.title}</span>
+                      <item.icon className={`h-5 w-5 shrink-0 transition-colors ${active ? "text-primary-foreground" : "text-sidebar-foreground/40 group-hover:text-primary"}`} />
+                      <span className={active ? "font-bold tracking-tight" : "font-medium"}>{item.title}</span>
                       {active && (
-                        <div className="absolute inset-y-0 left-0 w-1 bg-white/20 rounded-full" />
+                        <div className="absolute inset-y-2 left-0 w-1 bg-white/30 rounded-full" />
                       )}
                     </Link>
                   );
@@ -172,24 +172,24 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </nav>
 
         {/* Footer Actions */}
-        <div className="mt-auto border-t border-sidebar-border p-4 space-y-1 bg-sidebar/50 backdrop-blur-sm shrink-0">
+        <div className="mt-auto border-t border-sidebar-border p-5 space-y-2 bg-sidebar/80 backdrop-blur-md shrink-0">
           <Link
             to="/"
             onClick={onItemClick}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground transition-all duration-200"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/60 hover:text-sidebar-foreground transition-all duration-200 group"
           >
-            <ArrowLeft className="h-4 w-4" />
-            <span className="font-medium">Voltar ao site</span>
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            <span className="font-semibold">Voltar ao site</span>
           </Link>
           <button
             onClick={() => {
               if (onItemClick) onItemClick();
               signOut();
             }}
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-2.5 text-sm text-sidebar-foreground/60 hover:bg-sidebar-accent/50 hover:text-rose-500 transition-all duration-200 text-left"
+            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-foreground/60 hover:bg-rose-500/10 hover:text-rose-500 transition-all duration-200 text-left group"
           >
-            <LogOut className="h-4 w-4" />
-            <span className="font-medium">Sair do Sistema</span>
+            <LogOut className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+            <span className="font-semibold">Sair do Sistema</span>
           </button>
         </div>
       </div>
