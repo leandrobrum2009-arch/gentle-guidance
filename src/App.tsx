@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import PWAInstallBanner from "./components/PWAInstallBanner";
+import { AffiliateTracker } from "./components/AffiliateTracker";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
 import ScratchCard from "./pages/ScratchCard";
