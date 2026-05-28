@@ -144,8 +144,8 @@ const Header = () => {
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
 
-      <div className={`transition-all duration-500 ${scrolled ? 'py-2' : 'py-6'}`}>
-        <div className="container flex items-center justify-between gap-4 h-full">
+      <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-24'}`}>
+        <div className="container flex items-center justify-between gap-4">
           <div className="flex items-center gap-4 md:gap-8 min-w-0">
             <Link to="/" className="flex items-center gap-2 flex-shrink-0">
               {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
@@ -160,7 +160,7 @@ const Header = () => {
               )}
             </Link>
 
-            <nav className="hidden items-center gap-6 lg:flex">
+            <nav className="hidden items-center gap-6 lg:flex h-full">
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
