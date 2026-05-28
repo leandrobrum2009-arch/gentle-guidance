@@ -218,6 +218,32 @@ import { PaymentModal } from "@/components/PaymentModal";
     }
   };
 
+  const handleActivateAffiliate = async () => {
+    if (!user) return;
+    try {
+      const { data: profile } = await supabase.from("profiles").select("name").eq("user_id", user.id).single();
+      const baseCode = (profile?.name || user.email?.split('@')[0] || "user").toLowerCase().replace(/[^a-z0-9]/g, '');
+      const referralCode = `${baseCode}${Math.floor(Math.random() * 1000)}`;
+
+      const { data: newAff, error } = await supabase
+        .from("affiliates")
+        .insert({
+          user_id: user.id,
+          referral_code: referralCode,
+          type: 'common',
+          commission_rate: Number(siteSettings?.affiliate_commission_percent || 10) / 100
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setAffiliate(newAff);
+      toast.success("Conta de afiliado ativada com sucesso!");
+    } catch (error: any) {
+      toast.error("Erro ao ativar conta: " + error.message);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
