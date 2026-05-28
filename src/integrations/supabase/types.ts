@@ -16,37 +16,52 @@ export type Database = {
     Tables: {
       admin_features_config: {
         Row: {
+          affiliates_management_enabled: boolean | null
+          campaigns_management_enabled: boolean | null
           created_at: string | null
           id: string
           lucky_numbers_enabled: boolean | null
+          orders_management_enabled: boolean | null
           page_editing_enabled: boolean | null
           roulette_enabled: boolean | null
           sales_page_models_enabled: boolean | null
           scratch_cards_enabled: boolean | null
+          settings_management_enabled: boolean | null
           updated_at: string | null
           user_id: string
+          users_management_enabled: boolean | null
         }
         Insert: {
+          affiliates_management_enabled?: boolean | null
+          campaigns_management_enabled?: boolean | null
           created_at?: string | null
           id?: string
           lucky_numbers_enabled?: boolean | null
+          orders_management_enabled?: boolean | null
           page_editing_enabled?: boolean | null
           roulette_enabled?: boolean | null
           sales_page_models_enabled?: boolean | null
           scratch_cards_enabled?: boolean | null
+          settings_management_enabled?: boolean | null
           updated_at?: string | null
           user_id: string
+          users_management_enabled?: boolean | null
         }
         Update: {
+          affiliates_management_enabled?: boolean | null
+          campaigns_management_enabled?: boolean | null
           created_at?: string | null
           id?: string
           lucky_numbers_enabled?: boolean | null
+          orders_management_enabled?: boolean | null
           page_editing_enabled?: boolean | null
           roulette_enabled?: boolean | null
           sales_page_models_enabled?: boolean | null
           scratch_cards_enabled?: boolean | null
+          settings_management_enabled?: boolean | null
           updated_at?: string | null
           user_id?: string
+          users_management_enabled?: boolean | null
         }
         Relationships: [
           {

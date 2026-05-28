@@ -70,7 +70,12 @@ export const useFeatureAccess = () => {
           lucky_numbers_enabled: true,
           roulette_enabled: true,
           page_editing_enabled: true,
-          sales_page_models_enabled: true
+          sales_page_models_enabled: true,
+          campaigns_management_enabled: true,
+          orders_management_enabled: true,
+          users_management_enabled: true,
+          affiliates_management_enabled: true,
+          settings_management_enabled: true
         };
       }
 
@@ -82,13 +87,18 @@ export const useFeatureAccess = () => {
       
       if (error && error.code !== "PGRST116") throw error;
       
-      // Default to true if no config found (or maybe false if we want strict)
+      // Default values
       return data || {
         scratch_cards_enabled: true,
         lucky_numbers_enabled: true,
         roulette_enabled: true,
         page_editing_enabled: true,
-        sales_page_models_enabled: true
+        sales_page_models_enabled: true,
+        campaigns_management_enabled: true,
+        orders_management_enabled: true,
+        users_management_enabled: true,
+        affiliates_management_enabled: true,
+        settings_management_enabled: false
       };
     },
     enabled: !!user && !!role,
@@ -129,10 +139,17 @@ export const useAdminCampaigns = () =>
          features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
        }));
 
-       // Hide 'master' users if the current user is not a 'master'
-       if (role !== "master") {
-         results = results.filter(u => u.role !== "master");
-       }
+        // Filter users based on role
+        if (role === 'client_admin') {
+          // Client admin only sees regular users
+          results = results.filter(u => !u.role || u.role === 'user');
+        } else if (role === 'admin') {
+          // Admin sees everything except masters
+          results = results.filter(u => u.role !== "master");
+        } else if (role !== "master") {
+          // Any other role (if somehow here) also shouldn't see masters
+          results = results.filter(u => u.role !== "master");
+        }
        
        return results;
      },

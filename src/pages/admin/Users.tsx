@@ -1,5 +1,6 @@
+import { useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/AdminLayout";
-import { useAdminUsers, useIsMaster } from "@/hooks/useAdmin";
+import { useAdminUsers, useIsMaster, useFeatureAccess } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2 } from "lucide-react";
@@ -19,12 +20,29 @@ import { Badge } from "@/components/ui/badge";
 
 export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
+  const { data: features } = useFeatureAccess();
   const isMaster = useIsMaster();
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  if (features && !features.users_management_enabled) {
+    return (
+      <AdminLayout>
+        <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
+          <ShieldCheck className="h-16 w-16 text-destructive opacity-20" />
+          <h1 className="font-display text-2xl font-bold">Acesso Restrito</h1>
+          <p className="text-muted-foreground">Você não tem permissão para gerenciar usuários.</p>
+          <Button variant="outline" onClick={() => navigate("/admin")}>
+            Voltar ao Dashboard
+          </Button>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   const handleEdit = (user: any) => {
     setEditingUser({ 
@@ -34,6 +52,11 @@ export default function AdminUsers() {
       roulette_enabled: user.features?.roulette_enabled ?? true,
       page_editing_enabled: user.features?.page_editing_enabled ?? true,
       sales_page_models_enabled: user.features?.sales_page_models_enabled ?? true,
+      campaigns_management_enabled: user.features?.campaigns_management_enabled ?? true,
+      orders_management_enabled: user.features?.orders_management_enabled ?? true,
+      users_management_enabled: user.features?.users_management_enabled ?? true,
+      affiliates_management_enabled: user.features?.affiliates_management_enabled ?? true,
+      settings_management_enabled: user.features?.settings_management_enabled ?? false,
     });
     setIsEditDialogOpen(true);
   };
@@ -82,6 +105,11 @@ export default function AdminUsers() {
             roulette_enabled: editingUser.roulette_enabled,
             page_editing_enabled: editingUser.page_editing_enabled,
             sales_page_models_enabled: editingUser.sales_page_models_enabled,
+            campaigns_management_enabled: editingUser.campaigns_management_enabled,
+            orders_management_enabled: editingUser.orders_management_enabled,
+            users_management_enabled: editingUser.users_management_enabled,
+            affiliates_management_enabled: editingUser.affiliates_management_enabled,
+            settings_management_enabled: editingUser.settings_management_enabled,
           }, { onConflict: 'user_id' });
 
         if (featureError) throw featureError;
@@ -236,6 +264,50 @@ export default function AdminUsers() {
                   <div className="space-y-3 pt-2 border-t border-border mt-2">
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Permissões de Recursos</p>
                     
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Campanhas</Label>
+                      <Switch 
+                        checked={editingUser?.campaigns_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, campaigns_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Pedidos</Label>
+                      <Switch 
+                        checked={editingUser?.orders_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, orders_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Usuários do Site</Label>
+                      <Switch 
+                        checked={editingUser?.users_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, users_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Afiliados</Label>
+                      <Switch 
+                        checked={editingUser?.affiliates_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, affiliates_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Config. do Sistema</Label>
+                      <Switch 
+                        checked={editingUser?.settings_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, settings_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="border-t border-border pt-2 my-2 opacity-50">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">Ativar Módulos de Jogos</p>
+                    </div>
+
                     <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
                       <Label className="text-xs font-bold text-foreground">Raspadinhas</Label>
                       <Switch 
