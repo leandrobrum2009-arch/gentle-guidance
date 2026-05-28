@@ -163,7 +163,7 @@ export const useAdminCampaigns = () =>
      queryFn: async () => {
        const { data, error } = await supabase
          .from("affiliates")
-         .select("*, profiles(full_name, email)")
+         .select("*, profiles(name, email)")
          .order("created_at", { ascending: false });
        if (error) throw error;
        return data;
