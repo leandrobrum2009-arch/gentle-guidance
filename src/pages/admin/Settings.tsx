@@ -197,15 +197,15 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-nowrap overflow-x-auto w-full justify-start border border-border/50 no-scrollbar">
-          <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
-          <TabsTrigger value="sales" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Venda</TabsTrigger>
-          <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
-          <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
-          <TabsTrigger value="tracking" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pixels & Analytics</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
-          <TabsTrigger value="finance" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
-          <TabsTrigger value="company" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap md:flex-nowrap md:overflow-x-auto w-full justify-start border border-border/50 no-scrollbar gap-1.5">
+          <TabsTrigger value="visual" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Visual & Logo</TabsTrigger>
+          <TabsTrigger value="sales" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Página de Venda</TabsTrigger>
+          <TabsTrigger value="pwa" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Aplicativo (PWA)</TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">SEO & Favicon</TabsTrigger>
+          <TabsTrigger value="tracking" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pixels & Analytics</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pagamentos</TabsTrigger>
+          <TabsTrigger value="finance" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Financeiro</TabsTrigger>
+          <TabsTrigger value="company" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Empresa</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none">
@@ -430,10 +430,23 @@ export default function AdminSettings() {
                 />
               </div>
               
-              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
                 <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                   <strong>Nota:</strong> Quando habilitado, um banner flutuante aparecerá para os usuários sugerindo a instalação do aplicativo em seus telefones. No Android, o navegador pedirá a instalação direta. No iOS, o banner mostrará instruções de como adicionar à tela de início.
                 </p>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-[10px] font-bold rounded-lg h-8"
+                    onClick={() => {
+                      localStorage.removeItem("pwa-banner-dismissed");
+                      toast.info("O banner de instalação aparecerá na página inicial em alguns segundos.");
+                    }}
+                  >
+                    Resetar Banner (Para Testes)
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -955,27 +968,27 @@ function SettingField({
                 </div>
              </div>
            )}
-           <div className="flex gap-2">
-              <Input 
-                value={s.value} 
-                placeholder="Cole a URL ou suba um arquivo..."
-                onChange={(e) => onUpdate(s.key, e.target.value)} 
-                className="flex-1 bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-medium text-xs" 
-              />
-              <div className="relative">
-                <Input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && onUpload?.(s.key, e.target.files[0])}
-                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                  disabled={uploading}
-                />
-                <Button variant="secondary" className="h-11 rounded-xl px-4 font-bold border-2 hover:bg-secondary transition-colors" disabled={uploading}>
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
-                  {uploading ? "Subindo..." : "Upload"}
-                </Button>
-              </div>
-           </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+               <Input 
+                 value={s.value} 
+                 placeholder="Cole a URL ou suba um arquivo..."
+                 onChange={(e) => onUpdate(s.key, e.target.value)} 
+                 className="flex-1 bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-medium text-xs" 
+               />
+               <div className="relative">
+                 <Input 
+                   type="file" 
+                   accept="image/*"
+                   onChange={(e) => e.target.files?.[0] && onUpload?.(s.key, e.target.files[0])}
+                   className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                   disabled={uploading}
+                 />
+                 <Button variant="secondary" className="h-11 w-full sm:w-auto rounded-xl px-4 font-bold border-2 hover:bg-secondary transition-colors" disabled={uploading}>
+                   {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                   {uploading ? "Subindo..." : "Upload"}
+                 </Button>
+               </div>
+            </div>
         </div>
       );
     }
