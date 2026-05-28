@@ -1,6 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import UserRanking from "@/components/UserRanking";
+import { SEO } from "@/components/SEO";
 import { motion } from "framer-motion";
 import { Trophy, Star, Zap, Crown, Users } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -8,6 +9,10 @@ import { cn } from "@/lib/utils";
 export default function Ranking() {
   return (
     <div className="min-h-screen bg-background text-foreground relative overflow-hidden transition-colors duration-500">
+      <SEO
+        title="Ranking de Participantes"
+        description="Confira o ranking dos maiores compradores de cotas da plataforma e descubra quem está no topo do hall da fama dos sorteios."
+      />
       {/* Abstract Background */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/20 blur-[120px] rounded-full animate-pulse" />

@@ -11,7 +11,10 @@ const Winners = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title="Ganhadores" description="Confira os ganhadores das nossas ações premiadas." />
+      <SEO
+        title="Ganhadores"
+        description="Confira os ganhadores das nossas ações premiadas, com fotos, prêmios entregues e a data de cada sorteio realizado."
+      />
       <Header />
       <div className="h-24 md:h-32" />
       <div className="container py-8">
