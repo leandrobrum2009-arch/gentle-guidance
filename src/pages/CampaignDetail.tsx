@@ -246,11 +246,25 @@ const CampaignDetail = () => {
       const quantity = typeof quantityOrNumbers === 'number' ? quantityOrNumbers : quantityOrNumbers.length;
       const numbers = typeof quantityOrNumbers === 'number' ? null : quantityOrNumbers;
       
+      // Get affiliate ID if present
+      const refCode = localStorage.getItem("referred_by");
+      let affiliateId = null;
+      if (refCode) {
+        const { data: affData } = await supabase
+          .from("affiliates")
+          .select("id")
+          .eq("referral_code", refCode)
+          .eq("is_active", true)
+          .maybeSingle();
+        if (affData) affiliateId = affData.id;
+      }
+
       const { data: orderId, error } = await supabase.rpc('reserve_tickets', {
         p_campaign_id: campaignId,
         p_user_id: user.id,
         p_quantity: quantity,
-        p_numbers: numbers
+        p_numbers: numbers,
+        p_affiliate_id: affiliateId
       });
 
       if (error) throw error;
