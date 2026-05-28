@@ -1,5 +1,5 @@
 import AdminLayout from "@/components/AdminLayout";
-import { useAdminUsers, useIsMaster } from "@/hooks/useAdmin";
+import { useAdminUsers, useIsMaster, useFeatureAccess } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2 } from "lucide-react";
