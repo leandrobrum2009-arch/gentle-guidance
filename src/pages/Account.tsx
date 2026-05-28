@@ -1007,12 +1007,18 @@ import { PaymentModal } from "@/components/PaymentModal";
                    ) : (
                      <div className="relative z-10 space-y-8">
                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                         <div className="space-y-1">
-                           <h2 className="text-2xl font-black uppercase italic tracking-tighter">Seu Painel de <span className="text-primary">Afiliado</span></h2>
-                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                             <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Conta Ativa & Verificada
-                           </p>
-                         </div>
+                           <div className="space-y-1">
+                            <h2 className="text-2xl font-black uppercase italic tracking-tighter">
+                              Seu Painel de <span className="text-primary">{affiliate?.type === 'influencer' ? 'Influenciador' : 'Afiliado'}</span>
+                            </h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                              {affiliate?.type === 'influencer' ? (
+                                <Badge className="bg-purple-500/20 text-purple-500 border-purple-500/30 font-black italic text-[9px]">NÍVEL INFLUENCIADOR</Badge>
+                              ) : (
+                                <><CheckCircle2 className="h-3 w-3 text-emerald-500" /> Conta Ativa & Verificada</>
+                              )}
+                            </p>
+                          </div>
                          <div className="flex items-center gap-2">
                             <Link to="/painel-afiliado">
                               <Button className="rounded-xl font-bold uppercase italic gap-2 bg-primary/20 text-primary border border-primary/20 hover:bg-primary/30 h-12 px-6">
