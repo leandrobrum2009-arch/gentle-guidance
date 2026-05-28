@@ -984,6 +984,80 @@ import { PaymentModal } from "@/components/PaymentModal";
                    </Card>
                 </TabsContent>
 
+               <TabsContent value="affiliate" className="space-y-6">
+                 <Card className="bg-card border-border p-8 backdrop-blur-xl relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-8 opacity-5">
+                      <Users className="h-40 w-40" />
+                   </div>
+                   
+                   {!affiliate ? (
+                     <div className="relative z-10 text-center space-y-6 py-8">
+                       <div className="h-20 w-20 rounded-3xl bg-primary/10 flex items-center justify-center mx-auto text-primary">
+                         <TrendingUp className="h-10 w-10" />
+                       </div>
+                       <div className="space-y-2">
+                         <h2 className="text-2xl font-black uppercase italic tracking-tighter">Programa de Afiliados</h2>
+                         <p className="text-muted-foreground max-w-md mx-auto">Indique amigos e ganhe uma comissão sobre todas as vendas realizadas através do seu link exclusivo!</p>
+                       </div>
+                       <Button onClick={handleActivateAffiliate} className="h-14 px-10 rounded-2xl font-black uppercase italic tracking-widest glow-primary shadow-xl">Ativar minha conta agora</Button>
+                     </div>
+                   ) : (
+                     <div className="relative z-10 space-y-8">
+                       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                         <div className="space-y-1">
+                           <h2 className="text-2xl font-black uppercase italic tracking-tighter">Seu Painel de <span className="text-primary">Afiliado</span></h2>
+                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                             <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Conta Ativa & Verificada
+                           </p>
+                         </div>
+                         <div className="flex items-center gap-2">
+                            <Link to="/painel-afiliado">
+                              <Button className="rounded-xl font-bold uppercase italic gap-2 bg-primary/20 text-primary border border-primary/20 hover:bg-primary/30 h-12 px-6">
+                                <TrendingUp className="h-4 w-4" /> Painel Detalhado
+                              </Button>
+                            </Link>
+                         </div>
+                       </div>
+
+                       <div className="grid gap-4 sm:grid-cols-3">
+                          <div className="p-6 rounded-3xl bg-secondary/30 border border-border">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Ganhos Totais</p>
+                            <p className="text-2xl font-black text-emerald-500">R$ {commissions?.reduce((acc:any, c:any) => acc + (Number(c.amount) || 0), 0).toFixed(2)}</p>
+                          </div>
+                          <div className="p-6 rounded-3xl bg-secondary/30 border border-border">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Indicações</p>
+                            <p className="text-2xl font-black text-foreground">{referrals?.length || 0}</p>
+                          </div>
+                          <div className="p-6 rounded-3xl bg-secondary/30 border border-border">
+                            <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Sua Comissão</p>
+                            <p className="text-2xl font-black text-primary">{Number(affiliate.commission_rate * 100).toFixed(0)}%</p>
+                          </div>
+                       </div>
+
+                       <div className="p-6 rounded-3xl bg-primary/5 border border-primary/20 space-y-4">
+                         <div className="flex items-center justify-between">
+                            <Label className="text-[10px] font-black uppercase tracking-widest text-primary">Seu Link de Indicação</Label>
+                            <span className="text-[9px] font-bold text-muted-foreground uppercase">Compartilhe e Ganhe</span>
+                         </div>
+                         <div className="flex gap-2">
+                            <Input 
+                              readOnly 
+                              value={`${window.location.origin}/?ref=${affiliate.referral_code}`}
+                              className="h-12 bg-card border-border font-mono text-xs font-bold rounded-xl"
+                            />
+                            <Button onClick={copyReferral} size="icon" variant="outline" className="h-12 w-12 rounded-xl border-border shrink-0">
+                               <Copy className="h-4 w-4" />
+                            </Button>
+                            <Button onClick={handleShareReferral} size="icon" variant="outline" className="h-12 w-12 rounded-xl border-border shrink-0">
+                               <Share2 className="h-4 w-4" />
+                            </Button>
+                         </div>
+                       </div>
+                     </div>
+                   )}
+                 </Card>
+               </TabsContent>
+
                 <TabsContent value="ranking" className="space-y-6">
                    <div className="bg-card/50 border border-border rounded-[40px] p-6 md:p-10 backdrop-blur-2xl">
                      <UserRanking />
