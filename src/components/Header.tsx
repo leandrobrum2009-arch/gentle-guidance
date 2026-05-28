@@ -145,7 +145,7 @@ const Header = () => {
     <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
 
       <div className="flex flex-col w-full">
-        <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-24'}`}>
+        <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-20 md:h-24'}`}>
           <div className="container flex items-center justify-between gap-4">
             <div className="flex items-center gap-4 md:gap-8 min-w-0">
               <Link to="/" className="flex items-center gap-2 flex-shrink-0">
