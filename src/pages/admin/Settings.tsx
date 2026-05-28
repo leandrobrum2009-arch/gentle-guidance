@@ -955,27 +955,27 @@ function SettingField({
                 </div>
              </div>
            )}
-           <div className="flex gap-2">
-              <Input 
-                value={s.value} 
-                placeholder="Cole a URL ou suba um arquivo..."
-                onChange={(e) => onUpdate(s.key, e.target.value)} 
-                className="flex-1 bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-medium text-xs" 
-              />
-              <div className="relative">
-                <Input 
-                  type="file" 
-                  accept="image/*"
-                  onChange={(e) => e.target.files?.[0] && onUpload?.(s.key, e.target.files[0])}
-                  className="absolute inset-0 opacity-0 cursor-pointer z-10"
-                  disabled={uploading}
-                />
-                <Button variant="secondary" className="h-11 rounded-xl px-4 font-bold border-2 hover:bg-secondary transition-colors" disabled={uploading}>
-                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
-                  {uploading ? "Subindo..." : "Upload"}
-                </Button>
-              </div>
-           </div>
+            <div className="flex flex-col sm:flex-row gap-2">
+               <Input 
+                 value={s.value} 
+                 placeholder="Cole a URL ou suba um arquivo..."
+                 onChange={(e) => onUpdate(s.key, e.target.value)} 
+                 className="flex-1 bg-secondary/40 border-border/50 h-11 rounded-xl shadow-inner font-medium text-xs" 
+               />
+               <div className="relative">
+                 <Input 
+                   type="file" 
+                   accept="image/*"
+                   onChange={(e) => e.target.files?.[0] && onUpload?.(s.key, e.target.files[0])}
+                   className="absolute inset-0 opacity-0 cursor-pointer z-10"
+                   disabled={uploading}
+                 />
+                 <Button variant="secondary" className="h-11 w-full sm:w-auto rounded-xl px-4 font-bold border-2 hover:bg-secondary transition-colors" disabled={uploading}>
+                   {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4 mr-2" />}
+                   {uploading ? "Subindo..." : "Upload"}
+                 </Button>
+               </div>
+            </div>
         </div>
       );
     }
