@@ -144,119 +144,121 @@ const Header = () => {
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
 
-      <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-24'}`}>
-        <div className="container flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 md:gap-8 min-w-0">
-            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
-                <img 
-                  src={siteSettings.site_logo_url} 
-                  alt={siteSettings?.site_name || "Logo"} 
-                  className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <LogoFallback siteName={siteSettings?.site_name} />
-              )}
-            </Link>
+      <div className="flex flex-col w-full">
+        <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-24'}`}>
+          <div className="container flex items-center justify-between gap-4">
+            <div className="flex items-center gap-4 md:gap-8 min-w-0">
+              <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+                {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
+                  <img 
+                    src={siteSettings.site_logo_url} 
+                    alt={siteSettings?.site_name || "Logo"} 
+                    className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
+                    onError={() => setLogoError(true)}
+                  />
+                ) : (
+                  <LogoFallback siteName={siteSettings?.site_name} />
+                )}
+              </Link>
 
-            <nav className="hidden items-center gap-6 lg:flex h-full">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-foreground' : 'text-foreground/90'}`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
-          </div>
+              <nav className="hidden items-center gap-6 lg:flex h-full">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className={`text-[11px] font-bold uppercase tracking-wider transition-all hover:text-primary ${scrolled ? 'text-foreground' : 'text-foreground/90'}`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
 
-          <div className="flex items-center gap-3">
-            <ThemeToggle />
-            {user ? (
-              <div className="flex items-center gap-3">
-                <motion.div 
-                  whileHover={{ scale: 1.02 }}
-                  className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex border-light-path border-[#22c55e]/40"
-                >
-                  <Wallet className="h-4 w-4 text-primary" />
-                  <span className="text-[10px] font-black italic text-animate-gradient">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
-                </motion.div>
-                
-                <button
-                  onClick={() => navigate("/minha-conta")}
-                  className="relative rounded-full bg-secondary/50 p-2 text-foreground/90 hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
-                >
-                  <Bell className="h-5 w-5" />
-                  {unreadCount > 0 && (
-                    <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
-                  )}
-                </button>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
+              {user ? (
+                <div className="flex items-center gap-3">
+                  <motion.div 
+                    whileHover={{ scale: 1.02 }}
+                    className="hidden items-center gap-2 rounded-full bg-primary/10 border border-primary/20 px-4 py-1.5 md:flex border-light-path border-[#22c55e]/40"
+                  >
+                    <Wallet className="h-4 w-4 text-primary" />
+                    <span className="text-[10px] font-black italic text-animate-gradient">R$ {Number(profile?.balance || 0).toFixed(2)}</span>
+                  </motion.div>
+                  
+                  <button
+                    onClick={() => navigate("/minha-conta")}
+                    className="relative rounded-full bg-secondary/50 p-2 text-foreground/90 hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
+                  >
+                    <Bell className="h-5 w-5" />
+                    {unreadCount > 0 && (
+                      <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-primary ring-4 ring-background animate-pulse" />
+                    )}
+                  </button>
 
-                <div className="flex items-center gap-2">
-                  {isAdmin && (
-                    <Link to="/admin" className="flex items-center">
-                      <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic group">
-                        <Settings className="h-4 w-4 text-primary group-hover:rotate-90 transition-transform duration-500" />
-                        <span className="hidden sm:inline">Painel Admin</span>
+                  <div className="flex items-center gap-2">
+                    {isAdmin && (
+                      <Link to="/admin" className="flex items-center">
+                        <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic group">
+                          <Settings className="h-4 w-4 text-primary group-hover:rotate-90 transition-transform duration-500" />
+                          <span className="hidden sm:inline">Painel Admin</span>
+                        </Button>
+                      </Link>
+                    )}
+                    <Link to="/minha-conta">
+                      <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-border bg-card hover:bg-secondary font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
+                        <User className="h-4 w-4 text-primary" />
+                        <span className="hidden lg:inline">{profile?.name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || "Perfil"}</span>
                       </Button>
                     </Link>
-                  )}
-                  <Link to="/minha-conta">
-                    <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-border bg-card hover:bg-secondary font-black uppercase tracking-widest text-[10px] px-4 italic text-foreground shadow-sm">
-                      <User className="h-4 w-4 text-primary" />
-                      <span className="hidden lg:inline">{profile?.name?.split(' ')[0] || user.user_metadata?.name?.split(' ')[0] || user?.email?.split('@')[0] || "Perfil"}</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="hidden sm:flex items-center gap-2">
+                  <Link to="/entrar">
+                    <Button size="sm" variant="ghost" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6">
+                      Entrar
+                    </Button>
+                  </Link>
+                  <Link to="/cadastrar">
+                    <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30">
+                      Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                     </Button>
                   </Link>
                 </div>
-              </div>
-            ) : (
-              <div className="hidden sm:flex items-center gap-2">
-                <Link to="/entrar">
-                  <Button size="sm" variant="ghost" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6">
-                    Entrar
-                  </Button>
-                </Link>
-                <Link to="/cadastrar">
-                  <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30">
-                    Participar <Zap className="ml-1 h-3 w-3 fill-current" />
-                  </Button>
-                </Link>
-              </div>
-            )}
+              )}
 
-            <button
-              onClick={() => setMobileOpen(!mobileOpen)}
-              className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
-            >
-              {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </button>
+              <button
+                onClick={() => setMobileOpen(!mobileOpen)}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
+              >
+                {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+              </button>
+            </div>
           </div>
-      </div>
-
-      {/* Configurable Marquee Strip below the logo/nav */}
-      {siteSettings?.home_marquee_enabled === 'true' && !scrolled && (
-        <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-b border-primary/30 py-2 pointer-events-none">
-          <motion.div 
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="flex whitespace-nowrap gap-12 items-center will-change-transform"
-          >
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
-                {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
-                  <React.Fragment key={idx}>
-                    <span>{text}</span>
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
-                  </React.Fragment>
-                ))}
-              </div>
-            ))}
-          </motion.div>
         </div>
-      )}
+
+        {/* Configurable Marquee Strip below the logo/nav */}
+        {siteSettings?.home_marquee_enabled === 'true' && !scrolled && (
+          <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-b border-primary/30 py-2 pointer-events-none">
+            <motion.div 
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+              className="flex whitespace-nowrap gap-12 items-center will-change-transform"
+            >
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
+                  {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
+                    <React.Fragment key={idx}>
+                      <span>{text}</span>
+                      <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                    </React.Fragment>
+                  ))}
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        )}
       </div>
 
       <AnimatePresence>
