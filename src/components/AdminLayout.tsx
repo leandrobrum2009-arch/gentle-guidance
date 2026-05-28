@@ -97,13 +97,19 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       if (item.title === "Roletas" && features && !features.roulette_enabled) return false;
       if (item.title === "Raspadinhas" && features && !features.scratch_cards_enabled) return false;
       if (item.title === "Banners" && features && !features.page_editing_enabled) return false;
-      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false; // Prized quotas
+      if (item.title === "Federal" && features && !features.lucky_numbers_enabled) return false;
       if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
       
-      // Role-based restrictions
-      if (item.title === "Configurações do Sistema" && userRole !== 'master' && userRole !== 'admin') return false; 
-      if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'admin') return false;
+      // New granular permissions
+      if (item.title === "Campanhas" && features && !features.campaigns_management_enabled) return false;
+      if (item.title === "Pedidos" && features && !features.orders_management_enabled) return false;
+      if (item.title === "Usuários" && features && !features.users_management_enabled) return false;
+      if (item.title === "Afiliados" && features && !features.affiliates_management_enabled) return false;
+      if (item.title === "Configurações do Sistema" && features && !features.settings_management_enabled) return false;
+
+      // Hard role-based fallback restrictions (security)
       if (item.title === "Diagnóstico" && userRole !== 'master') return false;
+      if (item.title === "Logs de Segurança" && userRole !== 'master') return false;
       
       return true;
     })
