@@ -430,10 +430,23 @@ export default function AdminSettings() {
                 />
               </div>
               
-              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10">
+              <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 space-y-4">
                 <p className="text-xs text-muted-foreground leading-relaxed font-medium">
                   <strong>Nota:</strong> Quando habilitado, um banner flutuante aparecerá para os usuários sugerindo a instalação do aplicativo em seus telefones. No Android, o navegador pedirá a instalação direta. No iOS, o banner mostrará instruções de como adicionar à tela de início.
                 </p>
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="text-[10px] font-bold rounded-lg h-8"
+                    onClick={() => {
+                      localStorage.removeItem("pwa-banner-dismissed");
+                      toast.info("O banner de instalação aparecerá na página inicial em alguns segundos.");
+                    }}
+                  >
+                    Resetar Banner (Para Testes)
+                  </Button>
+                </div>
               </div>
             </CardContent>
           </Card>
