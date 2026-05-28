@@ -265,14 +265,14 @@ export default function AffiliateDashboard() {
             </Card>
 
             <Card className="border-border bg-card/50 backdrop-blur-sm">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-black uppercase italic tracking-widest flex items-center gap-2">
                   <Megaphone className="h-4 w-4 text-primary" />
                   Ganhos por Campanha
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
+                <div className="space-y-4 pt-4">
                   {/* Group commissions by campaign */}
                   {Array.from(new Set(data.commissions.map(c => c.campaign_id))).map(campId => {
                     const campaignComm = data.commissions.filter(c => c.campaign_id === campId);
@@ -296,6 +296,38 @@ export default function AffiliateDashboard() {
               </CardContent>
             </Card>
           </div>
+
+          <Card className="border-border bg-card/50 backdrop-blur-sm">
+            <CardHeader>
+              <CardTitle className="text-sm font-black uppercase italic tracking-widest flex items-center gap-2">
+                <ShoppingBag className="h-4 w-4 text-primary" />
+                Vendas Recentes
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {data.commissions.length > 0 ? data.commissions.slice(0, 5).map((comm: any) => (
+                  <div key={comm.id} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/20 border border-border/50">
+                    <div className="flex items-center gap-4">
+                      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                        <CheckCircle2 className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-xs font-bold text-foreground">Venda #{comm.id.slice(0, 8).toUpperCase()}</p>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase">{comm.campaigns?.title || 'Campanha'}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-black text-emerald-500">+ R$ {Number(comm.amount).toFixed(2)}</p>
+                      <p className="text-[9px] text-muted-foreground uppercase font-bold">{format(new Date(comm.created_at), 'dd/MM/yyyy HH:mm')}</p>
+                    </div>
+                  </div>
+                )) : (
+                  <div className="text-center py-10 opacity-30 italic text-sm">Nenhuma venda para exibir.</div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </main>
       <Footer />
