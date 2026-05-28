@@ -131,6 +131,7 @@ const AppContent = () => {
           <Route path="/raspadinha" element={<Navigate to="/raspadinha-da-sorte" replace />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/afiliados" element={<Affiliates />} />
+          <Route path="/painel-afiliado" element={<ProtectedRoute><AffiliateDashboard /></ProtectedRoute>} />
           <Route path="/termos-de-uso" element={<Terms />} />
           <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           
