@@ -155,9 +155,9 @@ export default function AdminUsers() {
                       </div>
                     </TableCell>
                      <TableCell>
-                       {u.role === 'master' && <Badge className="bg-purple-500 text-[10px] font-black italic">MASTER</Badge>}
-                       {u.role === 'client_admin' && <Badge className="bg-blue-500 text-[10px] font-black italic">CLIENT ADMIN</Badge>}
-                       {u.role === 'admin' && <Badge className="bg-orange-500 text-[10px] font-black italic">ADMIN</Badge>}
+                       {u.role === 'master' && <Badge className="bg-purple-500 text-[10px] font-black italic">MASTER (DONO)</Badge>}
+                       {u.role === 'admin' && <Badge className="bg-blue-500 text-[10px] font-black italic">ADMIN TOTAL</Badge>}
+                       {u.role === 'client_admin' && <Badge className="bg-orange-500 text-[10px] font-black italic">ADMIN RESTRITO</Badge>}
                        {(!u.role || u.role === 'user') && <Badge variant="outline" className="text-[10px] font-bold">USER</Badge>}
                      </TableCell>
                      <TableCell className="text-foreground font-medium">{u.phone || "-"}</TableCell>
@@ -225,7 +225,7 @@ export default function AdminUsers() {
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
                       <SelectItem value="user">Usuário Comum</SelectItem>
-                      <SelectItem value="client_admin">Client Admin (Restrito)</SelectItem>
+                      <SelectItem value="client_admin">Admin Restrito</SelectItem>
                       <SelectItem value="admin">Administrador Total</SelectItem>
                       <SelectItem value="master">Master (Dono)</SelectItem>
                     </SelectContent>

@@ -101,8 +101,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
       
       // Role-based restrictions
-      if (item.title === "Configurações do Sistema" && userRole !== 'master' && userRole !== 'client_admin') return false; 
-      if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'client_admin') return false;
+      if (item.title === "Configurações do Sistema" && userRole !== 'master' && userRole !== 'admin') return false; 
+      if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'admin') return false;
       if (item.title === "Diagnóstico" && userRole !== 'master') return false;
       
       return true;
@@ -130,7 +130,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </span>
               {userRole && (
                 <span className="text-[10px] font-black uppercase tracking-widest text-primary/80 italic mt-0.5">
-                  {userRole === 'master' ? 'Master Access' : userRole === 'client_admin' ? 'Client Admin' : 'Admin'}
+                  {userRole === 'master' ? 'Master (Dono)' : userRole === 'admin' ? 'Admin Total' : 'Admin Restrito'}
                 </span>
               )}
             </div>
