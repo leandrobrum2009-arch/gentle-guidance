@@ -84,7 +84,7 @@ import { PaymentModal } from "@/components/PaymentModal";
    useEffect(() => {
      const handleHashChange = () => {
        const hash = window.location.hash.replace('#', '');
-       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games"];
+       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate"];
        if (validTabs.includes(hash)) {
          setActiveTab(hash);
        }
