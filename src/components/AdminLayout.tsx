@@ -36,7 +36,7 @@ import { useSiteSettings } from "@/hooks/useData";
    ]},
     { category: "Configurações", items: [
       { title: "Banners", url: "/admin/banners", icon: ImageIcon },
-      { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+      { title: "Configurações do Sistema", url: "/admin/configuracoes", icon: Settings },
       { title: "Logs de Segurança", url: "/admin/audit-logs", icon: ShieldAlert },
       { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
     ]},
