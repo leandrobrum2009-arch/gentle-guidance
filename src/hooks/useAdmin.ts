@@ -15,7 +15,9 @@ export const useRole = () => {
         .eq("user_id", user.id);
       
       if (error) throw error;
-      const role = data?.[0]?.role?.toLowerCase() || 'user';
+      const roles = data?.map(r => r.role?.toLowerCase()) || [];
+      const rolePriority = ['master', 'client_admin', 'admin'];
+      const role = rolePriority.find(p => roles.includes(p)) || 'user';
       return role as string;
     },
     enabled: !!user,
@@ -135,7 +137,7 @@ export const useAdminCampaigns = () =>
        
        let results = profiles.map(profile => ({
          ...profile,
-         role: userRoles?.find(r => r.user_id === profile.user_id)?.role || "user",
+         role: (['master','client_admin','admin'].find(p=>(userRoles?.filter(r=>r.user_id===profile.user_id).map(r=>r.role)||[]).includes(p))||'user'),
          features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
        }));
 
