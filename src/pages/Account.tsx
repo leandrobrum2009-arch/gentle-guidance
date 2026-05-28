@@ -292,8 +292,16 @@ import { PaymentModal } from "@/components/PaymentModal";
                       <input type="file" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
                     </label>
                   </div>
-                  <h2 className="text-lg font-bold">{profile?.name || user.user_metadata?.name || user?.email?.split('@')[0] || "Usuário"}</h2>
+                  <h2 className="text-lg font-bold flex items-center justify-center gap-2">
+                    {profile?.name || user.user_metadata?.name || user?.email?.split('@')[0] || "Usuário"}
+                    {affiliate?.type === 'influencer' && (
+                      <Crown className="h-4 w-4 text-primary fill-primary animate-pulse" />
+                    )}
+                  </h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
+                  {affiliate?.type === 'influencer' && (
+                    <Badge className="mb-4 bg-primary/20 text-primary border-primary/30 font-black italic text-[9px]">INFLUENCIADOR</Badge>
+                  )}
                   <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
                     <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
                       <span>Nível {profile?.vip_level || 1} VIP</span>
@@ -486,6 +494,27 @@ import { PaymentModal } from "@/components/PaymentModal";
                     </div>
                   </Card>
                 </div>
+
+                {affiliate && (
+                  <Card className="bg-primary/5 border-primary/20 p-6 backdrop-blur-xl group hover:border-primary/40 transition-all">
+                    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
+                          <Share2 className="h-4 w-4 text-primary" /> Seu Link de {affiliate.type === 'influencer' ? 'Influenciador' : 'Afiliado'}
+                        </h4>
+                        <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Compartilhe e ganhe comissões em tempo real</p>
+                      </div>
+                      <div className="flex items-center gap-2 bg-black/20 p-1 rounded-xl border border-white/5 w-full md:w-auto">
+                        <code className="px-3 text-[10px] font-mono font-bold text-primary truncate max-w-[200px]">
+                          {window.location.origin}/?ref={affiliate.referral_code}
+                        </code>
+                        <Button size="icon" variant="ghost" className="h-8 w-8 rounded-lg hover:bg-primary/20" onClick={copyReferral}>
+                          <Copy className="h-3 w-3" />
+                        </Button>
+                      </div>
+                    </div>
+                  </Card>
+                )}
 
                 <Card className="bg-card border-border p-6 backdrop-blur-xl">
                   <CardHeader className="p-0 mb-6 flex flex-row items-center justify-between">
@@ -1007,12 +1036,18 @@ import { PaymentModal } from "@/components/PaymentModal";
                    ) : (
                      <div className="relative z-10 space-y-8">
                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-                         <div className="space-y-1">
-                           <h2 className="text-2xl font-black uppercase italic tracking-tighter">Seu Painel de <span className="text-primary">Afiliado</span></h2>
-                           <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                             <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Conta Ativa & Verificada
-                           </p>
-                         </div>
+                           <div className="space-y-1">
+                            <h2 className="text-2xl font-black uppercase italic tracking-tighter">
+                              Seu Painel de <span className="text-primary">{affiliate?.type === 'influencer' ? 'Influenciador' : 'Afiliado'}</span>
+                            </h2>
+                            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                              {affiliate?.type === 'influencer' ? (
+                                <Badge className="bg-purple-500/20 text-purple-500 border-purple-500/30 font-black italic text-[9px]">NÍVEL INFLUENCIADOR</Badge>
+                              ) : (
+                                <><CheckCircle2 className="h-3 w-3 text-emerald-500" /> Conta Ativa & Verificada</>
+                              )}
+                            </p>
+                          </div>
                          <div className="flex items-center gap-2">
                             <Link to="/painel-afiliado">
                               <Button className="rounded-xl font-bold uppercase italic gap-2 bg-primary/20 text-primary border border-primary/20 hover:bg-primary/30 h-12 px-6">
