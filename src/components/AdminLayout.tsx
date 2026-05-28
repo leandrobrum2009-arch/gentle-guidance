@@ -36,7 +36,7 @@ import { useSiteSettings } from "@/hooks/useData";
    ]},
     { category: "Configurações", items: [
       { title: "Banners", url: "/admin/banners", icon: ImageIcon },
-      { title: "Sistema", url: "/admin/configuracoes", icon: Settings },
+      { title: "Configurações do Sistema", url: "/admin/configuracoes", icon: Settings },
       { title: "Logs de Segurança", url: "/admin/audit-logs", icon: ShieldAlert },
       { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
     ]},
@@ -101,7 +101,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       if (item.title === "Caixas Misteriosas" && features && !features.sales_page_models_enabled) return false;
       
       // Role-based restrictions
-      if (item.title === "Sistema" && userRole !== 'master' && userRole !== 'client_admin') return false; 
+      if (item.title === "Configurações do Sistema" && userRole !== 'master' && userRole !== 'client_admin') return false; 
       if (item.title === "Usuários" && userRole !== 'master' && userRole !== 'client_admin') return false;
       if (item.title === "Diagnóstico" && userRole !== 'master') return false;
       
