@@ -15,7 +15,8 @@ export const useRole = () => {
         .eq("user_id", user.id);
       
       if (error) throw error;
-      return data?.[0]?.role as string | null;
+      const role = data?.[0]?.role?.toLowerCase() || 'user';
+      return role as string;
     },
     enabled: !!user,
   });
