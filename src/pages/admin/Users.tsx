@@ -34,6 +34,11 @@ export default function AdminUsers() {
       roulette_enabled: user.features?.roulette_enabled ?? true,
       page_editing_enabled: user.features?.page_editing_enabled ?? true,
       sales_page_models_enabled: user.features?.sales_page_models_enabled ?? true,
+      campaigns_management_enabled: user.features?.campaigns_management_enabled ?? true,
+      orders_management_enabled: user.features?.orders_management_enabled ?? true,
+      users_management_enabled: user.features?.users_management_enabled ?? true,
+      affiliates_management_enabled: user.features?.affiliates_management_enabled ?? true,
+      settings_management_enabled: user.features?.settings_management_enabled ?? false,
     });
     setIsEditDialogOpen(true);
   };
