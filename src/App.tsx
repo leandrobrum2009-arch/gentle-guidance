@@ -10,6 +10,7 @@ import MysteryBox from "./pages/MysteryBox";
 import Ranking from "./pages/Ranking";
 import Affiliates from "./pages/Affiliates";
 import FederalResults from "./pages/FederalResults";
+import AffiliateDashboard from "./pages/AffiliateDashboard";
 import AdminFederal from "./pages/admin/Federal";
 import AdminUsers from "./pages/admin/Users";
 import AdminAffiliates from "./pages/admin/Affiliates";
