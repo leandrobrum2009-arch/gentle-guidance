@@ -4,7 +4,7 @@ import {
    User, LogOut, Trophy, History, Coins, Activity, Camera,
    Wallet, Bell, TrendingUp, CreditCard, Star, Gift,
    Zap, Ticket, ArrowUpRight, ArrowDownLeft, ChevronRight, RotateCw, Crown,
-    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2, Crown
+    Package, ShoppingBag, Users, CheckCircle2, Lock, ChevronLeft, Copy, Share2
 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Loader2 } from "lucide-react";
