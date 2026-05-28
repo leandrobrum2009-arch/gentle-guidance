@@ -139,10 +139,17 @@ export const useAdminCampaigns = () =>
          features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
        }));
 
-       // Hide 'master' users if the current user is not a 'master'
-       if (role !== "master") {
-         results = results.filter(u => u.role !== "master");
-       }
+        // Filter users based on role
+        if (role === 'client_admin') {
+          // Client admin only sees regular users
+          results = results.filter(u => !u.role || u.role === 'user');
+        } else if (role === 'admin') {
+          // Admin sees everything except masters
+          results = results.filter(u => u.role !== "master");
+        } else if (role !== "master") {
+          // Any other role (if somehow here) also shouldn't see masters
+          results = results.filter(u => u.role !== "master");
+        }
        
        return results;
      },
