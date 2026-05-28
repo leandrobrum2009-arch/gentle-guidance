@@ -197,15 +197,15 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-nowrap overflow-x-auto w-full justify-start border border-border/50 no-scrollbar">
-          <TabsTrigger value="visual" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Visual & Logo</TabsTrigger>
-          <TabsTrigger value="sales" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Página de Venda</TabsTrigger>
-          <TabsTrigger value="pwa" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Aplicativo (PWA)</TabsTrigger>
-          <TabsTrigger value="seo" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">SEO & Favicon</TabsTrigger>
-          <TabsTrigger value="tracking" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pixels & Analytics</TabsTrigger>
-          <TabsTrigger value="payment" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Pagamentos</TabsTrigger>
-          <TabsTrigger value="finance" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Financeiro</TabsTrigger>
-          <TabsTrigger value="company" className="rounded-xl px-6 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-sm">Empresa</TabsTrigger>
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex-wrap md:flex-nowrap md:overflow-x-auto w-full justify-start border border-border/50 no-scrollbar gap-1.5">
+          <TabsTrigger value="visual" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Visual & Logo</TabsTrigger>
+          <TabsTrigger value="sales" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Página de Venda</TabsTrigger>
+          <TabsTrigger value="pwa" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Aplicativo (PWA)</TabsTrigger>
+          <TabsTrigger value="seo" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">SEO & Favicon</TabsTrigger>
+          <TabsTrigger value="tracking" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pixels & Analytics</TabsTrigger>
+          <TabsTrigger value="payment" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pagamentos</TabsTrigger>
+          <TabsTrigger value="finance" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Financeiro</TabsTrigger>
+          <TabsTrigger value="company" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Empresa</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none">
