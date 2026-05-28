@@ -26,6 +26,22 @@ export default function AdminUsers() {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  if (features && !features.users_management_enabled) {
+    return (
+      <AdminLayout>
+        <div className="flex h-[60vh] flex-col items-center justify-center gap-4">
+          <ShieldCheck className="h-16 w-16 text-destructive opacity-20" />
+          <h1 className="font-display text-2xl font-bold">Acesso Restrito</h1>
+          <p className="text-muted-foreground">Você não tem permissão para gerenciar usuários.</p>
+          <Button variant="outline" onClick={() => navigate("/admin")}>
+            Voltar ao Dashboard
+          </Button>
+        </div>
+      </AdminLayout>
+    );
+  }
 
   const handleEdit = (user: any) => {
     setEditingUser({ 
