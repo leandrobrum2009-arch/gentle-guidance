@@ -152,7 +152,7 @@ const Header = () => {
                 {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
                   <img 
                     src={siteSettings.site_logo_url} 
-                    alt={siteSettings?.site_name || "Logo"} 
+                    alt={`${siteSettings?.site_name || "Plataforma de Rifas"} - logotipo da página inicial`} 
                     className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
                     onError={() => setLogoError(true)}
                   />
@@ -188,6 +188,7 @@ const Header = () => {
                   
                   <button
                     onClick={() => navigate("/minha-conta")}
+                    aria-label={unreadCount > 0 ? `Abrir notificações (${unreadCount} não lidas)` : "Abrir notificações"}
                     className="relative rounded-full bg-secondary/50 p-2 text-foreground/90 hover:bg-secondary hover:text-primary transition-all border border-border shadow-sm"
                   >
                     <Bell className="h-5 w-5" />
@@ -230,6 +231,8 @@ const Header = () => {
 
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
+                aria-label={mobileOpen ? "Fechar menu de navegação" : "Abrir menu de navegação"}
+                aria-expanded={mobileOpen}
                 className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary/50 text-foreground lg:hidden border border-border shadow-sm"
               >
                 {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}

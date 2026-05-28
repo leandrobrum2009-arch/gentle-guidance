@@ -61,12 +61,12 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                     {campaign.draw_date && (
                       <CountdownTimer targetDate={campaign.draw_date} className="scale-110 origin-left" />
                     )}
-                    <h1 className="text-xl sm:text-2xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
+                    <h2 className="text-xl sm:text-2xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
                       <span className="block mb-2">{campaign.title.split(' ')[0]}</span>
                       <span className="text-animate-gradient inline-block md:pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
-                    </h1>
+                    </h2>
                     <p className="text-sm md:text-lg text-foreground/80 font-bold max-w-xl leading-relaxed">
                       {campaign.subtitle || campaign.description?.slice(0, 120)}
                     </p>
@@ -88,6 +88,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
       
       <Button 
         variant="ghost" size="icon" 
+        aria-label="Slide anterior"
         className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-white/5 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={scrollPrev}
       >
@@ -95,6 +96,7 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
       </Button>
       <Button 
         variant="ghost" size="icon" 
+        aria-label="Próximo slide"
         className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-white/5 backdrop-blur-md border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity"
         onClick={scrollNext}
       >

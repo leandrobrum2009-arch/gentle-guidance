@@ -68,12 +68,12 @@ const CampaignSlide = ({ campaign }: { campaign: Campaign }) => {
               </Badge>
             </div>
             
-            <h1 className="text-xl sm:text-2xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground md:pr-8 py-2">
+            <h2 className="text-xl sm:text-2xl md:text-6xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground md:pr-8 py-2">
               <span className="block mb-1">{campaign.title.split(' ')[0]}</span>
               <span className="text-primary neon-text-primary inline-block md:pr-8 pb-1">
                 {campaign.title.split(' ').slice(1).join(' ')}
               </span>
-            </h1>
+            </h2>
             
             <p className="text-base text-muted-foreground font-bold max-w-lg leading-relaxed">
               {campaign.subtitle || 'Uma oportunidade única de conquistar o seu objetivo com um investimento mínimo.'}
