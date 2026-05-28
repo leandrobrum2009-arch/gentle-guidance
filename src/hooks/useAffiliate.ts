@@ -44,12 +44,20 @@ export const useAffiliateData = () => {
         .eq("affiliate_id", affiliate.id)
         .gte("created_at", sevenDaysAgo.toISOString());
 
+      // Get active campaigns for link generation
+      const { data: campaigns } = await supabase
+        .from("campaigns")
+        .select("id, title, slug")
+        .eq("status", "active")
+        .order("created_at", { ascending: false });
+
       return {
         isAffiliate: true,
         affiliate,
         commissions: commissions || [],
         totalClicks: totalClicks || 0,
-        clicksHistory: clicksHistory || []
+        clicksHistory: clicksHistory || [],
+        campaigns: campaigns || []
       };
     },
     enabled: !!user,
