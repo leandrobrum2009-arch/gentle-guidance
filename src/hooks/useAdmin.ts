@@ -70,7 +70,12 @@ export const useFeatureAccess = () => {
           lucky_numbers_enabled: true,
           roulette_enabled: true,
           page_editing_enabled: true,
-          sales_page_models_enabled: true
+          sales_page_models_enabled: true,
+          campaigns_management_enabled: true,
+          orders_management_enabled: true,
+          users_management_enabled: true,
+          affiliates_management_enabled: true,
+          settings_management_enabled: true
         };
       }
 
@@ -82,13 +87,18 @@ export const useFeatureAccess = () => {
       
       if (error && error.code !== "PGRST116") throw error;
       
-      // Default to true if no config found (or maybe false if we want strict)
+      // Default values
       return data || {
         scratch_cards_enabled: true,
         lucky_numbers_enabled: true,
         roulette_enabled: true,
         page_editing_enabled: true,
-        sales_page_models_enabled: true
+        sales_page_models_enabled: true,
+        campaigns_management_enabled: true,
+        orders_management_enabled: true,
+        users_management_enabled: true,
+        affiliates_management_enabled: true,
+        settings_management_enabled: false
       };
     },
     enabled: !!user && !!role,
