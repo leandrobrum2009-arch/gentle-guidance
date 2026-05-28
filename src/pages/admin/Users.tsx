@@ -247,6 +247,50 @@ export default function AdminUsers() {
                     <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Permissões de Recursos</p>
                     
                     <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Campanhas</Label>
+                      <Switch 
+                        checked={editingUser?.campaigns_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, campaigns_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Pedidos</Label>
+                      <Switch 
+                        checked={editingUser?.orders_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, orders_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Usuários do Site</Label>
+                      <Switch 
+                        checked={editingUser?.users_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, users_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Afiliados</Label>
+                      <Switch 
+                        checked={editingUser?.affiliates_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, affiliates_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
+                      <Label className="text-xs font-bold text-foreground">Config. do Sistema</Label>
+                      <Switch 
+                        checked={editingUser?.settings_management_enabled} 
+                        onCheckedChange={(val) => setEditingUser({ ...editingUser, settings_management_enabled: val })}
+                      />
+                    </div>
+
+                    <div className="border-t border-border pt-2 my-2 opacity-50">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-2">Ativar Módulos de Jogos</p>
+                    </div>
+
+                    <div className="flex items-center justify-between p-2 rounded-lg bg-background/50">
                       <Label className="text-xs font-bold text-foreground">Raspadinhas</Label>
                       <Switch 
                         checked={editingUser?.scratch_cards_enabled} 
