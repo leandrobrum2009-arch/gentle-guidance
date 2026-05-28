@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import PWAInstallBanner from "./components/PWAInstallBanner";
+import { AffiliateTracker } from "./components/AffiliateTracker";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
 import ScratchCard from "./pages/ScratchCard";
@@ -9,6 +10,7 @@ import MysteryBox from "./pages/MysteryBox";
 import Ranking from "./pages/Ranking";
 import Affiliates from "./pages/Affiliates";
 import FederalResults from "./pages/FederalResults";
+import AffiliateDashboard from "./pages/AffiliateDashboard";
 import AdminFederal from "./pages/admin/Federal";
 import AdminUsers from "./pages/admin/Users";
 import AdminAffiliates from "./pages/admin/Affiliates";
@@ -104,6 +106,7 @@ const AppContent = () => {
     <BrowserRouter>
       <AuthProvider>
         <RouteExtras />
+        <AffiliateTracker />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={showSalesPage ? <SalesPage /> : <Index />} />
@@ -128,6 +131,7 @@ const AppContent = () => {
           <Route path="/raspadinha" element={<Navigate to="/raspadinha-da-sorte" replace />} />
           <Route path="/ranking" element={<Ranking />} />
           <Route path="/afiliados" element={<Affiliates />} />
+          <Route path="/painel-afiliado" element={<ProtectedRoute><AffiliateDashboard /></ProtectedRoute>} />
           <Route path="/termos-de-uso" element={<Terms />} />
           <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           

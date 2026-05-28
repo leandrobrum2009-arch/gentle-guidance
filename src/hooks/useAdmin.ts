@@ -168,7 +168,46 @@ export const useAdminCampaigns = () =>
        if (error) throw error;
        return data;
      },
+    });
+ 
+ export const useUpdateAffiliate = () => {
+   const queryClient = useQueryClient();
+   return useMutation({
+     mutationFn: async ({ id, ...data }: { id: string; commission_rate?: number; type?: string; is_active?: boolean }) => {
+       const { error } = await supabase
+         .from("affiliates")
+         .update(data)
+         .eq("id", id);
+       if (error) throw error;
+     },
+     onSuccess: () => {
+       queryClient.invalidateQueries({ queryKey: ["admin-affiliates"] });
+       toast.success("Afiliado atualizado com sucesso!");
+     },
+     onError: (error: any) => {
+       toast.error("Erro ao atualizar afiliado: " + error.message);
+     },
    });
+ };
+
+ export const useCreateAffiliate = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (data: { user_id: string; commission_rate: number; type: string; referral_code: string }) => {
+      const { error } = await supabase
+        .from("affiliates")
+        .insert(data);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-affiliates"] });
+      toast.success("Afiliado criado com sucesso!");
+    },
+    onError: (error: any) => {
+      toast.error("Erro ao criar afiliado: " + error.message);
+    },
+  });
+};
  
  export const useAdminRoulette = () =>
    useQuery({
