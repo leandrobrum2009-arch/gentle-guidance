@@ -151,8 +151,8 @@ export default function AffiliateDashboard() {
                   <AreaChart data={last7Days}>
                     <defs>
                       <linearGradient id="colorClicks" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="var(--primary)" stopOpacity={0}/>
+                        <stop offset="5%" stopColor="rgb(var(--primary-rgb))" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="rgb(var(--primary-rgb))" stopOpacity={0}/>
                       </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
