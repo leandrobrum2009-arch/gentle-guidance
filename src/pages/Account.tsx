@@ -292,8 +292,16 @@ import { PaymentModal } from "@/components/PaymentModal";
                       <input type="file" className="hidden" accept="image/*" onChange={handleAvatarUpload} />
                     </label>
                   </div>
-                  <h2 className="text-lg font-bold">{profile?.name || user.user_metadata?.name || user?.email?.split('@')[0] || "Usuário"}</h2>
+                  <h2 className="text-lg font-bold flex items-center justify-center gap-2">
+                    {profile?.name || user.user_metadata?.name || user?.email?.split('@')[0] || "Usuário"}
+                    {affiliate?.type === 'influencer' && (
+                      <Crown className="h-4 w-4 text-primary fill-primary animate-pulse" />
+                    )}
+                  </h2>
                   <p className="text-xs text-muted-foreground mb-4">{user?.email}</p>
+                  {affiliate?.type === 'influencer' && (
+                    <Badge className="mb-4 bg-primary/20 text-primary border-primary/30 font-black italic text-[9px]">INFLUENCIADOR</Badge>
+                  )}
                   <div className="w-full bg-secondary/50 p-4 rounded-xl border border-border">
                     <div className="flex justify-between text-[10px] font-bold text-muted-foreground mb-2">
                       <span>Nível {profile?.vip_level || 1} VIP</span>
