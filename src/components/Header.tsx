@@ -143,27 +143,6 @@ const Header = () => {
 
   return (
     <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
-      {/* Configurable Marquee Strip at the very top */}
-      {siteSettings?.home_marquee_enabled === 'true' && !scrolled && (
-        <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-b border-primary/30 py-2 pointer-events-none">
-          <motion.div 
-            animate={{ x: ["0%", "-50%"] }}
-            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-            className="flex whitespace-nowrap gap-12 items-center will-change-transform"
-          >
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
-                {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
-                  <React.Fragment key={idx}>
-                    <span>{text}</span>
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
-                  </React.Fragment>
-                ))}
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      )}
 
       <div className={`transition-all duration-500 ${scrolled ? 'py-2' : 'py-6'}`}>
         <div className="container flex items-center justify-between gap-4 h-full">
@@ -255,7 +234,29 @@ const Header = () => {
               {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
+      </div>
+
+      {/* Configurable Marquee Strip below the logo/nav */}
+      {siteSettings?.home_marquee_enabled === 'true' && !scrolled && (
+        <div className="relative z-40 w-full overflow-hidden bg-primary/20 backdrop-blur-md border-b border-primary/30 py-2 pointer-events-none">
+          <motion.div 
+            animate={{ x: ["0%", "-50%"] }}
+            transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+            className="flex whitespace-nowrap gap-12 items-center will-change-transform"
+          >
+            {[...Array(6)].map((_, i) => (
+              <div key={i} className="flex items-center gap-12 text-[10px] font-black uppercase tracking-[0.3em] text-primary italic">
+                {siteSettings.home_marquee_text?.split(' • ').map((text: string, idx: number) => (
+                  <React.Fragment key={idx}>
+                    <span>{text}</span>
+                    <div className="h-1.5 w-1.5 rounded-full bg-primary shadow-[0_0_8px_rgba(var(--primary-rgb),0.6)]" />
+                  </React.Fragment>
+                ))}
+              </div>
+            ))}
+          </motion.div>
         </div>
+      )}
       </div>
 
       <AnimatePresence>
