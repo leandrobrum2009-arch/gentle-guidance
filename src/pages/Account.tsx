@@ -286,6 +286,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
                 { label: "Conquistas", id: "achievements", icon: Star },
+                { label: "Programa de Afiliados", id: "affiliate", icon: Users },
                 { label: "Giros & Caixas", id: "games", icon: ShoppingBag },
               ].map((item) => (
                 <Button 
