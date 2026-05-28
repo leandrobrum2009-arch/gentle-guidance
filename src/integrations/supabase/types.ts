@@ -1726,15 +1726,26 @@ export type Database = {
       release_expired_tickets: { Args: never; Returns: undefined }
       repair_order: { Args: { p_order_id: string }; Returns: Json }
       reprocess_order_prizes: { Args: { p_order_id: string }; Returns: Json }
-      reserve_tickets: {
-        Args: {
-          p_campaign_id: string
-          p_numbers?: string[]
-          p_quantity: number
-          p_user_id: string
-        }
-        Returns: string
-      }
+      reserve_tickets:
+        | {
+            Args: {
+              p_campaign_id: string
+              p_numbers?: string[]
+              p_quantity: number
+              p_user_id: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              p_affiliate_id?: string
+              p_campaign_id: string
+              p_numbers?: string[]
+              p_quantity: number
+              p_user_id: string
+            }
+            Returns: string
+          }
       sync_federal_lottery: { Args: never; Returns: undefined }
     }
     Enums: {
