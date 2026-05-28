@@ -87,6 +87,11 @@ export default function AdminUsers() {
             roulette_enabled: editingUser.roulette_enabled,
             page_editing_enabled: editingUser.page_editing_enabled,
             sales_page_models_enabled: editingUser.sales_page_models_enabled,
+            campaigns_management_enabled: editingUser.campaigns_management_enabled,
+            orders_management_enabled: editingUser.orders_management_enabled,
+            users_management_enabled: editingUser.users_management_enabled,
+            affiliates_management_enabled: editingUser.affiliates_management_enabled,
+            settings_management_enabled: editingUser.settings_management_enabled,
           }, { onConflict: 'user_id' });
 
         if (featureError) throw featureError;
