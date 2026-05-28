@@ -157,18 +157,38 @@ export const useAdminCampaigns = () =>
    });
  };
  
- export const useAdminAffiliates = () =>
-   useQuery({
-     queryKey: ["admin-affiliates"],
+ export const useAdminAffiliates = () => {
+   const { data: userRole } = useRole();
+   return useQuery({
+     queryKey: ["admin-affiliates", userRole],
      queryFn: async () => {
-       const { data, error } = await supabase
+       const { data: affiliates, error } = await supabase
          .from("affiliates")
          .select("*, profiles(name, email)")
          .order("created_at", { ascending: false });
        if (error) throw error;
-       return data;
+
+       // Fetch roles to filter if necessary
+       const { data: userRoles } = await supabase.from("user_roles").select("*");
+       
+       let results = affiliates.map(affiliate => ({
+         ...affiliate,
+         role: userRoles?.find(r => r.user_id === affiliate.user_id)?.role || "user"
+       }));
+
+       // Filter based on requester's role
+       if (userRole === 'client_admin') {
+         // Client admin shouldn't see admins or masters
+         results = results.filter(a => a.role === 'user');
+       } else if (userRole === 'admin') {
+         // Admin shouldn't see masters
+         results = results.filter(a => a.role !== 'master');
+       }
+
+       return results;
      },
     });
+ };
  
  export const useUpdateAffiliate = () => {
    const queryClient = useQueryClient();
