@@ -213,7 +213,7 @@ export default function SalesPage() {
                            ))}
                         </div>
                      </div>
-                     <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1024" className="w-full h-full object-cover opacity-40" alt="Sorteio" />
+                     <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1024" className="w-full h-full object-cover opacity-40" alt="Painel de transmissão ao vivo do sorteio com números premiados destacados" />
                   </div>
                 </div>
               </div>

@@ -5,12 +5,17 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Users, DollarSign, Share2, TrendingUp } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Link } from "react-router-dom";
+import { SEO } from "@/components/SEO";
 
 export default function Affiliates() {
   const { user } = useAuth();
 
   return (
     <div className="min-h-screen bg-background">
+      <SEO
+        title="Programa de Afiliados"
+        description="Indique amigos, divulgue campanhas e ganhe comissões em cada compra realizada por meio do seu link exclusivo de afiliado."
+      />
       <Header />
       <main className="container pt-32 pb-20">
         <div className="max-w-5xl mx-auto space-y-12">

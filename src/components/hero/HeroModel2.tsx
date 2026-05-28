@@ -44,9 +44,9 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
                   <Badge className="bg-primary/20 text-primary border-primary/20 px-6 py-1.5 text-xs font-black uppercase tracking-[0.3em] italic">
                     ⭐ OFERTA ESPECIAL ⭐
                   </Badge>
-                  <h1 className="text-xl sm:text-2xl md:text-7xl lg:text-8xl font-black uppercase italic leading-[1.1] tracking-tighter text-white filter drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] md:pr-10 py-2">
+                  <h2 className="text-xl sm:text-2xl md:text-7xl lg:text-8xl font-black uppercase italic leading-[1.1] tracking-tighter text-white filter drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)] md:pr-10 py-2">
                     <span className="text-animate-gradient inline-block md:pr-10 pb-1">{campaign.title}</span>
-                  </h1>
+                  </h2>
                 </div>
 
                 <div className="flex flex-col items-center gap-6">

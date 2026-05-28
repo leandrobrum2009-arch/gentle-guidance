@@ -57,9 +57,19 @@ const Footer = () => {
               A maior e mais segura plataforma de ações online. Prêmios instantâneos e sorteios garantidos.
             </p>
             <div className="flex gap-3">
-              {[Instagram, Youtube, MessageCircle].map((Icon, idx) => (
-                <a key={idx} href="#" className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm">
+              {[
+                { Icon: Instagram, label: "Instagram" },
+                { Icon: Youtube, label: "YouTube" },
+                { Icon: MessageCircle, label: "WhatsApp" },
+              ].map(({ Icon, label }) => (
+                <a
+                  key={label}
+                  href="#"
+                  aria-label={`Acessar nosso ${label}`}
+                  className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm"
+                >
                   <Icon className="h-4 w-4" />
+                  <span className="sr-only">{label}</span>
                 </a>
               ))}
             </div>
@@ -102,8 +112,8 @@ const Footer = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <img src="https://logodownload.org/wp-content/uploads/2014/10/google-play-badge.png" className="h-8 object-contain" alt="" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/1200px-Download_on_the_App_Store_Badge.svg.png" className="h-8 object-contain" alt="" />
+                <img src="https://logodownload.org/wp-content/uploads/2014/10/google-play-badge.png" className="h-8 object-contain" alt="Disponível no Google Play" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/1200px-Download_on_the_App_Store_Badge.svg.png" className="h-8 object-contain" alt="Baixar na App Store" />
               </div>
             </div>
           </div>

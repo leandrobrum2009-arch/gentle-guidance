@@ -21,13 +21,15 @@ export const SEO = ({
   const { data: settings } = useSiteSettings();
 
   const siteName = settings?.site_title || settings?.site_name || "";
-  const defaultDescription = settings?.description || "Plataforma Online";
-  const defaultKeywords = settings?.site_keywords || "sorteios, prêmios";
+  const defaultDescription =
+    settings?.description ||
+    "Plataforma online de rifas com pagamento via PIX, sorteios oficiais pela Loteria Federal e prêmios entregues com segurança.";
+  const defaultKeywords = settings?.site_keywords || "rifas online, sorteios, prêmios, pix, loteria federal";
   
   const seoTitle = !title || title === siteName ? siteName : `${title} | ${siteName}`;
   const seoDescription = description || defaultDescription;
   const seoKeywords = keywords ? `${keywords}, ${defaultKeywords}` : defaultKeywords;
-  const seoImage = image || "/placeholder.svg";
+  const seoImage = image || "https://sistemarifas.lovable.app/placeholder.svg";
   const seoUrl = url || window.location.href;
 
   return (
