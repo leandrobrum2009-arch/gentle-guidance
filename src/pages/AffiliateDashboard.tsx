@@ -5,7 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
   Loader2, DollarSign, Users, MousePointer2, TrendingUp, Copy, Check, 
-  PieChart, BarChart3, LayoutDashboard, Megaphone, Link as LinkIcon, Share2, Crown
+  PieChart, BarChart3, LayoutDashboard, Megaphone, Link as LinkIcon, Share2, Crown,
+  ShoppingBag, CheckCircle2
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
