@@ -105,6 +105,7 @@ const AppContent = () => {
     <BrowserRouter>
       <AuthProvider>
         <RouteExtras />
+        <AffiliateTracker />
         <Routes>
           {/* Public Routes */}
           <Route path="/" element={showSalesPage ? <SalesPage /> : <Index />} />
