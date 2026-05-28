@@ -3,24 +3,58 @@ import Footer from "@/components/Footer";
 import { useAffiliateData } from "@/hooks/useAffiliate";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2, DollarSign, Users, MousePointer2, TrendingUp, Copy, Check, PieChart, BarChart3, LayoutDashboard, Megaphone } from "lucide-react";
+import { 
+  Loader2, DollarSign, Users, MousePointer2, TrendingUp, Copy, Check, 
+  PieChart, BarChart3, LayoutDashboard, Megaphone, Link as LinkIcon, Share2, Crown
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 import { format, subDays, startOfDay, isSameDay } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function AffiliateDashboard() {
   const { data, isLoading } = useAffiliateData();
   const [copied, setCopied] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<string>("home");
+
+  const getLink = () => {
+    if (!data?.affiliate?.referral_code) return "";
+    const baseUrl = window.location.origin;
+    if (selectedCampaign === "home") {
+      return `${baseUrl}/?ref=${data.affiliate.referral_code}`;
+    }
+    const campaign = data.campaigns.find(c => c.id === selectedCampaign);
+    return `${baseUrl}/campanha/${campaign?.slug || campaign?.id}?ref=${data.affiliate.referral_code}`;
+  };
 
   const copyLink = () => {
-    if (!data?.affiliate?.referral_code) return;
-    const link = `${window.location.origin}?ref=${data.affiliate.referral_code}`;
+    const link = getLink();
+    if (!link) return;
     navigator.clipboard.writeText(link);
     setCopied(true);
     toast.success("Link de afiliado copiado!");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleShare = async () => {
+    const link = getLink();
+    if (!link) return;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'Participe da nossa Rifa!',
+          text: 'Confira esta campanha incrível e concorra a prêmios!',
+          url: link,
+        });
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') copyLink();
+      }
+    } else {
+      copyLink();
+    }
   };
 
   if (isLoading) {
@@ -66,27 +100,70 @@ export default function AffiliateDashboard() {
       <Header />
       <main className="container pt-32 pb-20">
         <div className="max-w-6xl mx-auto space-y-8">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-3xl font-black uppercase italic tracking-tighter">
-                Painel do <span className="text-primary">Afiliado</span>
-              </h1>
-              <p className="text-muted-foreground text-sm font-bold uppercase tracking-widest mt-1">
-                {data.affiliate.type === 'influencer' ? 'Nível Influenciador' : 'Afiliado Comum'}
-              </p>
-            </div>
-            <div className="flex items-center gap-2 p-1 bg-secondary/30 rounded-2xl border border-border/50">
-              <div className="px-4 py-2 text-xs font-mono font-bold text-primary">
-                {window.location.origin}?ref={data.affiliate.referral_code}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="h-16 w-16 rounded-3xl bg-primary/10 flex items-center justify-center text-primary shadow-lg shadow-primary/10 border border-primary/20">
+                {data.affiliate.type === 'influencer' ? <Crown className="h-8 w-8 fill-primary" /> : <Users className="h-8 w-8" />}
               </div>
-              <Button size="icon" variant="ghost" className="h-10 w-10 rounded-xl" onClick={copyLink}>
-                {copied ? <Check className="h-4 w-4 text-emerald-500" /> : <Copy className="h-4 w-4" />}
-              </Button>
+              <div>
+                <h1 className="text-3xl font-black uppercase italic tracking-tighter">
+                  Painel do <span className="text-primary">{data.affiliate.type === 'influencer' ? 'Influenciador' : 'Afiliado'}</span>
+                </h1>
+                <div className="flex items-center gap-2 mt-1">
+                  <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-primary/5 text-primary border-primary/20">
+                    CÓDIGO: {data.affiliate.referral_code}
+                  </Badge>
+                  <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest bg-emerald-500/5 text-emerald-500 border-emerald-500/20">
+                    COMISSÃO: {(data.affiliate.commission_rate * 100).toFixed(0)}%
+                  </Badge>
+                </div>
+              </div>
             </div>
           </div>
 
+          <Card className="border-border/50 bg-card/30 backdrop-blur-xl overflow-hidden rounded-3xl border-2 border-primary/10">
+            <CardHeader className="bg-primary/5 border-b border-primary/10 py-4">
+              <CardTitle className="text-xs font-black uppercase tracking-[0.2em] flex items-center gap-2 text-primary">
+                <LinkIcon className="h-4 w-4" /> Gerador de Link para Divulgação
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="grid gap-6 md:grid-cols-12 items-end">
+                <div className="md:col-span-5 space-y-2">
+                  <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Escolha o destino</label>
+                  <Select value={selectedCampaign} onValueChange={setSelectedCampaign}>
+                    <SelectTrigger className="h-12 bg-secondary/50 border-border rounded-xl font-bold">
+                      <SelectValue placeholder="Selecione uma campanha" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="home">Página Inicial</SelectItem>
+                      {data.campaigns?.map(c => (
+                        <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="md:col-span-7 flex flex-col sm:flex-row gap-3">
+                  <div className="flex-1 bg-secondary/30 border border-border/50 rounded-xl h-12 flex items-center px-4 overflow-hidden">
+                    <code className="text-[11px] font-mono font-bold text-primary truncate">
+                      {getLink()}
+                    </code>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="icon" variant="outline" className="h-12 w-12 rounded-xl" onClick={copyLink}>
+                      {copied ? <Check className="h-5 w-5 text-emerald-500" /> : <Copy className="h-5 w-5" />}
+                    </Button>
+                    <Button className="h-12 rounded-xl gap-2 font-black uppercase italic px-6 glow-primary" onClick={handleShare}>
+                      <Share2 className="h-4 w-4" /> Divulgar
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <div className="grid gap-6 md:grid-cols-4">
-            <Card className="border-border bg-emerald-500/5 backdrop-blur-xl">
+            <Card className="border-border bg-emerald-500/5 backdrop-blur-xl group hover:border-emerald-500/30 transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="h-10 w-10 rounded-xl bg-emerald-500/20 flex items-center justify-center text-emerald-500">
@@ -99,7 +176,7 @@ export default function AffiliateDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-amber-500/5 backdrop-blur-xl">
+            <Card className="border-border bg-amber-500/5 backdrop-blur-xl group hover:border-amber-500/30 transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="h-10 w-10 rounded-xl bg-amber-500/20 flex items-center justify-center text-amber-500">
@@ -111,7 +188,7 @@ export default function AffiliateDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-blue-500/5 backdrop-blur-xl">
+            <Card className="border-border bg-blue-500/5 backdrop-blur-xl group hover:border-blue-500/30 transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="h-10 w-10 rounded-xl bg-blue-500/20 flex items-center justify-center text-blue-500">
@@ -123,7 +200,7 @@ export default function AffiliateDashboard() {
               </CardContent>
             </Card>
 
-            <Card className="border-border bg-primary/5 backdrop-blur-xl">
+            <Card className="border-border bg-primary/5 backdrop-blur-xl group hover:border-primary/30 transition-all">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
@@ -202,7 +279,7 @@ export default function AffiliateDashboard() {
                     const title = campaignComm[0]?.campaigns?.title || "Geral / Outros";
                     
                     return (
-                      <div key={campId || 'other'} className="flex items-center justify-between p-3 rounded-xl bg-secondary/20 border border-border/50">
+                      <div key={campId || 'other'} className="flex items-center justify-between p-3 rounded-xl bg-secondary/20 border border-border/50 hover:border-primary/30 transition-colors">
                         <div className="flex flex-col">
                           <span className="text-xs font-bold text-foreground truncate max-w-[150px]">{title}</span>
                           <span className="text-[10px] text-muted-foreground uppercase font-black">{campaignComm.length} vendas</span>
