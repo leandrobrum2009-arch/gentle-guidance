@@ -942,7 +942,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "purchase", "prizes", "ranking", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
