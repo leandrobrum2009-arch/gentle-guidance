@@ -346,11 +346,11 @@ import { PaymentModal } from "@/components/PaymentModal";
           </aside>
 
           <main className="lg:col-span-9 space-y-6">
-            <div className="grid gap-4 sm:grid-cols-4">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-4">
               {[
                 { label: "Saldo", val: `R$ ${Number(profile?.balance || 0).toFixed(2)}`, icon: Wallet, color: "text-emerald-400" },
                 { label: "Cashback", val: `R$ ${Number(profile?.cashback_balance || 0).toFixed(2)}`, icon: Coins, color: "text-amber-400" },
-                { label: "Giros Totais", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
+                { label: "Giros", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
                 { label: "Vitórias", val: orders?.filter((o:any) => o.payment_status === 'won').length || 0, icon: Trophy, color: "text-purple-400" },
               ].map((stat, i) => (
                 <Card key={i} className="bg-card border-border p-4 group hover:bg-secondary/50 transition-all duration-300">
