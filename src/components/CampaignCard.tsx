@@ -62,8 +62,8 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 </Badge>
               )}
               {isCompleted && (
-                <Badge className="bg-blue-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest">
-                  Finalizada
+                <Badge className="bg-blue-500 px-2 py-0.5 text-[8px] font-black uppercase tracking-widest gap-1">
+                  <Trophy className="h-2 w-2" /> Finalizada
                 </Badge>
               )}
               {campaign.status === 'audit' && (

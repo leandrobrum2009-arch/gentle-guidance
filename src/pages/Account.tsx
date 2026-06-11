@@ -566,14 +566,39 @@ import { PaymentModal } from "@/components/PaymentModal";
                     </CardHeader>
                     
                     <div className="space-y-4">
-                      {orders?.length ? orders.map((o: any) => (
-                        <div key={o.id} className="bg-secondary/20 border border-border rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all">
+                      {orders?.length ? orders.map((o: any) => {
+                        const isCampaignFinished = o.campaigns?.status === 'completed' || o.campaigns?.status === 'finished' || o.campaigns?.status === 'drawn';
+                        const hasWinner = o.tickets?.some((t: any) => o.campaigns?.draw_number === t.number);
+                        
+                        return (
+                        <div key={o.id} className={cn(
+                          "bg-secondary/20 border border-border rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all",
+                          hasWinner && "border-amber-500/50 bg-amber-500/5 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                        )}>
                           <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
-                              <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
+                              <div className="relative">
+                                <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
+                                {hasWinner && (
+                                  <div className="absolute -top-2 -right-2 h-8 w-8 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-background animate-bounce">
+                                    <Trophy className="h-4 w-4 text-white" />
+                                  </div>
+                                )}
+                              </div>
                               <div className="min-w-0">
-                                <p className="text-sm font-black uppercase tracking-tight text-foreground truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
-                                <div className="flex items-center gap-2 mt-1">
+                                <div className="flex items-center gap-2 mb-1">
+                                  <p className="text-sm font-black uppercase tracking-tight text-foreground truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
+                                  {isCampaignFinished ? (
+                                    <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-500 border-blue-500/20">
+                                      Encerrada
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                                      {o.campaigns?.status === 'active' ? 'Ativa' : o.campaigns?.status === 'paused' ? 'Pausada' : 'Aguardando'}
+                                    </Badge>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-2">
                                   <Badge variant="outline" className="text-[8px] font-bold border-border text-muted-foreground">PEDIDO #{o.id.slice(0, 8)}</Badge>
                                   <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
                                 </div>
@@ -584,12 +609,19 @@ import { PaymentModal } from "@/components/PaymentModal";
                                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Qtd.</p>
                                 <p className="text-lg font-black italic text-foreground">{o.quantity}</p>
                               </div>
-                              <Badge className={cn(
-                                  "text-[10px] font-black italic uppercase px-4 h-8 rounded-full",
-                                  o.payment_status === 'paid' ? "bg-emerald-500 text-white glow-emerald border-none" : "bg-amber-500 text-white glow-amber border-none"
-                              )}>
-                                  {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
-                              </Badge>
+                              <div className="flex flex-col items-end gap-1">
+                                <Badge className={cn(
+                                    "text-[10px] font-black italic uppercase px-4 h-8 rounded-full",
+                                    o.payment_status === 'paid' ? "bg-emerald-500 text-white glow-emerald border-none" : "bg-amber-500 text-white glow-amber border-none"
+                                )}>
+                                    {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
+                                </Badge>
+                                {hasWinner && (
+                                  <Badge className="bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest border-none px-2 animate-pulse">
+                                    VOCÊ GANHOU!
+                                  </Badge>
+                                )}
+                              </div>
                             </div>
                           </div>
 
@@ -635,7 +667,8 @@ import { PaymentModal } from "@/components/PaymentModal";
                             </div>
                           )}
                         </div>
-                      )) : (
+                        );
+                      }) : (
                         <div className="text-center py-24 opacity-30">
                             <Ticket className="h-16 w-16 mx-auto mb-4 text-foreground" />
                             <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
