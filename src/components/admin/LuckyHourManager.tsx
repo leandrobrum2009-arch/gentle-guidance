@@ -318,21 +318,66 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                     onChange={e => setNewDraw(p => ({ ...p, prize_description: e.target.value }))}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-wider">Data e Hora</Label>
-                  <Input 
-                    type="datetime-local" 
-                    value={newDraw.draw_time} 
-                    className="rounded-xl"
-                    onChange={e => setNewDraw(p => ({ ...p, draw_time: e.target.value }))}
-                  />
+                <div className="space-y-2 flex flex-col justify-end">
+                  <div className="flex items-center gap-2 p-3 bg-secondary/50 rounded-xl border border-border h-[42px]">
+                    <Switch 
+                      checked={newDraw.is_recurring} 
+                      onCheckedChange={v => setNewDraw(p => ({ ...p, is_recurring: v }))} 
+                    />
+                    <Label className="text-[10px] font-bold uppercase cursor-pointer">Sorteio Recorrente</Label>
+                  </div>
                 </div>
               </div>
+
+              {newDraw.is_recurring && (
+                <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 grid grid-cols-1 md:grid-cols-3 gap-4 animate-in fade-in zoom-in-95">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider">Frequência</Label>
+                    <Select value={newDraw.frequency} onValueChange={v => setNewDraw(p => ({ ...p, frequency: v as any }))}>
+                      <SelectTrigger className="bg-card rounded-lg">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="daily">Diário (Todos os dias)</SelectItem>
+                        <SelectItem value="every_x_days">A cada X dias</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {newDraw.frequency === 'every_x_days' && (
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider">A cada quantos dias?</Label>
+                      <Input 
+                        type="number" 
+                        min="2" 
+                        value={newDraw.every_x_days} 
+                        onChange={e => setNewDraw(p => ({ ...p, every_x_days: parseInt(e.target.value) || 2 }))}
+                        className="bg-card rounded-lg"
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider">Total de Ocorrências</Label>
+                    <Input 
+                      type="number" 
+                      min="1" 
+                      max="30"
+                      value={newDraw.occurrences} 
+                      onChange={e => setNewDraw(p => ({ ...p, occurrences: parseInt(e.target.value) || 1 }))}
+                      className="bg-card rounded-lg"
+                    />
+                    <p className="text-[9px] text-muted-foreground italic">Máximo 30 sorteios de uma vez.</p>
+                  </div>
+                </div>
+              )}
+
               <Button onClick={handleAdd} disabled={saving} className="w-full md:w-auto rounded-xl">
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Agendar Sorteio
+                {newDraw.is_recurring ? `Agendar ${newDraw.occurrences} Sorteios` : 'Agendar Sorteio'}
               </Button>
             </div>
+
           )}
 
           {isLoading ? (
