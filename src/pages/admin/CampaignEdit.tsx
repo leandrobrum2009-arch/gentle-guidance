@@ -44,6 +44,7 @@ interface CampaignForm {
   live_stream_url: string; concurso: string;
   fake_progress_enabled: boolean;
   fake_progress_percentage: number;
+  progress_text: string;
 }
 
 
@@ -74,6 +75,7 @@ const empty: CampaignForm = {
   concurso: "",
   fake_progress_enabled: false,
   fake_progress_percentage: 0,
+  progress_text: "",
 };
 
 
@@ -108,6 +110,7 @@ export default function AdminCampaignEdit() {
       roulette_rules: (data.roulette_rules as any[]) ?? [],
       ranking_prizes: (data.ranking_prizes as any[]) ?? [],
       prize_rules: (data.prize_rules as any[]) ?? [],
+      progress_text: data.progress_text ?? "",
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as unknown as CampaignForm);
     setLoading(false);
@@ -485,6 +488,27 @@ export default function AdminCampaignEdit() {
                      />
                      <Percent className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                    </div>
+                 </div>
+
+                 <div className="space-y-2 md:col-span-2">
+                   <Label className="flex items-center gap-2">
+                     Texto Customizado do Progresso
+                     <TooltipProvider>
+                       <Tooltip>
+                         <TooltipTrigger asChild>
+                           <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                         </TooltipTrigger>
+                         <TooltipContent>
+                           <p className="w-48 text-[10px]">Substitui o número da porcentagem por um texto fixo (ex: "QUASE LÁ", "80% VENDIDO"). Deixe vazio para usar a porcentagem automática.</p>
+                         </TooltipContent>
+                       </Tooltip>
+                     </TooltipProvider>
+                   </Label>
+                   <Input 
+                     placeholder="Ex: QUASE LÁ ou 75% VENDIDO"
+                     value={form.progress_text} 
+                     onChange={(e) => set("progress_text", e.target.value)} 
+                   />
                  </div>
                </div>
             </Card>
