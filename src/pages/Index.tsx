@@ -49,7 +49,7 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <Icon className="h-5 w-5 text-primary" />
-          <h2 className="font-display text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">
+          <h2 className="font-display text-xl sm:text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none">
             {title.split(' ')[0]} <span className="text-animate-gradient">{title.split(' ').slice(1).join(' ')}</span>
           </h2>
         </div>
