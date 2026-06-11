@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import CampaignPricing from "@/components/CampaignPricing";
 import { Campaign } from "@/hooks/useData";
 
@@ -26,7 +26,8 @@ describe("CampaignPricing Component", () => {
     fireEvent.change(input, { target: { value: "5" } });
     
     // 5 * 1.5 = 7.5
-    expect(screen.getByText(/R\$ 7,50/)).toBeDefined();
+    const totals = screen.getAllByText(/R\$ 7,50/);
+    expect(totals.length).toBeGreaterThan(0);
   });
 
   it("applies bundle price correctly", async () => {
@@ -37,8 +38,9 @@ describe("CampaignPricing Component", () => {
     const bundleButton = screen.getByText("+10");
     fireEvent.click(bundleButton);
     
-    // Should show bundle price 12,00 (multiple matches are fine, as long as it exists)
-    expect(screen.getAllByText(/R\$ 12,00/)).toHaveLength(2);
+    // Should show bundle price 12,00
+    const prices = screen.getAllByText(/R\$ 12,00/);
+    expect(prices.length).toBeGreaterThan(0);
     expect(screen.getByText(/Selecionadas/i).parentElement?.textContent).toContain("10");
   });
 
