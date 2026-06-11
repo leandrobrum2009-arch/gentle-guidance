@@ -1178,12 +1178,96 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'social_proof':
+        return (
+          <div key={section} className="bg-card rounded-[2rem] p-8 border border-border shadow-sm space-y-8 overflow-hidden relative">
+            <div className="flex flex-col items-center text-center gap-2">
+              <Badge className="bg-emerald-500/10 text-emerald-500 border-none text-[10px] font-black uppercase tracking-widest">Confiança Total</Badge>
+              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">Quem Ganha, <span className="text-animate-gradient">Acredita!</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest max-w-md">Junte-se a milhares de participantes que já realizaram seus sonhos com nossas ações.</p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {[
+                { name: "João Silva", prize: "R$ 5.000,00 no PIX", date: "Há 2 dias", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Joao" },
+                { name: "Maria Santos", prize: "iPhone 15 Pro Max", date: "Há 5 dias", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Maria" },
+                { name: "Pedro Oliveira", prize: "Moto 0km", date: "Há 1 semana", img: "https://api.dicebear.com/7.x/avataaars/svg?seed=Pedro" }
+              ].map((winner, i) => (
+                <div key={i} className="bg-secondary/30 rounded-3xl p-5 border border-border/50 flex items-center gap-4 group hover:bg-secondary/50 transition-all">
+                  <Avatar className="h-14 w-14 border-2 border-primary/20">
+                    <AvatarImage src={winner.img} />
+                    <AvatarFallback className="bg-primary/10 text-primary font-black">{winner.name[0]}</AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="text-xs font-black uppercase tracking-tight text-foreground truncate">{winner.name}</p>
+                    <p className="text-[10px] font-bold text-primary uppercase italic truncate">{winner.prize}</p>
+                    <p className="text-[9px] text-muted-foreground uppercase font-bold mt-1 flex items-center gap-1">
+                      <CheckCircle2 className="h-3 w-3 text-emerald-500" /> Vencedor Verificado
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex flex-wrap justify-center gap-8 pt-4 opacity-50 grayscale hover:grayscale-0 transition-all duration-700">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="h-5 w-5 text-emerald-500" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Sorteio Auditado</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Pagamento Instantâneo</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Star className="h-5 w-5 text-amber-500" />
+                <span className="text-[10px] font-black uppercase tracking-widest">Ação 100% Legal</span>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'cta':
+        return (
+          <div key={section} className="bg-primary rounded-[2.5rem] p-8 md:p-12 text-center space-y-6 relative overflow-hidden group shadow-2xl shadow-primary/20">
+            <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
+            <motion.div 
+              animate={{ scale: [1, 1.02, 1] }}
+              transition={{ repeat: Infinity, duration: 3 }}
+              className="relative z-10 space-y-4"
+            >
+              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-black leading-none">
+                Sua sorte está a um <br className="hidden md:block" /> <span className="underline decoration-black/30 underline-offset-8">PIX de distância!</span>
+              </h2>
+              <p className="text-sm md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto">
+                Não deixe para amanhã o prêmio que você pode ganhar hoje. Escolha suas cotas e participe agora!
+              </p>
+            </div>
+            
+            <div className="relative z-10 pt-4">
+              <Button 
+                size="lg"
+                className="h-16 px-12 rounded-2xl bg-black text-primary hover:bg-black/90 hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-widest text-sm gap-3 group"
+                onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+              >
+                QUERO PARTICIPAR AGORA <Zap className="h-5 w-5 fill-current group-hover:animate-bounce" />
+              </Button>
+              <p className="text-[10px] font-black text-black/50 uppercase tracking-[0.2em] mt-6 flex items-center justify-center gap-2">
+                <Clock className="h-3 w-3" /> RESTAM POUCAS COTAS DISPONÍVEIS!
+              </p>
+            </div>
+
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 -mt-8 -mr-8 w-32 h-32 bg-white/10 rounded-full blur-2xl" />
+            <div className="absolute bottom-0 left-0 -mb-8 -ml-8 w-32 h-32 bg-black/10 rounded-full blur-2xl" />
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "progress", "purchase", "events", "prizes", "ranking", "description", "faq", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "progress", "purchase", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
