@@ -167,14 +167,14 @@ const Index = () => {
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     return campaigns
-      .filter(c => (c.status === "completed" || c.status === "finished") && c.draw_number)
+      .filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn"))
       .sort((a, b) => {
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
         }
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       })
-      .slice(0, 4);
+      .slice(0, 12);
   }, [campaigns]);
 
   const featuredCampaign = activeCampaigns[0];
