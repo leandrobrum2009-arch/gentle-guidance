@@ -35,7 +35,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       <div className="relative z-10">
         <div className="mb-4 flex items-start justify-between">
           <div className="relative">
-            <div className="h-16 w-16 overflow-hidden rounded-2xl border-2 border-primary/20 bg-secondary/30">
+            <div className="h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-xl sm:rounded-2xl border-2 border-primary/20 bg-secondary/30">
               <img 
                 src={winner.avatar_url || `https://images.unsplash.com/photo-${[
                   "1507003211169-0a1dd7228f2d",
