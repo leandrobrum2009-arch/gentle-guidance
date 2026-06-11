@@ -407,8 +407,6 @@ import { PaymentModal } from "@/components/PaymentModal";
                         )}
                       </div>
                     </div>
-                      </div>
-                    </div>
 
                     <Button 
                       onClick={handleUpdateProfile} 
