@@ -49,326 +49,89 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
 
   return (
     <div className="space-y-10">
-      {/* Header with Tabs */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-            <TrendingUp className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-xl font-black uppercase italic tracking-tighter">{title || "Elite da Plataforma"}</h2>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Compita com os melhores e ganhe destaque</p>
-          </div>
-        </div>
-
-        {!users && !stats && (
-          <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
-            <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
-              <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-                <Star className="h-3 w-3" /> Pontos
-              </TabsTrigger>
-              <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-                <Zap className="h-3 w-3" /> Experiência
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-      </div>
-
-      {stats && (
-        <div className="space-y-8">
-          {stats.userTickets && stats.userTickets.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <Star className="h-4 w-4 text-green-500" />
-                </div>
-                <h3 className="text-xs font-black uppercase tracking-widest italic">Meu melhor número</h3>
+      {stats?.activePrize && (
+        <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
+          <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
+                <Trophy className="h-6 w-6 text-primary" />
               </div>
-              <div className="flex flex-wrap gap-3">
-                {(() => {
-                  const sorted = [...stats.userTickets].sort((a, b) => Number(b.number) - Number(a.number));
-                  const highest = sorted[0];
-                  
-                  return (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Maior</span>
-                      <div className="h-10 min-w-[3rem] w-auto px-4 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-center shadow-sm">
-                        <span className="text-primary font-black italic text-sm">
-                          #{highest.number}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })()}
+              <div>
+                <h3 className="text-xl font-black text-foreground italic">Maior e Menor Bilhete</h3>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Resultados instantâneos da campanha</p>
               </div>
             </div>
-          )}
+            <Badge variant="outline" className="rounded-full bg-primary/20 text-primary border-primary/30 text-[10px] font-black h-8 px-4 gap-2">
+              <Sparkles className="h-3 w-3 text-primary" /> PROVA SOCIAL
+            </Badge>
+          </div>
 
-          {stats.activePrize && (
-            <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
-              {/* Header with Trophy Icon */}
-              <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-                    <Trophy className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-foreground italic">Maior e Menor Bilhete</h3>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Resultados instantâneos da campanha</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="rounded-full bg-primary/20 text-primary border-primary/30 text-[10px] font-black h-8 px-4 gap-2">
-                  <Sparkles className="h-3 w-3 text-primary" /> PROVA SOCIAL
+          <div className="p-8 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-xl w-fit border border-primary/20">
+                <Zap className="h-3 w-3 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">HOJE</span>
+              </div>
+              <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                A geração de maior e menor bilhete contabiliza compras entre 
+                <br />
+                <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 00:00:00</span> e <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 23:59:59</span>.
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-muted-foreground">Promoção acaba em</span>
+                <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30 font-bold px-4 py-1 rounded-full text-xs">
+                  Sorteio finalizado
                 </Badge>
               </div>
-
-              <div className="p-8 space-y-6">
-                {/* Generation Info */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-xl w-fit border border-primary/20">
-                    <Zap className="h-3 w-3 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">HOJE</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    A geração de maior e menor bilhete contabiliza compras entre 
-                    <br />
-                    <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 00:00:00</span> e <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 23:59:59</span>.
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-muted-foreground">Promoção acaba em</span>
-                    <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30 font-bold px-4 py-1 rounded-full text-xs">
-                      Sorteio finalizado
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Tickets Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Menor Bilhete */}
-                  <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <ArrowDownCircle className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-black uppercase tracking-widest">Menor Bilhete</span>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
-                        {(Array.isArray(stats.lowestTickets[0]?.profiles) ? stats.lowestTickets[0].profiles[0]?.name : stats.lowestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
-                      </h4>
-                    </div>
-                    <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
-                      {stats.lowestTickets[0]?.number || "000000"}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-                        Comprou: R$ {stats.activePrize.prize_menor || "14,01"}
-                      </div>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
-                        {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Maior Bilhete */}
-                  <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <ArrowUpCircle className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-black uppercase tracking-widest">Maior Bilhete</span>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
-                        {(Array.isArray(stats.highestTickets[0]?.profiles) ? stats.highestTickets[0].profiles[0]?.name : stats.highestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
-                      </h4>
-                    </div>
-                    <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
-                      {stats.highestTickets[0]?.number || "999999"}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-                        Comprou: R$ {stats.activePrize.prize_maior || "14,01"}
-                      </div>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
-                        {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
             </div>
-          )}
-        </div>
-      )}
 
-      {stats && !stats.activePrize && (
-        <div className="space-y-8">
-
-          {!stats.activePrize && (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Crown className="h-4 w-4 text-primary" />
-                  </div>
-                  <h3 className="text-xs font-black uppercase tracking-widest italic">Maiores números comprados</h3>
+              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                  <ArrowDownCircle className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-black uppercase tracking-widest">Menor Bilhete</span>
                 </div>
-                <div className="grid gap-3">
-                  {stats.highestTickets.length > 0 ? stats.highestTickets.map((ticket, idx) => {
-                    const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
-                    return (
-                      <div key={idx} className="bg-primary/5 border border-primary/20 p-4 rounded-2xl flex items-center justify-between group hover:bg-primary/10 transition-all">
-                        <div className="flex items-center gap-3">
-                          <div className="h-12 min-w-[3rem] w-auto px-3 rounded-xl bg-primary/20 flex items-center justify-center flex-shrink-0">
-                            <span className="text-sm font-black italic text-primary">#{ticket.number}</span>
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
-                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o maior número</span>
-                          </div>
-                        </div>
-                        <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">TOP {idx + 1}</Badge>
-                      </div>
-                    );
-                  }) : (
-                    <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
-                    </div>
-                  )}
+                <div className="space-y-1">
+                  <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+                    {(Array.isArray(stats.lowestTickets[0]?.profiles) ? stats.lowestTickets[0].profiles[0]?.name : stats.lowestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
+                  </h4>
+                </div>
+                <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
+                  {stats.lowestTickets[0]?.number || "000000"}
+                </div>
+                <div className="space-y-1">
+                  <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+                    Comprou: R$ {stats.activePrize.prize_menor || "14,01"}
+                  </div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
+                    {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
               </div>
 
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 mb-2">
-                  <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center">
-                    <TrendingUp className="h-4 w-4 text-muted-foreground rotate-180" />
-                  </div>
-                  <h3 className="text-xs font-black uppercase tracking-widest italic">Menores números comprados</h3>
+              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                  <ArrowUpCircle className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-black uppercase tracking-widest">Maior Bilhete</span>
                 </div>
-                <div className="grid gap-3">
-                  {stats.lowestTickets.length > 0 ? stats.lowestTickets.map((ticket, idx) => {
-                    const profile = Array.isArray(ticket.profiles) ? ticket.profiles[0] : ticket.profiles;
-                    return (
-                      <div key={idx} className="bg-secondary/30 border border-border p-4 rounded-2xl flex items-center justify-between group hover:bg-secondary/50 transition-all">
-                        <div className="flex items-center gap-3">
-                          <div className="h-12 min-w-[3rem] w-auto px-3 rounded-xl bg-secondary border border-border flex items-center justify-center flex-shrink-0">
-                            <span className="text-sm font-black italic text-foreground/80">#{ticket.number}</span>
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-[10px] font-black uppercase text-foreground leading-tight">{profile?.name || "Usuário"}</span>
-                            <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">Atualmente com o menor número</span>
-                          </div>
-                        </div>
-                        <Badge variant="outline" className="border-border text-muted-foreground text-[8px] font-black">MIN {idx + 1}</Badge>
-                      </div>
-                    );
-                  }) : (
-                    <div className="bg-secondary/20 border border-dashed border-border p-8 rounded-2xl text-center">
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase italic">Aguardando bilhetes...</p>
-                    </div>
-                  )}
+                <div className="space-y-1">
+                  <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+                    {(Array.isArray(stats.highestTickets[0]?.profiles) ? stats.highestTickets[0].profiles[0]?.name : stats.highestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
+                  </h4>
+                </div>
+                <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
+                  {stats.highestTickets[0]?.number || "999999"}
+                </div>
+                <div className="space-y-1">
+                  <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+                    Comprou: R$ {stats.activePrize.prize_maior || "14,01"}
+                  </div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
+                    {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
               </div>
             </div>
-          )}
-      </div>
-      )}
-
-      {(!stats || (users && users.length > 0)) && !stats?.activePrize && (
-        <div className="space-y-6">
-          {(users && users.length > 0) && (
-            <div className="flex items-center gap-2 mb-2">
-              <div className="h-8 w-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
-                <Crown className="h-4 w-4 text-amber-500" />
-              </div>
-              <h3 className="text-xs font-black uppercase tracking-widest italic">Top Compradores</h3>
-            </div>
-          )}
-
-          {/* Podium View */}
-          <div className="grid grid-cols-3 gap-2 md:gap-6 items-end pt-10 pb-4">
-            {/* Second Place */}
-            <PodiumPlace 
-              user={podium[1]} 
-              rank={2} 
-              category={users ? 'tickets' : category}
-              className="order-1"
-            />
-            
-            {/* First Place */}
-            <PodiumPlace 
-              user={podium[0]} 
-              rank={1} 
-              category={users ? 'tickets' : category}
-              className="order-2"
-            />
-
-            {/* Third Place */}
-            <PodiumPlace 
-              user={podium[2]} 
-              rank={3} 
-              category={users ? 'tickets' : category}
-              className="order-3"
-            />
-          </div>
-
-          {/* List View */}
-          <div className="grid gap-3">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={users ? 'campaign' : category}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-3"
-              >
-                {rest.map((user, index) => (
-                  <motion.div
-                    key={user.name + index}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                    className="group flex items-center justify-between p-4 bg-card border border-border rounded-3xl hover:bg-secondary/50 hover:border-primary/30 transition-all duration-300 shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="w-6 text-sm font-black italic text-foreground group-hover:text-primary transition-colors">
-                        #{index + 4}
-                      </span>
-                      <div className="relative">
-                        <Avatar className="h-12 w-12 border-2 border-border group-hover:border-primary/30 transition-all">
-                          <AvatarImage src={user.avatar_url || ""} />
-                          <AvatarFallback className="bg-secondary text-foreground font-black uppercase text-xs">
-                            {user.name.substring(0, 2)}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="absolute -bottom-1 -right-1 h-5 w-5 rounded-full bg-card border border-border flex items-center justify-center">
-                          <span className="text-[8px] font-black text-primary">{user.vip_level || 1}</span>
-                        </div>
-                      </div>
-                      <div>
-                        <p className="text-sm font-black uppercase tracking-tighter text-foreground">{user.name}</p>
-                        <div className="flex items-center gap-3 mt-0.5">
-                          <Badge variant="outline" className="text-[8px] border-white/10 text-muted-foreground uppercase font-black px-2 py-0 h-4">
-                            {users ? `${user.total_tickets} COTAS` : `${user.xp} XP`}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-lg font-black italic text-primary drop-shadow-[0_0_8px_rgba(var(--primary-rgb),0.3)]">
-                        {users ? user.total_tickets : (category === 'points' ? user.points : user.xp)}
-                        <span className="text-[10px] uppercase ml-1 opacity-50">{users ? 'cotas' : (category === 'points' ? 'pts' : 'xp')}</span>
-                      </p>
-                    </div>
-                  </motion.div>
-                ))}
-                
-                {rest.length === 0 && (
-                  <div className="text-center py-10 opacity-20 italic uppercase font-black text-xs tracking-widest">
-                    Fim da lista
-                  </div>
-                )}
-              </motion.div>
-            </AnimatePresence>
           </div>
         </div>
       )}
