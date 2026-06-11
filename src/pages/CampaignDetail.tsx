@@ -965,12 +965,91 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'events':
+        return luckyHours && luckyHours.length > 0 && (
+          <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4 -mt-2">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                <Clock className="h-5 w-5 text-amber-500" />
+              </div>
+              <h2 className="text-sm font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
+            </div>
+            
+            <Tabs defaultValue="hourly" className="w-full">
+              <TabsList className="bg-secondary/50 rounded-xl mb-4 grid grid-cols-2">
+                <TabsTrigger value="hourly" className="rounded-lg gap-2 text-[10px] font-black uppercase tracking-tighter py-2">
+                  <Clock className="h-3 w-3" /> Hora Premiada
+                </TabsTrigger>
+                <TabsTrigger value="greater_smaller" className="rounded-lg gap-2 text-[10px] font-black uppercase tracking-tighter py-2">
+                  <TrendingUp className="h-3 w-3" /> Maior/Menor Cota
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent value="hourly">
+                <div className="grid grid-cols-1 gap-3">
+                  {hourlyDraws.length > 0 ? hourlyDraws.slice(0, 3).map((draw) => (
+                    <div key={draw.id} className="p-3 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                          <Clock className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-black uppercase tracking-tight text-foreground truncate">{draw.title}</p>
+                          <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                            {new Date(draw.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} • {draw.prize_description}
+                          </p>
+                          {draw.status === 'completed' && draw.winner_name && (
+                            <p className="text-[9px] font-black text-emerald-500 uppercase mt-0.5 truncate">Ganhador: {draw.winner_name}</p>
+                          )}
+                        </div>
+                      </div>
+                      <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[7px] font-black uppercase px-2 h-5 shrink-0">
+                        {draw.status === 'completed' ? 'Sorteado' : 'Em breve'}
+                      </Badge>
+                    </div>
+                  )) : (
+                    <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Aguardando eventos...</p>
+                  )}
+                </div>
+              </TabsContent>
+
+              <TabsContent value="greater_smaller">
+                <div className="grid grid-cols-1 gap-3">
+                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.slice(0, 3).map((draw) => (
+                    <div key={draw.id} className="p-3 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                      <div className="flex items-center gap-3">
+                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
+                          <TrendingUp className="h-4 w-4" />
+                        </div>
+                        <div className="min-w-0">
+                          <p className="text-xs font-black uppercase tracking-tight text-foreground truncate">{draw.title}</p>
+                          <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                            {draw.prize_description}
+                          </p>
+                          {draw.status === 'completed' && draw.winner_name && (
+                            <p className="text-[9px] font-black text-emerald-500 uppercase mt-0.5 truncate">#{draw.winning_number} • {draw.winner_name}</p>
+                          )}
+                        </div>
+                      </div>
+                      <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[7px] font-black uppercase px-2 h-5 shrink-0">
+                        {draw.status === 'completed' ? 'Realizado' : 'Em breve'}
+                      </Badge>
+                    </div>
+                  )) : (
+                    <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Aguardando sorteio...</p>
+                  )}
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "events", "header", "progress", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -1008,89 +1087,6 @@ const CampaignDetail = () => {
 
           {sectionsOrder.map((section) => renderSection(section))}
           
-          {luckyHours && luckyHours.length > 0 && (
-            <div className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6 mt-6">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                  <Clock className="h-5 w-5 text-amber-500" />
-                </div>
-                <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
-              </div>
-              
-              <Tabs defaultValue="hourly" className="w-full">
-                <TabsList className="bg-secondary/50 rounded-xl mb-6">
-                  <TabsTrigger value="hourly" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
-                    <Clock className="h-3 w-3" /> Hora Premiada
-                  </TabsTrigger>
-                  <TabsTrigger value="greater_smaller" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
-                    <TrendingUp className="h-3 w-3" /> Maior/Menor Cota
-                  </TabsTrigger>
-                </TabsList>
-
-                <TabsContent value="hourly">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {hourlyDraws.length > 0 ? hourlyDraws.map((draw) => (
-                      <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
-                            <Clock className="h-5 w-5" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-black uppercase tracking-tight text-foreground">{draw.title}</p>
-                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                              {new Date(draw.draw_time).toLocaleDateString('pt-BR')} às {new Date(draw.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                            {draw.status === 'completed' && draw.winner_name && (
-                              <p className="text-[10px] font-black text-emerald-500 uppercase mt-1">Ganhador: {draw.winner_name}</p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs font-black text-primary uppercase">{draw.prize_description}</p>
-                          <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[8px] font-black uppercase px-2 h-5 mt-1">
-                            {draw.status === 'completed' ? 'Realizado' : 'Em breve'}
-                          </Badge>
-                        </div>
-                      </div>
-                    )) : (
-                      <p className="text-xs text-muted-foreground italic text-center py-8 col-span-2">Nenhum evento agendado.</p>
-                    )}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="greater_smaller">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.map((draw) => (
-                      <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
-                        <div className="flex items-center gap-3">
-                          <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
-                            <TrendingUp className="h-5 w-5" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-black uppercase tracking-tight text-foreground">{draw.title}</p>
-                            <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                              {new Date(draw.draw_time).toLocaleDateString('pt-BR')} às {new Date(draw.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                            </p>
-                            {draw.status === 'completed' && draw.winner_name && (
-                              <p className="text-[10px] font-black text-emerald-500 uppercase mt-1">Ganhador: {draw.winner_name} (Nº {draw.winning_number})</p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xs font-black text-primary uppercase">{draw.prize_description}</p>
-                          <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[8px] font-black uppercase px-2 h-5 mt-1">
-                            {draw.status === 'completed' ? 'Realizado' : 'Em breve'}
-                          </Badge>
-                        </div>
-                      </div>
-                    )) : (
-                      <p className="text-xs text-muted-foreground italic text-center py-8 col-span-2">Aguardando sorteio de maior e menor cota.</p>
-                    )}
-                  </div>
-                </TabsContent>
-              </Tabs>
-            </div>
-          )}
         </div>
       </div>
 
