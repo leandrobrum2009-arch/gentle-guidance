@@ -789,7 +789,17 @@ export const useUserOrders = (userId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("orders")
-        .select("*, campaigns(title, image_url, ticket_generation_type), tickets(*)")
+        .select(`
+          *, 
+          campaigns(
+            title, 
+            image_url, 
+            ticket_generation_type, 
+            draw_number,
+            status
+          ), 
+          tickets(*)
+        `)
         .eq("user_id", userId)
         .order("created_at", { ascending: false });
       if (error) throw error;
