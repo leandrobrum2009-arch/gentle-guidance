@@ -263,10 +263,17 @@ const Index = () => {
   }, [campaigns, showEnded]);
 
   const featuredCampaign = activeCampaigns[0];
-  // If there's only one campaign, show it in the grid too so it's not empty below
-  const otherCampaigns = activeCampaigns.length > 1 
-    ? activeCampaigns.filter(c => c.id !== featuredCampaign?.id)
-    : activeCampaigns;
+  // Normal campaigns excludes featured ones to avoid duplication
+  const normalCampaignsList = useMemo(() => {
+    return normalCampaigns.filter(c => !featuredCampaigns.some(f => f.id === c.id));
+  }, [normalCampaigns, featuredCampaigns]);
+
+  const totalPages = Math.ceil(normalCampaignsList.length / itemsPerPage);
+  
+  const paginatedCampaigns = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return normalCampaignsList.slice(startIndex, startIndex + itemsPerPage);
+  }, [normalCampaignsList, currentPage, itemsPerPage]);
   const endingSoon = activeCampaigns.filter(c => {
     const total = Number(c.total_tickets) || 1;
     const sold = Number(c.sold_tickets) || 0;
@@ -433,29 +440,6 @@ const Index = () => {
                    badge="Ao Vivo"
                  />
                  
-                 <div className="flex flex-col sm:flex-row gap-3 md:mb-10">
-                   <div className="relative group">
-                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-                     <Input 
-                       placeholder="Buscar rifas..." 
-                       value={searchTerm}
-                       onChange={(e) => setSearchTerm(e.target.value)}
-                       className="pl-10 h-11 w-full sm:w-64 rounded-xl border-border bg-card/50 backdrop-blur-sm focus:ring-primary/20"
-                     />
-                   </div>
-                   <Select value={sortBy} onValueChange={setSortBy}>
-                     <SelectTrigger className="h-11 w-full sm:w-48 rounded-xl border-border bg-card/50 backdrop-blur-sm">
-                       <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
-                       <SelectValue placeholder="Ordenar por" />
-                     </SelectTrigger>
-                     <SelectContent className="rounded-xl border-border bg-card/90 backdrop-blur-xl">
-                       <SelectItem value="recent">Mais Recentes</SelectItem>
-                       <SelectItem value="oldest">Mais Antigas</SelectItem>
-                       <SelectItem value="price-asc">Menor Preço</SelectItem>
-                       <SelectItem value="price-desc">Maior Preço</SelectItem>
-                     </SelectContent>
-                   </Select>
-                 </div>
                </div>
 
                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
@@ -579,73 +563,6 @@ const Index = () => {
              </div>
            </section>
 
-          {/* Ending Soon */}
-          <section className="container py-10">
-            <div className="rounded-3xl bg-gradient-to-br from-primary/10 via-background to-secondary/20 border border-primary/20 p-8 md:p-12 overflow-hidden relative">
-              <div className="absolute top-0 right-0 p-8 opacity-10 rotate-12 hidden lg:block">
-                <Clock className="h-64 w-64 text-primary" />
-              </div>
-              <div className="relative z-10 max-w-2xl space-y-6">
-                <Badge className="bg-destructive text-white border-none font-black italic tracking-tighter animate-pulse">
-                  🔥 CORRE QUE TÁ ACABANDO
-                </Badge>
-                <h2 className="text-4xl md:text-6xl font-black uppercase italic italic leading-none tracking-tighter">
-                  Últimas <span className="text-primary neon-text-primary">Oportunidades</span>
-                </h2>
-                <p className="text-muted-foreground text-sm md:text-lg font-medium">
-                  Esses sorteios já venderam mais de 80% dos bilhetes. Sua chance de ganhar pode ser o próximo clique.
-                </p>
-                <div className="grid gap-4">
-                  {endingSoon.slice(0, 4).map((campaign, i) => (
-                    <div key={i} className="bg-card/60 backdrop-blur-sm border border-border rounded-2xl p-4 flex items-center gap-4 shadow-sm group hover:border-primary/50 transition-all duration-300">
-                       <div className="relative h-16 w-16 flex-shrink-0">
-                         <img src={campaign.image_url || "https://images.unsplash.com/photo-1540747913346-19e32dc3e97e?q=80&w=256&h=256&auto=format&fit=crop"} className="h-full w-full rounded-xl object-cover" alt="" />
-                         <div className="absolute inset-0 bg-primary/20 blur-sm rounded-xl animate-pulse group-hover:bg-primary/40" />
-                       </div>
-                      <div className="min-w-0 flex-1">
-                          <div className="flex items-center justify-between mb-1 text-foreground">
-                            <h4 className="font-bold text-xs truncate uppercase tracking-tighter">{campaign.title}</h4>
-                            {campaign.draw_date && <CountdownTimer targetDate={campaign.draw_date} className="scale-75 origin-right" />}
-                          </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <div className="h-1.5 flex-1 bg-secondary rounded-full overflow-hidden">
-                            <motion.div 
-                              initial={{ width: 0 }}
-                              whileInView={{ width: `${(campaign.sold_tickets/campaign.total_tickets)*100}%` }}
-                              className="h-full bg-primary" 
-                            />
-                          </div>
-                          <span className="text-[8px] font-black text-primary">{(campaign.sold_tickets/campaign.total_tickets*100).toFixed(0)}%</span>
-                        </div>
-                        {/* Participants faces */}
-                        <div className="flex items-center gap-1.5 mt-2">
-                          <div className="flex -space-x-2">
-                            {[
-                              "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=32&h=32&auto=format&fit=crop",
-                              "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=32&h=32&auto=format&fit=crop",
-                              "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?q=80&w=32&h=32&auto=format&fit=crop",
-                              "https://images.unsplash.com/photo-1531123897727-8f129e16fd3c?q=80&w=32&h=32&auto=format&fit=crop",
-                              "https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?q=80&w=32&h=32&auto=format&fit=crop"
-                            ].map((img, idx) => (
-                              <img key={idx} src={img} className="h-5 w-5 rounded-full border-2 border-card object-cover" alt="User" />
-                            ))}
-                          </div>
-                          <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">+ {Math.floor(campaign.sold_tickets / 100) + 1} participando</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                 <Button 
-                   size="lg" 
-                   className="h-14 rounded-2xl px-8 font-black uppercase italic tracking-widest glow-primary shadow-[0_0_20px_rgba(var(--primary-rgb),0.5)] animate-pulse"
-                   onClick={() => { playSound('click'); hapticFeedback(); }}
-                 >
-                  Ver Tudo <ArrowRight className="ml-2 h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          </section>
 
 
           {/* Ganhadores Cinematic Section - Hall da Fama */}
