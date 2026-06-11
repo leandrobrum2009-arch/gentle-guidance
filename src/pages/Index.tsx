@@ -189,8 +189,13 @@ const Index = () => {
 
   const activeCampaigns = useMemo(() => {
     if (!campaigns) return [];
+    const now = new Date();
     return campaigns
-      .filter(c => c.status === "active")
+      .filter(c => {
+        const isActiveStatus = c.status === "active";
+        const isNotExpired = !c.draw_date || new Date(c.draw_date) > now;
+        return isActiveStatus && isNotExpired;
+      })
       .sort((a, b) => {
         if (a.featured && !b.featured) return -1;
         if (!a.featured && b.featured) return 1;
@@ -243,8 +248,13 @@ const Index = () => {
 
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
+    const now = new Date();
     const allEnded = campaigns
-      .filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn"))
+      .filter(c => {
+        const isEndedStatus = (c.status === "completed" || c.status === "finished" || c.status === "drawn");
+        const isExpired = c.draw_date && new Date(c.draw_date) <= now;
+        return isEndedStatus || isExpired;
+      })
       .sort((a, b) => {
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
@@ -711,7 +721,7 @@ const Index = () => {
 
           {/* Rifas Encerradas Section at the end - Optimized Loading */}
           <div ref={endedRef} className="scroll-mt-20">
-            {isIntersecting && campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn")) && (
+            {isIntersecting && campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn" || (c.draw_date && new Date(c.draw_date) <= new Date()))) && (
               <section className="container py-12 md:py-20 border-t border-border mt-12">
                 <SectionHeading 
                   icon={Clock} 
@@ -728,7 +738,7 @@ const Index = () => {
                   </AnimatePresence>
                 </div>
 
-                {!showEnded && campaigns.filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn")).length > 4 && (
+                {!showEnded && campaigns.filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn" || (c.draw_date && new Date(c.draw_date) <= new Date()))).length > 4 && (
                   <div className="flex justify-center mt-12">
                     <Button 
                       variant="outline" 
