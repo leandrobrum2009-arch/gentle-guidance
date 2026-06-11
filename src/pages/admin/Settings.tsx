@@ -675,6 +675,49 @@ export default function AdminSettings() {
                     </div>
                   </div>
 
+                  {/* Pay2m */}
+                  <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
+                    settings.find(s => s.key === 'active_payment_provider')?.value === 'pay2m' 
+                    ? 'bg-primary/5 border-primary shadow-xl shadow-primary/5' 
+                    : 'bg-secondary/20 border-border/50 opacity-60 grayscale-[0.5]'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg">
+                          <span className="font-black text-lg">P2</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base">Pay2m</h4>
+                          <div className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">API PIX</p>
+                          </div>
+                        </div>
+                      </div>
+                      {settings.find(s => s.key === 'active_payment_provider')?.value === 'pay2m' && (
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Check className="h-5 w-5 stroke-[3px]" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'pay2m_client_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Key"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'pay2m_client_secret')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Secret"
+                        getIcon={getIcon}
+                        type="password"
+                      />
+                    </div>
+                  </div>
+
                   {/* Manual */}
                   <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
                     settings.find(s => s.key === 'active_payment_provider')?.value === 'manual' 
