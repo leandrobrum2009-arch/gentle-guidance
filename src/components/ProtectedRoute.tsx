@@ -1,18 +1,20 @@
 import { ReactNode, useEffect, useRef } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useIsAdmin } from "@/hooks/useAdmin";
-import { Loader2 } from "lucide-react";
+import { useIsAdmin, useRole } from "@/hooks/useAdmin";
+import { Loader2, ShieldAlert } from "lucide-react";
 import { logAuthEvent } from "@/lib/audit";
 
 interface ProtectedRouteProps {
   children: ReactNode;
   adminOnly?: boolean;
+  masterOnly?: boolean;
 }
 
-export default function ProtectedRoute({ children, adminOnly = false }: ProtectedRouteProps) {
+export default function ProtectedRoute({ children, adminOnly = false, masterOnly = false }: ProtectedRouteProps) {
   const { user, loading: authLoading } = useAuth();
   const { data: isAdmin, isLoading: roleLoading } = useIsAdmin();
+  const { data: role, isLoading: userRoleLoading } = useRole();
   const location = useLocation();
   const loggedRef = useRef<string | null>(null);
 
@@ -33,7 +35,7 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
     });
   }, [location.pathname, adminOnly, user?.id, isAdmin, roleLoading]);
 
-  if (authLoading || (adminOnly && roleLoading)) {
+  if (authLoading || (adminOnly && roleLoading) || (masterOnly && userRoleLoading)) {
     return (
       <div className="flex h-screen items-center justify-center bg-background">
         <div className="flex flex-col items-center gap-4">
@@ -53,6 +55,26 @@ export default function ProtectedRoute({ children, adminOnly = false }: Protecte
   if (adminOnly && !isAdmin) {
     console.warn(`Unauthorized access attempt to ${location.pathname} by user ${user.id}`);
     return <Navigate to="/" replace />;
+  }
+
+  if (masterOnly && role !== 'master') {
+    return (
+      <div className="flex h-screen items-center justify-center bg-background p-6">
+        <div className="max-w-md w-full bg-card border border-border p-8 rounded-3xl text-center space-y-6 shadow-2xl">
+          <div className="h-20 w-20 bg-destructive/10 text-destructive rounded-full flex items-center justify-center mx-auto animate-bounce">
+            <ShieldAlert className="h-10 w-10" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-2xl font-black uppercase italic tracking-tighter">Acesso Restrito</h2>
+            <p className="text-muted-foreground text-sm leading-relaxed">
+              Esta página é exclusiva para usuários com privilégios **MASTER**. 
+              Seu nível de acesso atual não permite visualizar este conteúdo.
+            </p>
+          </div>
+          <Navigate to="/admin" replace />
+        </div>
+      </div>
+    );
   }
 
   return <>{children}</>;

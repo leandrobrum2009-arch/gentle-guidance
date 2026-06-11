@@ -156,11 +156,11 @@ const AppContent = () => {
           <Route path="/admin/banners" element={<ProtectedRoute adminOnly><AdminBanners /></ProtectedRoute>} />
           <Route path="/admin/cupons" element={<ProtectedRoute adminOnly><AdminCoupons /></ProtectedRoute>} />
           <Route path="/admin/notificacoes" element={<ProtectedRoute adminOnly><AdminNotifications /></ProtectedRoute>} />
-          <Route path="/admin/configuracoes" element={<ProtectedRoute adminOnly><AdminSettings /></ProtectedRoute>} />
-          <Route path="/admin/diagnostico" element={<ProtectedRoute adminOnly><AdminDiagnostics /></ProtectedRoute>} />
-          <Route path="/admin/pagamentos/logs" element={<ProtectedRoute adminOnly><AdminPaymentLogs /></ProtectedRoute>} />
-          <Route path="/admin/audit-logs" element={<ProtectedRoute adminOnly><AdminAuditLogs /></ProtectedRoute>} />
-          <Route path="/admin/transacoes" element={<ProtectedRoute adminOnly><AdminTransactions /></ProtectedRoute>} />
+          <Route path="/admin/configuracoes" element={<ProtectedRoute masterOnly><AdminSettings /></ProtectedRoute>} />
+          <Route path="/admin/diagnostico" element={<ProtectedRoute masterOnly><AdminDiagnostics /></ProtectedRoute>} />
+          <Route path="/admin/pagamentos/logs" element={<ProtectedRoute masterOnly><AdminPaymentLogs /></ProtectedRoute>} />
+          <Route path="/admin/audit-logs" element={<ProtectedRoute masterOnly><AdminAuditLogs /></ProtectedRoute>} />
+          <Route path="/admin/transacoes" element={<ProtectedRoute masterOnly><AdminTransactions /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
