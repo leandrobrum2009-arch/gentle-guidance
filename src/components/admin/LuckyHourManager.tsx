@@ -6,7 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck, Eye, TrendingUp, Filter, ShieldAlert, CheckSquare, XCircle } from "lucide-react";
+import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck, Eye, TrendingUp, Filter, ShieldAlert, CheckSquare, XCircle, Calendar } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
@@ -35,7 +37,12 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
     prize_description: "",
     draw_time: "",
     draw_type: 'hourly' as 'hourly' | 'greater_smaller',
+    is_recurring: false,
+    frequency: 'daily' as 'daily' | 'every_x_days',
+    every_x_days: 3,
+    occurrences: 5,
   });
+
 
   const handleAdd = async () => {
     if (!newDraw.title || !newDraw.prize_description || !newDraw.draw_time) {
@@ -45,21 +52,59 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
 
     setSaving(true);
     try {
-      const { error } = await supabase.from("lucky_hours").insert({
-        campaign_id: campaignId,
-        title: newDraw.title,
-        prize_description: newDraw.prize_description,
-        draw_time: new Date(newDraw.draw_time).toISOString(),
-        status: 'scheduled',
-        draw_type: newDraw.draw_type
-      });
+      const drawsToInsert = [];
+      const startTime = new Date(newDraw.draw_time);
+
+      if (newDraw.is_recurring) {
+        for (let i = 0; i < newDraw.occurrences; i++) {
+          const drawTime = new Date(startTime);
+          if (newDraw.frequency === 'daily') {
+            drawTime.setDate(startTime.getDate() + i);
+          } else {
+            drawTime.setDate(startTime.getDate() + (i * newDraw.every_x_days));
+          }
+
+          drawsToInsert.push({
+            campaign_id: campaignId,
+            title: newDraw.title,
+            prize_description: newDraw.prize_description,
+            draw_time: drawTime.toISOString(),
+            status: 'scheduled',
+            draw_type: newDraw.draw_type
+          });
+        }
+      } else {
+        drawsToInsert.push({
+          campaign_id: campaignId,
+          title: newDraw.title,
+          prize_description: newDraw.prize_description,
+          draw_time: startTime.toISOString(),
+          status: 'scheduled',
+          draw_type: newDraw.draw_type
+        });
+      }
+
+      const { error } = await supabase.from("lucky_hours").insert(drawsToInsert);
 
       if (error) throw error;
 
-      toast({ title: "Sucesso", description: "Sorteio agendado!" });
-      setNewDraw({ title: "", prize_description: "", draw_time: "", draw_type: activeTab });
+      toast({ 
+        title: "Sucesso", 
+        description: newDraw.is_recurring ? `${drawsToInsert.length} sorteios agendados!` : "Sorteio agendado!" 
+      });
+      setNewDraw({ 
+        title: "", 
+        prize_description: "", 
+        draw_time: "", 
+        draw_type: activeTab,
+        is_recurring: false,
+        frequency: 'daily',
+        every_x_days: 3,
+        occurrences: 5
+      });
       setIsAdding(false);
       refetch();
+
     } catch (e: any) {
       toast({ title: "Erro", description: e.message, variant: "destructive" });
     } finally {
@@ -80,7 +125,27 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
     }
   };
 
+  const handleClearScheduled = async () => {
+    if (!confirm("Tem certeza que deseja excluir TODOS os sorteios agendados? Sorteios realizados não serão afetados.")) return;
+
+    try {
+      const { error } = await supabase
+        .from("lucky_hours")
+        .delete()
+        .eq("campaign_id", campaignId)
+        .eq("status", "scheduled")
+        .eq("draw_type", activeTab);
+
+      if (error) throw error;
+      toast({ title: "Sucesso", description: "Todos os sorteios agendados foram removidos." });
+      refetch();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    }
+  };
+
   const handleNotifyWinner = async (draw: LuckyHour) => {
+
     if (!draw.winner_name || !draw.winning_number) {
       toast({ title: "Erro", description: "Dados do vencedor incompletos", variant: "destructive" });
       return;
@@ -275,21 +340,66 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                     onChange={e => setNewDraw(p => ({ ...p, prize_description: e.target.value }))}
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label className="text-xs font-bold uppercase tracking-wider">Data e Hora</Label>
-                  <Input 
-                    type="datetime-local" 
-                    value={newDraw.draw_time} 
-                    className="rounded-xl"
-                    onChange={e => setNewDraw(p => ({ ...p, draw_time: e.target.value }))}
-                  />
+                <div className="space-y-2 flex flex-col justify-end">
+                  <div className="flex items-center gap-2 p-3 bg-secondary/50 rounded-xl border border-border h-[42px]">
+                    <Switch 
+                      checked={newDraw.is_recurring} 
+                      onCheckedChange={v => setNewDraw(p => ({ ...p, is_recurring: v }))} 
+                    />
+                    <Label className="text-[10px] font-bold uppercase cursor-pointer">Sorteio Recorrente</Label>
+                  </div>
                 </div>
               </div>
+
+              {newDraw.is_recurring && (
+                <div className="p-4 bg-primary/5 rounded-xl border border-primary/10 grid grid-cols-1 md:grid-cols-3 gap-4 animate-in fade-in zoom-in-95">
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider">Frequência</Label>
+                    <Select value={newDraw.frequency} onValueChange={v => setNewDraw(p => ({ ...p, frequency: v as any }))}>
+                      <SelectTrigger className="bg-card rounded-lg">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="daily">Diário (Todos os dias)</SelectItem>
+                        <SelectItem value="every_x_days">A cada X dias</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {newDraw.frequency === 'every_x_days' && (
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-bold uppercase tracking-wider">A cada quantos dias?</Label>
+                      <Input 
+                        type="number" 
+                        min="2" 
+                        value={newDraw.every_x_days} 
+                        onChange={e => setNewDraw(p => ({ ...p, every_x_days: parseInt(e.target.value) || 2 }))}
+                        className="bg-card rounded-lg"
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2">
+                    <Label className="text-[10px] font-bold uppercase tracking-wider">Total de Ocorrências</Label>
+                    <Input 
+                      type="number" 
+                      min="1" 
+                      max="30"
+                      value={newDraw.occurrences} 
+                      onChange={e => setNewDraw(p => ({ ...p, occurrences: parseInt(e.target.value) || 1 }))}
+                      className="bg-card rounded-lg"
+                    />
+                    <p className="text-[9px] text-muted-foreground italic">Máximo 30 sorteios de uma vez.</p>
+                  </div>
+                </div>
+              )}
+
               <Button onClick={handleAdd} disabled={saving} className="w-full md:w-auto rounded-xl">
                 {saving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Agendar Sorteio
+                {newDraw.is_recurring ? `Agendar ${newDraw.occurrences} Sorteios` : 'Agendar Sorteio'}
               </Button>
             </div>
+
           )}
 
           {isLoading ? (
@@ -301,8 +411,18 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                   Nenhum sorteio agendado para esta campanha.
                 </div>
               ) : (
-                <>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Sorteios Encontrados ({luckyHours?.filter(h => h.draw_type === activeTab).length})</p>
+                    {luckyHours?.some(h => h.draw_type === activeTab && h.status === 'scheduled') && (
+                      <Button variant="ghost" size="sm" className="h-7 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/5 font-bold uppercase tracking-tighter gap-1.5" onClick={handleClearScheduled}>
+                        <Trash2 className="h-3 w-3" /> Limpar Agendados
+                      </Button>
+                    )}
+                  </div>
                   <div className="grid gap-4">
+
+
                     {paginatedLuckyHours.map((draw) => (
                       <div key={draw.id} className="p-5 bg-card border border-border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 hover:shadow-md transition-all group">
                         <div className="flex items-start gap-4">
@@ -418,8 +538,9 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                       </Button>
                     </div>
                   )}
-                </>
-              )}
+                  </div>
+                )}
+
             </div>
           )}
         </CardContent>
