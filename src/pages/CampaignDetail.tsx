@@ -153,13 +153,13 @@ const CampaignDetail = () => {
 
   const hourlyDraws = useMemo(() => {
     if (!luckyHours) return [];
-    return luckyHours.filter(h => h.draw_type === 'hourly' && (h.status === 'scheduled' || h.is_approved))
+    return luckyHours.filter(h => h.draw_type === 'hourly')
       .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
   }, [luckyHours]);
 
   const greaterSmallerDraws = useMemo(() => {
     if (!luckyHours) return [];
-    return luckyHours.filter(h => h.draw_type === 'greater_smaller' && (h.status === 'scheduled' || h.is_approved))
+    return luckyHours.filter(h => h.draw_type === 'greater_smaller')
       .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
   }, [luckyHours]);
 
@@ -1008,7 +1008,6 @@ const CampaignDetail = () => {
                 <div className="grid grid-cols-1 gap-3">
                   {hourlyDraws.length > 0 ? hourlyDraws.map((draw) => (
                     <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50">
-
                       <div className="flex items-center gap-3">
                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
                           <Clock className="h-4 w-4" />
@@ -1019,7 +1018,14 @@ const CampaignDetail = () => {
                             {new Date(draw.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} • {draw.prize_description}
                           </p>
                           {draw.status === 'completed' && draw.winner_name && (
-                            <p className="text-[9px] font-black text-emerald-500 uppercase mt-0.5 truncate">Ganhador: {draw.winner_name}</p>
+                            <div className="mt-1 flex flex-col gap-0.5">
+                              <p className="text-[9px] font-black text-emerald-500 uppercase truncate flex items-center gap-1">
+                                <Trophy className="h-2 w-2" /> Ganhador: {draw.winner_name}
+                              </p>
+                              {draw.winning_number && (
+                                <p className="text-[8px] font-bold text-muted-foreground uppercase italic">Cota Premiada: {draw.winning_number}</p>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
