@@ -137,7 +137,7 @@ export const useAdminCampaigns = () =>
        
         let results = profiles.map(profile => {
           const matchingRoles = userRoles?.filter(r => r.user_id === profile.user_id).map(r => r.role) || [];
-          const userRole = (['master', 'client_admin', 'admin', 'moderator'].find(p => matchingRoles.includes(p)) || 'user');
+          const userRole = (['master', 'client_admin', 'admin', 'moderator'] as any[]).find(p => matchingRoles.includes(p)) || 'user';
           return {
             ...profile,
             role: userRole as any,
