@@ -42,7 +42,6 @@ import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { maskCPF, maskPhone, validateCPF, validatePhone } from "@/lib/validations";
-import { ptBR } from "date-fns/locale";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
