@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
@@ -6,7 +6,7 @@ import {
   ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { Badge } from "@/components/ui/badge";
