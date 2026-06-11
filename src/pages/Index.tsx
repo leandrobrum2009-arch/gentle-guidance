@@ -349,52 +349,74 @@ const Index = () => {
             </div>
           </section>
 
-           {/* Premium Draws & Live Activity */}
-           <section className="container py-12 md:py-20">
-             <div className="flex flex-col gap-12">
+           {/* Active Campaigns Sections */}
+           <section className="container py-12 md:py-20 space-y-20">
+             {/* Featured Campaigns */}
+             {featuredCampaigns.length > 0 && (
                <div className="space-y-8">
                  <SectionHeading 
-                   icon={Zap} 
-                   title="Sorteios Premium" 
-                   subtitle="Os prêmios mais desejados do momento"
-                   badge="Em Destaque"
+                   icon={Star} 
+                   title="Campanhas em Destaque" 
+                   subtitle="As melhores oportunidades selecionadas para você"
+                   badge="VIP"
                  />
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
-                    {activeCampaigns.length > 0 ? (
-                      activeCampaigns.map((campaign, i) => (
-                        <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                      ))
-                    ) : (
-                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
-                        <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
-                          <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
-                        </div>
-                        <div className="space-y-2">
-                          <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
-                          <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Button 
-                            variant="outline" 
-                            size="lg" 
-                            className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
-                            onClick={() => {
-                              queryClient.invalidateQueries({ queryKey: ["campaigns"] });
-                              window.location.reload();
-                            }}
-                          >
-                            <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
-                          </Button>
-                          <Link to="/ganhadores">
-                            <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
-                              VER GANHADORES
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                   {featuredCampaigns.map((campaign, i) => (
+                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                   ))}
+                 </div>
+               </div>
+             )}
+
+             {/* Normal Active Campaigns */}
+             <div className="space-y-8">
+               <SectionHeading 
+                 icon={Zap} 
+                 title="Sorteios Ativos" 
+                 subtitle="Participe e concorra a prêmios incríveis"
+                 badge="Ao Vivo"
+               />
+               <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
+                 {normalCampaigns.length > 0 ? (
+                   normalCampaigns.map((campaign, i) => (
+                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                   ))
+                 ) : featuredCampaigns.length === 0 ? (
+                   <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
+                     <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
+                       <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
+                     </div>
+                     <div className="space-y-2">
+                       <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
+                       <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
+                     </div>
+                     <div className="flex flex-col sm:flex-row gap-3">
+                       <Button 
+                         variant="outline" 
+                         size="lg" 
+                         className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
+                         onClick={() => {
+                           queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+                           window.location.reload();
+                         }}
+                       >
+                         <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
+                       </Button>
+                       <Link to="/ganhadores">
+                         <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
+                           VER GANHADORES
+                         </Button>
+                       </Link>
+                     </div>
+                   </div>
+                 ) : (
+                   <div className="col-span-full py-12 text-center">
+                     <p className="text-xs font-black uppercase tracking-widest text-muted-foreground italic">Confira nossas campanhas em destaque acima!</p>
+                   </div>
+                 )}
+               </div>
+             </div>
+           </section>
  
                  {/* Social Proof / Security Highlights - Smaller Version */}
                  <div className="grid gap-4 md:grid-cols-3">
