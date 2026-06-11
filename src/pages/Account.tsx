@@ -588,9 +588,13 @@ import { PaymentModal } from "@/components/PaymentModal";
                               <div className="min-w-0">
                                 <div className="flex items-center gap-2 mb-1">
                                   <p className="text-sm font-black uppercase tracking-tight text-foreground truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
-                                  {isCampaignFinished && (
+                                  {isCampaignFinished ? (
                                     <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-500 border-blue-500/20">
                                       Encerrada
+                                    </Badge>
+                                  ) : (
+                                    <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
+                                      {o.campaigns?.status === 'active' ? 'Ativa' : o.campaigns?.status === 'paused' ? 'Pausada' : 'Aguardando'}
                                     </Badge>
                                   )}
                                 </div>
