@@ -37,21 +37,53 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
           const { data, error } = await supabase.functions.invoke('mercadopago-payment', {
             body: { orderId, path: 'create' },
           });
-          if (error) throw error;
+          if (error) {
+            await supabase.from('payment_failures').insert({
+              order_id: orderId,
+              user_id: order.user_id,
+              provider: 'mercadopago',
+              error_message: error.message,
+              metadata: { context: 'card-payment-create' }
+            });
+            throw error;
+          }
           if (data?.init_point) {
             window.location.href = data.init_point;
           } else {
-            toast.error("Erro ao gerar link de pagamento Mercado Pago");
+            const msg = "Erro ao gerar link de pagamento Mercado Pago";
+            await supabase.from('payment_failures').insert({
+              order_id: orderId,
+              user_id: order.user_id,
+              provider: 'mercadopago',
+              error_message: msg
+            });
+            toast.error(msg);
           }
         } else {
           const { data, error } = await supabase.functions.invoke('stripe-payment', {
             body: { orderId, path: 'create' },
           });
-          if (error) throw error;
+          if (error) {
+            await supabase.from('payment_failures').insert({
+              order_id: orderId,
+              user_id: order.user_id,
+              provider: 'stripe',
+              error_message: error.message,
+              metadata: { context: 'card-payment-create' }
+            });
+            throw error;
+          }
           if (data?.url) {
             window.location.href = data.url;
           } else {
-            toast.error("Erro ao gerar link de pagamento Stripe");
+            const msg = "Erro ao gerar link de pagamento Stripe";
+            await supabase.from('payment_failures').insert({
+              order_id: orderId,
+              user_id: order.user_id,
+              provider: 'stripe',
+              error_message: msg
+            });
+            toast.error(msg);
           }
         }
       } catch (err: any) {
