@@ -1235,7 +1235,7 @@ const CampaignDetail = () => {
               transition={{ repeat: Infinity, duration: 3 }}
               className="relative z-10 space-y-4"
             >
-              <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-black leading-none">
+              <h2 className="text-xl sm:text-2xl md:text-5xl font-black uppercase italic tracking-tighter text-black leading-none">
                 Sua sorte está a um <br className="hidden md:block" /> <span className="underline decoration-black/30 underline-offset-8">PIX de distância!</span>
               </h2>
               <p className="text-[10px] md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto leading-relaxed">
