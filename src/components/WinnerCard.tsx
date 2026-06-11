@@ -27,7 +27,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative overflow-hidden rounded-2xl border border-border bg-card p-4 md:p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group border-light-path border-[#22c55e]/20"
+      className="relative overflow-hidden rounded-2xl border border-border bg-card p-3 sm:p-4 md:p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group border-light-path border-[#22c55e]/20"
     >
       {/* Background Icon */}
       <Trophy className="absolute -right-4 -top-4 h-32 w-32 text-primary/5 rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6" />
