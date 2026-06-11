@@ -25,7 +25,7 @@ const LogoFallback = ({ siteName }: { siteName?: string }) => (
     <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
       <Ticket className="h-4 w-4 md:h-5 md:w-5 text-primary-foreground" />
     </div>
-    <span className={`font-display text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
+    <span className={`font-display text-xs sm:text-sm md:text-lg font-black uppercase tracking-tighter text-foreground text-animate-gradient truncate`}>
       {siteName ? (
         <>
           {siteName.split(' ')[0]}

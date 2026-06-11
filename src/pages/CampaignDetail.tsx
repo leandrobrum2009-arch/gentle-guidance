@@ -416,7 +416,7 @@ const CampaignDetail = () => {
               </div>
               
               <div className="space-y-2">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-animate-gradient leading-[0.9] break-words overflow-hidden">
+                <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-animate-gradient leading-[0.9] break-words overflow-hidden">
                   {campaign.title}
                 </h1>
                 {campaign.subtitle && (
