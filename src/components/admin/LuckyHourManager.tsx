@@ -499,11 +499,13 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                                   try {
                                     const { data, error } = await supabase.rpc('run_lucky_hour_draw', { p_lucky_hour_id: draw.id });
                                     if (error) throw error;
-                                    if (data && !data.success) throw new Error(data.message);
+                                    
+                                    const result = data as any;
+                                    if (result && !result.success) throw new Error(result.message);
                                     
                                     toast({ 
                                       title: "Sorteio Realizado!", 
-                                      description: `Vencedor: ${data.winner_name} (Nº ${data.winning_number})`
+                                      description: `Vencedor: ${result.winner_name} (Nº ${result.winning_number})`
                                     });
                                     refetch();
                                   } catch (err: any) {
