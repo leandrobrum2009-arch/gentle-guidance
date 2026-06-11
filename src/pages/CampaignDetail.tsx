@@ -1113,11 +1113,9 @@ const CampaignDetail = () => {
       <LiveNotifications />
 
       
-      <div className="container px-4 md:px-6">
-        <div className="flex flex-col gap-4">
-
+      <div className="container px-4 md:px-6 pb-20">
+        <div className="flex flex-col gap-6 md:gap-8">
           {sectionsOrder.map((section) => renderSection(section))}
-          
         </div>
       </div>
 
