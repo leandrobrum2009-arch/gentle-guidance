@@ -538,8 +538,9 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                       </Button>
                     </div>
                   )}
-                </>
-              )}
+                  </div>
+                )}
+
             </div>
           )}
         </CardContent>
