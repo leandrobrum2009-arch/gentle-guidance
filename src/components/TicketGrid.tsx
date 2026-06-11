@@ -1,16 +1,18 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Info, Lock, Trophy, Search } from "lucide-react";
+import { Check, Info, Lock, Trophy, Search, Sparkles, Zap, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
  
  interface TicketGridProps {
    totalTickets: number;
    soldTickets: string[]; // Numbers already sold
    selectedTickets: string[];
    onSelect: (number: string) => void;
+   onClearAll?: () => void;
    maxSelection?: number;
    luckyNumbers?: string[];
  }
@@ -20,14 +22,19 @@ import { Input } from "@/components/ui/input";
    soldTickets,
    selectedTickets,
    onSelect,
+   onClearAll,
    maxSelection = 100,
    luckyNumbers = []
  }: TicketGridProps) => {
    const [viewRange, setViewRange] = useState({ start: 0, end: 100 });
- 
+   const [searchQuery, setSearchQuery] = useState("");
+
    const tickets = useMemo(() => {
      const arr = [];
-     for (let i = viewRange.start; i < Math.min(viewRange.end, totalTickets); i++) {
+     const start = viewRange.start;
+     const end = Math.min(viewRange.end, totalTickets);
+     
+     for (let i = start; i < end; i++) {
        const numStr = i.toString().padStart(totalTickets.toString().length, '0');
        arr.push({
          number: numStr,
@@ -38,6 +45,15 @@ import { Input } from "@/components/ui/input";
      }
      return arr;
    }, [viewRange, totalTickets, soldTickets, selectedTickets, luckyNumbers]);
+
+   const handleSearch = (value: string) => {
+     setSearchQuery(value);
+     const num = parseInt(value);
+     if (!isNaN(num) && num >= 0 && num < totalTickets) {
+       const start = Math.floor(num / 100) * 100;
+       setViewRange({ start, end: start + 100 });
+     }
+   };
  
    return (
      <div className="space-y-4">
