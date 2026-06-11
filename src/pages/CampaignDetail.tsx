@@ -985,7 +985,7 @@ const CampaignDetail = () => {
 
       case 'events':
         return luckyHours && luckyHours.length > 0 && (
-          <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-md space-y-4 -mt-2">
+          <div key={section} className="bg-card rounded-3xl p-6 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-4 -mt-2">
 
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
