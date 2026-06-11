@@ -27,9 +27,19 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [isCpfValid, setIsCpfValid] = useState(true);
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (cpf) setIsCpfValid(validateCPF(cpf));
+  }, [cpf]);
+
+  useEffect(() => {
+    if (phone) setIsPhoneValid(validatePhone(phone));
+  }, [phone]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
