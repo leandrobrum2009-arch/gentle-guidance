@@ -948,7 +948,7 @@ const CampaignDetail = () => {
   const nextLuckyHour = useMemo(() => {
     if (!luckyHours) return null;
     const now = new Date();
-    // Only show hourly type as "next" alert
+    // Only show hourly type as "next" alert and ONLY if approved
     return luckyHours.find(h => {
       const drawDate = new Date(h.draw_time);
       return h.status === 'scheduled' && h.draw_type === 'hourly' && drawDate > now;
