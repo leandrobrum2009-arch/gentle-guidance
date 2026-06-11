@@ -173,7 +173,7 @@ const LiveNotifications = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-4 left-4 z-[100] flex flex-col gap-3 pointer-events-none">
+    <div className="fixed bottom-6 left-6 z-[100] flex flex-col gap-3 pointer-events-none">
       <AnimatePresence>
         {notifications.map((notif) => (
           <motion.div
