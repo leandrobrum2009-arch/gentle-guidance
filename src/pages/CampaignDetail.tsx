@@ -863,11 +863,20 @@ const CampaignDetail = () => {
 
       case 'ranking':
         return campaign.ranking_enabled && (
-          <div key={section} className="bg-card rounded-3xl p-8 border border-border shadow-sm">
+          <div key={section} className="bg-transparent border-none shadow-none">
             <UserRanking 
-              title="Maiores e menores cotas" 
-              stats={ticketStats ? { ...ticketStats, userTickets } : null} 
-              users={campaignRanking?.slice(0, 5)}
+              title="Premiação por Números" 
+              stats={ticketStats ? { 
+                ...ticketStats, 
+                userTickets,
+                activePrize: {
+                  title: "Maior e Menor Bilhete",
+                  prize_maior: "14,01",
+                  prize_menor: "14,01",
+                  end_date: campaign.draw_date || new Date().toISOString()
+                }
+              } : null} 
+              users={[]}
             />
           </div>
         );
