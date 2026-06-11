@@ -329,6 +329,8 @@ export type Database = {
           description: string | null
           draw_date: string | null
           draw_number: string | null
+          fake_progress_enabled: boolean | null
+          fake_progress_percentage: number | null
           featured: boolean | null
           federal_lottery_draw: boolean | null
           gallery_urls: Json | null
@@ -387,6 +389,8 @@ export type Database = {
           description?: string | null
           draw_date?: string | null
           draw_number?: string | null
+          fake_progress_enabled?: boolean | null
+          fake_progress_percentage?: number | null
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
@@ -445,6 +449,8 @@ export type Database = {
           description?: string | null
           draw_date?: string | null
           draw_number?: string | null
+          fake_progress_enabled?: boolean | null
+          fake_progress_percentage?: number | null
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
