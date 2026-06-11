@@ -150,7 +150,7 @@ const Register = () => {
               <Input id="name" value={name} onChange={(e) => setName(e.target.value)} placeholder="Seu nome completo" required />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="cpf">CPF</Label>
+              <Label htmlFor="cpf">CPF (Obrigatório)</Label>
               <div className="relative">
                 <Input 
                   id="cpf" 
@@ -161,6 +161,7 @@ const Register = () => {
                     "transition-colors",
                     cpf.length > 0 && (isCpfValid ? "border-emerald-500/50" : "border-rose-500/50")
                   )}
+                  required
                 />
                 {cpf.length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
@@ -170,7 +171,7 @@ const Register = () => {
               </div>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="phone">Telefone</Label>
+              <Label htmlFor="phone">Telefone (Obrigatório)</Label>
               <div className="relative">
                 <Input 
                   id="phone" 
@@ -181,6 +182,7 @@ const Register = () => {
                     "transition-colors",
                     phone.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
                   )}
+                  required
                 />
                 {phone.length > 0 && (
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
