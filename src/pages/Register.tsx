@@ -48,8 +48,8 @@ const Register = () => {
     setIsCpfValid(true);
     setIsPhoneValid(true);
 
-    if (!name || !email || !password) {
-      toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
+    if (!name || !email || !password || !cpf || !phone) {
+      toast({ title: "Preencha todos os campos obrigatórios", variant: "destructive" });
       return;
     }
 
