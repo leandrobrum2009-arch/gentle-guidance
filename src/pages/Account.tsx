@@ -663,7 +663,8 @@ import { PaymentModal } from "@/components/PaymentModal";
                             </div>
                           )}
                         </div>
-                      )) : (
+                        );
+                      }) : (
                         <div className="text-center py-24 opacity-30">
                             <Ticket className="h-16 w-16 mx-auto mb-4 text-foreground" />
                             <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
