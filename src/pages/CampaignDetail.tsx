@@ -354,7 +354,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative overflow-hidden mt-8 md:mt-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-border/10">
+          <div key={section} className="w-full bg-black relative overflow-x-hidden mt-8 md:mt-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-border/10">
             <RaffleGallery 
               images={Array.from(new Set([
                 campaign.image_url || "",
@@ -416,7 +416,7 @@ const CampaignDetail = () => {
               </div>
               
               <div className="space-y-2">
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-animate-gradient leading-[0.9]">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-animate-gradient leading-[0.9] break-words overflow-hidden">
                   {campaign.title}
                 </h1>
                 {campaign.subtitle && (
@@ -1119,7 +1119,7 @@ const CampaignDetail = () => {
 
       case 'faq':
         return (
-          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-10 border border-border shadow-sm space-y-8">
+          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-10 border border-border shadow-sm space-y-8 overflow-hidden">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">

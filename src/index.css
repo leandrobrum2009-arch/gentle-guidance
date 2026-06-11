@@ -171,7 +171,10 @@ aside:has(a[href*="lovable.dev"]) {
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased overflow-x-hidden transition-colors duration-300;
+    @apply bg-background text-foreground font-sans antialiased transition-colors duration-300;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
     font-family: 'Inter', system-ui, sans-serif;
     --default-transition: all 0.3s var(--animation-easing);
   }
