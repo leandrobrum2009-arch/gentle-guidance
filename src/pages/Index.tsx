@@ -418,51 +418,112 @@ const Index = () => {
 
              {/* Normal Active Campaigns */}
              <div className="space-y-8">
-               <SectionHeading 
-                 icon={Zap} 
-                 title="Sorteios Ativos" 
-                 subtitle="Participe e concorra a prêmios incríveis"
-                 badge="Ao Vivo"
-               />
+               <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                 <SectionHeading 
+                   icon={Zap} 
+                   title="Sorteios Ativos" 
+                   subtitle="Participe e concorra a prêmios incríveis"
+                   badge="Ao Vivo"
+                 />
+                 
+                 <div className="flex flex-col sm:flex-row gap-3 md:mb-10">
+                   <div className="relative group">
+                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+                     <Input 
+                       placeholder="Buscar rifas..." 
+                       value={searchTerm}
+                       onChange={(e) => setSearchTerm(e.target.value)}
+                       className="pl-10 h-11 w-full sm:w-64 rounded-xl border-border bg-card/50 backdrop-blur-sm focus:ring-primary/20"
+                     />
+                   </div>
+                   <Select value={sortBy} onValueChange={setSortBy}>
+                     <SelectTrigger className="h-11 w-full sm:w-48 rounded-xl border-border bg-card/50 backdrop-blur-sm">
+                       <Filter className="h-4 w-4 mr-2 text-muted-foreground" />
+                       <SelectValue placeholder="Ordenar por" />
+                     </SelectTrigger>
+                     <SelectContent className="rounded-xl border-border bg-card/90 backdrop-blur-xl">
+                       <SelectItem value="recent">Mais Recentes</SelectItem>
+                       <SelectItem value="oldest">Mais Antigas</SelectItem>
+                       <SelectItem value="price-asc">Menor Preço</SelectItem>
+                       <SelectItem value="price-desc">Maior Preço</SelectItem>
+                     </SelectContent>
+                   </Select>
+                 </div>
+               </div>
+
                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
-                 {normalCampaigns.length > 0 ? (
-                   normalCampaigns.map((campaign, i) => (
+                 {paginatedCampaigns.length > 0 ? (
+                   paginatedCampaigns.map((campaign, i) => (
                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
                    ))
-                 ) : featuredCampaigns.length === 0 ? (
-                   <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
+                 ) : (
+                   <div className="col-span-full py-20 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
                      <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
-                       <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
+                       <Search className="h-10 w-10 text-muted-foreground opacity-30" />
                      </div>
                      <div className="space-y-2">
-                       <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
-                       <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
-                     </div>
-                     <div className="flex flex-col sm:flex-row gap-3">
-                       <Button 
-                         variant="outline" 
-                         size="lg" 
-                         className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
-                         onClick={() => {
-                           queryClient.invalidateQueries({ queryKey: ["campaigns"] });
-                           window.location.reload();
-                         }}
-                       >
-                         <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
-                       </Button>
-                       <Link to="/ganhadores">
-                         <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
-                           VER GANHADORES
+                       <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">
+                         {searchTerm ? "Nenhum resultado encontrado" : "Nenhum sorteio ativo"}
+                       </h3>
+                       <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">
+                         {searchTerm ? "Tente buscar por outros termos ou limpe o filtro." : "Estamos preparando novos prêmios incríveis para você."}
+                       </p>
+                       {searchTerm && (
+                         <Button 
+                           variant="link" 
+                           onClick={() => setSearchTerm("")}
+                           className="text-primary font-black uppercase tracking-widest text-[10px]"
+                         >
+                           Limpar busca
                          </Button>
-                       </Link>
+                       )}
                      </div>
-                   </div>
-                 ) : (
-                   <div className="col-span-full py-12 text-center">
-                     <p className="text-xs font-black uppercase tracking-widest text-muted-foreground italic">Confira nossas campanhas em destaque acima!</p>
                    </div>
                  )}
                </div>
+
+               {/* Pagination UI */}
+               {totalPages > 1 && (
+                 <div className="flex justify-center items-center gap-2 pt-10">
+                   <Button
+                     variant="outline"
+                     size="icon"
+                     onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                     disabled={currentPage === 1}
+                     className="h-10 w-10 rounded-xl border-border hover:bg-primary/10 hover:text-primary disabled:opacity-30"
+                   >
+                     <ChevronLeft className="h-4 w-4" />
+                   </Button>
+                   
+                   <div className="flex gap-2">
+                     {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                       <Button
+                         key={page}
+                         variant={currentPage === page ? "default" : "outline"}
+                         onClick={() => setCurrentPage(page)}
+                         className={cn(
+                           "h-10 w-10 rounded-xl font-black transition-all",
+                           currentPage === page 
+                             ? "glow-primary border-transparent" 
+                             : "border-border hover:bg-primary/10 hover:text-primary"
+                         )}
+                       >
+                         {page}
+                       </Button>
+                     ))}
+                   </div>
+
+                   <Button
+                     variant="outline"
+                     size="icon"
+                     onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                     disabled={currentPage === totalPages}
+                     className="h-10 w-10 rounded-xl border-border hover:bg-primary/10 hover:text-primary disabled:opacity-30"
+                   >
+                     <ChevronRight className="h-4 w-4" />
+                   </Button>
+                 </div>
+               )}
              </div>
 
              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
