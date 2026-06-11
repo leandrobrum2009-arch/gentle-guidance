@@ -48,13 +48,14 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
         title: newDraw.title,
         prize_description: newDraw.prize_description,
         draw_time: new Date(newDraw.draw_time).toISOString(),
-        status: 'scheduled'
+        status: 'scheduled',
+        draw_type: newDraw.draw_type
       });
 
       if (error) throw error;
 
       toast({ title: "Sucesso", description: "Sorteio agendado!" });
-      setNewDraw({ title: "", prize_description: "", draw_time: "" });
+      setNewDraw({ title: "", prize_description: "", draw_time: "", draw_type: activeTab });
       setIsAdding(false);
       refetch();
     } catch (e: any) {
