@@ -185,6 +185,14 @@ const Index = () => {
       });
   }, [campaigns]);
 
+  const featuredCampaigns = useMemo(() => {
+    return activeCampaigns.filter(c => c.featured);
+  }, [activeCampaigns]);
+
+  const normalCampaigns = useMemo(() => {
+    return activeCampaigns.filter(c => !c.featured);
+  }, [activeCampaigns]);
+
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     const allEnded = campaigns
@@ -341,135 +349,137 @@ const Index = () => {
             </div>
           </section>
 
-           {/* Premium Draws & Live Activity */}
-           <section className="container py-12 md:py-20">
-             <div className="flex flex-col gap-12">
+           {/* Active Campaigns Sections */}
+           <section className="container py-12 md:py-20 space-y-20">
+             {/* Featured Campaigns */}
+             {featuredCampaigns.length > 0 && (
                <div className="space-y-8">
                  <SectionHeading 
-                   icon={Zap} 
-                   title="Sorteios Premium" 
-                   subtitle="Os prêmios mais desejados do momento"
-                   badge="Em Destaque"
+                   icon={Star} 
+                   title="Campanhas em Destaque" 
+                   subtitle="As melhores oportunidades selecionadas para você"
+                   badge="VIP"
                  />
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
-                    {activeCampaigns.length > 0 ? (
-                      activeCampaigns.map((campaign, i) => (
-                        <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                      ))
-                    ) : (
-                      <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
-                        <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
-                          <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
-                        </div>
-                        <div className="space-y-2">
-                          <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
-                          <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
-                        </div>
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <Button 
-                            variant="outline" 
-                            size="lg" 
-                            className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
-                            onClick={() => {
-                              queryClient.invalidateQueries({ queryKey: ["campaigns"] });
-                              window.location.reload();
-                            }}
-                          >
-                            <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
-                          </Button>
-                          <Link to="/ganhadores">
-                            <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
-                              VER GANHADORES
-                            </Button>
-                          </Link>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
- 
-                 {/* Social Proof / Security Highlights - Smaller Version */}
-                 <div className="grid gap-4 md:grid-cols-3">
-                   {[
-                     { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
-                     { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
-                     { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
-                   ].map((item, i) => (
-                     <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
-                       <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
-                         <item.icon className={cn("h-4 w-4", item.color)} />
-                       </div>
-                       <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
-                     </div>
+                 <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                   {featuredCampaigns.map((campaign, i) => (
+                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
                    ))}
                  </div>
- 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {/* Live Activity Feed */}
-                  <div className="rounded-3xl border border-border bg-card p-6 shadow-xl">
-                    <LiveActivityFeed />
-                  </div>
- 
-                 {/* Small Featured Roulette - Redesigned */}
-                 {featuredCampaign?.roulette_enabled && (
-                    <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group">
-                     {/* Decorative Elements */}
-                     <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
-                     <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
-                     
-                     <div className="relative z-10 flex flex-col items-center text-center">
-                        <Badge className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg shadow-primary/20">
-                          🔥 OPORTUNIDADE ÚNICA
-                        </Badge>
-                        <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
-                          Gire a <span className="text-animate-gradient">Sorte</span> Agora!
-                        </h3>
-                        <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
-                          Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
-                        </p>
-                        
-                        <div className="relative flex justify-center py-4 mb-6">
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                            className="relative h-40 w-40 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-3"
-                          >
-                             <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/20 via-card to-secondary/20 border-2 border-primary/30 flex items-center justify-center shadow-inner">
-                               <RotateCw className="h-12 w-12 text-primary opacity-60" />
-                             </div>
-                          </motion.div>
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <motion.div
-                              animate={{ scale: [1, 1.2, 1] }}
-                              transition={{ duration: 2, repeat: Infinity }}
-                            >
-                              <Gamepad2 className="h-12 w-12 text-primary drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
-                            </motion.div>
-                          </div>
-                        </div>
+               </div>
+             )}
 
-                        <Link to={`/roleta`} className="w-full">
-                          <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-light-path border-[#22c55e]/30 relative z-10">
-                            ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
-                          </Button>
-                        </Link>
-                        
-                        <div className="flex items-center gap-2 mt-6">
-                           <div className="flex -space-x-2">
-                              {[1,2,3].map(i => (
-                                <div key={i} className="h-6 w-6 rounded-full border-2 border-card bg-secondary flex items-center justify-center overflow-hidden">
-                                  <img src={`https://i.pravatar.cc/100?img=${i+10}`} alt="User" />
-                                </div>
-                              ))}
-                           </div>
-                           <p className="text-[10px] text-muted-foreground uppercase font-black tracking-widest">
-                             +1.2k giraram hoje
-                           </p>
-                        </div>
+             {/* Normal Active Campaigns */}
+             <div className="space-y-8">
+               <SectionHeading 
+                 icon={Zap} 
+                 title="Sorteios Ativos" 
+                 subtitle="Participe e concorra a prêmios incríveis"
+                 badge="Ao Vivo"
+               />
+               <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
+                 {normalCampaigns.length > 0 ? (
+                   normalCampaigns.map((campaign, i) => (
+                     <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                   ))
+                 ) : featuredCampaigns.length === 0 ? (
+                   <div className="col-span-full py-12 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
+                     <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
+                       <Trophy className="h-10 w-10 text-muted-foreground opacity-30" />
                      </div>
+                     <div className="space-y-2">
+                       <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">Nenhum sorteio ativo no momento</h3>
+                       <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">Estamos preparando novos prêmios incríveis para você. Fique de olho em nossas redes sociais!</p>
+                     </div>
+                     <div className="flex flex-col sm:flex-row gap-3">
+                       <Button 
+                         variant="outline" 
+                         size="lg" 
+                         className="h-12 rounded-2xl px-10 border-primary/20 hover:bg-primary/5 font-black uppercase tracking-widest text-xs gap-2" 
+                         onClick={() => {
+                           queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+                           window.location.reload();
+                         }}
+                       >
+                         <RotateCw className="h-4 w-4" /> ATUALIZAR PÁGINA
+                       </Button>
+                       <Link to="/ganhadores">
+                         <Button variant="ghost" size="lg" className="h-12 rounded-2xl px-10 font-black uppercase tracking-widest text-xs">
+                           VER GANHADORES
+                         </Button>
+                       </Link>
+                     </div>
+                   </div>
+                 ) : (
+                   <div className="col-span-full py-12 text-center">
+                     <p className="text-xs font-black uppercase tracking-widest text-muted-foreground italic">Confira nossas campanhas em destaque acima!</p>
                    </div>
                  )}
                </div>
+             </div>
+
+             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {/* Live Activity Feed */}
+                <div className="rounded-3xl border border-border bg-card p-6 shadow-xl">
+                  <LiveActivityFeed />
+                </div>
+
+                {/* Small Featured Roulette - Redesigned */}
+                {featuredCampaign?.roulette_enabled && (
+                  <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group">
+                    <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
+                    <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
+                    <div className="relative z-10 flex flex-col items-center text-center">
+                      <Badge className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg shadow-primary/20">
+                        🔥 OPORTUNIDADE ÚNICA
+                      </Badge>
+                      <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
+                        Gire a <span className="text-animate-gradient">Sorte</span> Agora!
+                      </h3>
+                      <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
+                        Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
+                      </p>
+                      <div className="relative flex justify-center py-4 mb-6">
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
+                          className="relative h-40 w-40 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-3"
+                        >
+                          <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/20 via-card to-secondary/20 border-2 border-primary/30 flex items-center justify-center shadow-inner">
+                            <RotateCw className="h-12 w-12 text-primary opacity-60" />
+                          </div>
+                        </motion.div>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <motion.div
+                            animate={{ scale: [1, 1.2, 1] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                          >
+                            <Gamepad2 className="h-12 w-12 text-primary drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
+                          </motion.div>
+                        </div>
+                      </div>
+                      <Link to={`/roleta`} className="w-full">
+                        <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-light-path border-[#22c55e]/30 relative z-10">
+                          ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </div>
+                )}
+             </div>
+
+             <div className="grid gap-4 md:grid-cols-3">
+               {[
+                 { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
+                 { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
+                 { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
+               ].map((item, i) => (
+                 <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
+                   <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
+                     <item.icon className={cn("h-4 w-4", item.color)} />
+                   </div>
+                   <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
+                 </div>
+               ))}
              </div>
            </section>
 
