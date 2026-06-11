@@ -628,6 +628,53 @@ export type Database = {
         }
         Relationships: []
       }
+      lucky_hours: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          draw_time: string
+          id: string
+          prize_description: string
+          status: string
+          title: string
+          updated_at: string
+          winner_name: string | null
+          winning_number: string | null
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          draw_time: string
+          id?: string
+          prize_description: string
+          status?: string
+          title: string
+          updated_at?: string
+          winner_name?: string | null
+          winning_number?: string | null
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          draw_time?: string
+          id?: string
+          prize_description?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          winner_name?: string | null
+          winning_number?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_hours_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       mystery_box_configs: {
         Row: {
           campaign_id: string | null
