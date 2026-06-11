@@ -79,7 +79,10 @@ export default function AdminSettings() {
     show_sales_page: "Habilitar Página de Vendas",
     sales_page_keywords: "Palavras-chave da Venda",
     sales_page_type: "Tipo da Plataforma",
-    sales_page_whatsapp: "WhatsApp de Vendas"
+    sales_page_whatsapp: "WhatsApp de Vendas",
+    pay2m_client_key: "Pay2m: Client Key",
+    pay2m_client_secret: "Pay2m: Client Secret",
+    pay2m_enabled: "Habilitar Pay2m"
   };
 
   useEffect(() => {
