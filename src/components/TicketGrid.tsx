@@ -138,20 +138,36 @@ import { Button } from "@/components/ui/button";
             ))}
         </div>
  
-       {selectedTickets.length > 0 && (
-         <div className="rounded-xl border border-primary/20 bg-primary/5 p-3">
-           <p className="text-[10px] font-bold uppercase text-primary mb-2 flex items-center gap-1">
-             <Info className="h-3 w-3" /> Números Selecionados ({selectedTickets.length})
-           </p>
-           <div className="flex flex-wrap gap-1">
-             {selectedTickets.map(num => (
-               <Badge key={num} variant="secondary" className="text-[10px] bg-primary/10 border-primary/20">
-                 #{num}
-               </Badge>
-             ))}
-           </div>
-         </div>
-       )}
+        {selectedTickets.length > 0 && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-2xl border border-primary/20 bg-primary/5 p-4 shadow-sm"
+          >
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">
+                <Sparkles className="h-3 w-3" /> Selecionados ({selectedTickets.length})
+              </p>
+              {onClearAll && (
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={onClearAll}
+                  className="h-6 px-2 text-[8px] font-black uppercase text-destructive hover:bg-destructive/10 gap-1"
+                >
+                  <Trash2 className="h-3 w-3" /> Limpar
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto no-scrollbar p-1">
+              {selectedTickets.map(num => (
+                <Badge key={num} variant="secondary" className="text-[10px] bg-white border border-primary/10 text-primary font-black px-2.5 h-6 rounded-lg shadow-sm">
+                  #{num}
+                </Badge>
+              ))}
+            </div>
+          </motion.div>
+        )}
      </div>
    );
  };
