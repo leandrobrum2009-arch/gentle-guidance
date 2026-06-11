@@ -35,7 +35,12 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
     prize_description: "",
     draw_time: "",
     draw_type: 'hourly' as 'hourly' | 'greater_smaller',
+    is_recurring: false,
+    frequency: 'daily' as 'daily' | 'every_x_days',
+    every_x_days: 3,
+    occurrences: 5,
   });
+
 
   const handleAdd = async () => {
     if (!newDraw.title || !newDraw.prize_description || !newDraw.draw_time) {
