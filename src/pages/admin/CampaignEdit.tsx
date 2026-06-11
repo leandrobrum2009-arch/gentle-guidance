@@ -42,6 +42,8 @@ interface CampaignForm {
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
   prize_rules: { type: string; label: string; prize_greater?: string; prize_smaller?: string; active?: boolean }[];
   live_stream_url: string; concurso: string;
+  fake_progress_enabled: boolean;
+  fake_progress_percentage: number;
 }
 
 
@@ -70,6 +72,8 @@ const empty: CampaignForm = {
   prize_rules: [],
   live_stream_url: "",
   concurso: "",
+  fake_progress_enabled: false,
+  fake_progress_percentage: 0,
 };
 
 
@@ -436,6 +440,50 @@ export default function AdminCampaignEdit() {
                    </AlertDescription>
                  </Alert>
                )}
+            </Card>
+            <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
+               <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                 <TrendingUp className="h-5 w-5 text-primary" /> Progresso da Campanha
+               </h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="flex items-center justify-between p-4 bg-secondary/20 rounded-xl border border-border">
+                   <div className="space-y-0.5">
+                     <Label className="text-sm font-bold">Habilitar Progresso Fake</Label>
+                     <p className="text-[10px] text-muted-foreground italic">Exibe uma barra de progresso personalizada para os clientes.</p>
+                   </div>
+                   <Switch 
+                     checked={form.fake_progress_enabled} 
+                     onCheckedChange={(v) => set("fake_progress_enabled", v)} 
+                   />
+                 </div>
+                 
+                 <div className={cn("space-y-2 transition-opacity", !form.fake_progress_enabled && "opacity-50 pointer-events-none")}>
+                   <Label className="flex items-center gap-2">
+                     Porcentagem de Vendas Exibida (%)
+                     <TooltipProvider>
+                       <Tooltip>
+                         <TooltipTrigger asChild>
+                           <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                         </TooltipTrigger>
+                         <TooltipContent>
+                           <p className="w-48 text-[10px]">Indique a porcentagem que você deseja mostrar na barra de progresso da página da campanha.</p>
+                         </TooltipContent>
+                       </Tooltip>
+                     </TooltipProvider>
+                   </Label>
+                   <div className="relative">
+                     <Input 
+                       type="number" 
+                       min="0"
+                       max="100"
+                       value={form.fake_progress_percentage} 
+                       onChange={(e) => set("fake_progress_percentage", parseInt(e.target.value) || 0)} 
+                       className="pr-8"
+                     />
+                     <Percent className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                   </div>
+                 </div>
+               </div>
             </Card>
           </TabsContent>
 
