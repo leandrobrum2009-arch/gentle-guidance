@@ -562,14 +562,36 @@ export default function AdminCampaignEdit() {
                        </Tooltip>
                      </TooltipProvider>
                    </Label>
-                   <Input 
-                     placeholder="Ex: QUASE LÁ ou 75% VENDIDO"
-                     value={form.progress_text} 
-                     onChange={(e) => set("progress_text", e.target.value)} 
-                   />
-                 </div>
-               </div>
-            </Card>
+                    <Input 
+                      placeholder="Ex: QUASE LÁ ou 75% VENDIDO"
+                      value={form.progress_text} 
+                      onChange={(e) => set("progress_text", e.target.value)} 
+                    />
+                  </div>
+
+                  <div className="space-y-4 md:col-span-2 pt-4 border-t">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização da Barra</Label>
+                    <div className="p-6 bg-card rounded-2xl border border-border shadow-inner">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-end mb-2">
+                          <span className="text-2xl font-black text-primary italic leading-none">
+                            {form.progress_text || (form.fake_progress_enabled ? `${form.fake_progress_percentage}%` : "75%")}
+                          </span>
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-secondary px-2 py-1 rounded-md">
+                            Progresso das Vendas
+                          </span>
+                        </div>
+                        <div className="relative h-6 w-full bg-secondary/30 rounded-full overflow-hidden border border-border/50">
+                          <div 
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary via-primary/80 to-primary shadow-[0_0_15px_rgba(var(--primary),0.5)] transition-all duration-1000 ease-out"
+                            style={{ width: `${form.fake_progress_enabled ? form.fake_progress_percentage : 75}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             </Card>
           </TabsContent>
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
