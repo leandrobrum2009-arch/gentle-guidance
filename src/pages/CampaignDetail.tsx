@@ -991,7 +991,7 @@ const CampaignDetail = () => {
                 <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                   <Clock className="h-5 w-5 text-amber-500" />
                 </div>
-                <h2 className="text-lg font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
+                <h2 className="text-sm font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
               </div>
               {nextLuckyHour && (
                 <Badge className="bg-primary text-white text-[10px] font-black uppercase px-3 py-1 animate-pulse">
