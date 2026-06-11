@@ -577,9 +577,10 @@ export default function AdminSettings() {
                       label=""
                       getIcon={() => null}
                       type="select"
-                      options={[
+                       options={[
                         { label: "Mercado Pago (Oficial / Automático)", value: "mercadopago" },
                         { label: "Paggue (PIX Automático)", value: "paggue" },
+                        { label: "Pay2m (PIX Automático)", value: "pay2m" },
                         { label: "Manual (Envio de Comprovante)", value: "manual" }
                       ]}
                     />
