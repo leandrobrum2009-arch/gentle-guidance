@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
-    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal, TrendingUp
+    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal, TrendingUp, ShieldCheck, Smartphone
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -1094,12 +1094,58 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'features':
+        return (
+          <div key={section} className="grid grid-cols-2 md:grid-cols-4 gap-3">
+            {[
+              { icon: ShieldCheck, title: "Seguro", desc: "Pagamento Protegido", color: "text-emerald-500" },
+              { icon: Zap, title: "Rápido", desc: "Sorteios Diários", color: "text-primary" },
+              { icon: Trophy, title: "Transparente", desc: "Ganhadores Reais", color: "text-amber-500" },
+              { icon: Smartphone, title: "Prático", desc: "Acesso via Celular", color: "text-blue-500" }
+            ].map((feature, i) => (
+              <div key={i} className="bg-card rounded-2xl p-4 border border-border/50 flex flex-col items-center text-center gap-2 group hover:border-primary/30 transition-all duration-300">
+                <div className={cn("h-10 w-10 rounded-xl bg-secondary flex items-center justify-center group-hover:scale-110 transition-transform duration-300", feature.color)}>
+                  <feature.icon className="h-5 w-5" />
+                </div>
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-tighter text-foreground leading-none">{feature.title}</p>
+                  <p className="text-[8px] font-bold text-muted-foreground uppercase mt-1 leading-none">{feature.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+
+      case 'faq':
+        return (
+          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border border-border shadow-sm space-y-6">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                <Info className="h-5 w-5 text-primary" />
+              </div>
+              <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Dúvidas Frequentes</h2>
+            </div>
+            <div className="space-y-4">
+              {[
+                { q: "Como participo?", a: "Escolha suas cotas, preencha seus dados e finalize o pagamento via PIX para confirmar sua participação instantaneamente." },
+                { q: "É seguro?", a: "Sim! Utilizamos tecnologia de ponta para garantir que todos os sorteios sejam justos e transparentes, com resultados auditáveis." },
+                { q: "Como recebo o prêmio?", a: "Nossa equipe entrará em contato via WhatsApp ou telefone logo após o sorteio para coordenar a entrega do seu prêmio." }
+              ].map((item, i) => (
+                <div key={i} className="p-4 rounded-2xl bg-secondary/30 border border-border/50 space-y-1">
+                  <p className="text-xs font-black uppercase tracking-tight text-foreground">{item.q}</p>
+                  <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{item.a}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        );
+
       default:
         return null;
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "progress", "header", "description", "purchase", "events", "ranking", "prizes", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "progress", "purchase", "events", "prizes", "ranking", "description", "faq", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
