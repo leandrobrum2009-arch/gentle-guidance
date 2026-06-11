@@ -705,9 +705,27 @@ const CampaignDetail = () => {
                   <div className="text-xs whitespace-pre-wrap bg-secondary/30 p-4 rounded-xl border border-border">
                     {campaign.regulations}
                   </div>
+                  
+                  {(campaign.concurso || campaign.draw_number) && (
+                    <div className="mt-4 p-4 rounded-xl bg-primary/5 border border-primary/10 flex flex-wrap gap-x-8 gap-y-2">
+                      {campaign.concurso && (
+                        <div>
+                          <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">Sorteio Base</p>
+                          <p className="text-xs font-bold text-primary italic uppercase tracking-tighter">Loteria Federal</p>
+                        </div>
+                      )}
+                      {campaign.draw_number && (
+                        <div>
+                          <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">Concurso Nº</p>
+                          <p className="text-xs font-bold text-primary italic font-mono">#{campaign.draw_number}</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
+
 
             <Button 
               variant="outline" 
