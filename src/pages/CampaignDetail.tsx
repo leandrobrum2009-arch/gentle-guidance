@@ -465,7 +465,7 @@ const CampaignDetail = () => {
                       />
                       <Button 
                         className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
-                        disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active" || (campaign.draw_date ? new Date(campaign.draw_date) < new Date() : false)}
+                        disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
                         onClick={() => handleBuy(selectedTickets)}
                       >
                         {isPurchasing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
