@@ -1238,7 +1238,7 @@ const CampaignDetail = () => {
               <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-black leading-none">
                 Sua sorte está a um <br className="hidden md:block" /> <span className="underline decoration-black/30 underline-offset-8">PIX de distância!</span>
               </h2>
-              <p className="text-sm md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto">
+              <p className="text-[10px] md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto leading-relaxed">
                 Não deixe para amanhã o prêmio que você pode ganhar hoje. Escolha suas cotas e participe agora!
               </p>
             </motion.div>
@@ -1246,12 +1246,12 @@ const CampaignDetail = () => {
             <div className="relative z-10 pt-4">
               <Button 
                 size="lg"
-                className="h-16 px-12 rounded-2xl bg-black text-primary hover:bg-black/90 hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-widest text-sm gap-3 group"
+                className="h-14 md:h-16 px-8 md:px-12 rounded-xl md:rounded-2xl bg-black text-primary hover:bg-black/90 hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-widest text-[10px] md:text-sm gap-3 group"
                 onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                QUERO PARTICIPAR AGORA <Zap className="h-5 w-5 fill-current group-hover:animate-bounce" />
+                QUERO PARTICIPAR AGORA <Zap className="h-4 w-4 md:h-5 md:w-5 fill-current group-hover:animate-bounce" />
               </Button>
-              <p className="text-[10px] font-black text-black/50 uppercase tracking-[0.2em] mt-6 flex items-center justify-center gap-2">
+              <p className="text-[8px] md:text-[10px] font-black text-black/50 uppercase tracking-[0.2em] mt-4 md:mt-6 flex items-center justify-center gap-2">
                 <Clock className="h-3 w-3" /> RESTAM POUCAS COTAS DISPONÍVEIS!
               </p>
             </div>
