@@ -41,6 +41,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { maskCPF, maskPhone, validateCPF, validatePhone } from "@/lib/validations";
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 import { cn } from "@/lib/utils";
 import { SEO } from "@/components/SEO";
@@ -76,7 +77,10 @@ import { PaymentModal } from "@/components/PaymentModal";
    const [isDepositOpen, setIsDepositOpen] = useState(false);
    const [isWithdrawOpen, setIsWithdrawOpen] = useState(false);
    const [isPaymentOpen, setIsPaymentOpen] = useState(false);
-   const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+  const [pendingOrderId, setPendingOrderId] = useState<string | null>(null);
+  const [isCpfValid, setIsCpfValid] = useState(true);
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
+  const [isUpdating, setIsUpdating] = useState(false);
 
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
@@ -99,9 +103,11 @@ import { PaymentModal } from "@/components/PaymentModal";
    useEffect(() => {
      if (user) {
        const fetchData = async () => {
-         const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-         setProfile(p);
-         const { data: a } = await supabase.from("affiliates").select("*").eq("user_id", user.id).maybeSingle();
+          const { data: p } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
+          setProfile(p);
+          if (p?.cpf) setIsCpfValid(validateCPF(p.cpf));
+          if (p?.phone) setIsPhoneValid(validatePhone(p.phone));
+          const { data: a } = await supabase.from("affiliates").select("*").eq("user_id", user.id).maybeSingle();
          setAffiliate(a);
          setIsLoading(false);
        };
@@ -166,6 +172,42 @@ import { PaymentModal } from "@/components/PaymentModal";
       queryClient.invalidateQueries({ queryKey: ["notifications", user.id] });
     } catch (error) {
       toast.error("Erro ao marcar notificações como lidas");
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!user || !profile) return;
+    
+    if (profile.cpf && !validateCPF(profile.cpf)) {
+      toast.error("CPF inválido");
+      setIsCpfValid(false);
+      return;
+    }
+
+    if (profile.phone && !validatePhone(profile.phone)) {
+      toast.error("Telefone inválido");
+      setIsPhoneValid(false);
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          name: profile.name,
+          cpf: profile.cpf,
+          phone: profile.phone
+        })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+      toast.success("Perfil atualizado com sucesso!");
+      queryClient.invalidateQueries({ queryKey: ["profile", user.id] });
+    } catch (error: any) {
+      toast.error("Erro ao atualizar perfil: " + error.message);
+    } finally {
+      setIsUpdating(false);
     }
   };
 
@@ -310,6 +352,64 @@ import { PaymentModal } from "@/components/PaymentModal";
                     <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
                       <div className="h-full bg-primary" style={{ width: `${progressPercent}%` }} />
                     </div>
+                  </div>
+
+                  <div className="w-full space-y-3 mt-6 text-left">
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Nome Completo</Label>
+                      <Input 
+                        value={profile?.name || ""} 
+                        onChange={(e) => setProfile({...profile, name: e.target.value})}
+                        className="h-10 rounded-xl bg-secondary/30 border-border focus:border-primary/50 font-bold text-xs"
+                      />
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">CPF</Label>
+                      <div className="relative">
+                        <Input 
+                          value={profile?.cpf || ""} 
+                          onChange={(e) => {
+                            const masked = maskCPF(e.target.value);
+                            setProfile({...profile, cpf: masked});
+                            setIsCpfValid(validateCPF(masked));
+                          }}
+                          placeholder="000.000.000-00"
+                          className={cn(
+                            "h-10 rounded-xl bg-secondary/30 border-border focus:border-primary/50 font-bold text-xs transition-colors",
+                            profile?.cpf?.length > 0 && (isCpfValid ? "border-emerald-500/50" : "border-rose-500/50")
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-1.5">
+                      <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">WhatsApp</Label>
+                      <div className="relative">
+                        <Input 
+                          value={profile?.phone || ""} 
+                          onChange={(e) => {
+                            const masked = maskPhone(e.target.value);
+                            setProfile({...profile, phone: masked});
+                            setIsPhoneValid(validatePhone(masked));
+                          }}
+                          placeholder="(00) 00000-0000"
+                          className={cn(
+                            "h-10 rounded-xl bg-secondary/30 border-border focus:border-primary/50 font-bold text-xs transition-colors",
+                            profile?.phone?.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <Button 
+                      onClick={handleUpdateProfile} 
+                      disabled={isUpdating}
+                      className="w-full h-10 rounded-xl font-bold uppercase italic text-[10px] tracking-widest mt-2"
+                    >
+                      {isUpdating ? <Loader2 className="h-3 w-3 animate-spin mr-2" /> : null}
+                      Salvar Alterações
+                    </Button>
                   </div>
                 </div>
               </CardContent>
