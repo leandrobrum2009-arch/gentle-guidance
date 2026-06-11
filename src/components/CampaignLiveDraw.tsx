@@ -135,7 +135,7 @@ const CampaignLiveDraw = ({ campaign }: CampaignLiveDrawProps) => {
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center gap-3 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500"
+          className="flex items-center gap-3 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 overflow-hidden"
         >
           <AlertCircle className="h-4 w-4 shrink-0" />
           <p className="text-[9px] font-bold uppercase tracking-widest leading-tight">
