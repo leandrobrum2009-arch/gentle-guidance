@@ -230,6 +230,11 @@ export interface Announcement {
    winning_number: string | null;
    status: 'scheduled' | 'completed';
    audit_log?: any[];
+   is_approved?: boolean;
+   approved_by?: string;
+   approved_at?: string;
+   draft_winner_name?: string;
+   draft_winning_number?: string;
    created_at: string;
    updated_at: string;
  }
