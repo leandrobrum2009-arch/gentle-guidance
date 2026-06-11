@@ -3,7 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { 
   Zap, Trophy, Loader2, Sparkles, Gamepad2, Gift, 
   TrendingUp, Award, Clock, Star, Users, Flame,
-  ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity
+  ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity,
+  Search, Filter, ChevronLeft, ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
