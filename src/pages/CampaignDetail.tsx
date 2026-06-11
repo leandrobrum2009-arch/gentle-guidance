@@ -948,16 +948,23 @@ const CampaignDetail = () => {
   const nextLuckyHour = useMemo(() => {
     if (!luckyHours) return null;
     const now = new Date();
-    // Find the next scheduled one that is today or upcoming soon
+    // Only show hourly type as "next" alert
     return luckyHours.find(h => {
       const drawDate = new Date(h.draw_time);
-      return h.status === 'scheduled' && drawDate > now;
+      return h.status === 'scheduled' && h.draw_type === 'hourly' && drawDate > now;
     });
   }, [luckyHours]);
 
-  const sortedLuckyHours = useMemo(() => {
+  const hourlyDraws = useMemo(() => {
     if (!luckyHours) return [];
-    return [...luckyHours].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
+    return luckyHours.filter(h => h.draw_type === 'hourly')
+      .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
+  }, [luckyHours]);
+
+  const greaterSmallerDraws = useMemo(() => {
+    if (!luckyHours) return [];
+    return luckyHours.filter(h => h.draw_type === 'greater_smaller')
+      .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
   }, [luckyHours]);
 
   return (
