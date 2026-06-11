@@ -457,7 +457,7 @@ const CampaignDetail = () => {
 
       case 'progress':
         return (
-          <div key={section} className="bg-card rounded-3xl p-6 shadow-sm border border-border space-y-4">
+          <div key={section} className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-black text-foreground italic">{progress}% <span className="text-muted-foreground not-italic font-bold">concluído</span></span>
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
@@ -478,7 +478,7 @@ const CampaignDetail = () => {
           <div key={section} className="grid gap-6 lg:grid-cols-3">
             <div className="lg:col-span-2 space-y-6">
 
-              <div className="bg-card rounded-3xl shadow-sm border border-border overflow-hidden" id="purchase-tabs">
+              <div className="bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden" id="purchase-tabs">
                 <Tabs defaultValue={campaign?.ticket_generation_type === 'manual' ? "manual" : "auto"} className="w-full">
                   {canManualSelect && (
                     <div className="px-6 pt-6">
@@ -684,7 +684,7 @@ const CampaignDetail = () => {
 
       case 'description':
         return (
-          <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
+          <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
                 <Info className="h-4 w-4 text-primary" /> Descrição e Regras
