@@ -411,14 +411,17 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                   Nenhum sorteio agendado para esta campanha.
                 </div>
               ) : (
-                <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Sorteios Encontrados ({paginatedLuckyHours.length} de {luckyHours?.filter(h => h.draw_type === activeTab).length})</p>
-                  <Button variant="ghost" size="sm" className="h-7 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/5 font-bold uppercase tracking-tighter gap-1.5" onClick={handleClearScheduled}>
-                    <Trash2 className="h-3 w-3" /> Limpar Agendados
-                  </Button>
-                </div>
-                <>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Sorteios Encontrados ({luckyHours?.filter(h => h.draw_type === activeTab).length})</p>
+                    {luckyHours?.some(h => h.draw_type === activeTab && h.status === 'scheduled') && (
+                      <Button variant="ghost" size="sm" className="h-7 text-[10px] text-destructive hover:text-destructive hover:bg-destructive/5 font-bold uppercase tracking-tighter gap-1.5" onClick={handleClearScheduled}>
+                        <Trash2 className="h-3 w-3" /> Limpar Agendados
+                      </Button>
+                    )}
+                  </div>
                   <div className="grid gap-4">
+
 
                     {paginatedLuckyHours.map((draw) => (
                       <div key={draw.id} className="p-5 bg-card border border-border rounded-2xl flex flex-col md:flex-row md:items-center justify-between gap-4 hover:shadow-md transition-all group">
