@@ -232,6 +232,50 @@ serve(async (req) => {
     }
 
     if (path === "webhook") {
+      // Handle Pay2m Webhook
+      if (body.notification_type === "PIX:QRCODE" && body.message) {
+        const msg = body.message
+        const orderId = msg.external_reference
+        const referenceCode = msg.reference_code
+        const status = msg.status
+
+        console.log(`[Pay2m Webhook] Order ${orderId}, Status: ${status}, Ref: ${referenceCode}`);
+
+        if (status === "paid" && orderId) {
+          await logWebhookEvent(supabaseClient, { 
+            provider: 'pay2m', 
+            eventId: referenceCode, 
+            payload: body 
+          });
+
+          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { 
+            p_order_id: orderId,
+            p_payment_id: referenceCode,
+            p_payment_provider: 'pay2m'
+          })
+
+          if (!rpcError) {
+             await markAsProcessed(supabaseClient, referenceCode, 'pay2m');
+             return new Response(JSON.stringify({ success: true }), {
+               headers: { ...corsHeaders, "Content-Type": "application/json" },
+               status: 200,
+             });
+          } else {
+             console.error("[Pay2m Webhook] RPC Error:", rpcError)
+             await markAsFailed(supabaseClient, referenceCode, 'pay2m', rpcError.message);
+             return new Response(JSON.stringify({ error: rpcError.message }), {
+               headers: { ...corsHeaders, "Content-Type": "application/json" },
+               status: 500,
+             });
+          }
+        }
+        return new Response(JSON.stringify({ received: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
+      // Handle Mercado Pago Webhook
       const topic = body.topic || url.searchParams.get("topic") || body.type
       const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id") || body.id
 
