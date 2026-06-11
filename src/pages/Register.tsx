@@ -134,11 +134,43 @@ const Register = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="cpf">CPF</Label>
-              <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="000.000.000-00" />
+              <div className="relative">
+                <Input 
+                  id="cpf" 
+                  value={cpf} 
+                  onChange={(e) => setCpf(maskCPF(e.target.value))} 
+                  placeholder="000.000.000-00" 
+                  className={cn(
+                    "transition-colors",
+                    cpf.length > 0 && (isCpfValid ? "border-emerald-500/50" : "border-rose-500/50")
+                  )}
+                />
+                {cpf.length > 0 && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isCpfValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Telefone</Label>
-              <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(00) 00000-0000" />
+              <div className="relative">
+                <Input 
+                  id="phone" 
+                  value={phone} 
+                  onChange={(e) => setPhone(maskPhone(e.target.value))} 
+                  placeholder="(00) 00000-0000" 
+                  className={cn(
+                    "transition-colors",
+                    phone.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
+                  )}
+                />
+                {phone.length > 0 && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isPhoneValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">E-mail *</Label>
