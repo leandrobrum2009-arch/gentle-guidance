@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Loader2, Zap, Phone } from "lucide-react";
+import { Loader2, Zap, Phone, CheckCircle2, AlertCircle } from "lucide-react";
+import { maskPhone, validatePhone } from "@/lib/validations";
+import { cn } from "@/lib/utils";
 
 interface QuickRegisterDialogProps {
   isOpen: boolean;
@@ -16,8 +18,13 @@ interface QuickRegisterDialogProps {
 export const QuickRegisterDialog = ({ isOpen, onOpenChange, onSuccess }: QuickRegisterDialogProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, signIn } = useAuth();
+
+  useEffect(() => {
+    setIsPhoneValid(validatePhone(phone));
+  }, [phone]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,11 +108,27 @@ export const QuickRegisterDialog = ({ isOpen, onOpenChange, onSuccess }: QuickRe
                 id="quick-phone"
                 placeholder="(00) 00000-0000"
                 value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                className="h-12 pl-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold"
+                onChange={(e) => setPhone(maskPhone(e.target.value))}
+                className={cn(
+                  "h-12 pl-12 rounded-xl bg-secondary/50 border-border focus:border-primary/50 font-bold transition-colors",
+                  phone.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
+                )}
                 required
+                type="tel"
               />
+              {phone.length > 0 && (
+                <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                  {isPhoneValid ? (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                  ) : (
+                    <AlertCircle className="h-4 w-4 text-rose-500" />
+                  )}
+                </div>
+              )}
             </div>
+            {phone.length > 0 && !isPhoneValid && (
+              <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1 ml-1">Número de WhatsApp inválido</p>
+            )}
             <p className="text-[10px] text-muted-foreground font-medium italic">* Usaremos este número para enviar seu comprovante.</p>
           </div>
 

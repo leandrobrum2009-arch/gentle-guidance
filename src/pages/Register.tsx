@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, User, Ticket } from "lucide-react";
+import { Eye, EyeOff, User, Ticket, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,8 @@ import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
 import { useSiteSettings } from "@/hooks/useData";
 import { SEO } from "@/components/SEO";
+import { maskCPF, maskPhone, validateCPF, validatePhone } from "@/lib/validations";
+import { cn } from "@/lib/utils";
 
 const Register = () => {
   const { data: siteSettings } = useSiteSettings();
@@ -25,14 +27,41 @@ const Register = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [avatar, setAvatar] = useState<File | null>(null);
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [isCpfValid, setIsCpfValid] = useState(true);
+  const [isPhoneValid, setIsPhoneValid] = useState(true);
   const { signUp } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (cpf) setIsCpfValid(validateCPF(cpf));
+  }, [cpf]);
+
+  useEffect(() => {
+    if (phone) setIsPhoneValid(validatePhone(phone));
+  }, [phone]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear validation before re-checking
+    setIsCpfValid(true);
+    setIsPhoneValid(true);
+
     if (!name || !email || !password) {
       toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
+      return;
+    }
+
+    if (cpf && !validateCPF(cpf)) {
+      setIsCpfValid(false);
+      toast({ title: "CPF inválido", description: "Por favor, verifique o número digitado.", variant: "destructive" });
+      return;
+    }
+
+    if (phone && !validatePhone(phone)) {
+      setIsPhoneValid(false);
+      toast({ title: "Telefone inválido", description: "Por favor, insira um número com DDD.", variant: "destructive" });
       return;
     }
     setIsLoading(true);
@@ -122,11 +151,43 @@ const Register = () => {
             </div>
             <div className="space-y-2">
               <Label htmlFor="cpf">CPF</Label>
-              <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} placeholder="000.000.000-00" />
+              <div className="relative">
+                <Input 
+                  id="cpf" 
+                  value={cpf} 
+                  onChange={(e) => setCpf(maskCPF(e.target.value))} 
+                  placeholder="000.000.000-00" 
+                  className={cn(
+                    "transition-colors",
+                    cpf.length > 0 && (isCpfValid ? "border-emerald-500/50" : "border-rose-500/50")
+                  )}
+                />
+                {cpf.length > 0 && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isCpfValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="phone">Telefone</Label>
-              <Input id="phone" value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="(00) 00000-0000" />
+              <div className="relative">
+                <Input 
+                  id="phone" 
+                  value={phone} 
+                  onChange={(e) => setPhone(maskPhone(e.target.value))} 
+                  placeholder="(00) 00000-0000" 
+                  className={cn(
+                    "transition-colors",
+                    phone.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
+                  )}
+                />
+                {phone.length > 0 && (
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    {isPhoneValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
+                  </div>
+                )}
+              </div>
             </div>
             <div className="space-y-2">
               <Label htmlFor="email">E-mail *</Label>
