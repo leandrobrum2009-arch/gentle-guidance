@@ -90,6 +90,26 @@ const Index = () => {
   const { data: isAdmin } = useIsAdmin();
   const { theme } = useTheme();
   const [heroStyle, setHeroStyle] = useState<number>(1); // Default style 1
+  const [showEnded, setShowEnded] = useState(false);
+  const endedRef = useRef<HTMLDivElement>(null);
+  const [isIntersecting, setIsIntersecting] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (endedRef.current) {
+      observer.observe(endedRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
   
   useEffect(() => {
     if (siteSettings) {
