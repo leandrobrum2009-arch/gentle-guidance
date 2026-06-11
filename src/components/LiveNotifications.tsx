@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShoppingCart, Trophy, X } from "lucide-react";
+import { ShoppingCart, Trophy, X, Bell } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -172,32 +173,44 @@ const LiveNotifications = () => {
   }, []);
 
   return (
-    <div className="fixed bottom-4 left-4 z-[100] flex flex-col gap-3 pointer-events-none">
+    <div className="fixed bottom-6 left-6 z-[100] flex flex-col gap-3 pointer-events-none">
       <AnimatePresence>
         {notifications.map((notif) => (
           <motion.div
             key={notif.id}
-            initial={{ opacity: 0, x: -50, scale: 0.8 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -50, scale: 0.8 }}
-            className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border shadow-2xl min-w-[260px] md:min-w-[300px] max-w-[calc(100vw-32px)] md:max-w-sm"
+            initial={{ opacity: 0, x: -100, scale: 0.5, rotate: -5 }}
+            animate={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, x: -100, scale: 0.5, rotate: 5 }}
+            transition={{ type: "spring", damping: 15, stiffness: 100 }}
+            className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/95 backdrop-blur-xl border-2 border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.2)] min-w-[260px] md:min-w-[300px] max-w-[calc(100vw-32px)] md:max-w-sm ring-2 ring-primary/10"
           >
-            <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${notif.type === 'winner' ? 'bg-amber-500/10 text-amber-500' : 'bg-primary/10 text-primary'}`}>
-              <Avatar className="h-full w-full border-2 border-background shadow-sm">
+            <div className={`relative h-12 w-12 rounded-full shrink-0 p-0.5 ${notif.type === 'winner' ? 'bg-gradient-to-tr from-amber-500 to-yellow-300' : 'bg-gradient-to-tr from-primary to-primary/50'}`}>
+              <Avatar className="h-full w-full border-2 border-background">
                 <AvatarImage src={notif.avatarUrl || ""} />
-                <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                  {notif.userName[0]}
+                <AvatarFallback className="bg-secondary text-primary font-black text-xs">
+                  {notif.userName[0]?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
+              <div className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-background flex items-center justify-center text-white ${notif.type === 'winner' ? 'bg-amber-500' : 'bg-primary'}`}>
+                {notif.type === 'winner' ? <Trophy className="h-2.5 w-2.5" /> : <ShoppingCart className="h-2.5 w-2.5" />}
+              </div>
             </div>
             
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold text-foreground">
-                <span className="text-primary">{notif.userName}</span> {notif.message}
+              <p className="text-[12px] font-black text-foreground leading-tight">
+                <span className="text-primary uppercase">{notif.userName}</span>
               </p>
-              <p className="text-[10px] text-muted-foreground truncate italic">
-                ({notif.campaignTitle}) • {format(notif.timestamp, "HH:mm", { locale: ptBR })}
+              <p className="text-[11px] font-bold text-foreground/90 leading-tight">
+                {notif.message}
               </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Badge variant="secondary" className="text-[8px] px-1.5 py-0 h-4 font-black uppercase tracking-tighter bg-primary/5 text-primary border-primary/10">
+                  {notif.type === 'winner' ? 'Ganhador' : 'Nova Compra'}
+                </Badge>
+                <span className="text-[9px] text-muted-foreground truncate italic">
+                  {format(notif.timestamp, "HH:mm", { locale: ptBR })}
+                </span>
+              </div>
             </div>
 
             <button 
