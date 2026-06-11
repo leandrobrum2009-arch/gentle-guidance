@@ -1122,17 +1122,17 @@ const CampaignDetail = () => {
           <div key={section} className="bg-card rounded-[2rem] p-6 md:p-10 border border-border shadow-sm space-y-8 overflow-hidden">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
-                  <Info className="h-6 w-6 text-primary" />
+                <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Info className="h-5 w-5 md:h-6 md:w-6 text-primary" />
                 </div>
-                <div>
-                  <h2 className="text-2xl font-black uppercase italic tracking-tighter text-animate-gradient">Dúvidas Frequentes</h2>
-                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Tudo o que você precisa saber</p>
+                <div className="min-w-0">
+                  <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-animate-gradient truncate">Dúvidas Frequentes</h2>
+                  <p className="text-[8px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">Tudo o que você precisa saber</p>
                 </div>
               </div>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               {[
                 { 
                   q: "Como os ganhadores são escolhidos?", 
@@ -1155,23 +1155,23 @@ const CampaignDetail = () => {
                   icon: Ticket
                 }
               ].map((item, i) => (
-                <div key={i} className="p-6 rounded-3xl bg-secondary/20 border border-border/50 hover:border-primary/30 transition-all duration-300 group">
-                  <div className="flex items-start gap-4">
+                <div key={i} className="p-4 md:p-6 rounded-3xl bg-secondary/20 border border-border/50 hover:border-primary/30 transition-all duration-300 group overflow-hidden">
+                  <div className="flex items-start gap-3 md:gap-4">
                     <div className="h-8 w-8 rounded-xl bg-background border border-border flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                       <item.icon className="h-4 w-4" />
                     </div>
-                    <div className="space-y-2">
-                      <p className="text-xs font-black uppercase tracking-tight text-foreground leading-tight">{item.q}</p>
-                      <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{item.a}</p>
+                    <div className="space-y-1 md:space-y-2 min-w-0">
+                      <p className="text-[10px] md:text-xs font-black uppercase tracking-tight text-foreground leading-tight truncate">{item.q}</p>
+                      <p className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-relaxed line-clamp-3">{item.a}</p>
                     </div>
                   </div>
                 </div>
               ))}
             </div>
             
-            <div className="pt-6 border-t border-border/50 flex flex-col items-center text-center gap-4">
-              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Ainda tem dúvidas? Fale com nosso suporte</p>
-              <Button variant="outline" className="rounded-2xl px-8 h-12 border-primary/20 text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[10px] gap-2">
+            <div className="pt-4 md:pt-6 border-t border-border/50 flex flex-col items-center text-center gap-3 md:gap-4">
+              <p className="text-[8px] md:text-xs font-bold text-muted-foreground uppercase tracking-widest truncate">Ainda tem dúvidas? Fale com nosso suporte</p>
+              <Button variant="outline" className="rounded-2xl px-6 md:px-8 h-10 md:h-12 border-primary/20 text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[9px] md:text-[10px] gap-2 w-full md:w-auto">
                 <Smartphone className="h-4 w-4" /> Atendimento via WhatsApp
               </Button>
             </div>
@@ -1264,29 +1264,29 @@ const CampaignDetail = () => {
 
       case 'steps':
         return (
-          <div key={section} className="bg-card rounded-[2rem] p-8 border border-border shadow-sm space-y-8">
+          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border border-border shadow-sm space-y-6 md:space-y-8 overflow-hidden">
             <div className="flex flex-col items-center text-center gap-2">
-              <Badge className="bg-primary/10 text-primary border-none text-[10px] font-black uppercase tracking-widest">Simples e Rápido</Badge>
-              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">Veja como <span className="text-animate-gradient">Participar</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Siga os passos abaixo e comece a concorrer agora mesmo.</p>
+              <Badge className="bg-primary/10 text-primary border-none text-[8px] md:text-[10px] font-black uppercase tracking-widest">Simples e Rápido</Badge>
+              <h2 className="text-xl md:text-3xl font-black uppercase italic tracking-tighter">Veja como <span className="text-animate-gradient">Participar</span></h2>
+              <p className="text-[9px] md:text-xs text-muted-foreground uppercase font-bold tracking-widest max-w-xs md:max-w-md">Siga os passos abaixo e comece a concorrer agora mesmo.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 relative">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative">
               {[
                 { step: "01", title: "Escolha suas Cotas", desc: "Selecione a quantidade de números ou escolha seus números da sorte favoritos.", icon: MousePointer2 },
                 { step: "02", title: "Faça o Pagamento", desc: "Pague via PIX com segurança. O processamento é instantâneo e automático.", icon: Zap },
                 { step: "03", title: "Aguarde o Sorteio", desc: "Pronto! Agora é só torcer. Você pode acompanhar tudo aqui pelo painel.", icon: Trophy }
               ].map((item, i) => (
-                <div key={i} className="relative flex flex-col items-center text-center gap-4 p-6 rounded-3xl bg-secondary/20 border border-border/50 group hover:border-primary/30 transition-all duration-300">
-                  <div className="absolute -top-3 -left-3 h-8 w-12 bg-primary text-black font-black italic flex items-center justify-center rounded-xl rotate-[-10deg] shadow-lg group-hover:rotate-0 transition-transform">
+                <div key={i} className="relative flex flex-col items-center text-center gap-3 md:gap-4 p-5 md:p-6 rounded-3xl bg-secondary/20 border border-border/50 group hover:border-primary/30 transition-all duration-300 overflow-hidden">
+                  <div className="absolute -top-2 -left-2 h-7 w-10 md:h-8 md:w-12 bg-primary text-black font-black italic flex items-center justify-center rounded-xl rotate-[-10deg] shadow-lg group-hover:rotate-0 transition-transform text-[10px] md:text-xs">
                     {item.step}
                   </div>
-                  <div className="h-14 w-14 rounded-2xl bg-background border border-border flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-300">
-                    <item.icon className="h-6 w-6" />
+                  <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-background border border-border flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-300 shrink-0">
+                    <item.icon className="h-5 w-5 md:h-6 md:w-6" />
                   </div>
-                  <div className="space-y-2">
-                    <h3 className="text-sm font-black uppercase tracking-tight text-foreground">{item.title}</h3>
-                    <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{item.desc}</p>
+                  <div className="space-y-1 md:space-y-2 min-w-0">
+                    <h3 className="text-xs md:text-sm font-black uppercase tracking-tight text-foreground truncate">{item.title}</h3>
+                    <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground leading-relaxed line-clamp-2">{item.desc}</p>
                   </div>
                 </div>
               ))}
