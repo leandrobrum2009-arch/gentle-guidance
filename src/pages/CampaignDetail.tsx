@@ -506,6 +506,7 @@ const CampaignDetail = () => {
                         soldTickets={[...soldTickets, ...protectedNumbers]}
                         selectedTickets={selectedTickets}
                         onSelect={handleToggleTicket}
+                        onClearAll={() => setSelectedTickets([])}
                         luckyNumbers={luckyNumbersList}
                       />
                       <Button 
