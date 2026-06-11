@@ -104,10 +104,10 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
 
           <div className="mt-5 space-y-4">
             <div>
-              <h3 className="font-display text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
+              <h3 className="font-display text-sm sm:text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
               </h3>
-              <p className="text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
+              <p className="text-[9px] sm:text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
             </div>
