@@ -177,9 +177,10 @@ const LiveNotifications = () => {
         {notifications.map((notif) => (
           <motion.div
             key={notif.id}
-            initial={{ opacity: 0, x: -50, scale: 0.8 }}
-            animate={{ opacity: 1, x: 0, scale: 1 }}
-            exit={{ opacity: 0, x: -50, scale: 0.8 }}
+            initial={{ opacity: 0, x: -100, scale: 0.5, rotate: -5 }}
+            animate={{ opacity: 1, x: 0, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, x: -100, scale: 0.5, rotate: 5 }}
+            transition={{ type: "spring", damping: 15, stiffness: 100 }}
             className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/95 backdrop-blur-xl border-2 border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.2)] min-w-[260px] md:min-w-[300px] max-w-[calc(100vw-32px)] md:max-w-sm ring-2 ring-primary/10"
           >
             <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${notif.type === 'winner' ? 'bg-amber-500/10 text-amber-500' : 'bg-primary/10 text-primary'}`}>
