@@ -386,13 +386,47 @@ export default function AdminCampaignEdit() {
                    </Select>
                  </div>
                </div>
-               <Label className="mt-4 block">Subtítulo</Label>
-               <Input value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} className="mt-2" />
-                <Label className="mt-4 block font-bold">Descrição da Campanha</Label>
-                <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Descreva os detalhes da premiação, modelo, ano, etc." className="mt-2 min-h-[120px] rounded-xl" />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div className="space-y-2">
+                    <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Subtítulo / Chamada Rápida</Label>
+                    <Input 
+                      placeholder="Ex: Participe e concorra ao prêmio dos seus sonhos!" 
+                      value={form.subtitle} 
+                      onChange={(e) => set("subtitle", e.target.value)} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Código LTP (Opcional)</Label>
+                    <Input 
+                      placeholder="Ex: LTP-12345" 
+                      value={form.ltp_code} 
+                      onChange={(e) => set("ltp_code", e.target.value)} 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2 mt-4 pt-2 border-t">
+                  <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Descrição Detalhada da Premiação</Label>
+                  <Textarea 
+                    value={form.description} 
+                    onChange={(e) => set("description", e.target.value)} 
+                    placeholder="Descreva os detalhes da premiação, modelo, ano, etc. Isso ajuda na conversão!" 
+                    className="min-h-[120px] rounded-xl" 
+                  />
+                </div>
                 
-                <Label className="mt-4 block font-bold">Regulamento / Termos de Uso</Label>
-                <Textarea value={form.regulations} onChange={(e) => set("regulations", e.target.value)} placeholder="Descreva as regras da rifa, data do sorteio, forma de entrega, etc." className="mt-2 min-h-[150px] rounded-xl" />
+                <div className="space-y-2 mt-4 pt-2 border-t">
+                  <Label className="font-bold text-xs uppercase tracking-wider text-amber-600 flex items-center gap-2">
+                    <ShieldAlert className="h-4 w-4" /> Regulamento e Termos de Uso
+                  </Label>
+                  <Textarea 
+                    value={form.regulations} 
+                    onChange={(e) => set("regulations", e.target.value)} 
+                    placeholder="Regras oficiais do sorteio, prazos de entrega e condições." 
+                    className="min-h-[150px] rounded-xl border-amber-200 focus-visible:ring-amber-500" 
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Este texto é fundamental para a transparência com o cliente.</p>
+                </div>
              </Card>
 
             <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
