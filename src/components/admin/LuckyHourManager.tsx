@@ -25,12 +25,14 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDraw, setSelectedDraw] = useState<LuckyHour | null>(null);
+  const [activeTab, setActiveTab] = useState<'hourly' | 'greater_smaller'>('hourly');
   const itemsPerPage = 5;
   
   const [newDraw, setNewDraw] = useState({
     title: "",
     prize_description: "",
     draw_time: "",
+    draw_type: 'hourly' as 'hourly' | 'greater_smaller',
   });
 
   const handleAdd = async () => {
