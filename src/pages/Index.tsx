@@ -187,16 +187,17 @@ const Index = () => {
 
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
-    return campaigns
+    const allEnded = campaigns
       .filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn"))
       .sort((a, b) => {
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
         }
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-      })
-      .slice(0, 12);
-  }, [campaigns]);
+      });
+    
+    return showEnded ? allEnded : allEnded.slice(0, 4);
+  }, [campaigns, showEnded]);
 
   const featuredCampaign = activeCampaigns[0];
   // If there's only one campaign, show it in the grid too so it's not empty below
