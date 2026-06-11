@@ -41,7 +41,7 @@ interface CampaignForm {
   upsell_enabled: boolean; upsell_probability: string;
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
   prize_rules: { type: string; label: string; prize_greater?: string; prize_smaller?: string; active?: boolean }[];
-  live_stream_url: string; concurso: string;
+  live_stream_url: string; concurso: string; draw_number: string;
   fake_progress_enabled: boolean;
   fake_progress_percentage: number;
   progress_text: string;
@@ -73,6 +73,7 @@ const empty: CampaignForm = {
   prize_rules: [],
   live_stream_url: "",
   concurso: "",
+  draw_number: "",
   fake_progress_enabled: false,
   fake_progress_percentage: 0,
   progress_text: "",
@@ -385,11 +386,48 @@ export default function AdminCampaignEdit() {
                    </Select>
                  </div>
                </div>
-               <Label className="mt-4 block">Subtítulo</Label>
-               <Input value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} className="mt-2" />
-               <Label className="mt-4 block">Descrição</Label>
-               <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} className="mt-2" rows={5} />
-            </Card>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                  <div className="space-y-2">
+                    <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Subtítulo / Chamada Rápida</Label>
+                    <Input 
+                      placeholder="Ex: Participe e concorra ao prêmio dos seus sonhos!" 
+                      value={form.subtitle} 
+                      onChange={(e) => set("subtitle", e.target.value)} 
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Código LTP (Opcional)</Label>
+                    <Input 
+                      placeholder="Ex: LTP-12345" 
+                      value={form.ltp_code} 
+                      onChange={(e) => set("ltp_code", e.target.value)} 
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2 mt-4 pt-2 border-t">
+                  <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Descrição Detalhada da Premiação</Label>
+                  <Textarea 
+                    value={form.description} 
+                    onChange={(e) => set("description", e.target.value)} 
+                    placeholder="Descreva os detalhes da premiação, modelo, ano, etc. Isso ajuda na conversão!" 
+                    className="min-h-[120px] rounded-xl" 
+                  />
+                </div>
+                
+                <div className="space-y-2 mt-4 pt-2 border-t">
+                  <Label className="font-bold text-xs uppercase tracking-wider text-amber-600 flex items-center gap-2">
+                    <ShieldAlert className="h-4 w-4" /> Regulamento e Termos de Uso
+                  </Label>
+                  <Textarea 
+                    value={form.regulations} 
+                    onChange={(e) => set("regulations", e.target.value)} 
+                    placeholder="Regras oficiais do sorteio, prazos de entrega e condições." 
+                    className="min-h-[150px] rounded-xl border-amber-200 focus-visible:ring-amber-500" 
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Este texto é fundamental para a transparência com o cliente.</p>
+                </div>
+             </Card>
 
             <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
@@ -435,8 +473,28 @@ export default function AdminCampaignEdit() {
                      value={form.timer_end_date} 
                      onChange={(e) => set("timer_end_date", e.target.value)} 
                    />
-                 </div>
-               </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      Número do Concurso (Loteria Federal)
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="w-48 text-[10px]">Número do concurso da Loteria Federal que será usado como base para o sorteio.</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Label>
+                    <Input 
+                      placeholder="Ex: 5932" 
+                      value={form.draw_number} 
+                      onChange={(e) => set("draw_number", e.target.value)} 
+                    />
+                  </div>
+                </div>
                {form.draw_date && form.timer_end_date && new Date(form.timer_end_date) > new Date(form.draw_date) && (
                  <Alert variant="destructive" className="mt-4 bg-destructive/10 border-destructive/20 text-destructive">
                    <AlertCircle className="h-4 w-4" />
@@ -504,14 +562,36 @@ export default function AdminCampaignEdit() {
                        </Tooltip>
                      </TooltipProvider>
                    </Label>
-                   <Input 
-                     placeholder="Ex: QUASE LÁ ou 75% VENDIDO"
-                     value={form.progress_text} 
-                     onChange={(e) => set("progress_text", e.target.value)} 
-                   />
-                 </div>
-               </div>
-            </Card>
+                    <Input 
+                      placeholder="Ex: QUASE LÁ ou 75% VENDIDO"
+                      value={form.progress_text} 
+                      onChange={(e) => set("progress_text", e.target.value)} 
+                    />
+                  </div>
+
+                  <div className="space-y-4 md:col-span-2 pt-4 border-t">
+                    <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Pré-visualização da Barra</Label>
+                    <div className="p-6 bg-card rounded-2xl border border-border shadow-inner">
+                      <div className="space-y-4">
+                        <div className="flex justify-between items-end mb-2">
+                          <span className="text-2xl font-black text-primary italic leading-none">
+                            {form.progress_text || (form.fake_progress_enabled ? `${form.fake_progress_percentage}%` : "75%")}
+                          </span>
+                          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest bg-secondary px-2 py-1 rounded-md">
+                            Progresso das Vendas
+                          </span>
+                        </div>
+                        <div className="relative h-6 w-full bg-secondary/30 rounded-full overflow-hidden border border-border/50">
+                          <div 
+                            className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary via-primary/80 to-primary shadow-[0_0_15px_rgba(var(--primary),0.5)] transition-all duration-1000 ease-out"
+                            style={{ width: `${form.fake_progress_enabled ? form.fake_progress_percentage : 75}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+             </Card>
           </TabsContent>
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
