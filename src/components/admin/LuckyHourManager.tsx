@@ -140,13 +140,29 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7 bg-secondary/10">
           <div>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" /> Gerenciar Hora Premiada
+              <Clock className="h-5 w-5 text-primary" /> Gerenciar Sorteios e Prêmios
             </CardTitle>
-            <CardDescription>Crie mini sorteios para ocorrerem durante a campanha.</CardDescription>
+            <CardDescription>Crie mini sorteios e prêmios automáticos para ocorrerem durante a campanha.</CardDescription>
           </div>
-          <Button onClick={() => setIsAdding(!isAdding)} variant={isAdding ? "outline" : "default"} className="gap-2 rounded-xl">
-            {isAdding ? "Cancelar" : <><Plus className="h-4 w-4" /> Novo Sorteio</>}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Tabs value={activeTab} onValueChange={(v) => {
+              setActiveTab(v as any);
+              setCurrentPage(1);
+              setNewDraw(p => ({ ...p, draw_type: v as any }));
+            }} className="w-auto">
+              <TabsList className="bg-secondary/50 rounded-xl">
+                <TabsTrigger value="hourly" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
+                  <Clock className="h-3 w-3" /> Hora Premiada
+                </TabsTrigger>
+                <TabsTrigger value="greater_smaller" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
+                  <TrendingUp className="h-3 w-3" /> Maior/Menor Cota
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button onClick={() => setIsAdding(!isAdding)} variant={isAdding ? "outline" : "default"} className="gap-2 rounded-xl">
+              {isAdding ? "Cancelar" : <><Plus className="h-4 w-4" /> Novo Sorteio</>}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="pt-6">
           {isAdding && (
