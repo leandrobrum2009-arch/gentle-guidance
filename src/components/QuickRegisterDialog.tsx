@@ -17,8 +17,13 @@ interface QuickRegisterDialogProps {
 export const QuickRegisterDialog = ({ isOpen, onOpenChange, onSuccess }: QuickRegisterDialogProps) => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { signUp, signIn } = useAuth();
+
+  useEffect(() => {
+    setIsPhoneValid(validatePhone(phone));
+  }, [phone]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
