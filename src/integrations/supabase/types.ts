@@ -347,6 +347,7 @@ export type Database = {
           payment_methods: Json | null
           price_bundles: Json | null
           prize_rules: Json | null
+          progress_text: string | null
           ranking_enabled: boolean | null
           ranking_prizes: Json | null
           regulations: string | null
@@ -407,6 +408,7 @@ export type Database = {
           payment_methods?: Json | null
           price_bundles?: Json | null
           prize_rules?: Json | null
+          progress_text?: string | null
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null
@@ -467,6 +469,7 @@ export type Database = {
           payment_methods?: Json | null
           price_bundles?: Json | null
           prize_rules?: Json | null
+          progress_text?: string | null
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null

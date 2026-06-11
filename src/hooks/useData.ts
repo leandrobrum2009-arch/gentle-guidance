@@ -55,6 +55,7 @@ export interface Campaign {
   show_timer?: boolean;
   fake_progress_enabled?: boolean;
   fake_progress_percentage?: number;
+  progress_text?: string | null;
   timer_end_date?: string | null;
   created_at: string;
   winners?: Winner[];

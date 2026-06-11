@@ -229,7 +229,8 @@ const CampaignDetail = () => {
     }
 
     const rounded = Math.round(val);
-    const text = val > 0 && val < 1 ? val.toFixed(2) : String(rounded);
+    const defaultText = val > 0 && val < 1 ? val.toFixed(2) : String(rounded);
+    const text = campaign.progress_text || defaultText;
     const bar = Math.min(100, Math.max(val, val > 0 ? 0.5 : 0));
     
     return { bar, text };
