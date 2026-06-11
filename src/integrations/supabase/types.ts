@@ -633,12 +633,17 @@ export type Database = {
       }
       lucky_hours: {
         Row: {
+          approved_at: string | null
+          approved_by: string | null
           audit_log: Json | null
           campaign_id: string
           created_at: string
+          draft_winner_name: string | null
+          draft_winning_number: string | null
           draw_time: string
           draw_type: string | null
           id: string
+          is_approved: boolean | null
           prize_description: string
           rule_id: string | null
           status: string
@@ -648,12 +653,17 @@ export type Database = {
           winning_number: string | null
         }
         Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
           audit_log?: Json | null
           campaign_id: string
           created_at?: string
+          draft_winner_name?: string | null
+          draft_winning_number?: string | null
           draw_time: string
           draw_type?: string | null
           id?: string
+          is_approved?: boolean | null
           prize_description: string
           rule_id?: string | null
           status?: string
@@ -663,12 +673,17 @@ export type Database = {
           winning_number?: string | null
         }
         Update: {
+          approved_at?: string | null
+          approved_by?: string | null
           audit_log?: Json | null
           campaign_id?: string
           created_at?: string
+          draft_winner_name?: string | null
+          draft_winning_number?: string | null
           draw_time?: string
           draw_type?: string | null
           id?: string
+          is_approved?: boolean | null
           prize_description?: string
           rule_id?: string | null
           status?: string

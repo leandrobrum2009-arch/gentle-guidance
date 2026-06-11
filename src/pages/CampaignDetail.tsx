@@ -948,7 +948,7 @@ const CampaignDetail = () => {
   const nextLuckyHour = useMemo(() => {
     if (!luckyHours) return null;
     const now = new Date();
-    // Only show hourly type as "next" alert
+    // Only show hourly type as "next" alert and ONLY if approved
     return luckyHours.find(h => {
       const drawDate = new Date(h.draw_time);
       return h.status === 'scheduled' && h.draw_type === 'hourly' && drawDate > now;
@@ -957,13 +957,15 @@ const CampaignDetail = () => {
 
   const hourlyDraws = useMemo(() => {
     if (!luckyHours) return [];
-    return luckyHours.filter(h => h.draw_type === 'hourly')
+    // Only show approved draws to public
+    return luckyHours.filter(h => h.draw_type === 'hourly' && (h.status === 'scheduled' || h.is_approved))
       .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
   }, [luckyHours]);
 
   const greaterSmallerDraws = useMemo(() => {
     if (!luckyHours) return [];
-    return luckyHours.filter(h => h.draw_type === 'greater_smaller')
+    // Only show approved draws to public
+    return luckyHours.filter(h => h.draw_type === 'greater_smaller' && (h.status === 'scheduled' || h.is_approved))
       .sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
   }, [luckyHours]);
 
