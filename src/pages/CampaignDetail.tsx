@@ -1241,7 +1241,7 @@ const CampaignDetail = () => {
               <p className="text-sm md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto">
                 Não deixe para amanhã o prêmio que você pode ganhar hoje. Escolha suas cotas e participe agora!
               </p>
-            </div>
+            </motion.div>
             
             <div className="relative z-10 pt-4">
               <Button 
