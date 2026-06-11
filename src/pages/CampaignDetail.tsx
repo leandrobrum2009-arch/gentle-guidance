@@ -985,7 +985,8 @@ const CampaignDetail = () => {
 
       case 'events':
         return luckyHours && luckyHours.length > 0 && (
-          <div key={section} className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4 -mt-2">
+          <div key={section} className="bg-card rounded-3xl p-6 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-4 -mt-2">
+
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
                 <Clock className="h-5 w-5 text-amber-500" />
@@ -1005,8 +1006,9 @@ const CampaignDetail = () => {
 
               <TabsContent value="hourly">
                 <div className="grid grid-cols-1 gap-3">
-                  {hourlyDraws.length > 0 ? hourlyDraws.slice(0, 3).map((draw) => (
-                    <div key={draw.id} className="p-3 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                  {hourlyDraws.length > 0 ? hourlyDraws.map((draw) => (
+                    <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50">
+
                       <div className="flex items-center gap-3">
                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
                           <Clock className="h-4 w-4" />
@@ -1033,8 +1035,9 @@ const CampaignDetail = () => {
 
               <TabsContent value="greater_smaller">
                 <div className="grid grid-cols-1 gap-3">
-                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.slice(0, 3).map((draw) => (
-                    <div key={draw.id} className="p-3 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.map((draw) => (
+                    <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50">
+
                       <div className="flex items-center gap-3">
                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
                           <TrendingUp className="h-4 w-4" />
@@ -1067,7 +1070,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "events", "header", "progress", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "events", "progress", "header", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -1083,7 +1086,7 @@ const CampaignDetail = () => {
 
       
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {nextLuckyHour && (
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
