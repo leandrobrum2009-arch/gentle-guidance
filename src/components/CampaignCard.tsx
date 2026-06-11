@@ -13,7 +13,9 @@ interface CampaignCardProps {
 }
 
 const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
-  const isCompleted = campaign.status === "completed" || campaign.status === "finished" || campaign.status === "drawn";
+  const now = new Date();
+  const isExpired = campaign.draw_date && new Date(campaign.draw_date) <= now;
+  const isCompleted = campaign.status === "completed" || campaign.status === "finished" || campaign.status === "drawn" || isExpired;
   const rawProgress = (campaign.sold_tickets / campaign.total_tickets) * 100;
   const progress = Math.round(rawProgress);
   const displayProgress = rawProgress > 0 && rawProgress < 1 ? rawProgress.toFixed(2) : progress;
