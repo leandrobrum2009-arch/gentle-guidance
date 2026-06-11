@@ -217,6 +217,19 @@ export interface Announcement {
   content: string;
   published_at: string;
 }
+ 
+ export interface LuckyHour {
+   id: string;
+   campaign_id: string;
+   title: string;
+   prize_description: string;
+   draw_time: string;
+   winner_name: string | null;
+   winning_number: string | null;
+   status: 'scheduled' | 'completed';
+   created_at: string;
+   updated_at: string;
+ }
 
 export const useCampaigns = () =>
   useQuery({
@@ -474,6 +487,21 @@ export const useRoulettePrizes = (campaignId: string) =>
         .eq("campaign_id", campaignId);
       if (error) throw error;
       return data as RoulettePrize[];
+    },
+    enabled: !!campaignId,
+  });
+
+export const useLuckyHours = (campaignId: string) =>
+  useQuery({
+    queryKey: ["lucky_hours", campaignId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("lucky_hours")
+        .select("*")
+        .eq("campaign_id", campaignId)
+        .order("draw_time", { ascending: true });
+      if (error) throw error;
+      return data as LuckyHour[];
     },
     enabled: !!campaignId,
   });
