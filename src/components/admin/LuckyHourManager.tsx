@@ -312,8 +312,8 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                           <div className="space-y-1">
                             <div className="flex items-center gap-2">
                               <h4 className="font-bold text-lg">{draw.title}</h4>
-                            <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className={`text-[10px] uppercase font-black tracking-tighter ${draw.status === 'completed' ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-amber-500 text-white hover:bg-amber-600'}`}>
-                                {draw.status === 'completed' ? 'Realizado' : 'Agendado'}
+                            <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className={`text-[10px] uppercase font-black tracking-tighter ${draw.status === 'completed' ? (draw.is_approved ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-blue-500 hover:bg-blue-600') : 'bg-amber-500 text-white hover:bg-amber-600'}`}>
+                                {draw.status === 'completed' ? (draw.is_approved ? 'Realizado' : 'Aguardando Aprovação') : 'Agendado'}
                               </Badge>
                             </div>
                             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
@@ -323,28 +323,41 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                                 <span className="flex items-center gap-1 text-[10px] bg-secondary/50 px-2 py-0.5 rounded-full"><History className="h-3 w-3" /> {draw.audit_log.length} registros</span>
                               )}
                             </div>
-                            {draw.status === 'completed' && draw.winner_name && (
-                              <div className="mt-3 p-3 bg-emerald-500/5 rounded-xl border border-emerald-500/10 flex flex-col gap-2 animate-in fade-in zoom-in-95">
+                            {draw.status === 'completed' && (
+                              <div className={`mt-3 p-3 rounded-xl border flex flex-col gap-2 animate-in fade-in zoom-in-95 ${draw.is_approved ? 'bg-emerald-500/5 border-emerald-500/10' : 'bg-blue-500/5 border-blue-500/10'}`}>
                                 <div className="flex items-center justify-between gap-4">
                                   <div className="flex items-center gap-2">
-                                    <div className="h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center">
-                                      <User className="h-3.5 w-3.5 text-emerald-600" />
+                                    <div className={`h-7 w-7 rounded-full flex items-center justify-center ${draw.is_approved ? 'bg-emerald-500/20' : 'bg-blue-500/20'}`}>
+                                      <User className={`h-3.5 w-3.5 ${draw.is_approved ? 'text-emerald-600' : 'text-blue-600'}`} />
                                     </div>
-                                    <span className="text-xs font-bold text-emerald-700 uppercase tracking-tight">Ganhador: {draw.winner_name} (Nº {draw.winning_number})</span>
+                                    <span className={`text-xs font-bold uppercase tracking-tight ${draw.is_approved ? 'text-emerald-700' : 'text-blue-700'}`}>
+                                      {draw.is_approved ? `Ganhador: ${draw.winner_name} (Nº ${draw.winning_number})` : `Pendente: ${draw.draft_winner_name} (Nº ${draw.draft_winning_number})`}
+                                    </span>
                                   </div>
-                                  <Button size="sm" variant="ghost" className="h-7 text-[10px] font-black uppercase text-emerald-600 hover:bg-emerald-500/10 gap-1.5" onClick={() => handleNotifyWinner(draw)}>
-                                    <Send className="h-3 w-3" /> Notificar
-                                  </Button>
+                                  {draw.is_approved ? (
+                                    <Button size="sm" variant="ghost" className="h-7 text-[10px] font-black uppercase text-emerald-600 hover:bg-emerald-500/10 gap-1.5" onClick={() => handleNotifyWinner(draw)}>
+                                      <Send className="h-3 w-3" /> Notificar
+                                    </Button>
+                                  ) : userRole === 'master' && (
+                                    <div className="flex items-center gap-2">
+                                      <Button size="sm" className="h-7 text-[9px] font-black uppercase bg-emerald-500 hover:bg-emerald-600 gap-1.5" onClick={() => handleApprove(draw)}>
+                                        <CheckSquare className="h-3 w-3" /> Aprovar
+                                      </Button>
+                                      <Button size="sm" variant="destructive" className="h-7 text-[9px] font-black uppercase gap-1.5" onClick={() => handleReject(draw)}>
+                                        <XCircle className="h-3 w-3" /> Rejeitar
+                                      </Button>
+                                    </div>
+                                  )}
                                 </div>
                                 {draw.audit_log && (
-                                  <div className="mt-1 pt-2 border-t border-emerald-500/10">
+                                  <div className={`mt-1 pt-2 border-t ${draw.is_approved ? 'border-emerald-500/10' : 'border-blue-500/10'}`}>
                                     <p className="text-[9px] font-bold text-muted-foreground uppercase flex items-center gap-1 mb-1">
                                       <ShieldCheck className="h-3 w-3" /> Log de Auditoria
                                     </p>
                                     <div className="space-y-1">
                                       {draw.audit_log.slice(-2).map((log: any, idx: number) => (
                                         <p key={idx} className="text-[9px] text-muted-foreground leading-tight italic">
-                                          {format(new Date(log.timestamp), "HH:mm:ss")} - {log.action === 'draw_completed' ? 'Sorteio realizado' : 'Revertido'} por {log.user_id?.substring(0, 8)}...
+                                          {format(new Date(log.timestamp), "HH:mm:ss")} - {log.action === 'draw_approved' ? 'Sorteio aprovado' : (log.action === 'draw_attempt' ? 'Resultado enviado' : 'Alterado')} por {log.user_id?.substring(0, 8)}...
                                         </p>
                                       ))}
                                     </div>
