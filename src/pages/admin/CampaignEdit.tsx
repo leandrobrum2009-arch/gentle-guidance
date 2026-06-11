@@ -241,11 +241,31 @@ export default function AdminCampaignEdit() {
         timer_end_date: form.timer_end_date ? new Date(form.timer_end_date).toISOString() : null,
       };
 
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+
       const { error } = id
         ? await supabase.from("campaigns").update(payload).eq("id", id)
         : await supabase.from("campaigns").insert(payload);
 
       if (error) throw error;
+
+      // Audit the change
+      if (user) {
+        await supabase.from("auth_audit_logs").insert({
+          user_id: user.id,
+          event: id ? "update_campaign" : "create_campaign",
+          resource: "campaigns",
+          status: "success",
+          details: { 
+            campaign_id: id || "new",
+            title: form.title,
+            status: form.status,
+            draw_date: payload.draw_date,
+            timestamp: new Date().toISOString()
+          }
+        });
+      }
       
       queryClient.invalidateQueries({ queryKey: ["campaigns"] });
       queryClient.invalidateQueries({ queryKey: ["campaign", id] });
