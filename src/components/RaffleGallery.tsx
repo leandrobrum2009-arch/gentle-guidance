@@ -39,7 +39,7 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
   return (
     <div className="w-full h-full flex flex-col items-center">
        <div 
-        className="group relative w-full h-[300px] md:h-[450px] overflow-hidden rounded-[2rem] md:rounded-[3rem] border border-border/50 bg-black flex items-center justify-center"
+        className="group relative w-full h-[300px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-[2rem] md:rounded-[3rem] border border-border/50 bg-black flex items-center justify-center shadow-2xl"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
@@ -94,7 +94,7 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
       </div>
 
       {allMedia.length > 1 && (
-        <div className="flex flex-wrap gap-2 py-4 justify-center w-full">
+        <div className="flex flex-wrap gap-2 md:gap-3 py-4 md:py-6 justify-center w-full max-w-4xl mx-auto px-2">
           {allMedia.map((img, i) => (
             <button
               key={i}
@@ -103,8 +103,8 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
                 setIsPaused(true);
               }}
               className={cn(
-                "relative h-12 w-16 md:h-16 md:w-24 overflow-hidden rounded-lg border-2 transition-all",
-                currentIndex === i ? "border-primary scale-105 shadow-md shadow-primary/20" : "border-transparent opacity-50 hover:opacity-100"
+                "relative h-14 w-20 md:h-20 md:w-32 overflow-hidden rounded-xl border-2 transition-all duration-300",
+                currentIndex === i ? "border-primary scale-110 shadow-lg shadow-primary/30 z-10" : "border-transparent opacity-60 hover:opacity-100 hover:scale-105"
               )}
             >
               <img src={img} className="h-full w-full object-cover" />
