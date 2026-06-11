@@ -380,6 +380,9 @@ import { PaymentModal } from "@/components/PaymentModal";
                             profile?.cpf?.length > 0 && (isCpfValid ? "border-emerald-500/50" : "border-rose-500/50")
                           )}
                         />
+                        {profile?.cpf?.length > 0 && !isCpfValid && (
+                          <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1 ml-1 mt-1">CPF inválido</p>
+                        )}
                       </div>
                     </div>
 
@@ -399,6 +402,9 @@ import { PaymentModal } from "@/components/PaymentModal";
                             profile?.phone?.length > 0 && (isPhoneValid ? "border-emerald-500/50" : "border-rose-500/50")
                           )}
                         />
+                        {profile?.phone?.length > 0 && !isPhoneValid && (
+                          <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1 ml-1 mt-1">WhatsApp inválido</p>
+                        )}
                       </div>
                     </div>
 

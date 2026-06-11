@@ -168,6 +168,9 @@ const Register = () => {
                     {isCpfValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
                   </div>
                 )}
+                {cpf.length > 0 && !isCpfValid && (
+                  <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1 ml-1 mt-1">Número de CPF inválido</p>
+                )}
               </div>
             </div>
             <div className="space-y-2">
@@ -188,6 +191,9 @@ const Register = () => {
                   <div className="absolute right-3 top-1/2 -translate-y-1/2">
                     {isPhoneValid ? <CheckCircle2 className="h-4 w-4 text-emerald-500" /> : <AlertCircle className="h-4 w-4 text-rose-500" />}
                   </div>
+                )}
+                {phone.length > 0 && !isPhoneValid && (
+                  <p className="text-[9px] text-rose-500 font-bold uppercase tracking-wider animate-in fade-in slide-in-from-top-1 ml-1 mt-1">Número de WhatsApp inválido</p>
                 )}
               </div>
             </div>
