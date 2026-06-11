@@ -2,7 +2,8 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { supabase } from "@/integrations/supabase/client";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { ShoppingCart, Trophy, X } from "lucide-react";
+import { ShoppingCart, Trophy, X, Bell } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
@@ -193,12 +194,20 @@ const LiveNotifications = () => {
             </div>
             
             <div className="flex-1 min-w-0">
-              <p className="text-[11px] font-bold text-foreground">
-                <span className="text-primary">{notif.userName}</span> {notif.message}
+              <p className="text-[12px] font-black text-foreground leading-tight">
+                <span className="text-primary uppercase">{notif.userName}</span>
               </p>
-              <p className="text-[10px] text-muted-foreground truncate italic">
-                ({notif.campaignTitle}) • {format(notif.timestamp, "HH:mm", { locale: ptBR })}
+              <p className="text-[11px] font-bold text-foreground/90 leading-tight">
+                {notif.message}
               </p>
+              <div className="flex items-center gap-1.5 mt-0.5">
+                <Badge variant="secondary" className="text-[8px] px-1.5 py-0 h-4 font-black uppercase tracking-tighter bg-primary/5 text-primary border-primary/10">
+                  {notif.type === 'winner' ? 'Ganhador' : 'Nova Compra'}
+                </Badge>
+                <span className="text-[9px] text-muted-foreground truncate italic">
+                  {format(notif.timestamp, "HH:mm", { locale: ptBR })}
+                </span>
+              </div>
             </div>
 
             <button 
