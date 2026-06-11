@@ -985,13 +985,19 @@ const CampaignDetail = () => {
 
       case 'events':
         return luckyHours && luckyHours.length > 0 && (
-          <div key={section} className="bg-card rounded-3xl p-6 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-4 -mt-2">
-
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
-                <Clock className="h-5 w-5 text-amber-500" />
+          <div key={section} className="bg-card rounded-3xl p-6 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Clock className="h-5 w-5 text-amber-500" />
+                </div>
+                <h2 className="text-sm font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
               </div>
-              <h2 className="text-sm font-black uppercase italic tracking-tighter text-animate-gradient">Eventos e Premiações</h2>
+              {nextLuckyHour && (
+                <Badge className="bg-primary text-white text-[10px] font-black uppercase px-3 py-1 animate-pulse">
+                  Próximo: {new Date(nextLuckyHour.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                </Badge>
+              )}
             </div>
             
             <Tabs defaultValue="hourly" className="w-full">
@@ -1092,7 +1098,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "events", "progress", "header", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "progress", "header", "description", "purchase", "events", "ranking", "prizes", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
@@ -1109,24 +1115,6 @@ const CampaignDetail = () => {
       
       <div className="container px-4 md:px-6">
         <div className="flex flex-col gap-4">
-          {nextLuckyHour && (
-            <motion.div 
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-primary/10 border border-primary/20 p-4 rounded-2xl flex items-center justify-between gap-4 animate-pulse"
-            >
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
-                  <Clock className="h-6 w-6" />
-                </div>
-                <div>
-                  <p className="text-sm font-black uppercase italic tracking-tighter text-primary">Hora Premiada em breve!</p>
-                  <p className="text-xs font-bold text-foreground/80">Hoje às {new Date(nextLuckyHour.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}: {nextLuckyHour.prize_description}</p>
-                </div>
-              </div>
-              <Badge className="bg-primary text-white text-[10px] font-black uppercase px-3 py-1">Imperdível</Badge>
-            </motion.div>
-          )}
 
           {sectionsOrder.map((section) => renderSection(section))}
           

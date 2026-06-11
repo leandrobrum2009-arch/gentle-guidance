@@ -94,7 +94,7 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
       </div>
 
       {allMedia.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto py-4 scrollbar-hide max-w-full justify-center">
+        <div className="flex flex-wrap gap-2 py-4 justify-center w-full">
           {allMedia.map((img, i) => (
             <button
               key={i}
@@ -103,7 +103,7 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
                 setIsPaused(true);
               }}
               className={cn(
-                "relative h-12 w-16 md:h-16 md:w-24 flex-shrink-0 overflow-hidden rounded-lg border-2 transition-all",
+                "relative h-12 w-16 md:h-16 md:w-24 overflow-hidden rounded-lg border-2 transition-all",
                 currentIndex === i ? "border-primary scale-105 shadow-md shadow-primary/20" : "border-transparent opacity-50 hover:opacity-100"
               )}
             >
