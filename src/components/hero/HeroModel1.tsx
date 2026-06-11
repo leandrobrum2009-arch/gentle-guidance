@@ -61,8 +61,8 @@ const HeroModel1 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
                     {campaign.draw_date && (
                       <CountdownTimer targetDate={campaign.draw_date} className="scale-110 origin-left" />
                     )}
-                    <h2 className="text-xl sm:text-2xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
-                      <span className="block mb-2">{campaign.title.split(' ')[0]}</span>
+                    <h2 className="text-2xl sm:text-3xl md:text-5xl lg:text-7xl font-black uppercase italic leading-[1] sm:leading-[1.1] tracking-tighter text-foreground filter drop-shadow-2xl md:pr-8 py-2">
+                      <span className="block mb-1 sm:mb-2">{campaign.title.split(' ')[0]}</span>
                       <span className="text-animate-gradient inline-block md:pr-8 pb-1">
                         {campaign.title.split(' ').slice(1).join(' ')}
                       </span>
