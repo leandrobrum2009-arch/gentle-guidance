@@ -147,10 +147,10 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
         </div>
       )}
 
-      {/* Removed sections per user request */}
     </div>
   );
 };
+
 
 
 
