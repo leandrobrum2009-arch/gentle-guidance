@@ -383,37 +383,59 @@ const CampaignDetail = () => {
         );
       
       case 'header':
+        const drawDateFull = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : null;
         return (
-          <div key={section} className="flex flex-col gap-6 mt-6">
+          <div key={section} className="flex flex-col gap-6 -mt-4">
+            <div className="space-y-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="bg-primary text-black border-none text-[10px] font-black uppercase px-3 h-6 rounded-full shadow-sm">Campanha Ativa</Badge>
+                {drawDateFull && (
+                  <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest border-primary/20 bg-primary/5 text-primary rounded-full px-3 h-6">
+                    Sorteio: {drawDateFull}
+                  </Badge>
+                )}
+              </div>
+              
+              <div className="space-y-2">
+                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black uppercase italic tracking-tighter text-animate-gradient leading-[0.9]">
+                  {campaign.title}
+                </h1>
+                {campaign.subtitle && (
+                  <p className="text-sm md:text-lg text-muted-foreground font-medium max-w-3xl leading-relaxed">
+                    {campaign.subtitle}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex flex-wrap gap-3 pt-2">
+                <Button 
+                  className="h-12 px-8 rounded-2xl font-black uppercase tracking-widest text-xs bg-primary text-black hover:scale-105 transition-all shadow-xl shadow-primary/20 animate-button-flash"
+                  onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
+                >
+                  PARTICIPE AGORA <Zap className="ml-2 h-4 w-4 fill-current" />
+                </Button>
+                <Button 
+                  variant="outline"
+                  className="h-12 px-8 rounded-2xl font-black uppercase tracking-widest text-xs border-primary/20 text-primary hover:bg-primary/5"
+                  onClick={() => {
+                    const element = document.getElementById('prizes');
+                    element?.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  VER COTAS PREMIADAS <Trophy className="ml-2 h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+
             {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
-              <div className="flex flex-col items-center justify-center p-6 bg-primary/5 border border-primary/20 rounded-3xl animate-pulse shadow-sm">
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-3">Tempo restante para o sorteio</p>
-                <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125" />
+              <div className="flex flex-col items-center justify-center p-8 bg-card border-2 border-primary/20 rounded-[2.5rem] shadow-xl shadow-primary/5 relative overflow-hidden group">
+                <div className="absolute inset-0 bg-primary/5 animate-pulse" />
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 relative z-10">Tempo restante para o sorteio</p>
+                <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125 md:scale-150 relative z-10" />
               </div>
             )}
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-              <div className="space-y-1">
-                <h1 className="text-xl md:text-2xl font-black text-foreground leading-tight text-animate-gradient">{campaign.title}</h1>
-                <p className="text-sm text-muted-foreground font-medium mb-3">{campaign.subtitle}</p>
-                <div className="flex flex-wrap gap-3">
-                  <Button 
-                    className="h-10 px-6 rounded-xl font-black uppercase tracking-widest text-[10px] bg-primary text-black hover:scale-105 transition-all shadow-lg shadow-primary/20 animate-button-flash"
-                    onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
-                  >
-                    PARTICIPE AGORA <Zap className="ml-2 h-3 w-3 fill-current" />
-                  </Button>
-                  <Button 
-                    variant="outline"
-                    className="h-10 px-6 rounded-xl font-black uppercase tracking-widest text-[10px] border-primary/20 text-primary hover:bg-primary/5"
-                    onClick={() => {
-                      const element = document.getElementById('prizes');
-                      element?.scrollIntoView({ behavior: 'smooth' });
-                    }}
-                  >
-                    VER COTAS PREMIADAS <Trophy className="ml-2 h-3 w-3" />
-                  </Button>
-                </div>
-              </div>
+          </div>
+        );
               <div className="flex flex-wrap items-center gap-2">
                 {campaign.status === "active" && (campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
                   <div className="flex flex-col gap-1">
@@ -1109,7 +1131,7 @@ const CampaignDetail = () => {
         type="article"
       />
       <Header />
-      <div className="h-20 md:h-28" />
+      <div className="h-16 md:h-20" />
       <LiveNotifications />
 
       
