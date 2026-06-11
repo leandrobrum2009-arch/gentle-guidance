@@ -590,23 +590,40 @@ const Index = () => {
             )}
           </section>
 
-          {/* Rifas Encerradas Section at the end */}
-          {endedCampaigns.length > 0 && (
-            <section className="container py-12 md:py-20 border-t border-border mt-12">
-              <SectionHeading 
-                icon={Clock} 
-                title="Últimos Ganhadores" 
-                subtitle="Rifas finalizadas recentemente"
-                badge="Encerradas"
-              />
-              
-              <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                {endedCampaigns.map((campaign, i) => (
-                  <CampaignCard key={campaign.id} campaign={campaign} index={i} />
-                ))}
-              </div>
-            </section>
-          )}
+          {/* Rifas Encerradas Section at the end - Optimized Loading */}
+          <div ref={endedRef} className="scroll-mt-20">
+            {isIntersecting && campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn")) && (
+              <section className="container py-12 md:py-20 border-t border-border mt-12">
+                <SectionHeading 
+                  icon={Clock} 
+                  title="Rifas Finalizadas" 
+                  subtitle="Confira os resultados dos sorteios anteriores"
+                  badge="Encerradas"
+                />
+                
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
+                  <AnimatePresence mode="popLayout">
+                    {endedCampaigns.map((campaign, i) => (
+                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
+                    ))}
+                  </AnimatePresence>
+                </div>
+
+                {!showEnded && campaigns.filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn")).length > 4 && (
+                  <div className="flex justify-center mt-12">
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      onClick={() => setShowEnded(true)}
+                      className="h-14 rounded-2xl px-10 font-black uppercase tracking-widest text-xs gap-2 border-primary/20 hover:bg-primary/5"
+                    >
+                      Carregar Mais Finalizadas <RotateCw className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </section>
+            )}
+          </div>
 
           <GoogleReviews />
 
