@@ -203,8 +203,43 @@ const Index = () => {
   }, [activeCampaigns]);
 
   const normalCampaigns = useMemo(() => {
-    return activeCampaigns.filter(c => !c.featured);
-  }, [activeCampaigns]);
+    let filtered = activeCampaigns.filter(c => !c.featured);
+    
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      filtered = filtered.filter(c => 
+        c.title.toLowerCase().includes(term) || 
+        c.subtitle?.toLowerCase().includes(term)
+      );
+    }
+    
+    switch (sortBy) {
+      case "price-asc":
+        filtered.sort((a, b) => a.ticket_price - b.ticket_price);
+        break;
+      case "price-desc":
+        filtered.sort((a, b) => b.ticket_price - a.ticket_price);
+        break;
+      case "oldest":
+        filtered.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        break;
+      default: // recent
+        filtered.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    }
+    
+    return filtered;
+  }, [activeCampaigns, searchTerm, sortBy]);
+
+  const totalPages = Math.ceil(normalCampaigns.length / itemsPerPage);
+  
+  const paginatedCampaigns = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    return normalCampaigns.slice(startIndex, startIndex + itemsPerPage);
+  }, [normalCampaigns, currentPage, itemsPerPage]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, sortBy]);
 
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
