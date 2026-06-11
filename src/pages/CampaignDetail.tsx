@@ -1118,24 +1118,61 @@ const CampaignDetail = () => {
 
       case 'faq':
         return (
-          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border border-border shadow-sm space-y-6">
-            <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
-                <Info className="h-5 w-5 text-primary" />
+          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-10 border border-border shadow-sm space-y-8">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center">
+                  <Info className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <h2 className="text-2xl font-black uppercase italic tracking-tighter text-animate-gradient">Dúvidas Frequentes</h2>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Tudo o que você precisa saber</p>
+                </div>
               </div>
-              <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Dúvidas Frequentes</h2>
             </div>
-            <div className="space-y-4">
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {[
-                { q: "Como participo?", a: "Escolha suas cotas, preencha seus dados e finalize o pagamento via PIX para confirmar sua participação instantaneamente." },
-                { q: "É seguro?", a: "Sim! Utilizamos tecnologia de ponta para garantir que todos os sorteios sejam justos e transparentes, com resultados auditáveis." },
-                { q: "Como recebo o prêmio?", a: "Nossa equipe entrará em contato via WhatsApp ou telefone logo após o sorteio para coordenar a entrega do seu prêmio." }
+                { 
+                  q: "Como os ganhadores são escolhidos?", 
+                  a: "Utilizamos um sistema de sorteio automatizado e transparente. Para a 'Hora Premiada', o sistema escolhe aleatoriamente entre os bilhetes pagos. Para 'Maior/Menor Cota', vence quem detiver o bilhete de maior ou menor numeração no horário marcado.",
+                  icon: Trophy
+                },
+                { 
+                  q: "Como sei se ganhei?", 
+                  a: "Além de aparecer instantaneamente no painel de 'Ganhadores' e nas notificações ao vivo, nossa equipe entra em contato via WhatsApp e telefone cadastrado para validar a premiação.",
+                  icon: Bell
+                },
+                { 
+                  q: "Quais as formas de pagamento?", 
+                  a: "Aceitamos PIX com compensação imediata. Assim que o pagamento é confirmado, seus números são validados automaticamente no sistema e você já está concorrendo.",
+                  icon: Zap
+                },
+                { 
+                  q: "Posso comprar quantas cotas?", 
+                  a: "O limite depende de cada campanha, mas você pode comprar quantas desejar até atingir o limite máximo por usuário ou o esgotamento da rifa. Quanto mais cotas, maiores as chances!",
+                  icon: Ticket
+                }
               ].map((item, i) => (
-                <div key={i} className="p-4 rounded-2xl bg-secondary/30 border border-border/50 space-y-1">
-                  <p className="text-xs font-black uppercase tracking-tight text-foreground">{item.q}</p>
-                  <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{item.a}</p>
+                <div key={i} className="p-6 rounded-3xl bg-secondary/20 border border-border/50 hover:border-primary/30 transition-all duration-300 group">
+                  <div className="flex items-start gap-4">
+                    <div className="h-8 w-8 rounded-xl bg-background border border-border flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+                      <item.icon className="h-4 w-4" />
+                    </div>
+                    <div className="space-y-2">
+                      <p className="text-xs font-black uppercase tracking-tight text-foreground leading-tight">{item.q}</p>
+                      <p className="text-[11px] font-medium text-muted-foreground leading-relaxed">{item.a}</p>
+                    </div>
+                  </div>
                 </div>
               ))}
+            </div>
+            
+            <div className="pt-6 border-t border-border/50 flex flex-col items-center text-center gap-4">
+              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Ainda tem dúvidas? Fale com nosso suporte</p>
+              <Button variant="outline" className="rounded-2xl px-8 h-12 border-primary/20 text-primary hover:bg-primary/5 font-black uppercase tracking-widest text-[10px] gap-2">
+                <Smartphone className="h-4 w-4" /> Atendimento via WhatsApp
+              </Button>
             </div>
           </div>
         );
