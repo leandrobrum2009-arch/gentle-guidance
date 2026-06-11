@@ -40,6 +40,7 @@ export interface Campaign {
   lucky_numbers_prizes?: any[];
   federal_lottery_draw?: boolean;
   draw_number?: string;
+  concurso?: string;
   payment_methods?: string[];
   sales_goal?: number;
   ticket_generation_type?: 'manual' | 'auto';
