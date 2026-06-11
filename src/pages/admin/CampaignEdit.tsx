@@ -73,6 +73,7 @@ const empty: CampaignForm = {
   prize_rules: [],
   live_stream_url: "",
   concurso: "",
+  draw_number: "",
   fake_progress_enabled: false,
   fake_progress_percentage: 0,
   progress_text: "",
