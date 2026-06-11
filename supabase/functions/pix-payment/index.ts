@@ -159,6 +159,75 @@ serve(async (req) => {
         })
       }
 
+      if (activeProvider === 'pay2m') {
+        const clientKey = settings.pay2m_client_key
+        const clientSecret = settings.pay2m_client_secret
+        
+        if (!clientKey || !clientSecret) {
+          throw new Error("Configurações da Pay2m (Client Key/Secret) não encontradas.")
+        }
+
+        // 1. Get Access Token
+        const authBase64 = btoa(`${clientKey}:${clientSecret}`)
+        const tokenRes = await fetch("https://portal.pay2m.com.br/api/auth/generate_token", {
+          method: "POST",
+          headers: {
+            "Authorization": `Basic ${authBase64}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ grant_type: "client_credentials" })
+        })
+
+        if (!tokenRes.ok) {
+          const errData = await tokenRes.json().catch(() => ({}))
+          console.error("Pay2m Auth Error:", errData)
+          throw new Error("Falha na autenticação com Pay2m")
+        }
+
+        const { access_token } = await tokenRes.json()
+
+        // 2. Create PIX QR Code
+        const pixRes = await fetch("https://portal.pay2m.com.br/api/v1/pix/qrcode", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${access_token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            value: Number(order.total_amount),
+            generator_name: (order.profiles?.name || "Cliente").slice(0, 100),
+            external_reference: orderId,
+            payer_message: `Rifa - ${order.campaigns?.title || 'Pedido'}`.slice(0, 100),
+            expiration_time: 3600 // 1 hour
+          })
+        })
+
+        if (!pixRes.ok) {
+          const errData = await pixRes.json().catch(() => ({}))
+          console.error("Pay2m PIX Error:", errData)
+          throw new Error(errData.message || "Erro ao gerar PIX na Pay2m")
+        }
+
+        const pixData = await pixRes.json()
+        const pixCode = pixData.content
+        
+        // Note: Pay2m doesn't seem to return base64 QR code directly in this endpoint.
+        // We'll return it as null and the frontend QR code component should handle generating it from the pixCode.
+        
+        await supabaseClient.from("orders").update({
+          pix_code: pixCode,
+          payment_id: pixData.reference_code
+        }).eq("id", orderId)
+
+        return new Response(JSON.stringify({
+          pix_code: pixCode,
+          pix_qr_code_base64: null
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        })
+      }
+
       throw new Error(`Provedor de pagamento '${activeProvider}' não suportado.`)
     }
 
