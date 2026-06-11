@@ -112,8 +112,8 @@ const Footer = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <img src="https://logodownload.org/wp-content/uploads/2014/10/google-play-badge.png" className="h-8 object-contain" alt="Disponível no Google Play" />
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/1200px-Download_on_the_App_Store_Badge.svg.png" className="h-8 object-contain" alt="Baixar na App Store" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg" className="h-8 object-contain" alt="Disponível no Google Play" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/3/3c/Download_on_the_App_Store_Badge.svg" className="h-8 object-contain" alt="Baixar na App Store" />
               </div>
             </div>
           </div>
