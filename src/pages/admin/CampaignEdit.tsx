@@ -1004,7 +1004,14 @@ export default function AdminCampaignEdit() {
                     {form.show_timer && (
                       <div className="space-y-2">
                         <Label>Data Final do Cronômetro</Label>
-                        <Input type="datetime-local" value={form.timer_end_date} onChange={(e) => set("timer_end_date", e.target.value)} />
+                        <Input 
+                          type="datetime-local" 
+                          value={form.timer_end_date} 
+                          onChange={(e) => set("timer_end_date", e.target.value)} 
+                          className={cn(
+                            form.draw_date && form.timer_end_date && new Date(form.timer_end_date) > new Date(form.draw_date) && "border-destructive focus-visible:ring-destructive"
+                          )}
+                        />
                         <p className="text-[10px] text-muted-foreground italic">Caso vazio, usará a data do sorteio.</p>
                       </div>
                     )}
