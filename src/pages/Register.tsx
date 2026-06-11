@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Eye, EyeOff, User, Ticket } from "lucide-react";
+import { Eye, EyeOff, User, Ticket, CheckCircle2, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,6 +13,8 @@ import Footer from "@/components/Footer";
 import { compressImage } from "@/lib/image-upload";
 import { useSiteSettings } from "@/hooks/useData";
 import { SEO } from "@/components/SEO";
+import { maskCPF, maskPhone, validateCPF, validatePhone } from "@/lib/validations";
+import { cn } from "@/lib/utils";
 
 const Register = () => {
   const { data: siteSettings } = useSiteSettings();
