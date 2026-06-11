@@ -79,7 +79,10 @@ export default function AdminSettings() {
     show_sales_page: "Habilitar Página de Vendas",
     sales_page_keywords: "Palavras-chave da Venda",
     sales_page_type: "Tipo da Plataforma",
-    sales_page_whatsapp: "WhatsApp de Vendas"
+    sales_page_whatsapp: "WhatsApp de Vendas",
+    pay2m_client_key: "Pay2m: Client Key",
+    pay2m_client_secret: "Pay2m: Client Secret",
+    pay2m_enabled: "Habilitar Pay2m"
   };
 
   useEffect(() => {
@@ -574,9 +577,10 @@ export default function AdminSettings() {
                       label=""
                       getIcon={() => null}
                       type="select"
-                      options={[
+                       options={[
                         { label: "Mercado Pago (Oficial / Automático)", value: "mercadopago" },
                         { label: "Paggue (PIX Automático)", value: "paggue" },
+                        { label: "Pay2m (PIX Automático)", value: "pay2m" },
                         { label: "Manual (Envio de Comprovante)", value: "manual" }
                       ]}
                     />
@@ -664,6 +668,49 @@ export default function AdminSettings() {
                       />
                       <SettingField 
                         s={settings.find(s => s.key === 'paggue_client_secret')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Secret"
+                        getIcon={getIcon}
+                        type="password"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Pay2m */}
+                  <div className={`space-y-5 p-6 rounded-3xl transition-all duration-300 border-2 ${
+                    settings.find(s => s.key === 'active_payment_provider')?.value === 'pay2m' 
+                    ? 'bg-primary/5 border-primary shadow-xl shadow-primary/5' 
+                    : 'bg-secondary/20 border-border/50 opacity-60 grayscale-[0.5]'
+                  }`}>
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-4">
+                        <div className="h-12 w-12 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-lg">
+                          <span className="font-black text-lg">P2</span>
+                        </div>
+                        <div>
+                          <h4 className="font-bold text-base">Pay2m</h4>
+                          <div className="flex items-center gap-1.5">
+                            <span className="h-2 w-2 rounded-full bg-blue-400 animate-pulse"></span>
+                            <p className="text-[10px] text-muted-foreground font-black uppercase tracking-tighter">API PIX</p>
+                          </div>
+                        </div>
+                      </div>
+                      {settings.find(s => s.key === 'active_payment_provider')?.value === 'pay2m' && (
+                        <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center shadow-lg">
+                          <Check className="h-5 w-5 stroke-[3px]" />
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      <SettingField 
+                        s={settings.find(s => s.key === 'pay2m_client_key')} 
+                        onUpdate={handleUpdate} 
+                        label="Client Key"
+                        getIcon={getIcon}
+                      />
+                      <SettingField 
+                        s={settings.find(s => s.key === 'pay2m_client_secret')} 
                         onUpdate={handleUpdate} 
                         label="Client Secret"
                         getIcon={getIcon}

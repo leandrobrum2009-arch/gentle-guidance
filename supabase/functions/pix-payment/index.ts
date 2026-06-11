@@ -159,10 +159,123 @@ serve(async (req) => {
         })
       }
 
+      if (activeProvider === 'pay2m') {
+        const clientKey = settings.pay2m_client_key
+        const clientSecret = settings.pay2m_client_secret
+        
+        if (!clientKey || !clientSecret) {
+          throw new Error("Configurações da Pay2m (Client Key/Secret) não encontradas.")
+        }
+
+        // 1. Get Access Token
+        const authBase64 = btoa(`${clientKey}:${clientSecret}`)
+        const tokenRes = await fetch("https://portal.pay2m.com.br/api/auth/generate_token", {
+          method: "POST",
+          headers: {
+            "Authorization": `Basic ${authBase64}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ grant_type: "client_credentials" })
+        })
+
+        if (!tokenRes.ok) {
+          const errData = await tokenRes.json().catch(() => ({}))
+          console.error("Pay2m Auth Error:", errData)
+          throw new Error("Falha na autenticação com Pay2m")
+        }
+
+        const { access_token } = await tokenRes.json()
+
+        // 2. Create PIX QR Code
+        const pixRes = await fetch("https://portal.pay2m.com.br/api/v1/pix/qrcode", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${access_token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            value: Number(order.total_amount),
+            generator_name: (order.profiles?.name || "Cliente").slice(0, 100),
+            external_reference: orderId,
+            payer_message: `Rifa - ${order.campaigns?.title || 'Pedido'}`.slice(0, 100),
+            expiration_time: 3600 // 1 hour
+          })
+        })
+
+        if (!pixRes.ok) {
+          const errData = await pixRes.json().catch(() => ({}))
+          console.error("Pay2m PIX Error:", errData)
+          throw new Error(errData.message || "Erro ao gerar PIX na Pay2m")
+        }
+
+        const pixData = await pixRes.json()
+        const pixCode = pixData.content
+        
+        // Note: Pay2m doesn't seem to return base64 QR code directly in this endpoint.
+        // We'll return it as null and the frontend QR code component should handle generating it from the pixCode.
+        
+        await supabaseClient.from("orders").update({
+          pix_code: pixCode,
+          payment_id: pixData.reference_code
+        }).eq("id", orderId)
+
+        return new Response(JSON.stringify({
+          pix_code: pixCode,
+          pix_qr_code_base64: null
+        }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        })
+      }
+
       throw new Error(`Provedor de pagamento '${activeProvider}' não suportado.`)
     }
 
     if (path === "webhook") {
+      // Handle Pay2m Webhook
+      if (body.notification_type === "PIX:QRCODE" && body.message) {
+        const msg = body.message
+        const orderId = msg.external_reference
+        const referenceCode = msg.reference_code
+        const status = msg.status
+
+        console.log(`[Pay2m Webhook] Order ${orderId}, Status: ${status}, Ref: ${referenceCode}`);
+
+        if (status === "paid" && orderId) {
+          await logWebhookEvent(supabaseClient, { 
+            provider: 'pay2m', 
+            eventId: referenceCode, 
+            payload: body 
+          });
+
+          const { error: rpcError } = await supabaseClient.rpc("handle_order_payment", { 
+            p_order_id: orderId,
+            p_payment_id: referenceCode,
+            p_payment_provider: 'pay2m'
+          })
+
+          if (!rpcError) {
+             await markAsProcessed(supabaseClient, referenceCode, 'pay2m');
+             return new Response(JSON.stringify({ success: true }), {
+               headers: { ...corsHeaders, "Content-Type": "application/json" },
+               status: 200,
+             });
+          } else {
+             console.error("[Pay2m Webhook] RPC Error:", rpcError)
+             await markAsFailed(supabaseClient, referenceCode, 'pay2m', rpcError.message);
+             return new Response(JSON.stringify({ error: rpcError.message }), {
+               headers: { ...corsHeaders, "Content-Type": "application/json" },
+               status: 500,
+             });
+          }
+        }
+        return new Response(JSON.stringify({ received: true }), {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+        });
+      }
+
+      // Handle Mercado Pago Webhook
       const topic = body.topic || url.searchParams.get("topic") || body.type
       const id = body.resource?.split("/").pop() || body.data?.id || url.searchParams.get("id") || body.id
 
