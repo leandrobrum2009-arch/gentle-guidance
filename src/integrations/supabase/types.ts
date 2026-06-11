@@ -1019,6 +1019,48 @@ export type Database = {
         }
         Relationships: []
       }
+      purchase_logs: {
+        Row: {
+          created_at: string | null
+          event_type: string
+          id: string
+          message: string | null
+          metadata: Json | null
+          order_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          event_type: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          order_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          event_type?: string
+          id?: string
+          message?: string | null
+          metadata?: Json | null
+          order_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_logs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_logs_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders_public_ranking"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       push_notifications: {
         Row: {
           body: string
@@ -1730,6 +1772,15 @@ export type Database = {
       process_scratch_card_play: {
         Args: { p_campaign_id: string; p_cost: number }
         Returns: Json
+      }
+      record_purchase_log: {
+        Args: {
+          p_event_type: string
+          p_message: string
+          p_metadata?: Json
+          p_order_id: string
+        }
+        Returns: undefined
       }
       release_expired_tickets: { Args: never; Returns: undefined }
       repair_order: { Args: { p_order_id: string }; Returns: Json }
