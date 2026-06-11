@@ -49,110 +49,95 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
 
   return (
     <div className="space-y-10">
-      {/* Header with Tabs */}
-      {/* Removed "Elite da Plataforma" and "Meu melhor número" sections per user request */}
+      {stats?.activePrize && (
+        <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
+          <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
+            <div className="flex items-center gap-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
+                <Trophy className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-black text-foreground italic">Maior e Menor Bilhete</h3>
+                <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Resultados instantâneos da campanha</p>
+              </div>
+            </div>
+            <Badge variant="outline" className="rounded-full bg-primary/20 text-primary border-primary/30 text-[10px] font-black h-8 px-4 gap-2">
+              <Sparkles className="h-3 w-3 text-primary" /> PROVA SOCIAL
+            </Badge>
+          </div>
 
-
-          {stats.activePrize && (
-            <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
-              {/* Header with Trophy Icon */}
-              <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
-                    <Trophy className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-black text-foreground italic">Maior e Menor Bilhete</h3>
-                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Resultados instantâneos da campanha</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="rounded-full bg-primary/20 text-primary border-primary/30 text-[10px] font-black h-8 px-4 gap-2">
-                  <Sparkles className="h-3 w-3 text-primary" /> PROVA SOCIAL
+          <div className="p-8 space-y-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-xl w-fit border border-primary/20">
+                <Zap className="h-3 w-3 text-primary" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-primary">HOJE</span>
+              </div>
+              <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                A geração de maior e menor bilhete contabiliza compras entre 
+                <br />
+                <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 00:00:00</span> e <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 23:59:59</span>.
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-bold text-muted-foreground">Promoção acaba em</span>
+                <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30 font-bold px-4 py-1 rounded-full text-xs">
+                  Sorteio finalizado
                 </Badge>
               </div>
+            </div>
 
-              <div className="p-8 space-y-6">
-                {/* Generation Info */}
-                <div className="space-y-4">
-                  <div className="flex items-center gap-2 bg-primary/10 px-4 py-2 rounded-xl w-fit border border-primary/20">
-                    <Zap className="h-3 w-3 text-primary" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-primary">HOJE</span>
-                  </div>
-                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                    A geração de maior e menor bilhete contabiliza compras entre 
-                    <br />
-                    <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 00:00:00</span> e <span className="text-foreground font-bold">{new Date().toLocaleDateString('pt-BR')} 23:59:59</span>.
-                  </p>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-muted-foreground">Promoção acaba em</span>
-                    <Badge className="bg-emerald-500/20 text-emerald-500 border-emerald-500/30 font-bold px-4 py-1 rounded-full text-xs">
-                      Sorteio finalizado
-                    </Badge>
-                  </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                  <ArrowDownCircle className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-black uppercase tracking-widest">Menor Bilhete</span>
                 </div>
-
-                {/* Tickets Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Menor Bilhete */}
-                  <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <ArrowDownCircle className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-black uppercase tracking-widest">Menor Bilhete</span>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
-                        {(Array.isArray(stats.lowestTickets[0]?.profiles) ? stats.lowestTickets[0].profiles[0]?.name : stats.lowestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
-                      </h4>
-                    </div>
-                    <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
-                      {stats.lowestTickets[0]?.number || "000000"}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-                        Comprou: R$ {stats.activePrize.prize_menor || "14,01"}
-                      </div>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
-                        {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
+                <div className="space-y-1">
+                  <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+                    {(Array.isArray(stats.lowestTickets[0]?.profiles) ? stats.lowestTickets[0].profiles[0]?.name : stats.lowestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
+                  </h4>
+                </div>
+                <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
+                  {stats.lowestTickets[0]?.number || "000000"}
+                </div>
+                <div className="space-y-1">
+                  <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+                    Comprou: R$ {stats.activePrize.prize_menor || "14,01"}
                   </div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
+                    {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
+                </div>
+              </div>
 
-                  {/* Maior Bilhete */}
-                  <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
-                    <div className="flex items-center gap-2 text-muted-foreground mb-2">
-                      <ArrowUpCircle className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-black uppercase tracking-widest">Maior Bilhete</span>
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
-                        {(Array.isArray(stats.highestTickets[0]?.profiles) ? stats.highestTickets[0].profiles[0]?.name : stats.highestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
-                      </h4>
-                    </div>
-                    <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
-                      {stats.highestTickets[0]?.number || "999999"}
-                    </div>
-                    <div className="space-y-1">
-                      <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
-                        Comprou: R$ {stats.activePrize.prize_maior || "14,01"}
-                      </div>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
-                        {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
-                      </p>
-                    </div>
+              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
+                  <ArrowUpCircle className="h-4 w-4 text-primary" />
+                  <span className="text-xs font-black uppercase tracking-widest">Maior Bilhete</span>
+                </div>
+                <div className="space-y-1">
+                  <h4 className="text-xl font-black uppercase italic tracking-tighter text-foreground">
+                    {(Array.isArray(stats.highestTickets[0]?.profiles) ? stats.highestTickets[0].profiles[0]?.name : stats.highestTickets[0]?.profiles?.name) || "AGUARDANDO..."}
+                  </h4>
+                </div>
+                <div className="bg-primary text-black px-8 py-3 rounded-2xl text-3xl font-black italic shadow-xl shadow-primary/20 group-hover:scale-110 transition-transform duration-500">
+                  {stats.highestTickets[0]?.number || "999999"}
+                </div>
+                <div className="space-y-1">
+                  <div className="bg-primary/20 text-primary border border-primary/30 px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider">
+                    Comprou: R$ {stats.activePrize.prize_maior || "14,01"}
                   </div>
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-2">
+                    {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                  </p>
                 </div>
               </div>
             </div>
-          )}
+          </div>
         </div>
       )}
-
     </div>
   );
 };
-
-
-
 
 const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: number, category: string, className?: string }) => {
   if (!user) return <div className={cn("flex-1", className)} />;
