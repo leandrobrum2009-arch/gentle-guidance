@@ -158,12 +158,14 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 </div>
                 <div className="min-w-0">
                   <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">
-                    {campaign.winners && campaign.winners.length > 0 ? 'Ganhador(a)' : 'Status'}
+                    {campaign.status === 'drawn' && campaign.draw_number ? 'Número Sorteado' : (campaign.winners && campaign.winners.length > 0 ? 'Ganhador(a)' : 'Status')}
                   </p>
                   <p className="text-xs font-black text-foreground truncate">
-                    {campaign.winners && campaign.winners.length > 0 
-                      ? (campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name)
-                      : 'Acumulada / Sem Ganhador'
+                    {campaign.status === 'drawn' && campaign.draw_number 
+                      ? campaign.draw_number 
+                      : (campaign.winners && campaign.winners.length > 0 
+                        ? (campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name)
+                        : 'Acumulada / Sem Ganhador')
                     }
                   </p>
                 </div>
