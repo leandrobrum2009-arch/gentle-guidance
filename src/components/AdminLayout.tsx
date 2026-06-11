@@ -18,8 +18,9 @@ import { useSiteSettings } from "@/hooks/useData";
    ]},
    { category: "Vendas", items: [
      { title: "Campanhas", url: "/admin/campanhas", icon: Megaphone },
-      { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
-      { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
+       { title: "Pedidos", url: "/admin/pedidos", icon: ShoppingCart },
+       { title: "Transações", url: "/admin/transacoes", icon: CreditCard },
+       { title: "Logs de Pagamento", url: "/admin/pagamentos/logs", icon: History },
      { title: "Cupons", url: "/admin/cupons", icon: Percent },
      { title: "Ganhadores", url: "/admin/ganhadores", icon: Trophy },
    ]},
@@ -103,8 +104,9 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
       // New granular permissions
       if (item.title === "Campanhas" && features && !features.campaigns_management_enabled) return false;
       if (item.title === "Pedidos" && features && !features.orders_management_enabled) return false;
-      if (item.title === "Usuários" && features && !features.users_management_enabled) return false;
-      if (item.title === "Afiliados" && features && !features.affiliates_management_enabled) return false;
+       if (item.title === "Usuários" && features && !features.users_management_enabled) return false;
+       if (item.title === "Transações" && features && !features.orders_management_enabled) return false;
+       if (item.title === "Afiliados" && features && !features.affiliates_management_enabled) return false;
       if (item.title === "Configurações do Sistema" && features && !features.settings_management_enabled) return false;
 
       // Hard role-based fallback restrictions (security)

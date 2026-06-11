@@ -24,6 +24,7 @@ import AdminDiagnostics from "./pages/admin/Diagnostics";
 import AdminScratchCards from "./pages/admin/ScratchCards";
 import AdminPaymentLogs from "./pages/admin/PaymentLogs";
 import AdminAuditLogs from "./pages/admin/AuditLogs";
+import AdminTransactions from "./pages/admin/Transactions";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -159,6 +160,7 @@ const AppContent = () => {
           <Route path="/admin/diagnostico" element={<ProtectedRoute adminOnly><AdminDiagnostics /></ProtectedRoute>} />
           <Route path="/admin/pagamentos/logs" element={<ProtectedRoute adminOnly><AdminPaymentLogs /></ProtectedRoute>} />
           <Route path="/admin/audit-logs" element={<ProtectedRoute adminOnly><AdminAuditLogs /></ProtectedRoute>} />
+          <Route path="/admin/transacoes" element={<ProtectedRoute adminOnly><AdminTransactions /></ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>
