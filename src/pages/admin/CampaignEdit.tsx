@@ -42,6 +42,8 @@ interface CampaignForm {
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
   prize_rules: { type: string; label: string; prize_greater?: string; prize_smaller?: string; active?: boolean }[];
   live_stream_url: string; concurso: string;
+  fake_progress_enabled: boolean;
+  fake_progress_percentage: number;
 }
 
 

@@ -215,11 +215,17 @@ const CampaignDetail = () => {
     if (!campaign) return { bar: 0, text: "0" };
     
     let val = 0;
-    if (campaign.sales_goal && campaign.sales_goal > 0) {
-      const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
-      val = (currentSales / campaign.sales_goal) * 100;
+    
+    // If fake progress is enabled, use the fake percentage
+    if (campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined) {
+      val = campaign.fake_progress_percentage;
     } else {
-      val = (campaign.sold_tickets / campaign.total_tickets) * 100;
+      if (campaign.sales_goal && campaign.sales_goal > 0) {
+        const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
+        val = (currentSales / campaign.sales_goal) * 100;
+      } else {
+        val = (campaign.sold_tickets / campaign.total_tickets) * 100;
+      }
     }
 
     const rounded = Math.round(val);

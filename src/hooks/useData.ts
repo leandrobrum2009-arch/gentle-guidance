@@ -53,6 +53,8 @@ export interface Campaign {
   main_prizes?: { position: number, prize: string }[];
   sections_order?: string[];
   show_timer?: boolean;
+  fake_progress_enabled?: boolean;
+  fake_progress_percentage?: number;
   timer_end_date?: string | null;
   created_at: string;
   winners?: Winner[];
