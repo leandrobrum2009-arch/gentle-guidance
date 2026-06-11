@@ -329,7 +329,7 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[400px]">
+                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
                     {activeCampaigns.length > 0 ? (
                       activeCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
