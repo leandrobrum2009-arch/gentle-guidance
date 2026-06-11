@@ -388,12 +388,31 @@ const CampaignDetail = () => {
           <div key={section} className="flex flex-col gap-6 -mt-4">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge className="bg-primary text-black border-none text-[10px] font-black uppercase px-3 h-6 rounded-full shadow-sm">Campanha Ativa</Badge>
-                {drawDateFull && (
-                  <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest border-primary/20 bg-primary/5 text-primary rounded-full px-3 h-6">
-                    Sorteio: {drawDateFull}
-                  </Badge>
-                )}
+                <div className="flex flex-wrap items-center gap-2">
+                  {campaign.status === "active" && (campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
+                    <div className="flex flex-col gap-1">
+                      <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit shadow-sm">
+                        Aguardando Sorteio
+                      </Badge>
+                    </div>
+                  ) : (
+                    <Badge className="bg-primary text-black border-none text-[10px] font-black uppercase px-3 h-6 rounded-full shadow-sm">Sorteio Ativo</Badge>
+                  ))}
+                  {campaign.status === "paused" && (
+                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit shadow-sm">Vendas Pausadas</Badge>
+                  )}
+                  {campaign.status === "audit" && (
+                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse shadow-sm">Em Auditoria</Badge>
+                  )}
+                  {campaign.status === "completed" && (
+                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-blue-500 text-white shadow-sm">Concluído</Badge>
+                  )}
+                  {drawDateFull && (
+                    <Badge variant="outline" className="text-[10px] font-bold uppercase tracking-widest border-primary/20 bg-primary/5 text-primary rounded-full px-3 h-6">
+                      Sorteio: {drawDateFull}
+                    </Badge>
+                  )}
+                </div>
               </div>
               
               <div className="space-y-2">
@@ -434,46 +453,6 @@ const CampaignDetail = () => {
                 <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125 md:scale-150 relative z-10" />
               </div>
             )}
-          </div>
-        );
-              <div className="flex flex-wrap items-center gap-2">
-                {campaign.status === "active" && (campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
-                  <div className="flex flex-col gap-1">
-                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit">
-                      Aguardando Sorteio
-                    </Badge>
-                    <p className="text-[10px] font-bold text-amber-600 animate-pulse">Vendas encerradas! O sorteio ocorrerá em breve.</p>
-                  </div>
-                ) : (
-                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
-                    Sorteio Ativo
-                  </Badge>
-                ))}
-                {campaign.status === "paused" && (
-                  <div className="flex flex-col gap-1">
-                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit">
-                      Vendas Pausadas
-                    </Badge>
-                    <p className="text-[10px] font-bold text-amber-600">As vendas estão temporariamente suspensas.</p>
-                  </div>
-                )}
-                {campaign.status === "audit" && (
-                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse">
-                    Em Auditoria
-                  </Badge>
-                )}
-                {campaign.status === "completed" && (
-                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-blue-500 text-white">
-                    Concluído
-                  </Badge>
-                )}
-                {drawDate && (
-                  <Badge variant="outline" className="rounded-full px-4 h-6 text-[10px] font-bold uppercase tracking-wider bg-card">
-                    <Calendar className="mr-1.5 h-3 w-3" /> {drawDate}
-                  </Badge>
-                )}
-              </div>
-            </div>
           </div>
         );
 
