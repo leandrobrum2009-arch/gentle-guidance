@@ -40,6 +40,7 @@ interface CampaignForm {
   upsell_video_url: string; upsell_offer_text: string;
   upsell_enabled: boolean; upsell_probability: string;
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
+  prize_rules: { type: string; label: string; prize_greater?: string; prize_smaller?: string; active?: boolean }[];
   live_stream_url: string; concurso: string;
 }
 
@@ -66,6 +67,7 @@ const empty: CampaignForm = {
   upsell_enabled: false,
   upsell_probability: "98%",
   ranking_prizes: [],
+  prize_rules: [],
   live_stream_url: "",
   concurso: "",
 };
@@ -101,6 +103,7 @@ export default function AdminCampaignEdit() {
       main_prizes: (data.main_prizes as any[]) ?? [], 
       roulette_rules: (data.roulette_rules as any[]) ?? [],
       ranking_prizes: (data.ranking_prizes as any[]) ?? [],
+      prize_rules: (data.prize_rules as any[]) ?? [],
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as unknown as CampaignForm);
     setLoading(false);

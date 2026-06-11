@@ -344,6 +344,7 @@ export type Database = {
           mystery_box_enabled: boolean | null
           payment_methods: Json | null
           price_bundles: Json | null
+          prize_rules: Json | null
           ranking_enabled: boolean | null
           ranking_prizes: Json | null
           regulations: string | null
@@ -401,6 +402,7 @@ export type Database = {
           mystery_box_enabled?: boolean | null
           payment_methods?: Json | null
           price_bundles?: Json | null
+          prize_rules?: Json | null
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null
@@ -458,6 +460,7 @@ export type Database = {
           mystery_box_enabled?: boolean | null
           payment_methods?: Json | null
           price_bundles?: Json | null
+          prize_rules?: Json | null
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null
