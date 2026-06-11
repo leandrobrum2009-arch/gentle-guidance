@@ -386,20 +386,26 @@ const CampaignDetail = () => {
                   </Button>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 {campaign.status === "active" && (campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
-                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
-                    Aguardando Sorteio
-                  </Badge>
+                  <div className="flex flex-col gap-1">
+                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit">
+                      Aguardando Sorteio
+                    </Badge>
+                    <p className="text-[10px] font-bold text-amber-600 animate-pulse">Vendas encerradas! O sorteio ocorrerá em breve.</p>
+                  </div>
                 ) : (
                   <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
                     Sorteio Ativo
                   </Badge>
                 ))}
                 {campaign.status === "paused" && (
-                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
-                    Vendas Pausadas
-                  </Badge>
+                  <div className="flex flex-col gap-1">
+                    <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white w-fit">
+                      Vendas Pausadas
+                    </Badge>
+                    <p className="text-[10px] font-bold text-amber-600">As vendas estão temporariamente suspensas.</p>
+                  </div>
                 )}
                 {campaign.status === "audit" && (
                   <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-purple-500 text-white animate-pulse">
