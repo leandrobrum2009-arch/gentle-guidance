@@ -232,12 +232,6 @@ const Index = () => {
     return filtered;
   }, [activeCampaigns, searchTerm, sortBy]);
 
-  const totalPages = Math.ceil(normalCampaigns.length / itemsPerPage);
-  
-  const paginatedCampaigns = useMemo(() => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    return normalCampaigns.slice(startIndex, startIndex + itemsPerPage);
-  }, [normalCampaigns, currentPage, itemsPerPage]);
 
   useEffect(() => {
     setCurrentPage(1);
