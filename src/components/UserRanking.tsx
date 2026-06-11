@@ -153,6 +153,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
 };
 
 
+
 const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: number, category: string, className?: string }) => {
   if (!user) return <div className={cn("flex-1", className)} />;
 
