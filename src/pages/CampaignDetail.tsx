@@ -948,7 +948,11 @@ const CampaignDetail = () => {
   const nextLuckyHour = useMemo(() => {
     if (!luckyHours) return null;
     const now = new Date();
-    return luckyHours.find(h => h.status === 'scheduled' && new Date(h.draw_time) > now);
+    // Find the next scheduled one that is today or upcoming soon
+    return luckyHours.find(h => {
+      const drawDate = new Date(h.draw_time);
+      return h.status === 'scheduled' && drawDate > now;
+    });
   }, [luckyHours]);
 
   const sortedLuckyHours = useMemo(() => {
