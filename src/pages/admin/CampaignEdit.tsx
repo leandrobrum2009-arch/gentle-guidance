@@ -439,8 +439,28 @@ export default function AdminCampaignEdit() {
                      value={form.timer_end_date} 
                      onChange={(e) => set("timer_end_date", e.target.value)} 
                    />
-                 </div>
-               </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="flex items-center gap-2">
+                      Número do Concurso (Loteria Federal)
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <p className="w-48 text-[10px]">Número do concurso da Loteria Federal que será usado como base para o sorteio.</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </Label>
+                    <Input 
+                      placeholder="Ex: 5932" 
+                      value={form.draw_number} 
+                      onChange={(e) => set("draw_number", e.target.value)} 
+                    />
+                  </div>
+                </div>
                {form.draw_date && form.timer_end_date && new Date(form.timer_end_date) > new Date(form.draw_date) && (
                  <Alert variant="destructive" className="mt-4 bg-destructive/10 border-destructive/20 text-destructive">
                    <AlertCircle className="h-4 w-4" />
