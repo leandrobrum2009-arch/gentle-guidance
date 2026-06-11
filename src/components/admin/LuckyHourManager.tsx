@@ -21,6 +21,7 @@ interface LuckyHourManagerProps {
 
 export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) {
   const { data: luckyHours, isLoading, refetch } = useLuckyHours(campaignId);
+  const { data: userRole } = useRole();
   const { toast } = useToast();
   const [isAdding, setIsAdding] = useState(false);
   const [saving, setSaving] = useState(false);
