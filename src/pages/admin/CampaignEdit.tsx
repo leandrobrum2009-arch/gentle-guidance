@@ -324,6 +324,63 @@ export default function AdminCampaignEdit() {
                <Label className="mt-4 block">Descrição</Label>
                <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} className="mt-2" rows={5} />
             </Card>
+
+            <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
+               <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                 <Calendar className="h-5 w-5 text-primary" /> Datas do Sorteio
+               </h3>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                 <div className="space-y-2">
+                   <Label className="flex items-center gap-2">
+                     Data do Sorteio
+                     <TooltipProvider>
+                       <Tooltip>
+                         <TooltipTrigger asChild>
+                           <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                         </TooltipTrigger>
+                         <TooltipContent>
+                           <p className="w-48 text-[10px]">Data em que o sorteio será realizado. Esta data será exibida para os clientes.</p>
+                         </TooltipContent>
+                       </Tooltip>
+                     </TooltipProvider>
+                   </Label>
+                   <Input 
+                     type="datetime-local" 
+                     value={form.draw_date} 
+                     onChange={(e) => set("draw_date", e.target.value)} 
+                   />
+                 </div>
+                 <div className="space-y-2">
+                   <Label className="flex items-center gap-2">
+                     Finalizar Vendas em
+                     <TooltipProvider>
+                       <Tooltip>
+                         <TooltipTrigger asChild>
+                           <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                         </TooltipTrigger>
+                         <TooltipContent>
+                           <p className="w-48 text-[10px]">Data em que o cronômetro chegará a zero e as vendas serão pausadas automaticamente.</p>
+                         </TooltipContent>
+                       </Tooltip>
+                     </TooltipProvider>
+                   </Label>
+                   <Input 
+                     type="datetime-local" 
+                     value={form.timer_end_date} 
+                     onChange={(e) => set("timer_end_date", e.target.value)} 
+                   />
+                 </div>
+               </div>
+               {form.draw_date && form.timer_end_date && new Date(form.timer_end_date) > new Date(form.draw_date) && (
+                 <Alert variant="destructive" className="mt-4 bg-destructive/10 border-destructive/20 text-destructive">
+                   <AlertCircle className="h-4 w-4" />
+                   <AlertTitle className="text-xs font-bold uppercase tracking-tight">Aviso de Data</AlertTitle>
+                   <AlertDescription className="text-[10px]">
+                     A data de finalização das vendas está definida para <strong>após</strong> a data do sorteio. Geralmente as vendas terminam antes ou no momento do sorteio.
+                   </AlertDescription>
+                 </Alert>
+               )}
+            </Card>
           </TabsContent>
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
