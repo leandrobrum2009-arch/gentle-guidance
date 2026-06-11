@@ -66,19 +66,14 @@ import { Button } from "@/components/ui/button";
          </div>
          
           <div className="flex items-center gap-2">
-            <div className="relative group">
+            <div className="relative group hidden sm:block">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground group-focus-within:text-primary transition-colors" />
               <Input 
                  type="number" 
-                 placeholder="Ir para o número..." 
-                 className="w-32 h-8 pl-8 text-[10px] font-bold uppercase tracking-tight rounded-lg border-border/50 focus:ring-1 focus:ring-primary/30"
-                 onChange={(e) => {
-                   const num = parseInt(e.target.value);
-                   if (!isNaN(num) && num >= 0 && num < totalTickets) {
-                      const start = Math.floor(num / 100) * 100;
-                      setViewRange({ start, end: start + 100 });
-                   }
-                 }}
+                 placeholder="Número..." 
+                 value={searchQuery}
+                 className="w-24 h-8 pl-8 text-[10px] font-bold uppercase tracking-tight rounded-lg border-border/50 focus:ring-1 focus:ring-primary/30"
+                 onChange={(e) => handleSearch(e.target.value)}
               />
             </div>
             <select 
@@ -90,7 +85,6 @@ import { Button } from "@/components/ui/button";
               }}
             >
               {Array.from({ length: Math.ceil(totalTickets / 100) }).map((_, i) => {
-                // For very large numbers of tickets, we show options in steps
                 const isVeryLarge = totalTickets > 10000;
                 if (isVeryLarge && i % 10 !== 0 && i !== Math.ceil(totalTickets / 100) - 1) return null;
                 
@@ -102,7 +96,18 @@ import { Button } from "@/components/ui/button";
               })}
             </select>
           </div>
-       </div>
+        </div>
+
+        <div className="sm:hidden relative group w-full mb-2">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+          <Input 
+             type="number" 
+             placeholder="Buscar número da sorte..." 
+             value={searchQuery}
+             className="w-full h-10 pl-10 text-xs font-bold uppercase tracking-tight rounded-xl border-border/50 focus:ring-2 focus:ring-primary/20"
+             onChange={(e) => handleSearch(e.target.value)}
+          />
+        </div>
  
         <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
             {tickets.map((ticket) => (
