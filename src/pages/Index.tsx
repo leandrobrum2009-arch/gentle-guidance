@@ -29,7 +29,7 @@ import HeroModel3 from "@/components/hero/HeroModel3";
 import HeroModel4 from "@/components/hero/HeroModel4";
 import CampaignCard from "@/components/CampaignCard";
 import WinnerCard from "@/components/WinnerCard";
-import LiveActivityFeed from "@/components/LiveActivityFeed";
+
 import Roulette from "@/components/Roulette";
 import CountdownTimer from "@/components/CountdownTimer";
 import GoogleReviews from "@/components/GoogleReviews";
