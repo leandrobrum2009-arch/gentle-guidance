@@ -381,11 +381,15 @@ const CampaignDetail = () => {
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                {campaign.status === "active" && (
+                {campaign.status === "active" && (campaign.draw_date && new Date(campaign.draw_date) < new Date() ? (
+                  <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
+                    Aguardando Sorteio
+                  </Badge>
+                ) : (
                   <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-green-500 text-white">
                     Sorteio Ativo
                   </Badge>
-                )}
+                ))}
                 {campaign.status === "paused" && (
                   <Badge className="rounded-full px-4 h-6 text-[10px] font-black uppercase tracking-wider bg-amber-500 text-white">
                     Vendas Pausadas
