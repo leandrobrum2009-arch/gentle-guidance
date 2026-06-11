@@ -216,6 +216,9 @@ export default function AdminCampaignEdit() {
       setForm(p => ({ ...p, title: v, slug: p.slug === "" || p.slug === p.title.toLowerCase().replace(/[\s_-]+/g, '-') ? newSlug : p.slug }));
       return;
     }
+    if (k === "fake_progress_percentage") {
+      v = Math.min(100, Math.max(0, parseInt(v) || 0));
+    }
     setForm((p) => ({ ...p, [k]: v }));
   };
 
