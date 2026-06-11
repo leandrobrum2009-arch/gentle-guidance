@@ -88,10 +88,24 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
 
   const handleUpdateStatus = async (id: string, status: 'scheduled' | 'completed', winner_name?: string, winning_number?: string) => {
     try {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+      
+      const { data: currentDraw } = await supabase.from("lucky_hours").select("audit_log").eq("id", id).single();
+      const currentLog = (currentDraw?.audit_log as any[]) || [];
+      
+      const newLogEntry = {
+        timestamp: new Date().toISOString(),
+        action: status === 'completed' ? 'draw_completed' : 'draw_reverted',
+        user_id: user?.id,
+        details: { status, winner_name, winning_number }
+      };
+
       const { error } = await supabase.from("lucky_hours").update({
         status,
         winner_name,
-        winning_number
+        winning_number,
+        audit_log: [...currentLog, newLogEntry]
       }).eq("id", id);
       
       if (error) throw error;
