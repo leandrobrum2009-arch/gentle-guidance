@@ -37,8 +37,8 @@ describe("CampaignPricing Component", () => {
     const bundleButton = screen.getByText("+10");
     fireEvent.click(bundleButton);
     
-    // Should show bundle price 12,00
-    expect(screen.getByText(/R\$ 12,00/)).toBeDefined();
+    // Should show bundle price 12,00 (multiple matches are fine, as long as it exists)
+    expect(screen.getAllByText(/R\$ 12,00/)).toHaveLength(2);
     expect(screen.getByText(/Selecionadas/i).parentElement?.textContent).toContain("10");
   });
 
