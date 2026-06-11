@@ -637,8 +637,10 @@ export type Database = {
           campaign_id: string
           created_at: string
           draw_time: string
+          draw_type: string | null
           id: string
           prize_description: string
+          rule_id: string | null
           status: string
           title: string
           updated_at: string
@@ -650,8 +652,10 @@ export type Database = {
           campaign_id: string
           created_at?: string
           draw_time: string
+          draw_type?: string | null
           id?: string
           prize_description: string
+          rule_id?: string | null
           status?: string
           title: string
           updated_at?: string
@@ -663,8 +667,10 @@ export type Database = {
           campaign_id?: string
           created_at?: string
           draw_time?: string
+          draw_type?: string | null
           id?: string
           prize_description?: string
+          rule_id?: string | null
           status?: string
           title?: string
           updated_at?: string

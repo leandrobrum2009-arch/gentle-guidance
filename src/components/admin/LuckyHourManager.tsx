@@ -6,12 +6,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck, Eye } from "lucide-react";
+import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck, Eye, TrendingUp, Filter } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface LuckyHourManagerProps {
   campaignId: string;
@@ -24,12 +25,14 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedDraw, setSelectedDraw] = useState<LuckyHour | null>(null);
+  const [activeTab, setActiveTab] = useState<'hourly' | 'greater_smaller'>('hourly');
   const itemsPerPage = 5;
   
   const [newDraw, setNewDraw] = useState({
     title: "",
     prize_description: "",
     draw_time: "",
+    draw_type: 'hourly' as 'hourly' | 'greater_smaller',
   });
 
   const handleAdd = async () => {
@@ -45,13 +48,14 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
         title: newDraw.title,
         prize_description: newDraw.prize_description,
         draw_time: new Date(newDraw.draw_time).toISOString(),
-        status: 'scheduled'
+        status: 'scheduled',
+        draw_type: newDraw.draw_type
       });
 
       if (error) throw error;
 
       toast({ title: "Sucesso", description: "Sorteio agendado!" });
-      setNewDraw({ title: "", prize_description: "", draw_time: "" });
+      setNewDraw({ title: "", prize_description: "", draw_time: "", draw_type: activeTab });
       setIsAdding(false);
       refetch();
     } catch (e: any) {
@@ -120,12 +124,13 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
 
   const paginatedLuckyHours = useMemo(() => {
     if (!luckyHours) return [];
-    const sorted = [...luckyHours].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
+    const filtered = luckyHours.filter(h => h.draw_type === activeTab);
+    const sorted = [...filtered].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
     const startIndex = (currentPage - 1) * itemsPerPage;
     return sorted.slice(startIndex, startIndex + itemsPerPage);
-  }, [luckyHours, currentPage]);
+  }, [luckyHours, currentPage, activeTab]);
 
-  const totalPages = Math.ceil((luckyHours?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((luckyHours?.filter(h => h.draw_type === activeTab).length || 0) / itemsPerPage);
 
   if (!campaignId) return <div className="p-4 text-center text-muted-foreground">Salve a campanha primeiro para gerenciar as Horas Premiadas.</div>;
 
@@ -135,13 +140,29 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-7 bg-secondary/10">
           <div>
             <CardTitle className="text-xl font-bold flex items-center gap-2">
-              <Clock className="h-5 w-5 text-primary" /> Gerenciar Hora Premiada
+              <Clock className="h-5 w-5 text-primary" /> Gerenciar Sorteios e Prêmios
             </CardTitle>
-            <CardDescription>Crie mini sorteios para ocorrerem durante a campanha.</CardDescription>
+            <CardDescription>Crie mini sorteios e prêmios automáticos para ocorrerem durante a campanha.</CardDescription>
           </div>
-          <Button onClick={() => setIsAdding(!isAdding)} variant={isAdding ? "outline" : "default"} className="gap-2 rounded-xl">
-            {isAdding ? "Cancelar" : <><Plus className="h-4 w-4" /> Novo Sorteio</>}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Tabs value={activeTab} onValueChange={(v) => {
+              setActiveTab(v as any);
+              setCurrentPage(1);
+              setNewDraw(p => ({ ...p, draw_type: v as any }));
+            }} className="w-auto">
+              <TabsList className="bg-secondary/50 rounded-xl">
+                <TabsTrigger value="hourly" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
+                  <Clock className="h-3 w-3" /> Hora Premiada
+                </TabsTrigger>
+                <TabsTrigger value="greater_smaller" className="rounded-lg gap-2 text-xs font-bold uppercase tracking-tighter">
+                  <TrendingUp className="h-3 w-3" /> Maior/Menor Cota
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+            <Button onClick={() => setIsAdding(!isAdding)} variant={isAdding ? "outline" : "default"} className="gap-2 rounded-xl">
+              {isAdding ? "Cancelar" : <><Plus className="h-4 w-4" /> Novo Sorteio</>}
+            </Button>
+          </div>
         </CardHeader>
         <CardContent className="pt-6">
           {isAdding && (

@@ -224,6 +224,8 @@ export interface Announcement {
    title: string;
    prize_description: string;
    draw_time: string;
+   draw_type: 'hourly' | 'greater_smaller';
+   rule_id?: string;
    winner_name: string | null;
    winning_number: string | null;
    status: 'scheduled' | 'completed';
