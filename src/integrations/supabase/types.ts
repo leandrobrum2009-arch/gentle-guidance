@@ -1926,6 +1926,7 @@ export type Database = {
         }
         Returns: string
       }
+      run_lucky_hour_draw: { Args: { p_lucky_hour_id: string }; Returns: Json }
       sync_federal_lottery: { Args: never; Returns: undefined }
     }
     Enums: {
