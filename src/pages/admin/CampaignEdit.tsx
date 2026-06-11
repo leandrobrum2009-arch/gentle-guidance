@@ -304,6 +304,7 @@ export default function AdminCampaignEdit() {
             <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
             <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
             <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
+            <TabsTrigger value="lucky_hour" className="rounded-xl px-6 gap-2"><Clock className="h-4 w-4" /> Hora Premiada</TabsTrigger>
             {features?.roulette_enabled || features?.scratch_cards_enabled ? (
               <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
             ) : null}
@@ -1169,6 +1170,10 @@ export default function AdminCampaignEdit() {
                   </div>
                </div>
             </Card>
+          </TabsContent>
+
+          <TabsContent value="lucky_hour" className="mt-6 space-y-6">
+            <LuckyHourManager campaignId={id || ""} />
           </TabsContent>
         </Tabs>
       </div>
