@@ -418,21 +418,20 @@ const Index = () => {
              </div>
            </section>
  
-                 {/* Social Proof / Security Highlights - Smaller Version */}
-                 <div className="grid gap-4 md:grid-cols-3">
-                   {[
-                     { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
-                     { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
-                     { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
-                   ].map((item, i) => (
-                     <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
-                       <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
-                         <item.icon className={cn("h-4 w-4", item.color)} />
-                       </div>
-                       <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
-                     </div>
-                   ))}
-                 </div>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {[
+                      { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
+                      { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
+                      { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
+                    ].map((item, i) => (
+                      <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
+                        <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
+                          <item.icon className={cn("h-4 w-4", item.color)} />
+                        </div>
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
+                      </div>
+                    ))}
+                  </div>
  
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {/* Live Activity Feed */}
