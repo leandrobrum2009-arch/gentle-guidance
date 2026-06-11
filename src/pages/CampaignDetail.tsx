@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
-    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal
+    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal, TrendingUp
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
