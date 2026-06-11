@@ -599,22 +599,35 @@ import { PaymentModal } from "@/components/PaymentModal";
                                 <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-2">
                                   <Zap className="h-3 w-3 fill-current" /> Seus Números da Sorte
                                 </p>
-                                <p className="text-[9px] font-bold text-muted-foreground italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
+                                <div className="flex flex-col md:flex-row md:items-center gap-2">
+                                  <p className="text-[9px] font-bold text-muted-foreground italic">Números atribuídos via sorteio {o.campaigns?.ticket_generation_type === 'auto' ? 'aleatório' : 'manual'}</p>
+                                  {o.campaigns?.status === 'drawn' && o.campaigns?.draw_number && (
+                                    <Badge className="bg-amber-500/10 text-amber-500 border-amber-500/20 text-[9px] font-black uppercase italic animate-pulse">
+                                      Número Ganhador: {o.campaigns.draw_number}
+                                    </Badge>
+                                  )}
+                                </div>
                               </div>
                               <div className="flex flex-wrap gap-2">
-                                {o.tickets?.map((t: any) => (
-                                  <div 
-                                    key={t.id} 
-                                    className={cn(
-                                      "h-10 px-4 flex items-center justify-center rounded-xl font-mono font-bold text-sm transition-all hover:scale-110 cursor-default shadow-lg",
-                                      t.is_lucky 
-                                      ? "bg-amber-500 text-white ring-2 ring-amber-500/50 shadow-amber-500/20"
-                                      : "bg-secondary text-foreground hover:bg-primary hover:text-white"
-                                    )}
-                                  >
-                                    {t.number}
-                                  </div>
-                                ))}
+                                {o.tickets?.map((t: any) => {
+                                  const isWinner = o.campaigns?.draw_number === t.number;
+                                  return (
+                                    <div 
+                                      key={t.id} 
+                                      className={cn(
+                                        "h-10 px-4 flex items-center justify-center rounded-xl font-mono font-bold text-sm transition-all hover:scale-110 cursor-default shadow-lg",
+                                        isWinner 
+                                        ? "bg-amber-500 text-white ring-4 ring-amber-500/50 shadow-amber-500/40 scale-110 z-10 animate-bounce"
+                                        : t.is_lucky 
+                                        ? "bg-amber-500/80 text-white ring-2 ring-amber-500/30"
+                                        : "bg-secondary text-foreground hover:bg-primary hover:text-white"
+                                      )}
+                                    >
+                                      {t.number}
+                                      {isWinner && <Trophy className="ml-2 h-3 w-3" />}
+                                    </div>
+                                  );
+                                })}
                                 {!o.tickets?.length && (
                                   <p className="text-[10px] text-muted-foreground font-bold uppercase italic py-2">Gerando números... Recarregue em instantes.</p>
                                 )}

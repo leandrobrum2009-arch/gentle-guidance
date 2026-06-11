@@ -5,6 +5,7 @@ import {
   TrendingUp, Award, Clock, Star, Users, Flame,
   ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdmin";
@@ -167,14 +168,14 @@ const Index = () => {
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     return campaigns
-      .filter(c => (c.status === "completed" || c.status === "finished") && c.draw_number)
+      .filter(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn"))
       .sort((a, b) => {
         if (a.draw_date && b.draw_date) {
           return new Date(b.draw_date).getTime() - new Date(a.draw_date).getTime();
         }
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
       })
-      .slice(0, 4);
+      .slice(0, 12);
   }, [campaigns]);
 
   const featuredCampaign = activeCampaigns[0];
@@ -329,7 +330,7 @@ const Index = () => {
                    subtitle="Os prêmios mais desejados do momento"
                    badge="Em Destaque"
                  />
-                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[400px]">
+                  <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 min-h-[100px]">
                     {activeCampaigns.length > 0 ? (
                       activeCampaigns.map((campaign, i) => (
                         <CampaignCard key={campaign.id} campaign={campaign} index={i} />
@@ -364,7 +365,23 @@ const Index = () => {
                       </div>
                     )}
                   </div>
-               </div>
+                </div>
+ 
+                 {/* Social Proof / Security Highlights - Smaller Version */}
+                 <div className="grid gap-4 md:grid-cols-3">
+                   {[
+                     { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
+                     { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
+                     { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
+                   ].map((item, i) => (
+                     <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
+                       <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
+                         <item.icon className={cn("h-4 w-4", item.color)} />
+                       </div>
+                       <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
+                     </div>
+                   ))}
+                 </div>
  
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {/* Live Activity Feed */}
