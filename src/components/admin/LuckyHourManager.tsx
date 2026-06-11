@@ -99,25 +99,112 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
       const { data: userData } = await supabase.auth.getUser();
       const user = userData?.user;
       
-      const { data: currentDraw } = await supabase.from("lucky_hours").select("audit_log").eq("id", id).single();
+      const { data: currentDraw } = await supabase.from("lucky_hours").select("*").eq("id", id).single();
       const currentLog = (currentDraw?.audit_log as any[]) || [];
-      
+      const isMaster = userRole === 'master';
+
       const newLogEntry = {
         timestamp: new Date().toISOString(),
-        action: status === 'completed' ? 'draw_completed' : 'draw_reverted',
+        action: status === 'completed' ? 'draw_attempt' : 'draw_reverted',
         user_id: user?.id,
         details: { status, winner_name, winning_number }
       };
 
-      const { error } = await supabase.from("lucky_hours").update({
+      // If master is doing the draw, it's auto-approved. 
+      // If admin is doing it, it goes to draft for approval.
+      const payload: any = {
         status,
-        winner_name,
-        winning_number,
         audit_log: [...currentLog, newLogEntry]
-      }).eq("id", id);
+      };
+
+      if (status === 'completed') {
+        if (isMaster) {
+          payload.winner_name = winner_name;
+          payload.winning_number = winning_number;
+          payload.is_approved = true;
+          payload.approved_by = user?.id;
+          payload.approved_at = new Date().toISOString();
+        } else {
+          payload.draft_winner_name = winner_name;
+          payload.draft_winning_number = winning_number;
+          payload.is_approved = false;
+        }
+      } else {
+        // Reverting
+        payload.winner_name = null;
+        payload.winning_number = null;
+        payload.draft_winner_name = null;
+        payload.draft_winning_number = null;
+        payload.is_approved = false;
+      }
+
+      const { error } = await supabase.from("lucky_hours").update(payload).eq("id", id);
       
       if (error) throw error;
-      toast({ title: "Sucesso", description: "Sorteio atualizado" });
+      toast({ 
+        title: "Sucesso", 
+        description: isMaster || status === 'scheduled' 
+          ? "Sorteio atualizado" 
+          : "Sorteio enviado para aprovação do Master" 
+      });
+      refetch();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    }
+  };
+
+  const handleApprove = async (draw: LuckyHour) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+      
+      const currentLog = (draw.audit_log as any[]) || [];
+      const newLogEntry = {
+        timestamp: new Date().toISOString(),
+        action: 'draw_approved',
+        user_id: user?.id,
+        details: { winner: draw.draft_winner_name, number: draw.draft_winning_number }
+      };
+
+      const { error } = await supabase.from("lucky_hours").update({
+        winner_name: draw.draft_winner_name,
+        winning_number: draw.draft_winning_number,
+        is_approved: true,
+        approved_by: user?.id,
+        approved_at: new Date().toISOString(),
+        audit_log: [...currentLog, newLogEntry]
+      }).eq("id", draw.id);
+
+      if (error) throw error;
+      toast({ title: "Sucesso", description: "Sorteio aprovado e publicado!" });
+      refetch();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    }
+  };
+
+  const handleReject = async (draw: LuckyHour) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+      
+      const currentLog = (draw.audit_log as any[]) || [];
+      const newLogEntry = {
+        timestamp: new Date().toISOString(),
+        action: 'draw_rejected',
+        user_id: user?.id
+      };
+
+      const { error } = await supabase.from("lucky_hours").update({
+        status: 'scheduled',
+        draft_winner_name: null,
+        draft_winning_number: null,
+        is_approved: false,
+        audit_log: [...currentLog, newLogEntry]
+      }).eq("id", draw.id);
+
+      if (error) throw error;
+      toast({ title: "Sucesso", description: "Sorteio rejeitado" });
       refetch();
     } catch (e: any) {
       toast({ title: "Erro", description: e.message, variant: "destructive" });
