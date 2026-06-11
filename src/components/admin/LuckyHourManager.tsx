@@ -6,11 +6,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck } from "lucide-react";
+import { Loader2, Plus, Trash2, Clock, Trophy, User, ChevronLeft, ChevronRight, Send, CheckCircle2, History, ShieldCheck, Eye } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface LuckyHourManagerProps {
   campaignId: string;
@@ -22,6 +23,7 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
   const [isAdding, setIsAdding] = useState(false);
   const [saving, setSaving] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedDraw, setSelectedDraw] = useState<LuckyHour | null>(null);
   const itemsPerPage = 5;
   
   const [newDraw, setNewDraw] = useState({
@@ -257,6 +259,9 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                               Reverter
                             </Button>
                           )}
+                          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg" onClick={() => setSelectedDraw(draw)}>
+                            <Eye className="h-4 w-4" />
+                          </Button>
                           <Button variant="ghost" size="icon" className="text-destructive hover:bg-destructive/10 h-9 w-9 rounded-lg" onClick={() => handleDelete(draw.id)}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
@@ -296,6 +301,100 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
           )}
         </CardContent>
       </Card>
+
+      <Dialog open={!!selectedDraw} onOpenChange={(open) => !open && setSelectedDraw(null)}>
+        <DialogContent className="sm:max-w-[500px] rounded-3xl">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <Eye className="h-5 w-5 text-primary" /> Detalhes do Sorteio
+            </DialogTitle>
+            <DialogDescription>
+              Informações completas e histórico de auditoria do evento.
+            </DialogDescription>
+          </DialogHeader>
+          
+          {selectedDraw && (
+            <div className="space-y-6 pt-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div className="p-4 bg-secondary/30 rounded-2xl space-y-1">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Título</p>
+                  <p className="font-bold text-sm">{selectedDraw.title}</p>
+                </div>
+                <div className="p-4 bg-secondary/30 rounded-2xl space-y-1">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Status</p>
+                  <Badge className={selectedDraw.status === 'completed' ? 'bg-emerald-500' : 'bg-amber-500'}>
+                    {selectedDraw.status === 'completed' ? 'Realizado' : 'Agendado'}
+                  </Badge>
+                </div>
+                <div className="p-4 bg-secondary/30 rounded-2xl space-y-1">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Prêmio</p>
+                  <p className="font-bold text-sm text-primary">{selectedDraw.prize_description}</p>
+                </div>
+                <div className="p-4 bg-secondary/30 rounded-2xl space-y-1">
+                  <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Data/Hora</p>
+                  <p className="font-bold text-sm">{format(new Date(selectedDraw.draw_time), "dd/MM/yyyy HH:mm")}</p>
+                </div>
+              </div>
+
+              {selectedDraw.status === 'completed' && (
+                <div className="p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl space-y-3">
+                  <p className="text-[10px] font-black uppercase text-emerald-600 tracking-widest flex items-center gap-1">
+                    <CheckCircle2 className="h-3 w-3" /> Resultado do Sorteio
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-muted-foreground uppercase font-bold">Ganhador</p>
+                      <p className="font-black text-emerald-700">{selectedDraw.winner_name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground uppercase font-bold">Número</p>
+                      <p className="font-black text-emerald-700">#{selectedDraw.winning_number}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <div className="space-y-3">
+                <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest flex items-center gap-1">
+                  <History className="h-3 w-3" /> Log de Auditoria Completo
+                </p>
+                <div className="max-h-[200px] overflow-y-auto space-y-2 pr-2 scrollbar-thin">
+                  {selectedDraw.audit_log && selectedDraw.audit_log.length > 0 ? (
+                    [...selectedDraw.audit_log].reverse().map((log: any, idx: number) => (
+                      <div key={idx} className="p-3 bg-secondary/20 rounded-xl text-[11px] border border-border/50">
+                        <div className="flex justify-between items-start mb-1">
+                          <span className="font-bold uppercase text-primary">
+                            {log.action === 'draw_completed' ? 'Sorteio Realizado' : 'Status Revertido'}
+                          </span>
+                          <span className="text-muted-foreground font-mono">
+                            {format(new Date(log.timestamp), "dd/MM HH:mm:ss")}
+                          </span>
+                        </div>
+                        <p className="text-muted-foreground italic">
+                          Operador: {log.user_id?.substring(0, 12)}...
+                        </p>
+                        {log.details && log.details.winner_name && (
+                          <p className="mt-1 text-foreground font-medium">
+                            Resultado: {log.details.winner_name} (#{log.details.winning_number})
+                          </p>
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-xs text-muted-foreground italic text-center py-4">Sem registros de auditoria.</p>
+                  )}
+                </div>
+              </div>
+
+              <div className="pt-2">
+                <Button className="w-full rounded-2xl h-12 font-black uppercase tracking-widest" onClick={() => setSelectedDraw(null)}>
+                  Fechar Detalhes
+                </Button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
