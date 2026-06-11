@@ -567,45 +567,59 @@ import { PaymentModal } from "@/components/PaymentModal";
                     
                     <div className="space-y-4">
                       {orders?.length ? orders.map((o: any) => {
-                        const isCampaignFinished = o.campaigns?.status === 'completed' || o.campaigns?.status === 'finished' || o.campaigns?.status === 'drawn';
+                        const isCampaignFinished = ['completed', 'finished', 'drawn'].includes(o.campaigns?.status);
                         const hasWinner = o.tickets?.some((t: any) => o.campaigns?.draw_number === t.number);
+                        const drawDate = o.campaigns?.draw_date ? format(new Date(o.campaigns.draw_date), "dd/MM/yyyy HH:mm", { locale: ptBR }) : null;
                         
                         return (
                         <div key={o.id} className={cn(
                           "bg-secondary/20 border border-border rounded-[24px] overflow-hidden group hover:border-primary/20 transition-all",
-                          hasWinner && "border-amber-500/50 bg-amber-500/5 shadow-[0_0_20px_rgba(245,158,11,0.1)]"
+                          hasWinner && "border-amber-500/50 bg-amber-500/5 shadow-[0_0_20px_rgba(245,158,11,0.2)] ring-1 ring-amber-500/30"
                         )}>
                           <div className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
                             <div className="flex items-center gap-4">
                               <div className="relative">
                                 <img src={o.campaigns?.image_url || "/placeholder.svg"} className="h-16 w-16 rounded-2xl object-cover shadow-2xl" />
                                 {hasWinner && (
-                                  <div className="absolute -top-2 -right-2 h-8 w-8 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-background animate-bounce">
+                                  <div className="absolute -top-2 -right-2 h-8 w-8 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-background animate-bounce z-10">
                                     <Trophy className="h-4 w-4 text-white" />
                                   </div>
                                 )}
                               </div>
                               <div className="min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
+                                <div className="flex flex-wrap items-center gap-2 mb-1">
                                   <p className="text-sm font-black uppercase tracking-tight text-foreground truncate max-w-[200px] md:max-w-md">{o.campaigns?.title}</p>
                                   {isCampaignFinished ? (
                                     <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-blue-500/10 text-blue-500 border-blue-500/20">
-                                      Encerrada
+                                      {o.campaigns?.status === 'drawn' ? 'Sorteado' : 'Encerrada'}
                                     </Badge>
                                   ) : (
                                     <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest bg-emerald-500/10 text-emerald-500 border-emerald-500/20">
                                       {o.campaigns?.status === 'active' ? 'Ativa' : o.campaigns?.status === 'paused' ? 'Pausada' : 'Aguardando'}
                                     </Badge>
                                   )}
+                                  {hasWinner && (
+                                    <Badge className="bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest border-none px-2 animate-pulse">
+                                      GANHADOR!
+                                    </Badge>
+                                  )}
                                 </div>
-                                <div className="flex items-center gap-2">
-                                  <Badge variant="outline" className="text-[8px] font-bold border-border text-muted-foreground">PEDIDO #{o.id.slice(0, 8)}</Badge>
-                                  <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                                <div className="flex flex-wrap items-center gap-3">
+                                  <div className="flex items-center gap-1.5">
+                                    <Badge variant="outline" className="text-[8px] font-bold border-border text-muted-foreground">PEDIDO #{o.id.slice(0, 8)}</Badge>
+                                    <p className="text-[9px] text-muted-foreground font-bold uppercase tracking-widest">{format(new Date(o.created_at), "dd/MM/yyyy")}</p>
+                                  </div>
+                                  {drawDate && (
+                                    <div className="flex items-center gap-1 text-[9px] font-bold text-primary uppercase tracking-widest">
+                                      <History className="h-3 w-3" />
+                                      Sorteio: {drawDate}
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                             </div>
-                            <div className="flex items-center gap-3">
-                              <div className="text-right hidden md:block">
+                            <div className="flex items-center gap-3 justify-between md:justify-end">
+                              <div className="text-right">
                                 <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Qtd.</p>
                                 <p className="text-lg font-black italic text-foreground">{o.quantity}</p>
                               </div>
@@ -616,10 +630,10 @@ import { PaymentModal } from "@/components/PaymentModal";
                                 )}>
                                     {o.payment_status === 'paid' ? 'APROVADO' : 'PENDENTE'}
                                 </Badge>
-                                {hasWinner && (
-                                  <Badge className="bg-amber-500 text-white text-[8px] font-black uppercase tracking-widest border-none px-2 animate-pulse">
-                                    VOCÊ GANHOU!
-                                  </Badge>
+                                {isCampaignFinished && (
+                                  <Link to={`/campanha/${o.campaigns?.slug}`} className="text-[9px] font-bold text-primary hover:underline uppercase tracking-widest mt-1">
+                                    Ver Resultado
+                                  </Link>
                                 )}
                               </div>
                             </div>
