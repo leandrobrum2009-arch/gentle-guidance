@@ -135,11 +135,12 @@ export const useAdminCampaigns = () =>
        const { data: userRoles } = await supabase.from("user_roles").select("*");
        const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
        
-        const results = profiles.map(profile => {
-          const userRole = (['master', 'client_admin', 'admin', 'moderator'].find(p => (userRoles?.filter(r => r.user_id === profile.user_id).map(r => r.role) || []).includes(p)) || 'user') as any;
+        let results = profiles.map(profile => {
+          const matchingRoles = userRoles?.filter(r => r.user_id === profile.user_id).map(r => r.role) || [];
+          const userRole = (['master', 'client_admin', 'admin', 'moderator'].find(p => matchingRoles.includes(p)) || 'user');
           return {
             ...profile,
-            role: userRole,
+            role: userRole as any,
             features: featureConfigs?.find(f => f.user_id === profile.user_id) || null
           };
         });
