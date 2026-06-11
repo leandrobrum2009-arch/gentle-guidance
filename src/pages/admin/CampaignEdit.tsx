@@ -13,13 +13,14 @@ import { Separator } from "@/components/ui/separator";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X, TrendingUp, ShieldAlert, Calendar } from "lucide-react";
+import { Loader2, ArrowLeft, Save, Plus, Trash2, Info, Settings2, Image as ImageIcon, Ticket, Percent, Trophy, HelpCircle, Sparkles, BookOpen, Crown, Box, Landmark, Upload, Target, Dices, Gift, Zap, Star, MousePointer2, X, TrendingUp, ShieldAlert, Calendar, Clock } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { compressImage } from "@/lib/image-upload";
+import LuckyHourManager from "@/components/admin/LuckyHourManager";
 
 
 interface CampaignForm {
