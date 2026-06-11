@@ -877,6 +877,89 @@ export default function AdminCampaignEdit() {
                   )}
                 </div>
              </Card>
+
+             <Card className="p-6 rounded-2xl border-border shadow-sm">
+                <div className="flex items-center gap-2 mb-6">
+                  <div className="h-8 w-8 rounded-lg bg-indigo-500/10 flex items-center justify-center text-indigo-500">
+                    <ShieldAlert className="h-5 w-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-lg font-bold">Regras de Prêmios (Automação)</h3>
+                    <p className="text-sm text-muted-foreground">Configure regras automáticas para destacar prêmios como Maior/Menor Cota.</p>
+                  </div>
+                  <Button size="sm" variant="outline" onClick={() => set("prize_rules", [...form.prize_rules, { type: "greater_smaller", label: "Maior e Menor Cota", active: true }])}>
+                    <Plus className="h-4 w-4 mr-2" /> Nova Regra
+                  </Button>
+                </div>
+
+                <div className="space-y-4">
+                  {form.prize_rules.map((rule, i) => (
+                    <div key={i} className="p-6 bg-secondary/30 rounded-2xl border border-border space-y-6">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <Select 
+                            value={rule.type} 
+                            onValueChange={(v) => {
+                              const n = [...form.prize_rules];
+                              n[i].type = v;
+                              set("prize_rules", n);
+                            }}
+                          >
+                            <SelectTrigger className="w-[200px]">
+                              <SelectValue placeholder="Tipo de Regra" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="greater_smaller">Maior e Menor Cota</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          <Switch 
+                            checked={rule.active} 
+                            onCheckedChange={(v) => {
+                              const n = [...form.prize_rules];
+                              n[i].active = v;
+                              set("prize_rules", n);
+                            }} 
+                          />
+                        </div>
+                        <Button variant="ghost" size="icon" className="text-destructive" onClick={() => {
+                          const n = [...form.prize_rules];
+                          n.splice(i, 1);
+                          set("prize_rules", n);
+                        }}><Trash2 className="h-4 w-4" /></Button>
+                      </div>
+
+                      {rule.type === 'greater_smaller' && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-xs font-bold">Prêmio Maior Cota</Label>
+                            <Input 
+                              placeholder="Ex: R$ 500,00 no PIX" 
+                              value={rule.prize_greater || ""} 
+                              onChange={(e) => {
+                                const n = [...form.prize_rules];
+                                n[i].prize_greater = e.target.value;
+                                set("prize_rules", n);
+                              }} 
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-xs font-bold">Prêmio Menor Cota</Label>
+                            <Input 
+                              placeholder="Ex: R$ 200,00 no PIX" 
+                              value={rule.prize_smaller || ""} 
+                              onChange={(e) => {
+                                const n = [...form.prize_rules];
+                                n[i].prize_smaller = e.target.value;
+                                set("prize_rules", n);
+                              }} 
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+             </Card>
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
