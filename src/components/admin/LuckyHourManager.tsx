@@ -125,7 +125,27 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
     }
   };
 
+  const handleClearScheduled = async () => {
+    if (!confirm("Tem certeza que deseja excluir TODOS os sorteios agendados? Sorteios realizados não serão afetados.")) return;
+
+    try {
+      const { error } = await supabase
+        .from("lucky_hours")
+        .delete()
+        .eq("campaign_id", campaignId)
+        .eq("status", "scheduled")
+        .eq("draw_type", activeTab);
+
+      if (error) throw error;
+      toast({ title: "Sucesso", description: "Todos os sorteios agendados foram removidos." });
+      refetch();
+    } catch (e: any) {
+      toast({ title: "Erro", description: e.message, variant: "destructive" });
+    }
+  };
+
   const handleNotifyWinner = async (draw: LuckyHour) => {
+
     if (!draw.winner_name || !draw.winning_number) {
       toast({ title: "Erro", description: "Dados do vencedor incompletos", variant: "destructive" });
       return;
