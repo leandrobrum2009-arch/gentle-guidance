@@ -7,6 +7,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2, Zap, Phone, CheckCircle2, AlertCircle } from "lucide-react";
 import { maskPhone, validatePhone } from "@/lib/validations";
+import { cn } from "@/lib/utils";
 
 interface QuickRegisterDialogProps {
   isOpen: boolean;
