@@ -36,7 +36,7 @@ const HeroModel4 = ({ campaigns, delay = 5000, transitionType = 'slide' }: HeroM
             <span className="text-xs font-black uppercase tracking-widest">Sorteio em Destaque</span>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none text-white">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl font-black uppercase italic tracking-tighter leading-none text-white">
             {campaign.title}
           </h1>
           

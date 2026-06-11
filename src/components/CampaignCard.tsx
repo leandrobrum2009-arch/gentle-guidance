@@ -80,7 +80,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                 <CountdownTimer targetDate={campaign.draw_date} className="scale-90 origin-left" />
               )}
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-black italic text-primary neon-text-primary">
+                <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-xs font-black italic text-primary neon-text-primary">
                   <Zap className="h-3 w-3 fill-current" />
                   R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}
                 </div>
@@ -104,10 +104,10 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
 
           <div className="mt-5 space-y-4">
             <div>
-              <h3 className="font-display text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
+              <h3 className="font-display text-sm sm:text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
               </h3>
-              <p className="text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
+              <p className="text-[9px] sm:text-[10px] md:text-[11px] font-bold text-muted-foreground line-clamp-1 mt-0.5 uppercase tracking-widest">
                 {campaign.subtitle}
               </p>
             </div>

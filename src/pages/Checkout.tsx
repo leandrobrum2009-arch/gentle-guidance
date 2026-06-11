@@ -175,16 +175,16 @@ import SuccessFlow from "@/components/checkout/SuccessFlow";
    return (
      <div className="min-h-screen bg-background">
        <Header />
-       <div className="container max-w-4xl py-10">
-         <div className="mb-8 flex items-center gap-4">
-           <Link to={`/campanha/${order.campaigns?.slug || order.campaign_id}`}>
-             <Button variant="ghost" size="icon" className="rounded-full"><ArrowLeft className="h-5 w-5" /></Button>
-           </Link>
-           <div>
-             <h1 className="text-2xl font-black uppercase tracking-tighter italic">Checkout</h1>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest">Pedido #{order.id.slice(0, 8)}</p>
-           </div>
-         </div>
+        <div className="container max-w-4xl py-6 md:py-10">
+          <div className="mb-6 md:mb-8 flex items-center gap-3 md:gap-4">
+            <Link to={`/campanha/${order.campaigns?.slug || order.campaign_id}`}>
+              <Button variant="ghost" size="icon" className="h-9 w-9 md:h-10 md:w-10 rounded-full"><ArrowLeft className="h-4 w-4 md:h-5 md:w-5" /></Button>
+            </Link>
+            <div className="min-w-0">
+              <h1 className="text-xl md:text-2xl font-black uppercase tracking-tighter italic truncate">Checkout</h1>
+               <p className="text-[9px] md:text-xs text-muted-foreground uppercase font-bold tracking-widest truncate">Pedido #{order.id.slice(0, 8)}</p>
+            </div>
+          </div>
  
          <div className="grid gap-8 lg:grid-cols-3">
            <div className="lg:col-span-2 space-y-6">

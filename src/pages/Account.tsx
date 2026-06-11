@@ -346,21 +346,21 @@ import { PaymentModal } from "@/components/PaymentModal";
           </aside>
 
           <main className="lg:col-span-9 space-y-6">
-            <div className="grid gap-4 sm:grid-cols-4">
+            <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-4">
               {[
                 { label: "Saldo", val: `R$ ${Number(profile?.balance || 0).toFixed(2)}`, icon: Wallet, color: "text-emerald-400" },
                 { label: "Cashback", val: `R$ ${Number(profile?.cashback_balance || 0).toFixed(2)}`, icon: Coins, color: "text-amber-400" },
-                { label: "Giros Totais", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
+                { label: "Giros", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
                 { label: "Vitórias", val: orders?.filter((o:any) => o.payment_status === 'won').length || 0, icon: Trophy, color: "text-purple-400" },
               ].map((stat, i) => (
-                <Card key={i} className="bg-card border-border p-4 group hover:bg-secondary/50 transition-all duration-300">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform">
-                       <stat.icon className={`h-5 w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
+                <Card key={i} className="bg-card border-border p-3 sm:p-4 group hover:bg-secondary/50 transition-all duration-300">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
+                       <stat.icon className={`h-4 w-4 sm:h-5 sm:w-5 ${stat.color} filter drop-shadow-[0_0_5px_currentColor]`} />
                     </div>
-                    <div>
-                      <p className="text-[9px] uppercase font-bold text-muted-foreground">{stat.label}</p>
-                      <p className="font-bold text-lg">{stat.val}</p>
+                    <div className="min-w-0">
+                      <p className="text-[8px] sm:text-[9px] uppercase font-bold text-muted-foreground truncate">{stat.label}</p>
+                      <p className="font-bold text-sm sm:text-lg truncate">{stat.val}</p>
                     </div>
                   </div>
 
