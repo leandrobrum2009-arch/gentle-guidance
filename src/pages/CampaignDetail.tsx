@@ -1035,8 +1035,9 @@ const CampaignDetail = () => {
 
               <TabsContent value="greater_smaller">
                 <div className="grid grid-cols-1 gap-3">
-                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.slice(0, 3).map((draw) => (
-                    <div key={draw.id} className="p-3 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.map((draw) => (
+                    <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50">
+
                       <div className="flex items-center gap-3">
                         <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
                           <TrendingUp className="h-4 w-4" />
