@@ -29,7 +29,7 @@ import HeroModel3 from "@/components/hero/HeroModel3";
 import HeroModel4 from "@/components/hero/HeroModel4";
 import CampaignCard from "@/components/CampaignCard";
 import WinnerCard from "@/components/WinnerCard";
-import LiveActivityFeed from "@/components/LiveActivityFeed";
+
 import Roulette from "@/components/Roulette";
 import CountdownTimer from "@/components/CountdownTimer";
 import GoogleReviews from "@/components/GoogleReviews";
@@ -55,9 +55,6 @@ const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, tit
         </div>
         <p className="text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground italic">{subtitle}</p>
       </div>
-      <Button variant="ghost" size="sm" className="hidden sm:flex text-[10px] font-black uppercase tracking-widest gap-1 hover:text-primary">
-        Ver Todos <ArrowRight className="h-3 w-3" />
-      </Button>
     </div>
   </div>
 );
@@ -536,15 +533,10 @@ const Index = () => {
                )}
              </div>
 
-             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {/* Live Activity Feed */}
-                <div className="rounded-3xl border border-border bg-card p-6 shadow-xl">
-                  <LiveActivityFeed />
-                </div>
-
+             <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
                 {/* Small Featured Roulette - Redesigned */}
                 {featuredCampaign?.roulette_enabled && (
-                  <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group">
+                  <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group max-w-2xl mx-auto w-full">
                     <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
                     <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
                     <div className="relative z-10 flex flex-col items-center text-center">
@@ -584,21 +576,6 @@ const Index = () => {
                     </div>
                   </div>
                 )}
-             </div>
-
-             <div className="grid gap-4 md:grid-cols-3">
-               {[
-                 { icon: ShieldCheck, title: "100% SEGURO", color: "text-emerald-500" },
-                 { icon: Award, title: "PRÊMIOS REAIS", color: "text-primary" },
-                 { icon: Heart, title: "SOCIAL", color: "text-rose-500" },
-               ].map((item, i) => (
-                 <div key={i} className="flex items-center gap-3 p-3 bg-secondary/20 rounded-2xl border border-border">
-                   <div className="h-8 w-8 rounded-xl bg-background flex items-center justify-center">
-                     <item.icon className={cn("h-4 w-4", item.color)} />
-                   </div>
-                   <h4 className="text-[10px] font-black uppercase tracking-widest text-foreground">{item.title}</h4>
-                 </div>
-               ))}
              </div>
            </section>
 
@@ -721,7 +698,7 @@ const Index = () => {
 
           {/* Rifas Encerradas Section at the end - Optimized Loading */}
           <div ref={endedRef} className="scroll-mt-20">
-            {isIntersecting && campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn" || (c.draw_date && new Date(c.draw_date) <= new Date()))) && (
+            {campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn" || (c.draw_date && new Date(c.draw_date) <= new Date()))) && (
               <section className="container py-12 md:py-20 border-t border-border mt-12">
                 <SectionHeading 
                   icon={Clock} 
@@ -755,29 +732,6 @@ const Index = () => {
           </div>
 
           <GoogleReviews />
-
-          {/* Social Proof / Security */}
-          <section className="border-y border-border bg-secondary/30 py-16">
-            <div className="container">
-              <div className="grid gap-12 lg:grid-cols-3">
-                {[
-                  { icon: ShieldCheck, title: "100% SEGURO", desc: "Processamos milhares de transações diariamente com segurança militar." },
-                  { icon: Award, title: "PRÊMIOS REAIS", desc: "Todos os nossos sorteios são auditados e os prêmios entregues pessoalmente." },
-                  { icon: Heart, title: "SOCIAL", desc: "Parte de cada arrecadação é destinada a instituições de caridade parceiras." },
-                ].map((item, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="h-12 w-12 flex-shrink-0 rounded-2xl bg-primary/10 flex items-center justify-center">
-                      <item.icon className="h-6 w-6 text-primary" />
-                    </div>
-                    <div className="space-y-1">
-                      <h4 className="text-xs font-black uppercase tracking-widest text-foreground">{item.title}</h4>
-                      <p className="text-[11px] font-medium leading-relaxed text-muted-foreground uppercase tracking-widest">{item.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
         </>
       )}
 
