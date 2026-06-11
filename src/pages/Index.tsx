@@ -102,6 +102,10 @@ const Index = () => {
   const [showEnded, setShowEnded] = useState(false);
   const endedRef = useRef<HTMLDivElement>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("recent");
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
