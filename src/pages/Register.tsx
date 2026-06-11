@@ -43,8 +43,25 @@ const Register = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Clear validation before re-checking
+    setIsCpfValid(true);
+    setIsPhoneValid(true);
+
     if (!name || !email || !password) {
       toast({ title: "Preencha os campos obrigatórios", variant: "destructive" });
+      return;
+    }
+
+    if (cpf && !validateCPF(cpf)) {
+      setIsCpfValid(false);
+      toast({ title: "CPF inválido", description: "Por favor, verifique o número digitado.", variant: "destructive" });
+      return;
+    }
+
+    if (phone && !validatePhone(phone)) {
+      setIsPhoneValid(false);
+      toast({ title: "Telefone inválido", description: "Por favor, insira um número com DDD.", variant: "destructive" });
       return;
     }
     setIsLoading(true);
