@@ -185,6 +185,14 @@ const Index = () => {
       });
   }, [campaigns]);
 
+  const featuredCampaigns = useMemo(() => {
+    return activeCampaigns.filter(c => c.featured);
+  }, [activeCampaigns]);
+
+  const normalCampaigns = useMemo(() => {
+    return activeCampaigns.filter(c => !c.featured);
+  }, [activeCampaigns]);
+
   const endedCampaigns = useMemo(() => {
     if (!campaigns) return [];
     const allEnded = campaigns
