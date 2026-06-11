@@ -388,9 +388,12 @@ export default function AdminCampaignEdit() {
                </div>
                <Label className="mt-4 block">Subtítulo</Label>
                <Input value={form.subtitle} onChange={(e) => set("subtitle", e.target.value)} className="mt-2" />
-               <Label className="mt-4 block">Descrição</Label>
-               <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} className="mt-2" rows={5} />
-            </Card>
+                <Label className="mt-4 block font-bold">Descrição da Campanha</Label>
+                <Textarea value={form.description} onChange={(e) => set("description", e.target.value)} placeholder="Descreva os detalhes da premiação, modelo, ano, etc." className="mt-2 min-h-[120px] rounded-xl" />
+                
+                <Label className="mt-4 block font-bold">Regulamento / Termos de Uso</Label>
+                <Textarea value={form.regulations} onChange={(e) => set("regulations", e.target.value)} placeholder="Descreva as regras da rifa, data do sorteio, forma de entrega, etc." className="mt-2 min-h-[150px] rounded-xl" />
+             </Card>
 
             <Card className="p-6 rounded-2xl border-border shadow-sm mt-6">
                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
