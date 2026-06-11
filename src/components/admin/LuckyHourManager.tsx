@@ -50,21 +50,59 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
 
     setSaving(true);
     try {
-      const { error } = await supabase.from("lucky_hours").insert({
-        campaign_id: campaignId,
-        title: newDraw.title,
-        prize_description: newDraw.prize_description,
-        draw_time: new Date(newDraw.draw_time).toISOString(),
-        status: 'scheduled',
-        draw_type: newDraw.draw_type
-      });
+      const drawsToInsert = [];
+      const startTime = new Date(newDraw.draw_time);
+
+      if (newDraw.is_recurring) {
+        for (let i = 0; i < newDraw.occurrences; i++) {
+          const drawTime = new Date(startTime);
+          if (newDraw.frequency === 'daily') {
+            drawTime.setDate(startTime.getDate() + i);
+          } else {
+            drawTime.setDate(startTime.getDate() + (i * newDraw.every_x_days));
+          }
+
+          drawsToInsert.push({
+            campaign_id: campaignId,
+            title: newDraw.title,
+            prize_description: newDraw.prize_description,
+            draw_time: drawTime.toISOString(),
+            status: 'scheduled',
+            draw_type: newDraw.draw_type
+          });
+        }
+      } else {
+        drawsToInsert.push({
+          campaign_id: campaignId,
+          title: newDraw.title,
+          prize_description: newDraw.prize_description,
+          draw_time: startTime.toISOString(),
+          status: 'scheduled',
+          draw_type: newDraw.draw_type
+        });
+      }
+
+      const { error } = await supabase.from("lucky_hours").insert(drawsToInsert);
 
       if (error) throw error;
 
-      toast({ title: "Sucesso", description: "Sorteio agendado!" });
-      setNewDraw({ title: "", prize_description: "", draw_time: "", draw_type: activeTab });
+      toast({ 
+        title: "Sucesso", 
+        description: newDraw.is_recurring ? `${drawsToInsert.length} sorteios agendados!` : "Sorteio agendado!" 
+      });
+      setNewDraw({ 
+        title: "", 
+        prize_description: "", 
+        draw_time: "", 
+        draw_type: activeTab,
+        is_recurring: false,
+        frequency: 'daily',
+        every_x_days: 3,
+        occurrences: 5
+      });
       setIsAdding(false);
       refetch();
+
     } catch (e: any) {
       toast({ title: "Erro", description: e.message, variant: "destructive" });
     } finally {
