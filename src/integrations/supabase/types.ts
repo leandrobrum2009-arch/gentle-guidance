@@ -1896,6 +1896,7 @@ export type Database = {
         }
         Returns: string
       }
+      process_overdue_lucky_hours: { Args: never; Returns: undefined }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }
         Returns: Json
@@ -1926,6 +1927,7 @@ export type Database = {
         }
         Returns: string
       }
+      run_lucky_hour_draw: { Args: { p_lucky_hour_id: string }; Returns: Json }
       sync_federal_lottery: { Args: never; Returns: undefined }
     }
     Enums: {

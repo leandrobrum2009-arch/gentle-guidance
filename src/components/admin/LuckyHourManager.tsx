@@ -488,15 +488,41 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
                           </div>
                         </div>
                         
-                        <div className="flex items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
+                        <div className="flex flex-wrap items-center gap-2 border-t md:border-t-0 pt-4 md:pt-0">
                           {draw.status === 'scheduled' ? (
-                            <Button variant="outline" size="sm" className="bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-600 border-emerald-500/20 rounded-lg h-9 font-bold px-4" onClick={() => {
-                              const name = prompt("Nome do Ganhador:");
-                              const number = prompt("Número Sorteado:");
-                              if (name && number) handleUpdateStatus(draw.id, 'completed', name, number);
-                            }}>
-                              Concluir Sorteio
-                            </Button>
+                            <>
+                              <Button 
+                                variant="outline" 
+                                size="sm" 
+                                className="bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 rounded-lg h-9 font-bold px-4 gap-2"
+                                onClick={async () => {
+                                  try {
+                                    const { data, error } = await supabase.rpc('run_lucky_hour_draw', { p_lucky_hour_id: draw.id });
+                                    if (error) throw error;
+                                    
+                                    const result = data as any;
+                                    if (result && !result.success) throw new Error(result.message);
+                                    
+                                    toast({ 
+                                      title: "Sorteio Realizado!", 
+                                      description: `Vencedor: ${result.winner_name} (Nº ${result.winning_number})`
+                                    });
+                                    refetch();
+                                  } catch (err: any) {
+                                    toast({ title: "Erro no sorteio", description: err.message, variant: "destructive" });
+                                  }
+                                }}
+                              >
+                                <Trophy className="h-4 w-4" /> Automático
+                              </Button>
+                              <Button variant="outline" size="sm" className="bg-emerald-500/5 hover:bg-emerald-500/10 text-emerald-600 border-emerald-500/20 rounded-lg h-9 font-bold px-4" onClick={() => {
+                                const name = prompt("Nome do Ganhador:");
+                                const number = prompt("Número Sorteado:");
+                                if (name && number) handleUpdateStatus(draw.id, 'completed', name, number);
+                              }}>
+                                Manual
+                              </Button>
+                            </>
                           ) : (
                             <Button variant="ghost" size="sm" className="h-9 text-xs font-bold opacity-60 hover:opacity-100" onClick={() => handleUpdateStatus(draw.id, 'scheduled')}>
                               Reverter

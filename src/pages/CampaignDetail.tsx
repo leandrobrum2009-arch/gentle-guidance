@@ -1043,7 +1043,8 @@ const CampaignDetail = () => {
                     return (
                       <div key={draw.id} className={cn(
                         "p-4 rounded-2xl bg-secondary/30 border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50",
-                        isComingSoon ? "border-primary animate-blink shadow-[0_0_15px_rgba(var(--primary),0.3)]" : "border-border"
+                        isComingSoon ? "border-primary animate-blink shadow-[0_0_15px_rgba(var(--primary),0.4)] bg-primary/5" : 
+                        draw.status === 'completed' ? "border-emerald-500/30 bg-emerald-500/5 animate-pulse" : "border-border"
                       )}>
                         <div className="flex items-center gap-3">
                           <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
