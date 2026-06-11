@@ -227,6 +227,7 @@ export interface Announcement {
    winner_name: string | null;
    winning_number: string | null;
    status: 'scheduled' | 'completed';
+   audit_log?: any[];
    created_at: string;
    updated_at: string;
  }
