@@ -779,27 +779,27 @@ const CampaignDetail = () => {
                     <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Cotas Disponíveis</h4>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {availablePrizes.map((p: any, i: number) => (
                       <div 
                         key={i} 
-                        className="group flex items-center justify-between p-4 rounded-3xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm"
+                        className="group flex items-center justify-between p-3 sm:p-4 rounded-2xl sm:rounded-3xl border border-green-500/10 bg-green-500/5 hover:border-green-500/30 hover:bg-green-500/[0.08] transition-all duration-300 shadow-sm overflow-hidden"
                       >
-                        <div className="flex items-center gap-4 overflow-hidden">
-                          <div className="px-5 h-10 shrink-0 rounded-full bg-green-500 text-white shadow-[0_5px_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-sm group-hover:scale-105 transition-transform duration-500">
+                        <div className="flex items-center gap-3 sm:gap-4 overflow-hidden min-w-0">
+                          <div className="px-3 sm:px-5 h-8 sm:h-10 shrink-0 rounded-full bg-green-500 text-white shadow-[0_5px_15px_rgba(34,197,94,0.3)] flex items-center justify-center font-black italic text-xs sm:text-sm group-hover:scale-105 transition-transform duration-500">
                             #{p.number}
                           </div>
-                          <div className="flex flex-col overflow-hidden">
-                            <span className="text-xs font-black uppercase tracking-tight text-foreground truncate max-w-[150px]">
+                          <div className="flex flex-col overflow-hidden min-w-0">
+                            <span className="text-[11px] sm:text-xs font-black uppercase tracking-tight text-foreground truncate max-w-full">
                               {p.prize}
                             </span>
-                            <span className="text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-1">
-                              <span className="h-1.5 w-1.5 rounded-full bg-green-500 animate-pulse" />
-                              LIVRE / DISPONÍVEL
+                            <span className="text-[8px] sm:text-[10px] font-bold text-green-600 uppercase tracking-widest flex items-center gap-1">
+                              <span className="h-1 sm:h-1.5 w-1 sm:w-1.5 rounded-full bg-green-500 animate-pulse" />
+                              LIVRE
                             </span>
                           </div>
                         </div>
-                        <Badge className="bg-green-500 text-white border-none text-[9px] font-black px-3 h-6 rounded-full shadow-sm">PARTICIPAR</Badge>
+                        <Badge className="bg-green-500 text-white border-none text-[8px] sm:text-[9px] font-black px-2 sm:px-3 h-5 sm:h-6 rounded-full shadow-sm shrink-0">PARTICIPAR</Badge>
                       </div>
                     ))}
                   </div>
@@ -1119,15 +1119,15 @@ const CampaignDetail = () => {
 
       case 'faq':
         return (
-          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-10 border border-border shadow-sm space-y-8 overflow-hidden">
+          <div key={section} className="bg-card rounded-[1.5rem] md:rounded-[2rem] p-5 md:p-10 border border-border shadow-sm space-y-6 md:space-y-8 overflow-hidden">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 md:h-12 md:w-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
-                  <Info className="h-5 w-5 md:h-6 md:w-6 text-primary" />
+                <div className="h-9 w-9 md:h-12 md:w-12 rounded-xl md:rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Info className="h-4 w-4 md:h-6 md:w-6 text-primary" />
                 </div>
                 <div className="min-w-0">
-                  <h2 className="text-xl md:text-2xl font-black uppercase italic tracking-tighter text-animate-gradient truncate">Dúvidas Frequentes</h2>
-                  <p className="text-[8px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">Tudo o que você precisa saber</p>
+                  <h2 className="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-animate-gradient truncate">Dúvidas Frequentes</h2>
+                  <p className="text-[7px] md:text-[10px] font-bold text-muted-foreground uppercase tracking-widest truncate">Tudo o que você precisa saber</p>
                 </div>
               </div>
             </div>
@@ -1160,8 +1160,8 @@ const CampaignDetail = () => {
                     <div className="h-8 w-8 rounded-xl bg-background border border-border flex items-center justify-center shrink-0 group-hover:bg-primary/10 group-hover:text-primary transition-colors">
                       <item.icon className="h-4 w-4" />
                     </div>
-                    <div className="space-y-1 md:space-y-2 min-w-0">
-                      <p className="text-[10px] md:text-xs font-black uppercase tracking-tight text-foreground leading-tight truncate">{item.q}</p>
+                    <div className="space-y-1 md:space-y-2 min-w-0 flex-1">
+                      <p className="text-[10px] md:text-xs font-black uppercase tracking-tight text-foreground leading-tight">{item.q}</p>
                       <p className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-relaxed line-clamp-3">{item.a}</p>
                     </div>
                   </div>
@@ -1238,7 +1238,7 @@ const CampaignDetail = () => {
               <h2 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-black leading-none">
                 Sua sorte está a um <br className="hidden md:block" /> <span className="underline decoration-black/30 underline-offset-8">PIX de distância!</span>
               </h2>
-              <p className="text-sm md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto">
+              <p className="text-[10px] md:text-lg font-bold text-black/70 uppercase tracking-widest max-w-2xl mx-auto leading-relaxed">
                 Não deixe para amanhã o prêmio que você pode ganhar hoje. Escolha suas cotas e participe agora!
               </p>
             </motion.div>
@@ -1246,12 +1246,12 @@ const CampaignDetail = () => {
             <div className="relative z-10 pt-4">
               <Button 
                 size="lg"
-                className="h-16 px-12 rounded-2xl bg-black text-primary hover:bg-black/90 hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-widest text-sm gap-3 group"
+                className="h-14 md:h-16 px-8 md:px-12 rounded-xl md:rounded-2xl bg-black text-primary hover:bg-black/90 hover:scale-105 transition-all shadow-2xl font-black uppercase tracking-widest text-[10px] md:text-sm gap-3 group"
                 onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}
               >
-                QUERO PARTICIPAR AGORA <Zap className="h-5 w-5 fill-current group-hover:animate-bounce" />
+                QUERO PARTICIPAR AGORA <Zap className="h-4 w-4 md:h-5 md:w-5 fill-current group-hover:animate-bounce" />
               </Button>
-              <p className="text-[10px] font-black text-black/50 uppercase tracking-[0.2em] mt-6 flex items-center justify-center gap-2">
+              <p className="text-[8px] md:text-[10px] font-black text-black/50 uppercase tracking-[0.2em] mt-4 md:mt-6 flex items-center justify-center gap-2">
                 <Clock className="h-3 w-3" /> RESTAM POUCAS COTAS DISPONÍVEIS!
               </p>
             </div>

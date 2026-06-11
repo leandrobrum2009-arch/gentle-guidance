@@ -51,13 +51,13 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
   return (
     <div className="space-y-6">
       {/* Unit Price Header */}
-      <div className="flex flex-col items-center justify-center p-4 rounded-3xl bg-secondary/30 border border-border/50">
-        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Valor por Cota</p>
-        <div className="flex items-center gap-3">
-          <span className="text-3xl font-black italic tracking-tighter text-foreground">
+      <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-secondary/30 border border-border/50">
+        <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Valor por Cota</p>
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-2xl sm:text-3xl font-black italic tracking-tighter text-foreground">
             R$ {unitPrice.toFixed(2).replace(".", ",")}
           </span>
-          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[9px] font-black uppercase">
+          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] sm:text-[9px] font-black uppercase px-2 h-5 sm:h-6">
             Promoção
           </Badge>
         </div>
@@ -105,11 +105,11 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                 </Badge>
               )}
 
-              <span className="text-2xl font-black italic tracking-tighter mt-1">+{bundle.quantity}</span>
-              <span className="text-[9px] font-black uppercase tracking-widest opacity-70">Cotas</span>
+              <span className="text-xl sm:text-2xl font-black italic tracking-tighter mt-1">+{bundle.quantity}</span>
+              <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest opacity-70">Cotas</span>
               
               <div className={cn(
-                "mt-2 text-sm font-black italic",
+                "mt-2 text-xs sm:text-sm font-black italic",
                 isSelected ? "text-white" : "text-primary"
               )}>
                 R$ {bundle.price.toFixed(2).replace(".", ",")}
@@ -142,26 +142,26 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
             )}
           </div>
           
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button 
               variant="outline" 
               size="icon" 
               onClick={decrement}
-              className="h-12 w-12 rounded-xl border-border hover:bg-secondary"
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl border-border hover:bg-secondary shrink-0"
             >
-              <Minus className="h-4 w-4" />
+              <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
             
-            <div className="relative flex-1">
+            <div className="relative flex-1 min-w-0">
               <Input 
                 type="number" 
                 value={quantity || ""} 
                 onChange={(e) => handleManualChange(e.target.value)}
-                className="h-12 text-center font-black text-xl rounded-xl border-border bg-secondary/20 focus-visible:ring-primary"
+                className="h-10 sm:h-12 text-center font-black text-lg sm:text-xl rounded-xl border-border bg-secondary/20 focus-visible:ring-primary px-2"
                 placeholder="Ex: 50"
               />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                <span className="text-[10px] font-black text-muted-foreground uppercase">Cotas</span>
+              <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <span className="text-[8px] sm:text-[10px] font-black text-muted-foreground uppercase">Cotas</span>
               </div>
             </div>
 
@@ -169,9 +169,9 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               variant="outline" 
               size="icon" 
               onClick={increment}
-              className="h-12 w-12 rounded-xl border-border hover:bg-secondary"
+              className="h-10 w-10 sm:h-12 sm:w-12 rounded-xl border-border hover:bg-secondary shrink-0"
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
             </Button>
           </div>
         </div>
@@ -180,7 +180,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
           <div className="space-y-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Valor Total</p>
             <div className="flex items-baseline gap-1">
-              <span className="text-3xl font-black italic tracking-tighter text-foreground">
+              <span className="text-2xl sm:text-3xl font-black italic tracking-tighter text-foreground">
                 R$ {totalPrice.toFixed(2).replace(".", ",")}
               </span>
             </div>
@@ -194,7 +194,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
         <Button
           size="lg"
           className={cn(
-            "w-full h-14 gap-3 text-base font-black uppercase tracking-widest rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary-rgb),0.2)] transition-all active:scale-[0.98] border-light-path",
+            "w-full h-12 sm:h-14 gap-2 sm:gap-3 text-sm sm:text-base font-black uppercase tracking-widest rounded-xl sm:rounded-2xl bg-primary hover:bg-primary/90 shadow-[0_10px_20px_rgba(var(--primary-rgb),0.2)] transition-all active:scale-[0.98] border-light-path",
             quantity > 0 && campaign.status === "active" && !isPurchasing && "animate-button-flash border-light-always"
           )}
           disabled={quantity === 0 || campaign.status !== "active" || isPurchasing}
