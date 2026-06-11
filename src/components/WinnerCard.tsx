@@ -62,7 +62,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
         </div>
 
         <div className="space-y-1.5 mt-2">
-          <h3 className="font-display text-lg md:text-xl font-black uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
+          <h3 className="font-display text-base sm:text-lg md:text-xl font-black uppercase italic tracking-tighter leading-none group-hover:text-primary transition-colors">
             {winner.winner_name}
           </h3>
           <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
