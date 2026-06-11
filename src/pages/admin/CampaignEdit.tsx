@@ -304,9 +304,40 @@ export default function AdminCampaignEdit() {
                    <Input value={form.title} onChange={(e) => set("title", e.target.value)} />
                  </div>
                  <div className="space-y-2">
-                   <Label>Status da Campanha</Label>
+                   <Label className="flex items-center gap-2">
+                     Status da Campanha
+                     <TooltipProvider>
+                       <Tooltip>
+                         <TooltipTrigger asChild>
+                           <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                         </TooltipTrigger>
+                         <TooltipContent className="p-4 w-72 space-y-3">
+                           <div className="space-y-1">
+                             <p className="font-bold text-xs text-emerald-500 uppercase tracking-tighter">Ativa</p>
+                             <p className="text-[10px] leading-relaxed">Campanha visível e disponível para compra imediata por qualquer usuário.</p>
+                           </div>
+                           <div className="space-y-1">
+                             <p className="font-bold text-xs text-amber-500 uppercase tracking-tighter">Pausada</p>
+                             <p className="text-[10px] leading-relaxed">Visível no site, mas os botões de compra ficam desativados. Ideal para manutenções rápidas.</p>
+                           </div>
+                           <div className="space-y-1">
+                             <p className="font-bold text-xs text-purple-500 uppercase tracking-tighter">Em Auditoria</p>
+                             <p className="text-[10px] leading-relaxed">Indica que as vendas encerraram e o administrador está conferindo os pagamentos antes do sorteio.</p>
+                           </div>
+                           <div className="space-y-1">
+                             <p className="font-bold text-xs text-blue-500 uppercase tracking-tighter">Finalizada</p>
+                             <p className="text-[10px] leading-relaxed">Sorteio já realizado. Os bilhetes não podem mais ser comprados e o ganhador é exibido.</p>
+                           </div>
+                           <div className="space-y-1">
+                             <p className="font-bold text-xs text-muted-foreground uppercase tracking-tighter">Rascunho</p>
+                             <p className="text-[10px] leading-relaxed">Campanha invisível para os usuários. Use enquanto estiver configurando os detalhes.</p>
+                           </div>
+                         </TooltipContent>
+                       </Tooltip>
+                     </TooltipProvider>
+                   </Label>
                    <Select value={form.status} onValueChange={(v) => set("status", v)}>
-                     <SelectTrigger>
+                     <SelectTrigger className="mt-2">
                        <SelectValue placeholder="Selecione o status" />
                      </SelectTrigger>
                      <SelectContent>
