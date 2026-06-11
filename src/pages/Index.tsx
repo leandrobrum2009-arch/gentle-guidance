@@ -5,6 +5,7 @@ import {
   TrendingUp, Award, Clock, Star, Users, Flame,
   ArrowRight, ShieldCheck, Heart, Link as LinkIcon, RotateCw, Activity
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useIsAdmin } from "@/hooks/useAdmin";
