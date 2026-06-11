@@ -184,13 +184,16 @@ const LiveNotifications = () => {
             transition={{ type: "spring", damping: 15, stiffness: 100 }}
             className="pointer-events-auto flex items-center gap-3 p-3 rounded-2xl bg-card/95 backdrop-blur-xl border-2 border-primary/20 shadow-[0_0_20px_rgba(var(--primary),0.2)] min-w-[260px] md:min-w-[300px] max-w-[calc(100vw-32px)] md:max-w-sm ring-2 ring-primary/10"
           >
-            <div className={`h-10 w-10 rounded-full flex items-center justify-center shrink-0 ${notif.type === 'winner' ? 'bg-amber-500/10 text-amber-500' : 'bg-primary/10 text-primary'}`}>
-              <Avatar className="h-full w-full border-2 border-background shadow-sm">
+            <div className={`relative h-12 w-12 rounded-full shrink-0 p-0.5 ${notif.type === 'winner' ? 'bg-gradient-to-tr from-amber-500 to-yellow-300' : 'bg-gradient-to-tr from-primary to-primary/50'}`}>
+              <Avatar className="h-full w-full border-2 border-background">
                 <AvatarImage src={notif.avatarUrl || ""} />
-                <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                  {notif.userName[0]}
+                <AvatarFallback className="bg-secondary text-primary font-black text-xs">
+                  {notif.userName[0]?.toUpperCase()}
                 </AvatarFallback>
               </Avatar>
+              <div className={`absolute -bottom-1 -right-1 h-5 w-5 rounded-full border-2 border-background flex items-center justify-center text-white ${notif.type === 'winner' ? 'bg-amber-500' : 'bg-primary'}`}>
+                {notif.type === 'winner' ? <Trophy className="h-2.5 w-2.5" /> : <ShoppingCart className="h-2.5 w-2.5" />}
+              </div>
             </div>
             
             <div className="flex-1 min-w-0">
