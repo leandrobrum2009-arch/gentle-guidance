@@ -124,12 +124,13 @@ export default function LuckyHourManager({ campaignId }: LuckyHourManagerProps) 
 
   const paginatedLuckyHours = useMemo(() => {
     if (!luckyHours) return [];
-    const sorted = [...luckyHours].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
+    const filtered = luckyHours.filter(h => h.draw_type === activeTab);
+    const sorted = [...filtered].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
     const startIndex = (currentPage - 1) * itemsPerPage;
     return sorted.slice(startIndex, startIndex + itemsPerPage);
-  }, [luckyHours, currentPage]);
+  }, [luckyHours, currentPage, activeTab]);
 
-  const totalPages = Math.ceil((luckyHours?.length || 0) / itemsPerPage);
+  const totalPages = Math.ceil((luckyHours?.filter(h => h.draw_type === activeTab).length || 0) / itemsPerPage);
 
   if (!campaignId) return <div className="p-4 text-center text-muted-foreground">Salve a campanha primeiro para gerenciar as Horas Premiadas.</div>;
 
