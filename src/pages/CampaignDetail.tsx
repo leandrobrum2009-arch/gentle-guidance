@@ -17,7 +17,7 @@ import {
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
   useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
-  useUserTickets, useUserCampaignScratches
+  useUserTickets, useUserCampaignScratches, useLuckyHours
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -140,6 +140,7 @@ const CampaignDetail = () => {
   const { data: luckyWinners } = useCampaignLuckyWinners(campaignId);
   const { data: ticketStats } = useCampaignTicketStats(campaignId);
   const { data: userTickets } = useUserTickets(user?.id || "", campaignId);
+  const { data: luckyHours } = useLuckyHours(campaignId);
 
 
   const [selectedTickets, setSelectedTickets] = useState<string[]>([]);
@@ -944,6 +945,21 @@ const CampaignDetail = () => {
 
   const sectionsOrder = campaign.sections_order || ["gallery", "header", "progress", "description", "ranking", "purchase", "prizes", "roulette_footer", "scratch_footer"];
 
+  const nextLuckyHour = useMemo(() => {
+    if (!luckyHours) return null;
+    const now = new Date();
+    // Find the next scheduled one that is today or upcoming soon
+    return luckyHours.find(h => {
+      const drawDate = new Date(h.draw_time);
+      return h.status === 'scheduled' && drawDate > now;
+    });
+  }, [luckyHours]);
+
+  const sortedLuckyHours = useMemo(() => {
+    if (!luckyHours) return [];
+    return [...luckyHours].sort((a, b) => new Date(b.draw_time).getTime() - new Date(a.draw_time).getTime());
+  }, [luckyHours]);
+
   return (
     <div className="min-h-screen bg-background">
       <SEO 
@@ -959,7 +975,64 @@ const CampaignDetail = () => {
       
       <div className="container px-4 md:px-6">
         <div className="flex flex-col gap-6">
+          {nextLuckyHour && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="bg-primary/10 border border-primary/20 p-4 rounded-2xl flex items-center justify-between gap-4 animate-pulse"
+            >
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center text-primary">
+                  <Clock className="h-6 w-6" />
+                </div>
+                <div>
+                  <p className="text-sm font-black uppercase italic tracking-tighter text-primary">Hora Premiada em breve!</p>
+                  <p className="text-xs font-bold text-foreground/80">Hoje às {new Date(nextLuckyHour.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}: {nextLuckyHour.prize_description}</p>
+                </div>
+              </div>
+              <Badge className="bg-primary text-white text-[10px] font-black uppercase px-3 py-1">Imperdível</Badge>
+            </motion.div>
+          )}
+
           {sectionsOrder.map((section) => renderSection(section))}
+          
+          {luckyHours && luckyHours.length > 0 && (
+            <div className="bg-card rounded-3xl p-8 border border-border shadow-sm space-y-6 mt-6">
+              <div className="flex items-center gap-3">
+                <div className="h-10 w-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Clock className="h-5 w-5 text-amber-500" />
+                </div>
+                <h2 className="text-xl font-black uppercase italic tracking-tighter text-animate-gradient">Hora Premiada</h2>
+              </div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {sortedLuckyHours.map((draw) => (
+                  <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <div className={`h-10 w-10 rounded-xl flex items-center justify-center ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-amber-500/10 text-amber-500'}`}>
+                        <Clock className="h-5 w-5" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-black uppercase tracking-tight text-foreground">{draw.title}</p>
+                        <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                          {new Date(draw.draw_time).toLocaleDateString('pt-BR')} às {new Date(draw.draw_time).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                        </p>
+                        {draw.status === 'completed' && draw.winner_name && (
+                          <p className="text-[10px] font-black text-emerald-500 uppercase mt-1">Ganhador: {draw.winner_name}</p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs font-black text-primary uppercase">{draw.prize_description}</p>
+                      <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[8px] font-black uppercase px-2 h-5 mt-1">
+                        {draw.status === 'completed' ? 'Realizado' : 'Em breve'}
+                      </Badge>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
