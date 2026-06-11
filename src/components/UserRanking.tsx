@@ -50,60 +50,8 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
   return (
     <div className="space-y-10">
       {/* Header with Tabs */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-        <div className="flex items-center gap-4">
-          <div className="h-12 w-12 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
-            <TrendingUp className="h-6 w-6 text-primary" />
-          </div>
-          <div>
-            <h2 className="text-xl font-black uppercase italic tracking-tighter">{title || "Elite da Plataforma"}</h2>
-            <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Compita com os melhores e ganhe destaque</p>
-          </div>
-        </div>
+      {/* Removed "Elite da Plataforma" and "Meu melhor número" sections per user request */}
 
-        {!users && !stats && (
-          <Tabs value={category} onValueChange={(v: any) => setCategory(v)} className="w-full md:w-auto">
-            <TabsList className="bg-secondary/50 border border-border h-12 p-1 rounded-2xl">
-              <TabsTrigger value="points" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-                <Star className="h-3 w-3" /> Pontos
-              </TabsTrigger>
-              <TabsTrigger value="xp" className="rounded-xl px-6 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground uppercase font-black text-[10px] tracking-widest gap-2">
-                <Zap className="h-3 w-3" /> Experiência
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
-        )}
-      </div>
-
-      {stats && (
-        <div className="space-y-8">
-          {stats.userTickets && stats.userTickets.length > 0 && (
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="h-8 w-8 rounded-lg bg-green-500/10 flex items-center justify-center">
-                  <Star className="h-4 w-4 text-green-500" />
-                </div>
-                <h3 className="text-xs font-black uppercase tracking-widest italic">Meu melhor número</h3>
-              </div>
-              <div className="flex flex-wrap gap-3">
-                {(() => {
-                  const sorted = [...stats.userTickets].sort((a, b) => Number(b.number) - Number(a.number));
-                  const highest = sorted[0];
-                  
-                  return (
-                    <div className="flex flex-col gap-1">
-                      <span className="text-[8px] font-bold uppercase text-muted-foreground ml-1">Maior</span>
-                      <div className="h-10 min-w-[3rem] w-auto px-4 rounded-xl border border-primary/20 bg-primary/5 flex items-center justify-center shadow-sm">
-                        <span className="text-primary font-black italic text-sm">
-                          #{highest.number}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-            </div>
-          )}
 
           {stats.activePrize && (
             <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
