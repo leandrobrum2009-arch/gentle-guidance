@@ -1,4 +1,4 @@
-import { Trophy, Medal, Star, Crown, Zap, TrendingUp, Users, Calendar, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
+import { Trophy, Medal, Star, Crown, Zap, TrendingUp, Users, Calendar, ArrowDownCircle, ArrowUpCircle, Sparkles } from "lucide-react";
 import { useRanking } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
