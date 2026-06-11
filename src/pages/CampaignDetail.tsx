@@ -1086,7 +1086,7 @@ const CampaignDetail = () => {
 
       
       <div className="container px-4 md:px-6">
-        <div className="flex flex-col gap-6">
+        <div className="flex flex-col gap-4">
           {nextLuckyHour && (
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
