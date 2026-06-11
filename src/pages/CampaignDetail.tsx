@@ -1035,30 +1035,45 @@ const CampaignDetail = () => {
 
               <TabsContent value="greater_smaller">
                 <div className="grid grid-cols-1 gap-3">
-                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.map((draw) => (
-                    <div key={draw.id} className="p-4 rounded-2xl bg-secondary/30 border border-border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50">
+                  {greaterSmallerDraws.length > 0 ? greaterSmallerDraws.map((draw) => {
+                    const drawTime = new Date(draw.draw_time);
+                    const now = new Date();
+                    const isComingSoon = draw.status === 'scheduled' && (drawTime.getTime() - now.getTime()) < 3600000 && drawTime > now;
 
-                      <div className="flex items-center gap-3">
-                        <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
-                          <TrendingUp className="h-4 w-4" />
+                    return (
+                      <div key={draw.id} className={cn(
+                        "p-4 rounded-2xl bg-secondary/30 border flex items-center justify-between gap-4 transition-all hover:bg-secondary/50",
+                        isComingSoon ? "border-primary animate-blink shadow-[0_0_15px_rgba(var(--primary),0.3)]" : "border-border"
+                      )}>
+                        <div className="flex items-center gap-3">
+                          <div className={`h-8 w-8 rounded-lg flex items-center justify-center shrink-0 ${draw.status === 'completed' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-primary/10 text-primary'}`}>
+                            <TrendingUp className="h-4 w-4" />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="text-xs font-black uppercase tracking-tight text-foreground truncate">{draw.title}</p>
+                            <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
+                              {drawTime.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })} • {draw.prize_description}
+                            </p>
+                            {draw.status === 'completed' && draw.winner_name && (
+                              <p className="text-[9px] font-black text-emerald-500 uppercase mt-0.5 truncate">Vencedor: {draw.winner_name} (Nº {draw.winning_number})</p>
+                            )}
+                            {isComingSoon && (
+                              <p className="text-[9px] font-black text-primary uppercase mt-0.5 animate-pulse">DEFINIÇÃO EM INSTANTES!</p>
+                            )}
+                          </div>
                         </div>
-                        <div className="min-w-0">
-                          <p className="text-xs font-black uppercase tracking-tight text-foreground truncate">{draw.title}</p>
-                          <p className="text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
-                            {draw.prize_description}
-                          </p>
-                          {draw.status === 'completed' && draw.winner_name && (
-                            <p className="text-[9px] font-black text-emerald-500 uppercase mt-0.5 truncate">#{draw.winning_number} • {draw.winner_name}</p>
-                          )}
-                        </div>
+                        <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className={cn(
+                          "text-[7px] font-black uppercase px-2 h-5 shrink-0",
+                          isComingSoon && "bg-primary text-white"
+                        )}>
+                          {draw.status === 'completed' ? 'Definido' : (isComingSoon ? 'Definindo...' : 'Agendado')}
+                        </Badge>
                       </div>
-                      <Badge variant={draw.status === 'completed' ? 'default' : 'secondary'} className="text-[7px] font-black uppercase px-2 h-5 shrink-0">
-                        {draw.status === 'completed' ? 'Realizado' : 'Em breve'}
-                      </Badge>
-                    </div>
-                  )) : (
-                    <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Aguardando sorteio...</p>
+                    );
+                  }) : (
+                    <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Aguardando definição...</p>
                   )}
+
                 </div>
               </TabsContent>
             </Tabs>
