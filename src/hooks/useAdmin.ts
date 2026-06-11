@@ -136,7 +136,7 @@ export const useAdminCampaigns = () =>
        const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
        
         let results = profiles.map(profile => {
-          const userRole = (['master','client_admin','admin','moderator'].find(p=>(userRoles?.filter(r=>r.user_id===profile.user_id).map(r=>r.role)||[]).includes(p))||'user') as "admin" | "client_admin" | "master" | "moderator" | "user";
+          const userRole = (['master','client_admin','admin','moderator'].find(p=>(userRoles?.filter(r=>r.user_id===profile.user_id).map(r=>r.role)||[]).includes(p))||'user') as "admin" | "moderator" | "user" | "master" | "client_admin";
           return {
             ...profile,
             role: userRole,
