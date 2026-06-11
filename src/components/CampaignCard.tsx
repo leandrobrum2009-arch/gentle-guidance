@@ -28,7 +28,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
       className="group relative h-full"
     >
       <Link to={`/campanha/${campaign.slug || campaign.id}`} className="block h-full outline-none">
-        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-4 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.2)] group-hover:scale-[1.02] shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 border-light-path border-[#22c55e]/20">
+        <div className="relative h-full overflow-hidden rounded-2xl border border-border bg-card p-3 sm:p-4 transition-all duration-500 group-hover:border-primary/50 group-hover:shadow-[0_0_30px_hsl(var(--primary)/0.2)] group-hover:scale-[1.02] shadow-sm focus-within:ring-2 focus-within:ring-primary focus-within:ring-offset-2 border-light-path border-[#22c55e]/20">
           
           {/* Reflection Effect */}
           <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -102,7 +102,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             </div>
           </div>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-4 sm:mt-5 space-y-3 sm:space-y-4">
             <div>
               <h3 className="font-display text-sm sm:text-base md:text-lg font-black uppercase italic tracking-tight group-hover:text-primary transition-colors line-clamp-1">
                 {campaign.title}
@@ -190,7 +190,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               <Button 
                 size="sm" 
                 className={cn(
-                  "h-8 rounded-full text-[10px] font-black uppercase tracking-widest px-4 relative z-10",
+                  "h-7 sm:h-8 rounded-full text-[8px] sm:text-[10px] font-black uppercase tracking-widest px-3 sm:px-4 relative z-10",
                   isCompleted 
                     ? "bg-secondary text-muted-foreground border-border hover:bg-secondary/80" 
                     : "glow-primary border-light-path border-[#22c55e]/30"
