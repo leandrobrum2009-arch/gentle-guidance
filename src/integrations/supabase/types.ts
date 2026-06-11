@@ -633,6 +633,7 @@ export type Database = {
       }
       lucky_hours: {
         Row: {
+          audit_log: Json | null
           campaign_id: string
           created_at: string
           draw_time: string
@@ -645,6 +646,7 @@ export type Database = {
           winning_number: string | null
         }
         Insert: {
+          audit_log?: Json | null
           campaign_id: string
           created_at?: string
           draw_time: string
@@ -657,6 +659,7 @@ export type Database = {
           winning_number?: string | null
         }
         Update: {
+          audit_log?: Json | null
           campaign_id?: string
           created_at?: string
           draw_time?: string
