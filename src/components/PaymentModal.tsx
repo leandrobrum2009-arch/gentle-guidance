@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landmark, Upload } from "lucide-react";
+import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landmark, Upload, Zap } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
