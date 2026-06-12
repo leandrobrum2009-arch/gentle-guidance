@@ -14,7 +14,7 @@ const Announcements = () => {
     <div className="min-h-screen bg-background">
       <SEO title="Comunicados" description="Fique por dentro de todas as novidades, atualizações e comunicados oficiais da nossa plataforma." />
       <Header />
-      <div className="h-24 md:h-32" />
+      <div className="h-[var(--header-height,100px)]" />
       <div className="container py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

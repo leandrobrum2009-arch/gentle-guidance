@@ -354,7 +354,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative overflow-x-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-border/10">
+          <div key={section} className="w-full bg-black relative overflow-x-hidden rounded-b-[2rem] md:rounded-b-[3rem] shadow-2xl border border-border/10">
             <RaffleGallery 
               images={Array.from(new Set([
                 campaign.image_url || "",
@@ -1310,12 +1310,11 @@ const CampaignDetail = () => {
         type="article"
       />
       <Header />
-      <div className="h-20 md:h-24" />
       <LiveNotifications />
 
       
-      <div className="container px-4 md:px-6 pb-20">
-        <div className="flex flex-col gap-8 md:gap-12">
+      <div className="container px-4 md:px-6 pb-20 pt-[var(--header-height,100px)]">
+        <div className="flex flex-col gap-8 md:gap-12 mt-0">
           {sectionsOrder.map((section) => renderSection(section))}
         </div>
       </div>

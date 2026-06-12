@@ -49,6 +49,14 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
+  const headerRef = React.useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      const height = headerRef.current.offsetHeight;
+      document.documentElement.style.setProperty('--header-height', `${height}px`);
+    }
+  }, [siteSettings, scrolled, mobileOpen]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
@@ -142,7 +150,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`sticky top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-background/95 backdrop-blur-md'}`}>
+    <header ref={headerRef} className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-background/95 backdrop-blur-md'}`}>
 
       <div className="flex flex-col w-full">
         <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-20 md:h-24'}`}>

@@ -318,7 +318,7 @@ const Index = () => {
       ) : (
         <>
            {campaigns && campaigns.length > 0 && (
-             <div className="relative group">
+             <div className="relative group pt-[var(--header-height,100px)]">
                  {/* Style Selector - Only visible for admins to test visually */}
                  {isAdmin && (
                    <div className="absolute top-4 right-4 z-50 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">

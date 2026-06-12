@@ -34,7 +34,7 @@ const FederalResults = () => {
         />
         <Header />
 
-       <div className="container py-12 md:py-20">
+       <div className="container py-12 md:py-20 pt-[var(--header-height,100px)]">
          <div className="mb-10 text-center space-y-4">
            <motion.div 
              initial={{ opacity: 0, scale: 0.9 }} 
