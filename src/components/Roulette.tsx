@@ -336,27 +336,27 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
                     <div className="space-y-2">
                       {campaign.prize_rules.map((rule: any, i: number) => {
                         if (!rule.active) return null;
-                        let text = "";
-                        let icon = <Trophy className="h-3 w-3 text-amber-500" />;
+                        let ruleText = "";
+                        let ruleIcon = <Trophy className="h-3 w-3 text-amber-500" />;
                         
                         if (rule.type === 'greater_smaller') {
-                          text = `Maior Cota: ${rule.prize_greater} | Menor Cota: ${rule.prize_smaller}`;
+                          ruleText = `Maior Cota: ${rule.prize_greater} | Menor Cota: ${rule.prize_smaller}`;
                         } else if (rule.type === 'mystery_box') {
-                          text = `Ganhe ${rule.reward_quantity} Caixa(s) Misteriosa(s) ao comprar ${rule.min_tickets} cotas`;
-                          icon = <Gift className="h-3 w-3 text-purple-500" />;
+                          ruleText = `Ganhe ${rule.reward_quantity} Caixa(s) Misteriosa(s) ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <Gift className="h-3 w-3 text-purple-500" />;
                         } else if (rule.type === 'roulette') {
-                          text = `Ganhe ${rule.reward_quantity} Giro(s) de Roleta ao comprar ${rule.min_tickets} cotas`;
-                          icon = <RotateCw className="h-3 w-3 text-primary" />;
+                          ruleText = `Ganhe ${rule.reward_quantity} Giro(s) de Roleta ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <RotateCw className="h-3 w-3 text-primary" />;
                         } else if (rule.type === 'scratch_card') {
-                          text = `Ganhe ${rule.reward_quantity} Raspadinha(s) ao comprar ${rule.min_tickets} cotas`;
-                          icon = <Sparkles className="h-3 w-3 text-amber-500" />;
+                          ruleText = `Ganhe ${rule.reward_quantity} Raspadinha(s) ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <Sparkles className="h-3 w-3 text-amber-500" />;
                         }
                         
                         return (
                           <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/10">
                             <p className="text-xs text-white/70 leading-relaxed flex items-center gap-2">
-                              {icon}
-                              {text}
+                              {ruleIcon}
+                              {ruleText}
                             </p>
                           </div>
                         );
