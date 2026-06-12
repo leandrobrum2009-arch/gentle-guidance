@@ -18,26 +18,43 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
   // Function to transform YouTube or Twitch URL to embed URL if needed
   const getEmbedUrl = (link: string) => {
-    // Twitch Support
-    if (link.includes("twitch.tv/")) {
-      const channel = link.split("twitch.tv/")[1]?.split("/")[0]?.split("?")[0];
-      const parent = window.location.hostname;
-      return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=true`;
-    }
+    try {
+      if (!link) return "";
+      const urlObj = new URL(link.startsWith('http') ? link : `https://${link}`);
+      const hostname = urlObj.hostname.toLowerCase();
+      const pathname = urlObj.pathname;
 
-    // YouTube Support
-    if (link.includes("youtube.com/live/")) {
-      const id = link.split("/live/")[1]?.split("?")[0];
-      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+      // Twitch Support
+      if (hostname.includes("twitch.tv")) {
+        const channel = pathname.split("/")[1]?.split("?")[0];
+        if (!channel) return "";
+        const parent = window.location.hostname;
+        return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=true`;
+      }
+
+      // YouTube Support
+      if (hostname.includes("youtube.com") || hostname.includes("youtu.be")) {
+        let id = "";
+        if (pathname.includes("/live/")) {
+          id = pathname.split("/live/")[1]?.split("?")[0];
+        } else if (hostname.includes("youtu.be")) {
+          id = pathname.split("/").pop() || "";
+        } else if (urlObj.searchParams.has("v")) {
+          id = urlObj.searchParams.get("v") || "";
+        } else if (pathname.includes("/embed/")) {
+          id = pathname.split("/embed/")[1]?.split("?")[0];
+        }
+        
+        if (!id) return "";
+        return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&rel=0`;
+      }
+
+      // Generic fallback for other valid URLs
+      return link;
+    } catch (e) {
+      console.error("Invalid URL in LiveStreamPlayer:", link);
+      return "";
     }
-    if (link.includes("youtube.com/watch?v=")) {
-      return link.replace("watch?v=", "embed/") + "?autoplay=1&mute=1";
-    }
-    if (link.includes("youtu.be/")) {
-      const id = link.split("/").pop();
-      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
-    }
-    return link;
   };
 
   const embedUrl = getEmbedUrl(url);
