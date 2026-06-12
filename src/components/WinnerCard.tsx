@@ -27,7 +27,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="relative overflow-hidden rounded-2xl border border-border bg-card p-3 sm:p-4 md:p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group border-light-path border-[#22c55e]/20"
+      className="relative overflow-hidden rounded-xl border border-border bg-card p-3 sm:p-4 md:p-6 shadow-sm hover:border-primary/30 hover:shadow-md transition-all group border-light-path border-[#22c55e]/20"
     >
       {/* Background Icon */}
       <Trophy className="absolute -right-4 -top-4 h-32 w-32 text-primary/5 rotate-12 transition-transform group-hover:scale-110 group-hover:rotate-6" />
@@ -35,7 +35,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       <div className="relative z-10">
         <div className="mb-4 flex items-start justify-between">
           <div className="relative">
-            <div className="h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-xl sm:rounded-2xl border-2 border-primary/20 bg-secondary/30">
+            <div className="h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-lg sm:rounded-xl border-2 border-primary/20 bg-secondary/30">
               <img 
                 src={winner.avatar_url || `https://images.unsplash.com/photo-${[
                   "1507003211169-0a1dd7228f2d",
@@ -68,7 +68,7 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
           <p className="text-[10px] md:text-[11px] font-bold uppercase tracking-widest text-muted-foreground truncate">{campaignTitle}</p>
         </div>
 
-        <div className="mt-5 p-4 md:p-5 rounded-2xl bg-secondary/50 border border-border space-y-4">
+        <div className="mt-5 p-4 md:p-5 rounded-xl bg-secondary/50 border border-border space-y-4">
           <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
             <span className="text-muted-foreground">Prêmio</span>
             <span className="text-primary neon-text-primary italic font-black">{winner.prize_description}</span>

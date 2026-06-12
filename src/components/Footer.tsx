@@ -37,7 +37,7 @@ const Footer = () => {
                 />
               ) : (
                 <>
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/20">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary shadow-lg shadow-primary/20">
                     <Ticket className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <span className="font-display text-2xl font-black italic uppercase tracking-tighter">
@@ -66,7 +66,7 @@ const Footer = () => {
                   key={label}
                   href="#"
                   aria-label={`Acessar nosso ${label}`}
-                  className="h-10 w-10 rounded-xl bg-secondary border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm"
+                  className="h-10 w-10 rounded-lg bg-secondary border border-border flex items-center justify-center text-foreground hover:bg-primary hover:text-primary-foreground transition-all shadow-sm"
                 >
                   <Icon className="h-4 w-4" />
                   <span className="sr-only">{label}</span>
@@ -104,7 +104,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Certificações</h3>
             <div className="flex flex-col gap-4">
-              <div className="p-4 rounded-2xl border border-border bg-secondary flex items-center gap-4 shadow-sm">
+              <div className="p-4 rounded-xl border border-border bg-secondary flex items-center gap-4 shadow-sm">
                 <ShieldCheck className="h-8 w-8 text-primary" />
                 <div>
                   <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Pagamento Seguro</p>

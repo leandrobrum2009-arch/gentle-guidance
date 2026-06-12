@@ -116,7 +116,7 @@ import { Button } from "@/components/ui/button";
                 disabled={ticket.isSold}
                 onClick={() => onSelect(ticket.number)}
                 className={cn(
-                  "relative aspect-square flex items-center justify-center rounded-lg text-[10px] font-bold transition-all",
+                  "relative aspect-square flex items-center justify-center rounded-md md:rounded-lg text-[10px] font-bold transition-all",
                   !ticket.isSold && "hover:scale-110 hover:z-10 active:scale-95",
                  ticket.isSold 
                    ? "bg-muted-foreground/10 text-muted-foreground/50 cursor-not-allowed" 
@@ -142,7 +142,7 @@ import { Button } from "@/components/ui/button";
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="rounded-2xl border border-primary/20 bg-primary/5 p-4 shadow-sm"
+            className="rounded-xl md:rounded-2xl border border-primary/20 bg-primary/5 p-4 shadow-sm"
           >
             <div className="flex items-center justify-between mb-3">
               <p className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1.5">

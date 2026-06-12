@@ -39,7 +39,7 @@ const RaffleGallery = ({ images, videoUrl }: RaffleGalleryProps) => {
   return (
     <div className="w-full h-full flex flex-col items-center">
        <div 
-        className="group relative w-full h-[300px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-b-[2rem] md:rounded-b-[3rem] border border-border/50 bg-black flex items-center justify-center shadow-2xl"
+        className="group relative w-full h-[300px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-b-2xl md:rounded-b-3xl border border-border/50 bg-black flex items-center justify-center shadow-2xl"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
