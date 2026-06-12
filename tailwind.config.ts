@@ -85,7 +85,7 @@ export default {
         },
         "blink": {
           "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.2" },
+          "50%": { opacity: "0.6" },
         },
         "slide-up": {
           from: { transform: "translateY(10px)", opacity: "0" },
