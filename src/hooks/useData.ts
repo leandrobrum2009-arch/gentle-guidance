@@ -61,6 +61,9 @@ export interface Campaign {
   created_at: string;
   live_stream_url?: string;
   live_stream_enabled?: boolean;
+  mystery_box_available_count?: number;
+  roulette_available_count?: number;
+  scratch_cards_available_count?: number;
   winners?: Winner[];
 }
 
