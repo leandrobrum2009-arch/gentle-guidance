@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy } from "lucide-react";
+import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
