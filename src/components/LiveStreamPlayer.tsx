@@ -111,16 +111,30 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
         {/* Video Frame */}
         <div className={cn(
-          "w-full h-full overflow-hidden rounded-xl bg-black border border-white/5 shadow-inner",
+          "w-full h-full overflow-hidden rounded-xl bg-black border border-white/5 shadow-inner flex items-center justify-center",
           isExpanded ? "aspect-video" : "h-full"
         )}>
-          <iframe
-            src={embedUrl}
-            title={`Live Stream - ${campaignTitle}`}
-            className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowFullScreen
-          />
+          {embedUrl ? (
+            <iframe
+              src={embedUrl}
+              title={`Live Stream - ${campaignTitle}`}
+              className="w-full h-full"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : (
+            <div className="flex flex-col items-center gap-3 p-6 text-center">
+              <Video className="h-12 w-12 text-white/20" />
+              <div className="space-y-1">
+                <p className="text-sm font-bold text-white/40 uppercase tracking-widest">
+                  Transmissão Indisponível
+                </p>
+                <p className="text-[10px] text-white/20 font-medium uppercase">
+                  Verifique o link de transmissão nas configurações
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Info Overlay (only in small mode) */}
