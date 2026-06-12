@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landmark, Upload } from "lucide-react";
+import { Loader2, QrCode, Copy, Clock, CheckCircle2, XCircle, ShieldCheck, Landmark, Upload, Zap } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -152,6 +152,39 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
     return () => clearInterval(timer);
   }, [status, isOpen]);
   */
+
+  const handleSimulatePayment = async () => {
+    if (!orderId || !order || isPayingWithBalance) return;
+    
+    setIsPayingWithBalance(true);
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Usuário não autenticado");
+
+      // We call pay_with_balance as a way to "approve" the order instantly in development
+      // This is a simulation for resgate (redemption) by tickets/balance
+      const { data: response, error } = await supabase.rpc('pay_with_balance', {
+        p_order_id: orderId,
+        p_user_id: userData.user.id
+      });
+
+      if (error) throw error;
+      const data = response as any;
+
+      if (data.success || data.message?.toLowerCase().includes('pago')) {
+        toast.success("Resgate simulado com sucesso!");
+        setStatus('paid');
+        fetchOrder();
+        onPaymentSuccess();
+      } else {
+        toast.error(data.message || "Erro na simulação");
+      }
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    } finally {
+      setIsPayingWithBalance(false);
+    }
+  };
 
   const copyPix = () => {
     if (order?.pix_code) {
@@ -448,6 +481,15 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
                           onClick={copyPix}
                         >
                           <Copy className="h-5 w-5" /> COPIAR CÓDIGO PIX
+                        </Button>
+                        
+                        <Button 
+                          variant="ghost"
+                          className="w-full h-10 rounded-xl gap-2 font-black uppercase text-[9px] tracking-widest border border-dashed border-primary/20 text-primary/60 hover:text-primary hover:bg-primary/5" 
+                          onClick={handleSimulatePayment}
+                          disabled={isPayingWithBalance}
+                        >
+                          <Zap className="h-3.5 w-3.5" /> SIMULAR RESGATE (TESTE)
                         </Button>
                         
                         {userBalance > 0 && (
