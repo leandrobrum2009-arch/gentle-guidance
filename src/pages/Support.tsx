@@ -15,7 +15,7 @@ const Support = () => {
     <div className="min-h-screen bg-background">
       <SEO title="Suporte" description="Precisa de ajuda? Entre em contato com nossa equipe de suporte." />
       <Header />
-      <div className="container py-8">
+      <div className="container py-8 pt-[calc(var(--header-height,100px)+2rem)]">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

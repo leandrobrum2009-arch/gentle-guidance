@@ -309,7 +309,7 @@ import { PaymentModal } from "@/components/PaymentModal";
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="container relative z-10 py-10 pt-24"
+        className="container relative z-10 py-10 pt-[calc(var(--header-height,100px)+2rem)]"
       >
         <div className="grid gap-8 lg:grid-cols-12">
           <aside className="lg:col-span-3 space-y-6">
