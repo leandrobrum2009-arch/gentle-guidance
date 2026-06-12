@@ -142,7 +142,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
             whileHover={{ y: -5, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
              onClick={() => { handleStartOpening(box); playSound('click'); hapticFeedback(); }}
-            className={cn("group relative overflow-hidden rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
+            className={cn("group relative overflow-hidden rounded-2xl md:rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
             <div className="relative z-10 space-y-4">
@@ -328,7 +328,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
                 initial={{ rotateY: 90, scale: 0.5 }}
                 animate={{ rotateY: 0, scale: 1 }}
                 transition={{ type: "spring", stiffness: 100 }}
-                className="w-72 h-96 rounded-[3rem] border-4 bg-zinc-950 relative overflow-hidden group holographic-card shadow-2xl"
+                className="w-72 h-96 rounded-2xl md:rounded-[3rem] border-4 bg-zinc-950 relative overflow-hidden group holographic-card shadow-2xl"
                 style={{ borderColor: rarityColor }}
               >
                 {/* Premium Reflections */}
@@ -340,7 +340,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
                 />
                 
                 <div className="relative h-full flex flex-col items-center justify-center p-8 gap-8 z-30">
-                   <div className="h-28 w-28 rounded-[2rem] bg-white/5 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
+                   <div className="h-28 w-28 rounded-xl md:rounded-[2rem] bg-white/5 border border-white/10 flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform duration-500">
                       <PrizeIcon type={prize?.prize_type} className="h-16 w-16" style={{ color: rarityColor }} />
                    </div>
                    

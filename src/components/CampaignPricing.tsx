@@ -51,7 +51,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
   return (
     <div className="space-y-6">
       {/* Unit Price Header */}
-      <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl sm:rounded-3xl bg-secondary/30 border border-border/50">
+      <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-secondary/30 border border-border/50">
         <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Valor por Cota</p>
         <div className="flex items-center gap-2 sm:gap-3">
           <span className="text-2xl sm:text-3xl font-black italic tracking-tighter text-foreground">
@@ -76,7 +76,6 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               whileTap={{ scale: 0.95 }}
               onClick={() => setQuantity(bundle.quantity)}
               className={cn(
-                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden",
                 isSelected
                   ? "border-primary bg-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] text-white scale-105 z-10"
                   : cn("border-primary/30 bg-card hover:border-primary/60 text-foreground shadow-sm", 
@@ -136,7 +135,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
       </div>
 
       {/* Manual Selection and Summary */}
-      <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-6">
+      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">

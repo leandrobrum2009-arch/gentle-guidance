@@ -50,7 +50,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
   return (
     <div className="space-y-10">
       {stats?.activePrize && (
-        <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-lg">
+        <div className="bg-card border border-border rounded-2xl md:rounded-3xl overflow-hidden shadow-lg">
           <div className="p-6 border-b border-border flex items-center justify-between bg-primary/5">
             <div className="flex items-center gap-3">
               <div className="h-10 w-10 rounded-xl bg-primary/20 flex items-center justify-center border border-primary/30">
@@ -86,7 +86,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+              <div className="bg-secondary/30 border border-border/50 rounded-2xl md:rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <ArrowDownCircle className="h-4 w-4 text-primary" />
                   <span className="text-xs font-black uppercase tracking-widest">Menor Bilhete</span>
@@ -109,7 +109,7 @@ const UserRanking = ({ users, title, stats }: UserRankingProps) => {
                 </div>
               </div>
 
-              <div className="bg-secondary/30 border border-border/50 rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
+              <div className="bg-secondary/30 border border-border/50 rounded-2xl md:rounded-3xl p-8 flex flex-col items-center justify-center space-y-4 text-center group hover:bg-secondary/40 transition-all duration-300">
                 <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <ArrowUpCircle className="h-4 w-4 text-primary" />
                   <span className="text-xs font-black uppercase tracking-widest">Maior Bilhete</span>
@@ -163,13 +163,13 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
         )} />
         
         <div className={cn(
-          "relative h-20 w-20 md:h-28 md:w-28 rounded-3xl p-1 bg-gradient-to-tr transition-transform duration-500 group-hover:scale-110",
+          "relative h-20 w-20 md:h-28 md:w-28 rounded-2xl md:rounded-3xl p-1 bg-gradient-to-tr transition-transform duration-500 group-hover:scale-110",
           rank === 1 ? "from-yellow-400 to-amber-600 rotate-3" : 
           rank === 2 ? "from-slate-300 to-slate-500 -rotate-3" : 
           "from-amber-600 to-amber-900 rotate-6"
         )}>
-          <div className="h-full w-full rounded-[1.4rem] bg-card p-1">
-            <Avatar className="h-full w-full rounded-2xl border-none">
+          <div className="h-full w-full rounded-xl md:rounded-2xl bg-card p-1">
+            <Avatar className="h-full w-full rounded-lg md:rounded-xl border-none">
               <AvatarImage src={user.avatar_url || ""} />
               <AvatarFallback className="bg-zinc-800 text-white font-black text-xl">
                 {user.name.substring(0, 2).toUpperCase()}
@@ -218,7 +218,7 @@ const PodiumPlace = ({ user, rank, category, className }: { user: any, rank: num
       </div>
 
       <div className={cn(
-        "mt-4 w-full rounded-t-3xl border-t border-x border-white/5 bg-gradient-to-b from-white/5 to-transparent",
+        "mt-4 w-full rounded-t-2xl md:rounded-t-3xl border-t border-x border-white/5 bg-gradient-to-b from-white/5 to-transparent",
         rank === 1 ? "h-24 md:h-32 shadow-[0_0_40px_rgba(250,204,21,0.05)]" : 
         rank === 2 ? "h-16 md:h-24" : 
         "h-12 md:h-20"
