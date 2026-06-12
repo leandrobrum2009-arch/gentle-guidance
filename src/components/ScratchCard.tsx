@@ -582,33 +582,35 @@ const ScratchCard = ({
         </div>
       </div>
 
-      <div className="w-full mt-4 space-y-3 z-10">
+      <div className="w-full mt-4 space-y-3 z-10 text-left">
         {/* Campaign Reward Rules Section */}
-        <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-3">
-          <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-primary" />
-            <span className="text-xs font-black uppercase tracking-widest text-white">REGRAS DE RECOMPENSA</span>
-          </div>
-          <div className="space-y-2">
-            <p className="text-[10px] text-white/60 font-medium">Ao comprar determinadas quantidades de cotas, você desbloqueia recompensas instantâneas:</p>
-            <div className="grid grid-cols-1 gap-2">
-              <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
-                <div className="flex items-center gap-2">
-                  <RotateCw className="h-3 w-3 text-primary" />
-                  <span className="text-[10px] font-bold text-white/80">GIROS DE ROLETA</span>
+        {potentialPrizes && potentialPrizes.length > 0 && (
+          <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-3">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-xs font-black uppercase tracking-widest text-white">REGRAS DE RECOMPENSA</span>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[10px] text-white/60 font-medium italic">Ao comprar cotas nesta campanha, você pode desbloquear:</p>
+              <div className="grid grid-cols-1 gap-2">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <RotateCw className="h-3 w-3 text-primary" />
+                    <span className="text-[10px] font-bold text-white/80 uppercase">Giros de Roleta</span>
+                  </div>
+                  <span className="text-[9px] font-black text-primary italic uppercase tracking-tighter">Bônus Automático</span>
                 </div>
-                <span className="text-[10px] font-black text-primary">A CADA 50 COTAS</span>
-              </div>
-              <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
-                <div className="flex items-center gap-2">
-                  <Gift className="h-3 w-3 text-purple-500" />
-                  <span className="text-[10px] font-bold text-white/80">CAIXAS MISTERIOSAS</span>
+                <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-3 w-3 text-purple-500" />
+                    <span className="text-[10px] font-bold text-white/80 uppercase">Itens Misteriosos</span>
+                  </div>
+                  <span className="text-[9px] font-black text-purple-500 italic uppercase tracking-tighter">Conforme Regulamento</span>
                 </div>
-                <span className="text-[10px] font-black text-purple-500">A CADA 100 COTAS</span>
               </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="flex items-center gap-2 px-1">
           <History className="h-3 w-3 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Histórico Recente</span>
