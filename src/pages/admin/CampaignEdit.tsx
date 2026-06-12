@@ -41,7 +41,7 @@ interface CampaignForm {
   upsell_enabled: boolean; upsell_probability: string;
   ranking_prizes: { id: string; title: string; start_date: string; end_date: string; prize_maior: string; prize_menor: string; active: boolean }[];
   prize_rules: { type: string; label: string; prize_greater?: string; prize_smaller?: string; active?: boolean }[];
-  live_stream_url: string; concurso: string; draw_number: string;
+  live_stream_url: string; live_stream_enabled: boolean; concurso: string; draw_number: string;
   fake_progress_enabled: boolean;
   fake_progress_percentage: number;
   progress_text: string;
