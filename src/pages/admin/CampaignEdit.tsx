@@ -334,12 +334,12 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="general" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div className="space-y-2">
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                 <div className="space-y-2 min-w-0">
                    <Label>Título da Campanha</Label>
                    <Input value={form.title} onChange={(e) => set("title", e.target.value)} />
                  </div>
-                 <div className="space-y-2">
+                 <div className="space-y-2 min-w-0">
                    <Label className="flex items-center gap-2">
                      Status da Campanha
                      <TooltipProvider>
@@ -386,8 +386,8 @@ export default function AdminCampaignEdit() {
                    </Select>
                  </div>
                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                  <div className="space-y-2">
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-4">
+                   <div className="space-y-2 min-w-0">
                     <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Subtítulo / Chamada Rápida</Label>
                     <Input 
                       placeholder="Ex: Participe e concorra ao prêmio dos seus sonhos!" 
@@ -395,7 +395,7 @@ export default function AdminCampaignEdit() {
                       onChange={(e) => set("subtitle", e.target.value)} 
                     />
                   </div>
-                  <div className="space-y-2">
+                   <div className="space-y-2 min-w-0">
                     <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Código LTP (Opcional)</Label>
                     <Input 
                       placeholder="Ex: LTP-12345" 
@@ -433,8 +433,8 @@ export default function AdminCampaignEdit() {
                <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
                  <Calendar className="h-5 w-5 text-primary" /> Datas do Sorteio
                </h3>
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                 <div className="space-y-2">
+               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+                 <div className="space-y-2 min-w-0">
                    <Label className="flex items-center gap-2">
                      Data do Sorteio
                      <TooltipProvider>
@@ -454,7 +454,7 @@ export default function AdminCampaignEdit() {
                      onChange={(e) => set("draw_date", e.target.value)} 
                    />
                  </div>
-                 <div className="space-y-2">
+                 <div className="space-y-2 min-w-0">
                    <Label className="flex items-center gap-2">
                      Finalizar Vendas em
                      <TooltipProvider>
@@ -474,7 +474,7 @@ export default function AdminCampaignEdit() {
                      onChange={(e) => set("timer_end_date", e.target.value)} 
                    />
                   </div>
-                  <div className="space-y-2">
+                   <div className="space-y-2 min-w-0">
                     <Label className="flex items-center gap-2">
                       Número do Concurso (Loteria Federal)
                       <TooltipProvider>
