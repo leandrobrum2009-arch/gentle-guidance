@@ -330,6 +330,41 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
                   <p className="text-[11px] text-white/40 italic mt-2">Os giros são liberados após a confirmação do pagamento.</p>
                 </div>
                 
+                {campaign.prize_rules && campaign.prize_rules.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-black uppercase text-amber-500 tracking-widest italic">Prêmios de Engajamento</h4>
+                    <div className="space-y-2">
+                      {campaign.prize_rules.map((rule: any, i: number) => {
+                        if (!rule.active) return null;
+                        let text = "";
+                        let icon = <Trophy className="h-3 w-3 text-amber-500" />;
+                        
+                        if (rule.type === 'greater_smaller') {
+                          text = `Maior Cota: ${rule.prize_greater} | Menor Cota: ${rule.prize_smaller}`;
+                        } else if (rule.type === 'mystery_box') {
+                          text = `Ganhe ${rule.reward_quantity} Caixa(s) Misteriosa(s) ao comprar ${rule.min_tickets} cotas`;
+                          icon = <Gift className="h-3 w-3 text-purple-500" />;
+                        } else if (rule.type === 'roulette') {
+                          text = `Ganhe ${rule.reward_quantity} Giro(s) de Roleta ao comprar ${rule.min_tickets} cotas`;
+                          icon = <RotateCw className="h-3 w-3 text-primary" />;
+                        } else if (rule.type === 'scratch_card') {
+                          text = `Ganhe ${rule.reward_quantity} Raspadinha(s) ao comprar ${rule.min_tickets} cotas`;
+                          icon = <Sparkles className="h-3 w-3 text-amber-500" />;
+                        }
+                        
+                        return (
+                          <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/10">
+                            <p className="text-xs text-white/70 leading-relaxed flex items-center gap-2">
+                              {icon}
+                              {text}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                
                 <div className="space-y-3">
                   <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Multiplicadores</h4>
                   <p className="text-sm text-white/70 leading-relaxed">
