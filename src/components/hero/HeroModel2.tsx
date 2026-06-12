@@ -51,7 +51,7 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
 
                 <div className="flex flex-col items-center gap-6">
                   {campaign.draw_date && (
-                    <div className="p-1 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl">
+                    <div className="p-1 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
                       <CountdownTimer targetDate={campaign.draw_date} className="scale-100 md:scale-150 p-4 md:p-8" />
                     </div>
                   )}
@@ -63,7 +63,7 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
 
                 <div className="flex flex-wrap items-center justify-center gap-6 pt-8">
                   <Link to={`/campanha/${campaign.slug || campaign.id}`}>
-                    <Button size="lg" className="h-14 md:h-20 rounded-2xl md:rounded-[2rem] px-8 md:px-12 gap-2 md:gap-4 text-sm md:text-xl font-black uppercase italic tracking-widest glow-primary border-light-path border-light-always shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)] border-[#22c55e]/30 relative z-10">
+                    <Button size="lg" className="h-14 md:h-20 rounded-2xl px-8 md:px-12 gap-2 md:gap-4 text-sm md:text-xl font-black uppercase italic tracking-widest glow-primary border-light-path border-light-always shadow-[0_0_50px_rgba(var(--primary-rgb),0.4)] border-[#22c55e]/30 relative z-10">
                       RESGATAR MEU PRÊMIO <ArrowRight className="h-6 w-6" />
                     </Button>
                   </Link>
