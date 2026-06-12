@@ -28,7 +28,7 @@ import TicketGrid from "@/components/TicketGrid";
 import PurchaseAnimation from "@/components/PurchaseAnimation";
 import CampaignPricing from "@/components/CampaignPricing";
 import Roulette from "@/components/Roulette";
-import MysteryBox from "@/components/MysteryBox";
+import MysteryBox, { PrizeIcon } from "@/components/MysteryBox";
 import CampaignPublicInfo from "@/components/CampaignPublicInfo";
 import CountdownTimer from "@/components/CountdownTimer";
 import LiveNotifications from "@/components/LiveNotifications";
@@ -1064,42 +1064,32 @@ const CampaignDetail = () => {
         );
 
       case 'roulette_footer':
-        return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-          <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
+        return campaign.roulette_enabled && (
+          <div key={section} className="mt-8 mb-12 bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-6">
             <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Prêmios da <span className="text-animate-gradient">Roleta</span></h2>
-              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Benefícios exclusivos para quem adquire cotas desta ação!</p>
+              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">Roleta <span className="text-animate-gradient">da Sorte</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Tente sua sorte e ganhe prêmios instantâneos!</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {roulettePrizes.map((p, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border/50">
-                  <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
-                      <RotateCw className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-black uppercase tracking-tight text-foreground">{p.label}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
-                    </div>
-                  </div>
-                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase">BENEFÍCIO</Badge>
-                </div>
-              ))}
-            </div>
-
+            <Roulette 
+              prizes={roulettePrizes} 
+              campaign={campaign} 
+              availableSpins={userSpinsAvailable}
+              onSpinStart={() => setIsGameInProgress(true)}
+              onSpinComplete={() => setIsGameInProgress(false)}
+            />
           </div>
         );
 
       case 'scratch_footer':
         return campaign?.scratch_cards_enabled && (
-          <div key={section} className="mt-12 mb-20">
-             <div className="flex flex-col items-center text-center mb-8">
+          <div key={section} className="mt-8 mb-12">
+             <div className="flex flex-col items-center text-center mb-6">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
-              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
+              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">Raspadinha <span className="text-animate-gradient">Premiada</span></h2>
               <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">
-                Tente ganhar prêmios reais raspando agora!
+                Raspe agora e ganhe prêmios na hora!
               </p>
             </div>
             <ScratchCard 
@@ -1118,6 +1108,114 @@ const CampaignDetail = () => {
             />
           </div>
         );
+
+      case 'mystery_box_footer':
+        return campaign?.mystery_box_enabled && (
+          <div key={section} className="mt-8 mb-12">
+            <div className="flex flex-col items-center text-center mb-6">
+              <Badge className="bg-purple-500/20 text-purple-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Itens Épicos</Badge>
+              <h2 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter">Caixas <span className="text-animate-gradient">Misteriosas</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">
+                Abra caixas e descubra prêmios incríveis!
+              </p>
+            </div>
+            <MysteryBox 
+              boxes={mysteryBoxes || []} 
+              campaignId={campaignId} 
+            />
+          </div>
+        );
+
+      case 'games_status':
+        return (campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
+          <div key={section} className="bg-card rounded-[2rem] p-6 border border-border shadow-sm space-y-6">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
+                <Gamepad2 className="h-4 w-4 text-primary" /> Jogos Disponíveis
+              </h3>
+              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Premiações Instantâneas</span>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {campaign.roulette_enabled && (
+                <div className="p-4 rounded-2xl bg-primary/5 border border-primary/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary">
+                        <RotateCw className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-black uppercase italic">Roleta</span>
+                    </div>
+                    <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black">{campaign.roulette_available_count || 0} DISP.</Badge>
+                  </div>
+                  <div className="space-y-2">
+                    {roulettePrizes && roulettePrizes.length > 0 ? (
+                      roulettePrizes.slice(0, 3).map((p, i) => (
+                        <div key={i} className="flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase">
+                          <span>{p.label}</span>
+                          <span className="text-primary/70">Disponível</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-[9px] text-muted-foreground italic">Prêmios em breve...</p>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {campaign.scratch_cards_enabled && (
+                <div className="p-4 rounded-2xl bg-amber-500/5 border border-amber-500/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500">
+                        <Sparkles className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-black uppercase italic">Raspadinha</span>
+                    </div>
+                    <Badge className="bg-amber-500/20 text-amber-500 border-none text-[8px] font-black">{campaign.scratch_cards_available_count || 0} DISP.</Badge>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase">
+                      <span>Prêmios no PIX</span>
+                      <span className="text-amber-500/70">Disponível</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase">
+                      <span>Giros Grátis</span>
+                      <span className="text-amber-500/70">Disponível</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {campaign.mystery_box_enabled && (
+                <div className="p-4 rounded-2xl bg-purple-500/5 border border-purple-500/20 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-8 w-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-500">
+                        <Gift className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-black uppercase italic">Caixas</span>
+                    </div>
+                    <Badge className="bg-purple-500/20 text-purple-500 border-none text-[8px] font-black">{campaign.mystery_box_available_count || 0} DISP.</Badge>
+                  </div>
+                  <div className="space-y-2">
+                    {mysteryBoxes && mysteryBoxes.length > 0 ? (
+                      mysteryBoxes.slice(0, 3).map((box, i) => (
+                        <div key={i} className="flex items-center justify-between text-[9px] font-bold text-muted-foreground uppercase">
+                          <span>{box.name}</span>
+                          <span className="text-purple-500/70">{box.rarity}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-[9px] text-muted-foreground italic">Caixas em breve...</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        );
+
 
       case 'events':
         return luckyHours && luckyHours.length > 0 && (
@@ -1433,7 +1531,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "games_status", "purchase", "live_draw", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "mystery_box_footer"];
 
   return (
     <div className="min-h-screen bg-background">
