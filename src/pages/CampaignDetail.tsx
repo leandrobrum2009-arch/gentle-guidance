@@ -527,7 +527,7 @@ const CampaignDetail = () => {
 
               {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="space-y-4">
-                  {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
+                  {campaign.roulette_enabled && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -536,7 +536,7 @@ const CampaignDetail = () => {
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Combos</span>
                       </div>
                       <div className="flex flex-col gap-2">
-                        {(campaign.roulette_rules as any[]).map((rule, i) => (
+                        {((campaign.roulette_rules as any[]) || []).map((rule, i) => (
                           <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] group hover:scale-[1.02] transition-transform">
                             <span className="text-xs font-black text-foreground uppercase italic tracking-tight">A partir de {rule.min_tickets} títulos</span>
                             <div className="flex items-center gap-3">
@@ -547,11 +547,25 @@ const CampaignDetail = () => {
                             </div>
                           </div>
                         ))}
+                        {((campaign.prize_rules as any[]) || []).filter((r: any) => r.type === 'roulette' && r.active).map((rule, i) => (
+                          <div key={`prize-${i}`} className="flex items-center justify-between p-4 rounded-2xl bg-primary/10 border border-primary/20 shadow-[0_0_15px_rgba(var(--primary-rgb),0.1)] group hover:scale-[1.02] transition-transform">
+                            <span className="text-xs font-black text-foreground uppercase italic tracking-tight">{rule.label || `Combo ${rule.min_tickets} títulos`}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{rule.reward_quantity} chance(s) de contemplação</span>
+                              <div className="h-8 w-8 rounded-lg bg-primary/20 flex items-center justify-center text-primary group-hover:rotate-12 transition-transform">
+                                <RotateCw className="h-4 w-4" />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {(!campaign.roulette_rules || (campaign.roulette_rules as any[]).length === 0) && (!campaign.prize_rules || (campaign.prize_rules as any[]).filter((r: any) => r.type === 'roulette').length === 0) && (
+                          <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Nenhuma regra configurada ainda.</p>
+                        )}
                       </div>
                     </div>
                   )}
 
-                  {campaign.scratch_cards_enabled && campaign.scratch_card_rules && (campaign.scratch_card_rules as any[]).length > 0 && (
+                  {campaign.scratch_cards_enabled && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -560,7 +574,7 @@ const CampaignDetail = () => {
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Combos</span>
                       </div>
                       <div className="flex flex-col gap-2">
-                        {(campaign.scratch_card_rules as any[]).map((rule, i) => (
+                        {((campaign.scratch_card_rules as any[]) || []).map((rule, i) => (
                           <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] group hover:scale-[1.02] transition-transform">
                             <span className="text-xs font-black text-foreground uppercase italic tracking-tight">A partir de {rule.min_tickets} títulos</span>
                             <div className="flex items-center gap-3">
@@ -571,11 +585,25 @@ const CampaignDetail = () => {
                             </div>
                           </div>
                         ))}
+                        {((campaign.prize_rules as any[]) || []).filter((r: any) => r.type === 'scratch_card' && r.active).map((rule, i) => (
+                          <div key={`prize-${i}`} className="flex items-center justify-between p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 shadow-[0_0_15px_rgba(245,158,11,0.1)] group hover:scale-[1.02] transition-transform">
+                            <span className="text-xs font-black text-foreground uppercase italic tracking-tight">{rule.label || `Combo ${rule.min_tickets} títulos`}</span>
+                            <div className="flex items-center gap-3">
+                              <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{rule.reward_quantity} chance(s) de contemplação</span>
+                              <div className="h-8 w-8 rounded-lg bg-amber-500/20 flex items-center justify-center text-amber-500 group-hover:rotate-12 transition-transform">
+                                <Sparkles className="h-4 w-4" />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                        {(!campaign.scratch_card_rules || (campaign.scratch_card_rules as any[]).length === 0) && (!campaign.prize_rules || (campaign.prize_rules as any[]).filter((r: any) => r.type === 'scratch_card').length === 0) && (
+                          <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Nenhuma regra configurada ainda.</p>
+                        )}
                       </div>
                     </div>
                   )}
 
-                  {campaign.mystery_box_enabled && campaign.prize_rules && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
+                  {campaign.mystery_box_enabled && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -584,9 +612,9 @@ const CampaignDetail = () => {
                         <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Combos</span>
                       </div>
                       <div className="flex flex-col gap-2">
-                        {(campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').map((rule, i) => (
+                        {((campaign.prize_rules as any[]) || []).filter((r: any) => r.type === 'mystery_box' && r.active).map((rule, i) => (
                           <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 shadow-[0_0_15px_rgba(168,85,247,0.1)] group hover:scale-[1.02] transition-transform">
-                            <span className="text-xs font-black text-foreground uppercase italic tracking-tight">A partir de {rule.min_tickets} títulos</span>
+                            <span className="text-xs font-black text-foreground uppercase italic tracking-tight">{rule.label || `Combo ${rule.min_tickets} títulos`}</span>
                             <div className="flex items-center gap-3">
                               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{rule.reward_quantity} chance(s) de contemplação</span>
                               <div className="h-8 w-8 rounded-lg bg-purple-500/20 flex items-center justify-center text-purple-500 group-hover:rotate-12 transition-transform">
@@ -595,6 +623,9 @@ const CampaignDetail = () => {
                             </div>
                           </div>
                         ))}
+                        {(!campaign.prize_rules || (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length === 0) && (
+                          <p className="text-[10px] text-muted-foreground italic text-center py-4 uppercase font-bold tracking-widest">Nenhuma regra configurada ainda.</p>
+                        )}
                       </div>
                     </div>
                   )}
