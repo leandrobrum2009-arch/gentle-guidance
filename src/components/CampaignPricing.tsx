@@ -80,7 +80,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                 isSelected
                   ? "border-primary bg-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] text-white scale-105 z-10"
                   : cn("border-primary/30 bg-card hover:border-primary/60 text-foreground shadow-sm", 
-                       bundle.is_popular && "animate-pulse border-primary/50 bg-primary/5 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]")
+                       bundle.is_popular && "border-primary/50 bg-primary/5 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]")
               )}
             >
               {/* Light sweep effect */}
