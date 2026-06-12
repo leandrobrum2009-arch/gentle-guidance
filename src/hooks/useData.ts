@@ -59,6 +59,8 @@ export interface Campaign {
   progress_text?: string | null;
   timer_end_date?: string | null;
   created_at: string;
+  live_stream_url?: string;
+  live_stream_enabled?: boolean;
   winners?: Winner[];
 }
 
