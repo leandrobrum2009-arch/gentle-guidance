@@ -779,7 +779,7 @@ const CampaignDetail = () => {
                             })}
                           </div>
                         </div>
-                    )}
+                      )}
 
                     {campaign.mystery_box_enabled && (
                       <Dialog onOpenChange={(open) => {
@@ -815,7 +815,7 @@ const CampaignDetail = () => {
                           </div>
                         </DialogContent>
                       </Dialog>
-                    </div>
+                    )}
 
                     {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
                       <Dialog onOpenChange={(open) => {
