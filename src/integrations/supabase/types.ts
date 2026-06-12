@@ -344,6 +344,7 @@ export type Database = {
           manual_numbers: boolean | null
           max_tickets: number | null
           min_tickets: number | null
+          mystery_box_available_count: number | null
           mystery_box_enabled: boolean | null
           payment_methods: Json | null
           price_bundles: Json | null
@@ -352,6 +353,7 @@ export type Database = {
           ranking_enabled: boolean | null
           ranking_prizes: Json | null
           regulations: string | null
+          roulette_available_count: number | null
           roulette_enabled: boolean | null
           roulette_free_tickets: number | null
           roulette_multiplier_max: number | null
@@ -361,6 +363,7 @@ export type Database = {
           sales_goal: number | null
           scratch_card_cost: number | null
           scratch_card_rules: Json | null
+          scratch_cards_available_count: number | null
           scratch_cards_enabled: boolean | null
           sections_order: Json | null
           show_instant_prizes: boolean | null
@@ -406,6 +409,7 @@ export type Database = {
           manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
+          mystery_box_available_count?: number | null
           mystery_box_enabled?: boolean | null
           payment_methods?: Json | null
           price_bundles?: Json | null
@@ -414,6 +418,7 @@ export type Database = {
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null
+          roulette_available_count?: number | null
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
@@ -423,6 +428,7 @@ export type Database = {
           sales_goal?: number | null
           scratch_card_cost?: number | null
           scratch_card_rules?: Json | null
+          scratch_cards_available_count?: number | null
           scratch_cards_enabled?: boolean | null
           sections_order?: Json | null
           show_instant_prizes?: boolean | null
@@ -468,6 +474,7 @@ export type Database = {
           manual_numbers?: boolean | null
           max_tickets?: number | null
           min_tickets?: number | null
+          mystery_box_available_count?: number | null
           mystery_box_enabled?: boolean | null
           payment_methods?: Json | null
           price_bundles?: Json | null
@@ -476,6 +483,7 @@ export type Database = {
           ranking_enabled?: boolean | null
           ranking_prizes?: Json | null
           regulations?: string | null
+          roulette_available_count?: number | null
           roulette_enabled?: boolean | null
           roulette_free_tickets?: number | null
           roulette_multiplier_max?: number | null
@@ -485,6 +493,7 @@ export type Database = {
           sales_goal?: number | null
           scratch_card_cost?: number | null
           scratch_card_rules?: Json | null
+          scratch_cards_available_count?: number | null
           scratch_cards_enabled?: boolean | null
           sections_order?: Json | null
           show_instant_prizes?: boolean | null

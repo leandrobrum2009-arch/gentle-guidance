@@ -100,11 +100,17 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
    const fetchLatest = async () => {
      setFetching(true);
      try {
-       const { data, error } = await supabase.functions.invoke("federal-lottery");
+       const { data, error } = await supabase.functions.invoke("federal-lottery", {
+         body: { concurso: manualResult.concurso || undefined }
+       });
+       
        if (error) throw error;
+       if (data.error) throw new Error(data.error);
+
        toast({ title: `Concurso ${data.concurso} importado com sucesso!` });
        queryClient.invalidateQueries({ queryKey: ["federal-results"] });
      } catch (err: any) {
+       console.error("Fetch latest error:", err);
        toast({ title: "Erro ao buscar resultado", description: err.message, variant: "destructive" });
      } finally {
        setFetching(false);

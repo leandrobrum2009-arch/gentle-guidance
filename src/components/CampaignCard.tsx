@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy } from "lucide-react";
+import { Calendar, CheckCircle, Zap, Clock, ShieldCheck, TrendingUp, RotateCw, Star, Gift, Sparkles, Trophy, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -122,13 +122,34 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               {campaign.roulette_enabled && (
                 <div className="flex items-center gap-1 bg-primary/10 px-2 py-0.5 rounded-full border border-primary/20">
                   <RotateCw className="h-2.5 w-2.5 text-primary" />
-                  <span className="text-[8px] font-black uppercase text-primary">roleta disponíveis</span>
+                  <span className="text-[8px] font-black uppercase text-primary">
+                    {campaign.roulette_available_count && campaign.roulette_available_count > 0 
+                      ? `${campaign.roulette_available_count} roletas disponíveis`
+                      : 'roleta disponíveis'
+                    }
+                  </span>
                 </div>
               )}
               {campaign.mystery_box_enabled && (
                 <div className="flex items-center gap-1 bg-purple-500/10 px-2 py-0.5 rounded-full border border-purple-500/20">
-                  <Sparkles className="h-2.5 w-2.5 text-purple-500" />
-                  <span className="text-[8px] font-black uppercase text-purple-500">raspadinhas disponíveis</span>
+                  <Package className="h-2.5 w-2.5 text-purple-500" />
+                  <span className="text-[8px] font-black uppercase text-purple-500">
+                    {campaign.mystery_box_available_count && campaign.mystery_box_available_count > 0 
+                      ? `${campaign.mystery_box_available_count} caixas disponíveis`
+                      : 'caixas disponíveis'
+                    }
+                  </span>
+                </div>
+              )}
+              {campaign.scratch_cards_enabled && (
+                <div className="flex items-center gap-1 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                  <Sparkles className="h-2.5 w-2.5 text-amber-500" />
+                  <span className="text-[8px] font-black uppercase text-amber-500">
+                    {campaign.scratch_cards_available_count && campaign.scratch_cards_available_count > 0 
+                      ? `${campaign.scratch_cards_available_count} raspadinhas disponíveis`
+                      : 'raspadinhas disponíveis'
+                    }
+                  </span>
                 </div>
               )}
             </div>
