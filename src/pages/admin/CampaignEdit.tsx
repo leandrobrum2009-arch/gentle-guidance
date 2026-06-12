@@ -45,6 +45,9 @@ interface CampaignForm {
   fake_progress_enabled: boolean;
   fake_progress_percentage: number;
   progress_text: string;
+  mystery_box_available_count: number;
+  roulette_available_count: number;
+  scratch_cards_available_count: number;
 }
 
 
