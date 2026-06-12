@@ -36,7 +36,7 @@ const CampaignLiveDraw = ({ campaign }: CampaignLiveDrawProps) => {
 
   const embedUrl = getYoutubeEmbedUrl(campaign?.live_stream_url);
 
-  if (!campaign?.live_stream_url && !lotteryResult && !campaign?.federal_lottery_draw) {
+  if (!lotteryResult && !campaign?.federal_lottery_draw && !campaign?.concurso) {
     return null;
   }
 
