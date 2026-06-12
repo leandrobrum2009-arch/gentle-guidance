@@ -859,12 +859,12 @@ const CampaignDetail = () => {
                         </DialogContent>
                       </Dialog>
                     )}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
-          </div>
-        );
+          );
 
       case 'live_stream':
         return (
