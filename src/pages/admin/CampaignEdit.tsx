@@ -119,6 +119,9 @@ export default function AdminCampaignEdit() {
       ranking_prizes: (data.ranking_prizes as any[]) ?? [],
       prize_rules: (data.prize_rules as any[]) ?? [],
       progress_text: data.progress_text ?? "",
+      mystery_box_available_count: data.mystery_box_available_count ?? 0,
+      roulette_available_count: data.roulette_available_count ?? 0,
+      scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as unknown as CampaignForm);
     setLoading(false);
