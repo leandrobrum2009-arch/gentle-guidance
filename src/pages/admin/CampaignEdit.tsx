@@ -313,22 +313,22 @@ export default function AdminCampaignEdit() {
           <Button onClick={save} disabled={saving}>{saving && <Loader2 className="mr-2 animate-spin h-4 w-4" />} Salvar</Button>
         </div>
 
-        <Tabs defaultValue="general">
-          <TabsList className="w-full justify-start bg-card border h-14 rounded-2xl p-1 overflow-x-auto">
-            <TabsTrigger value="general" className="rounded-xl px-6 gap-2"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
-            <TabsTrigger value="pricing" className="rounded-xl px-6 gap-2"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
-            <TabsTrigger value="media" className="rounded-xl px-6 gap-2"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
-            <TabsTrigger value="prizes" className="rounded-xl px-6 gap-2"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
-            <TabsTrigger value="lucky_hour" className="rounded-xl px-6 gap-2"><Clock className="h-4 w-4" /> Hora Premiada</TabsTrigger>
+        <Tabs defaultValue="general" className="w-full">
+          <TabsList className="w-full justify-start bg-card border h-auto min-h-14 rounded-2xl p-1.5 flex flex-wrap lg:flex-nowrap overflow-x-auto overflow-y-hidden no-scrollbar">
+            <TabsTrigger value="general" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
+            <TabsTrigger value="pricing" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
+            <TabsTrigger value="media" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
+            <TabsTrigger value="prizes" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
+            <TabsTrigger value="lucky_hour" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Clock className="h-4 w-4" /> Hora Premiada</TabsTrigger>
             {features?.roulette_enabled || features?.scratch_cards_enabled ? (
-              <TabsTrigger value="engagement" className="rounded-xl px-6 gap-2"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+              <TabsTrigger value="engagement" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
             ) : null}
-            <TabsTrigger value="success_flow" className="rounded-xl px-6 gap-2"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
+            <TabsTrigger value="success_flow" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
             {features?.page_editing_enabled && (
-              <TabsTrigger value="layout" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
+              <TabsTrigger value="layout" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
             )}
             {userRole === 'master' && (
-              <TabsTrigger value="settings" className="rounded-xl px-6 gap-2"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
             )}
           </TabsList>
 
