@@ -130,6 +130,19 @@ const CampaignDetail = () => {
 
   const handleToggleTicket = (number: string) => setSelectedTickets(prev => prev.includes(number) ? prev.filter(n => n !== number) : [...prev, number]);
 
+  const handlePaymentSuccess = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
+    queryClient.invalidateQueries({ queryKey: ["campaign"] });
+  }, [queryClient]);
+
+  const handleOpenChange = useCallback((open: boolean) => {
+    setIsPaymentModalOpen(open);
+    if (!open) {
+      setSearchParams({}, { replace: true });
+      setCurrentOrderId(null);
+    }
+  }, [setSearchParams]);
+
   const handleBuy = async (quantityOrNumbers: number | string[], isUpsell = false) => {
     if (!user) { setPendingPurchase(quantityOrNumbers); setIsQuickRegisterOpen(true); return; }
     setIsPurchasing(true);
@@ -258,13 +271,7 @@ const CampaignDetail = () => {
       <QuickRegisterDialog isOpen={isQuickRegisterOpen} onOpenChange={setIsQuickRegisterOpen} onSuccess={() => { if (pendingPurchase) handleBuy(pendingPurchase); }} />
       <PaymentModal 
         isOpen={isPaymentModalOpen} 
-        onOpenChange={(open) => {
-          setIsPaymentModalOpen(open);
-          if (!open) {
-            setSearchParams({}, { replace: true });
-            setCurrentOrderId(null);
-          }
-        }} 
+        onOpenChange={handleOpenChange} 
         orderId={currentOrderId || ""} 
         onPaymentSuccess={handlePaymentSuccess}
         onBuyMore={(qty) => handleBuy(qty, true)}
