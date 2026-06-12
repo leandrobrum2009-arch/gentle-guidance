@@ -862,8 +862,6 @@ const CampaignDetail = () => {
                   </div>
                 )}
               </div>
-
-            </div>
           </div>
         );
 
