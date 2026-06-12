@@ -860,8 +860,9 @@ const CampaignDetail = () => {
                       </Dialog>
                     )}
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
             </div>
           </div>
         );
