@@ -1402,6 +1402,13 @@ export default function AdminCampaignEdit() {
                     <Label>Link do Sorteio ao Vivo (YouTube)</Label>
                     <Input value={form.live_stream_url} onChange={(e) => set("live_stream_url", e.target.value)} placeholder="https://www.youtube.com/watch?v=..." />
                   </div>
+                  <div className="flex items-center justify-between p-4 bg-secondary/50 rounded-xl border border-border">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Habilitar Live Stream</Label>
+                      <p className="text-[11px] text-muted-foreground">Exibir player de vídeo na campanha</p>
+                    </div>
+                    <Switch checked={form.live_stream_enabled} onCheckedChange={(v) => set("live_stream_enabled", v)} />
+                  </div>
 
                   <div className="space-y-2">
                     <Label>Mínimo de Cotas por Pedido</Label>
