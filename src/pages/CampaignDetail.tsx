@@ -1310,7 +1310,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "steps", "progress", "purchase", "live_stream", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
