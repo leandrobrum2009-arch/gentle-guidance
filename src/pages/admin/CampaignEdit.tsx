@@ -596,14 +596,14 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="pricing" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm grid grid-cols-1 md:grid-cols-2 gap-6">
-               <div>
-                 <Label>Preço Unitário (R$)</Label>
-                 <Input type="number" step="0.01" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} className="mt-2" />
-               </div>
-               <div>
-                 <Label>Total de Bilhetes</Label>
-                 <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} className="mt-2" />
-               </div>
+                <div className="space-y-2 min-w-0">
+                  <Label>Preço Unitário (R$)</Label>
+                  <Input type="number" step="0.01" value={form.ticket_price} onChange={(e) => set("ticket_price", e.target.value)} className="mt-2" />
+                </div>
+                <div className="space-y-2 min-w-0">
+                  <Label>Total de Bilhetes</Label>
+                  <Input type="number" value={form.total_tickets} onChange={(e) => set("total_tickets", e.target.value)} className="mt-2" />
+                </div>
                <div className="md:col-span-2 space-y-4 pt-4 border-t">
                  <div className="flex items-center gap-2">
                    <div className="h-8 w-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-500">
@@ -737,7 +737,7 @@ export default function AdminCampaignEdit() {
                      </div>
                    )}
                    <div className="flex items-center gap-4">
-                     <div className="flex-1">
+                      <div className="flex-1 min-w-0">
                         <Input 
                           placeholder="Ou cole a URL da imagem aqui..." 
                           value={form.image_url} 
@@ -745,7 +745,7 @@ export default function AdminCampaignEdit() {
                         />
                      </div>
                      <Label className="cursor-pointer">
-                       <div className="flex items-center gap-2 px-4 h-10 rounded-xl bg-primary text-foreground font-bold text-sm transition-all hover:bg-primary/90">
+                       <div className="flex items-center gap-2 px-3 md:px-4 h-10 rounded-xl bg-primary text-foreground font-bold text-xs md:text-sm transition-all hover:bg-primary/90 whitespace-nowrap">
                          {uploading === 'cover' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                          Fazer Upload
                        </div>
