@@ -355,7 +355,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative overflow-x-hidden rounded-b-2xl md:rounded-b-3xl shadow-2xl border border-border/10">
+          <div key={section} className="w-full bg-black relative overflow-x-hidden shadow-2xl border border-border/10">
             <RaffleGallery 
               images={Array.from(new Set([
                 campaign.image_url || "",
