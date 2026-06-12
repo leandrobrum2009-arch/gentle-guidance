@@ -1129,6 +1129,41 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Gift className="h-5 w-5 text-primary" /> Quantidades Disponíveis (Regras Manuais)
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="space-y-2">
+                  <Label>Caixas Misteriosas Disponíveis</Label>
+                  <Input 
+                    type="number" 
+                    value={form.mystery_box_available_count} 
+                    onChange={(e) => set("mystery_box_available_count", parseInt(e.target.value) || 0)} 
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Total de caixas que podem ser abertas.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Giros de Roleta Disponíveis</Label>
+                  <Input 
+                    type="number" 
+                    value={form.roulette_available_count} 
+                    onChange={(e) => set("roulette_available_count", parseInt(e.target.value) || 0)} 
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Total de giros permitidos nesta campanha.</p>
+                </div>
+                <div className="space-y-2">
+                  <Label>Raspadinhas Disponíveis</Label>
+                  <Input 
+                    type="number" 
+                    value={form.scratch_cards_available_count} 
+                    onChange={(e) => set("scratch_cards_available_count", parseInt(e.target.value) || 0)} 
+                  />
+                  <p className="text-[10px] text-muted-foreground italic">Total de raspadinhas que podem ser usadas.</p>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex items-center gap-2 mb-6">
                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                    <Dices className="h-5 w-5" />
