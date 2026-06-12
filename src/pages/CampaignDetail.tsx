@@ -859,10 +859,11 @@ const CampaignDetail = () => {
                         </DialogContent>
                       </Dialog>
                     )}
-                    </div>
                   </div>
                 )}
               </div>
+            </div>
+          );
             </div>
           );
 
