@@ -1121,6 +1121,49 @@ export default function AdminCampaignEdit() {
           <TabsContent value="engagement" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
                <div className="flex items-center gap-2 mb-6">
+                 <div className="h-8 w-8 rounded-lg bg-destructive/10 flex items-center justify-center text-destructive">
+                   <Video className="h-5 w-5" />
+                 </div>
+                 <div className="flex-1">
+                   <h3 className="text-lg font-bold">Transmissão Ao Vivo (Live Stream)</h3>
+                   <p className="text-sm text-muted-foreground">Exiba um vídeo ao vivo do YouTube ou outro link direto na página da campanha.</p>
+                 </div>
+                 <Switch checked={form.live_stream_enabled} onCheckedChange={(v) => set("live_stream_enabled", v)} />
+               </div>
+               
+               {form.live_stream_enabled && (
+                 <div className="space-y-4">
+                   <div className="space-y-2">
+                     <Label className="flex items-center gap-2">
+                       Link da Transmissão (YouTube ou Direct)
+                       <TooltipProvider>
+                         <Tooltip>
+                           <TooltipTrigger asChild>
+                             <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+                           </TooltipTrigger>
+                           <TooltipContent>
+                             <p className="w-48 text-[10px]">Cole o link completo do vídeo do YouTube (ex: youtube.com/watch?v=...) ou um link de embed direto.</p>
+                           </TooltipContent>
+                         </Tooltip>
+                       </TooltipProvider>
+                     </Label>
+                     <div className="relative">
+                       <Input 
+                         placeholder="Ex: https://www.youtube.com/watch?v=ID_DO_VIDEO" 
+                         value={form.live_stream_url} 
+                         onChange={(e) => set("live_stream_url", e.target.value)} 
+                         className="pr-10"
+                       />
+                       <ExternalLink className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                     </div>
+                     <p className="text-[10px] text-muted-foreground italic">Dica: Use lives do YouTube para melhor compatibilidade com celulares.</p>
+                   </div>
+                 </div>
+               )}
+            </Card>
+
+            <Card className="p-6 rounded-2xl border-border shadow-sm">
+               <div className="flex items-center gap-2 mb-6">
                  <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                    <Dices className="h-5 w-5" />
                  </div>
