@@ -181,39 +181,43 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       </div>
 
       <div className="space-y-8">
-      {isCompact ? (
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-card transition-all group">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
-                  <Gift className="h-5 w-5" />
+        {isCompact ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-card transition-all group">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                    <Gift className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black uppercase tracking-tight text-foreground">Caixas Misteriosas</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">Abra caixas e ganhe prêmios</p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-xs font-black uppercase tracking-tight text-foreground">Caixas Misteriosas</p>
-                  <p className="text-[10px] font-medium text-muted-foreground">Abra caixas e ganhe prêmios</p>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-orange-500/10 text-orange-500 border-none text-[9px] font-black">{boxes.length} Opções</Badge>
+                  <ChevronRight className="h-4 w-4 text-slate-300" />
                 </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-5xl bg-zinc-950/95 border-white/10 backdrop-blur-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
+                  <Gift className="h-5 w-5 text-orange-500" /> Caixas <span className="text-orange-500">Misteriosas</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="py-6 overflow-y-auto max-h-[70vh] no-scrollbar">
+                {renderBoxes()}
               </div>
-              <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/10 text-orange-500 border-none text-[9px] font-black">{boxes.length} Opções</Badge>
-                <ChevronRight className="h-4 w-4 text-slate-300" />
-              </div>
-            </button>
-          </DialogTrigger>
-          <DialogContent className="max-w-5xl bg-zinc-950/95 border-white/10 backdrop-blur-xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
-                <Gift className="h-5 w-5 text-orange-500" /> Caixas <span className="text-orange-500">Misteriosas</span>
-              </DialogTitle>
-            </DialogHeader>
-            <div className="py-6 overflow-y-auto max-h-[70vh] no-scrollbar">
-              {renderBoxes()}
-            </div>
-          </DialogContent>
-        </Dialog>
-      ) : (
-        renderBoxes()
-      )}
+            </DialogContent>
+          </Dialog>
+        ) : (
+          renderBoxes()
+        )}
+      </div>
+    </div>
+  );
+};
        <AnimatePresence>
          {isOpening && selectedBox && (
            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
