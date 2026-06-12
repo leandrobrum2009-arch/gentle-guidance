@@ -64,6 +64,7 @@ export interface Campaign {
   mystery_box_available_count?: number;
   roulette_available_count?: number;
   scratch_cards_available_count?: number;
+  prize_rules?: any[];
   winners?: Winner[];
 }
 
