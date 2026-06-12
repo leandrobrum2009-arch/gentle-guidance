@@ -49,6 +49,14 @@ const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
+  const headerRef = React.useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (headerRef.current) {
+      const height = headerRef.current.offsetHeight;
+      document.documentElement.style.setProperty('--header-height', `${height}px`);
+    }
+  }, [siteSettings, scrolled, mobileOpen]);
 
   useEffect(() => {
     const handleBeforeInstallPrompt = (e: any) => {
