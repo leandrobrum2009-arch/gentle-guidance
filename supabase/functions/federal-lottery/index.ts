@@ -18,18 +18,48 @@ serve(async (req) => {
     )
 
     const { concurso } = await req.json().catch(() => ({}))
-    const url = concurso 
-      ? `https://loteriascaixa-api.herokuapp.com/api/federal/${concurso}`
-      : 'https://loteriascaixa-api.herokuapp.com/api/federal/latest'
-
-    console.log(`Fetching lottery result from: ${url}`)
-    const response = await fetch(url)
-    if (!response.ok) {
-      const errorText = await response.text()
-      throw new Error(`Failed to fetch lottery result: ${response.status} ${errorText}`)
-    }
     
-    const data = await response.json()
+    // Tentativa de múltiplas fontes se a principal falhar
+    let data;
+    let success = false;
+    
+    // Fonte 1: herokuapp (LoteriasCaixa API)
+    try {
+      const url = concurso 
+        ? `https://loteriascaixa-api.herokuapp.com/api/federal/${concurso}`
+        : 'https://loteriascaixa-api.herokuapp.com/api/federal/latest'
+        
+      console.log(`Trying Source 1: ${url}`)
+      const response = await fetch(url)
+      if (response.ok) {
+        data = await response.json()
+        success = true
+      }
+    } catch (e) {
+      console.error('Source 1 failed:', e.message)
+    }
+
+    // Fonte 2 (Backup): Guia Loterias se a 1 falhar
+    if (!success) {
+      try {
+        const url = concurso 
+          ? `https://loterias-caixa-api.onrender.com/api/federal/${concurso}`
+          : 'https://loterias-caixa-api.onrender.com/api/federal/latest'
+          
+        console.log(`Trying Source 2 (Backup): ${url}`)
+        const response = await fetch(url)
+        if (response.ok) {
+          data = await response.json()
+          success = true
+        }
+      } catch (e) {
+        console.error('Source 2 failed:', e.message)
+      }
+    }
+
+    if (!success) {
+      throw new Error('Todas as fontes de dados da Loteria Federal falharam ou o concurso não foi encontrado.')
+    }
     
     // Map prizes to our format
     const premios = data.premios.map((p: any) => ({
