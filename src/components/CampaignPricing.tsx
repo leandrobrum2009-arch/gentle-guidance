@@ -80,7 +80,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                 isSelected
                   ? "border-primary bg-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] text-white scale-105 z-10"
                   : cn("border-primary/30 bg-card hover:border-primary/60 text-foreground shadow-sm", 
-                       bundle.is_popular && "animate-blink border-primary/50 shadow-[0_0_15px_rgba(var(--primary-rgb),0.2)]")
+                       bundle.is_popular && "animate-pulse border-primary/50 bg-primary/5 shadow-[0_0_15px_rgba(var(--primary-rgb),0.3)]")
               )}
             >
               {/* Light sweep effect */}
@@ -108,6 +108,15 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
 
               <span className="text-xl sm:text-2xl font-black italic tracking-tighter mt-1">+{bundle.quantity}</span>
               <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest opacity-70">Cotas</span>
+              
+              {bundle.label && (
+                <span className={cn(
+                  "mt-1 text-[7px] font-black uppercase tracking-tighter px-2 py-0.5 rounded-full",
+                  isSelected ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
+                )}>
+                  {bundle.label}
+                </span>
+              )}
               
               <div className={cn(
                 "mt-2 text-xs sm:text-sm font-black italic",
