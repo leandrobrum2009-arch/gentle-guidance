@@ -307,7 +307,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
               <DialogHeader>
                 <DialogTitle className="text-xl font-black italic uppercase italic tracking-tighter flex items-center gap-2">
                   <Info className="h-5 w-5 text-primary" />
-                  Regras da Roleta
+                  Regras e Prêmios de Engajamento
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-6 py-4">
