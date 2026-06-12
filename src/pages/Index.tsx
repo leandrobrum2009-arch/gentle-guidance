@@ -288,7 +288,7 @@ const Index = () => {
        </div>
 
        <Header />
-        <div className="h-20 md:h-28" />
+        
 
 
        {loadingCampaigns ? (

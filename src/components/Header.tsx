@@ -12,7 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
 
 const navLinks = [
-  { label: "Início", href: "/" },
+  
   { label: "Campanhas", href: "/campanhas" },
   { label: "Ganhadores", href: "/ganhadores" },
   { label: "Federal", href: "/resultado-federal" },
@@ -142,7 +142,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-transparent'}`}>
+    <header className={`sticky top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-background/95 backdrop-blur-md'}`}>
 
       <div className="flex flex-col w-full">
         <div className={`transition-all duration-500 flex items-center ${scrolled ? 'h-16' : 'h-20 md:h-24'}`}>

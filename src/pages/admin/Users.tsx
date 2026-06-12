@@ -149,6 +149,25 @@ export default function AdminUsers() {
         </div>
       </div>
 
+      <div className="mb-6 grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20">
+          <p className="text-[10px] font-black uppercase text-purple-500 mb-1">Dono / Master</p>
+          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Controle total do sistema, configurações e gestão de cargos.</p>
+        </div>
+        <div className="p-3 rounded-2xl bg-blue-500/10 border border-blue-500/20">
+          <p className="text-[10px] font-black uppercase text-blue-500 mb-1">Admin Total</p>
+          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Acesso a todos os recursos de gestão, exceto configurações avançadas.</p>
+        </div>
+        <div className="p-3 rounded-2xl bg-orange-500/10 border border-orange-500/20">
+          <p className="text-[10px] font-black uppercase text-orange-500 mb-1">Admin Restrito</p>
+          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Acesso limitado a funções específicas definidas pelo Master.</p>
+        </div>
+        <div className="p-3 rounded-2xl bg-secondary/50 border border-border">
+          <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Usuário Comum</p>
+          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Clientes que participam das rifas e compram bilhetes.</p>
+        </div>
+      </div>
+
       <Card className="border-border bg-card/50 backdrop-blur-xl">
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
