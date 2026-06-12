@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2 } from "lucide-react";
+import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -565,23 +565,53 @@ const ScratchCard = ({
         )}
       </div>
 
-      <div className="pt-4 border-t border-white/5 w-full flex justify-center gap-6">
-        <div className="flex flex-col items-center gap-1">
-          <Trophy className="h-4 w-4 text-primary opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Grandes Prêmios</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <Zap className="h-4 w-4 text-amber-500 opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Instantâneo</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <Gift className="h-4 w-4 text-secondary opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
+      <div className="pt-4 border-t border-white/5 w-full flex flex-col gap-4">
+        <div className="flex justify-center gap-6">
+          <div className="flex flex-col items-center gap-1">
+            <Trophy className="h-4 w-4 text-primary opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Grandes Prêmios</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Zap className="h-4 w-4 text-amber-500 opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Instantâneo</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Gift className="h-4 w-4 text-secondary opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
+          </div>
         </div>
       </div>
 
-      <div className="w-full mt-4 space-y-3 z-10">
-        <div className="flex items-center gap-2 px-1">
+      <div className="w-full mt-4 space-y-3 z-10 text-left">
+        {/* Campaign Reward Rules Section */}
+        {potentialPrizes && potentialPrizes.length > 0 && (
+          <div className="bg-white/5 p-4 rounded-2xl border border-white/10 space-y-3">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-primary" />
+              <span className="text-xs font-black uppercase tracking-widest text-white">REGRAS DE RECOMPENSA</span>
+            </div>
+            <div className="space-y-2">
+              <p className="text-[10px] text-white/60 font-medium italic">Ao comprar cotas nesta campanha, você pode desbloquear:</p>
+              <div className="grid grid-cols-1 gap-2">
+                <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <RotateCw className="h-3 w-3 text-primary" />
+                    <span className="text-[10px] font-bold text-white/80 uppercase">Giros de Roleta</span>
+                  </div>
+                  <span className="text-[9px] font-black text-primary italic uppercase tracking-tighter">Bônus Automático</span>
+                </div>
+                <div className="flex items-center justify-between p-2 rounded-xl bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2">
+                    <Gift className="h-3 w-3 text-purple-500" />
+                    <span className="text-[10px] font-bold text-white/80 uppercase">Itens Misteriosos</span>
+                  </div>
+                  <span className="text-[9px] font-black text-purple-500 italic uppercase tracking-tighter">Conforme Regulamento</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        <div className="flex items-center gap-2 px-1 pt-2">
           <History className="h-3 w-3 text-primary" />
           <span className="text-[10px] font-black uppercase tracking-widest text-white/60">Histórico Recente</span>
         </div>

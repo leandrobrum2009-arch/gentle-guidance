@@ -1073,9 +1073,12 @@ export default function AdminCampaignEdit() {
                             <SelectTrigger className="w-[200px]">
                               <SelectValue placeholder="Tipo de Regra" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="greater_smaller">Maior e Menor Cota</SelectItem>
-                            </SelectContent>
+                             <SelectContent>
+                               <SelectItem value="greater_smaller">Maior e Menor Cota</SelectItem>
+                               <SelectItem value="mystery_box">Caixas Misteriosas</SelectItem>
+                               <SelectItem value="roulette">Giros de Roleta</SelectItem>
+                               <SelectItem value="scratch_card">Raspadinhas</SelectItem>
+                             </SelectContent>
                           </Select>
                           <Switch 
                             checked={rule.active} 
@@ -1115,6 +1118,37 @@ export default function AdminCampaignEdit() {
                               onChange={(e) => {
                                 const n = [...form.prize_rules];
                                 n[i].prize_smaller = e.target.value;
+                                set("prize_rules", n);
+                              }} 
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {(rule.type === 'mystery_box' || rule.type === 'roulette' || rule.type === 'scratch_card') && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-xs font-bold">Mínimo de Cotas para Liberar</Label>
+                            <Input 
+                              type="number"
+                              placeholder="Ex: 50" 
+                              value={(rule as any).min_tickets || ""} 
+                              onChange={(e) => {
+                                const n = [...form.prize_rules];
+                                (n[i] as any).min_tickets = parseInt(e.target.value) || 0;
+                                set("prize_rules", n);
+                              }} 
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-xs font-bold">Quantidade Liberada</Label>
+                            <Input 
+                              type="number"
+                              placeholder="Ex: 1" 
+                              value={(rule as any).reward_quantity || ""} 
+                              onChange={(e) => {
+                                const n = [...form.prize_rules];
+                                (n[i] as any).reward_quantity = parseInt(e.target.value) || 0;
                                 set("prize_rules", n);
                               }} 
                             />

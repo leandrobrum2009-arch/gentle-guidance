@@ -170,40 +170,52 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
   );
 
   return (
-    <div className="space-y-8">
-      {isCompact ? (
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-white transition-all group">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
-                  <Gift className="h-5 w-5" />
+    <div className="space-y-6">
+      {/* Dynamic Rule Legend (Admin Configured) */}
+      <div className="bg-orange-500/5 p-4 rounded-2xl border border-orange-500/10 mb-2">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="h-4 w-4 text-orange-500" />
+          <span className="text-xs font-black uppercase tracking-widest text-orange-500">Prêmios de Engajamento</span>
+        </div>
+        <p className="text-[10px] text-muted-foreground font-medium uppercase italic">Confira as regras e quantidades disponíveis para esta campanha no botão de giros.</p>
+      </div>
+
+      <div className="space-y-8">
+        {isCompact ? (
+          <Dialog>
+            <DialogTrigger asChild>
+              <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-card transition-all group">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-xl bg-orange-500/10 flex items-center justify-center text-orange-500 group-hover:scale-110 transition-transform">
+                    <Gift className="h-5 w-5" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-xs font-black uppercase tracking-tight text-foreground">Caixas Misteriosas</p>
+                    <p className="text-[10px] font-medium text-muted-foreground">Abra caixas e ganhe prêmios</p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <p className="text-xs font-black uppercase tracking-tight text-foreground">Caixas Misteriosas</p>
-                  <p className="text-[10px] font-medium text-muted-foreground">Ganhe prêmios abrindo caixas</p>
+                <div className="flex items-center gap-2">
+                  <Badge className="bg-orange-500/10 text-orange-500 border-none text-[9px] font-black">{boxes.length} Opções</Badge>
+                  <ChevronRight className="h-4 w-4 text-slate-300" />
                 </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-5xl bg-zinc-950/95 border-white/10 backdrop-blur-xl">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
+                  <Gift className="h-5 w-5 text-orange-500" /> Caixas <span className="text-orange-500">Misteriosas</span>
+                </DialogTitle>
+              </DialogHeader>
+              <div className="py-6 overflow-y-auto max-h-[70vh] no-scrollbar">
+                {renderBoxes()}
               </div>
-              <div className="flex items-center gap-2">
-                <Badge className="bg-orange-500/10 text-orange-500 border-none text-[9px] font-black">{boxes.length} Opções</Badge>
-                <ChevronRight className="h-4 w-4 text-slate-300" />
-              </div>
-            </button>
-          </DialogTrigger>
-          <DialogContent className="max-w-5xl bg-zinc-950/95 border-white/10 backdrop-blur-xl">
-            <DialogHeader>
-              <DialogTitle className="text-xl font-black uppercase italic tracking-tighter text-white flex items-center gap-2">
-                <Gift className="h-5 w-5 text-orange-500" /> Caixas <span className="text-orange-500">Misteriosas</span>
-              </DialogTitle>
-            </DialogHeader>
-            <div className="py-6 overflow-y-auto max-h-[70vh] no-scrollbar">
-              {renderBoxes()}
-            </div>
-          </DialogContent>
-        </Dialog>
-      ) : (
-        renderBoxes()
-      )}
+            </DialogContent>
+          </Dialog>
+        ) : (
+          renderBoxes()
+        )}
+      </div>
+
        <AnimatePresence>
          {isOpening && selectedBox && (
            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
@@ -273,10 +285,10 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
           </motion.div>
          )}
        </AnimatePresence>
-     </div>
-   );
- };
- 
+    </div>
+  );
+};
+
  const OpeningAnimation = ({ prize, potentialPrizes, rarityColor, onComplete, playSound }: any) => {
    const [stage, setStage] = useState<'shake' | 'roll' | 'reveal'>('shake');
    useEffect(() => {

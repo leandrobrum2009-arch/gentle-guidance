@@ -307,7 +307,7 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
               <DialogHeader>
                 <DialogTitle className="text-xl font-black italic uppercase italic tracking-tighter flex items-center gap-2">
                   <Info className="h-5 w-5 text-primary" />
-                  Regras da Roleta
+                  Regras e Prêmios de Engajamento
                 </DialogTitle>
               </DialogHeader>
               <div className="space-y-6 py-4">
@@ -329,6 +329,41 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
                   )}
                   <p className="text-[11px] text-white/40 italic mt-2">Os giros são liberados após a confirmação do pagamento.</p>
                 </div>
+                
+                {campaign.prize_rules && campaign.prize_rules.length > 0 && (
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-black uppercase text-amber-500 tracking-widest italic">Prêmios de Engajamento</h4>
+                    <div className="space-y-2">
+                      {campaign.prize_rules.map((rule: any, i: number) => {
+                        if (!rule.active) return null;
+                        let ruleText = "";
+                        let ruleIcon = <Trophy className="h-3 w-3 text-amber-500" />;
+                        
+                        if (rule.type === 'greater_smaller') {
+                          ruleText = `Maior Cota: ${rule.prize_greater} | Menor Cota: ${rule.prize_smaller}`;
+                        } else if (rule.type === 'mystery_box') {
+                          ruleText = `Ganhe ${rule.reward_quantity} Caixa(s) Misteriosa(s) ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <Gift className="h-3 w-3 text-purple-500" />;
+                        } else if (rule.type === 'roulette') {
+                          ruleText = `Ganhe ${rule.reward_quantity} Giro(s) de Roleta ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <RotateCw className="h-3 w-3 text-primary" />;
+                        } else if (rule.type === 'scratch_card') {
+                          ruleText = `Ganhe ${rule.reward_quantity} Raspadinha(s) ao comprar ${rule.min_tickets} cotas`;
+                          ruleIcon = <Sparkles className="h-3 w-3 text-amber-500" />;
+                        }
+                        
+                        return (
+                          <div key={i} className="bg-white/5 p-3 rounded-xl border border-white/10">
+                            <p className="text-xs text-white/70 leading-relaxed flex items-center gap-2">
+                              {ruleIcon}
+                              {ruleText}
+                            </p>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
                 
                 <div className="space-y-3">
                   <h4 className="text-sm font-black uppercase text-primary tracking-widest italic">Multiplicadores</h4>

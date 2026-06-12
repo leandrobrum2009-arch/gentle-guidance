@@ -642,7 +642,7 @@ const CampaignDetail = () => {
                       )}
                     </div>
 
-                    {campaign.roulette_enabled && (
+                    {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
                       <Dialog onOpenChange={(open) => {
                         if (!open && isGameInProgress) return;
                       }}>
@@ -653,8 +653,14 @@ const CampaignDetail = () => {
                                 <RotateCw className="h-5 w-5" />
                               </div>
                               <div className="text-left">
-                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Gire a roleta e ganhe prêmios</p>
-                                <p className="text-[10px] font-medium text-muted-foreground">Tente sua sorte agora</p>
+                                <p className="text-xs font-black uppercase tracking-tight text-foreground">
+                                  {campaign.roulette_enabled ? 'Gire a roleta e ganhe prêmios' : 'Prêmios de Engajamento'}
+                                </p>
+                                <p className="text-[10px] font-medium text-muted-foreground">
+                                  {campaign.prize_rules && campaign.prize_rules.length > 0 
+                                    ? 'Confira as regras de bônus' 
+                                    : 'Tente sua sorte agora'}
+                                </p>
                               </div>
                             </div>
                             <div className="flex items-center gap-2">
