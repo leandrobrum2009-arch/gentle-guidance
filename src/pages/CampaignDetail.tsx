@@ -454,7 +454,7 @@ const CampaignDetail = () => {
       <SEO title={campaign.title} description={campaign.subtitle || ""} image={campaign.image_url || ""} type="article" />
       <Header />
       <div className="container px-4 md:px-6 pb-20 pt-[100px]">
-        <div className="flex flex-col gap-8 md:gap-12">{["gallery", "header", "purchase"].map((section) => renderSection(section))}</div>
+        <div className="flex flex-col gap-8 md:gap-12">{["gallery", "header", "purchase", "info"].map((section) => renderSection(section))}</div>
       </div>
       <PurchaseAnimation isVisible={showSuccess} onComplete={() => setShowSuccess(false)} />
       <QuickRegisterDialog isOpen={isQuickRegisterOpen} onOpenChange={setIsQuickRegisterOpen} onSuccess={() => { if (pendingPurchase) handleBuy(pendingPurchase); }} />
