@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import {
     Calendar, ArrowLeft, Trophy, Share2, Loader2, CheckCircle2,
     Gift, Zap, MousePointer2, Sparkles, BookOpen, Star, Crown, Ticket, RotateCw, Gamepad2, Activity,
-    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal, TrendingUp, ShieldCheck, Smartphone, Bell
+    ChevronDown, ChevronUp, Clock, Info, RefreshCw, Medal, TrendingUp, ShieldCheck, Smartphone, Bell, Video
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,7 @@ import { QuickRegisterDialog } from "@/components/QuickRegisterDialog";
 import { PaymentModal } from "@/components/PaymentModal";
 import { SEO } from "@/components/SEO";
 import CampaignLiveDraw from "@/components/CampaignLiveDraw";
+import LiveStreamPlayer from "@/components/LiveStreamPlayer";
 
 
 
@@ -684,6 +685,16 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'live_stream':
+        return (
+          <LiveStreamPlayer 
+            key={section}
+            url={campaign.live_stream_url}
+            enabled={campaign.live_stream_enabled}
+            campaignTitle={campaign.title}
+          />
+        );
+
       case 'description':
         return (
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-4 md:space-y-6">
@@ -1299,7 +1310,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "steps", "progress", "purchase", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "steps", "progress", "purchase", "live_stream", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
