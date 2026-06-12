@@ -1073,9 +1073,12 @@ export default function AdminCampaignEdit() {
                             <SelectTrigger className="w-[200px]">
                               <SelectValue placeholder="Tipo de Regra" />
                             </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="greater_smaller">Maior e Menor Cota</SelectItem>
-                            </SelectContent>
+                             <SelectContent>
+                               <SelectItem value="greater_smaller">Maior e Menor Cota</SelectItem>
+                               <SelectItem value="mystery_box">Caixas Misteriosas</SelectItem>
+                               <SelectItem value="roulette">Giros de Roleta</SelectItem>
+                               <SelectItem value="scratch_card">Raspadinhas</SelectItem>
+                             </SelectContent>
                           </Select>
                           <Switch 
                             checked={rule.active} 
