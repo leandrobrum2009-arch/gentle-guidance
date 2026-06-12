@@ -153,6 +153,39 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
   }, [status, isOpen]);
   */
 
+  const handleSimulatePayment = async () => {
+    if (!orderId || !order || isPayingWithBalance) return;
+    
+    setIsPayingWithBalance(true);
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Usuário não autenticado");
+
+      // We call pay_with_balance as a way to "approve" the order instantly in development
+      // This is a simulation for resgate (redemption) by tickets/balance
+      const { data: response, error } = await supabase.rpc('pay_with_balance', {
+        p_order_id: orderId,
+        p_user_id: userData.user.id
+      });
+
+      if (error) throw error;
+      const data = response as any;
+
+      if (data.success || data.message?.toLowerCase().includes('pago')) {
+        toast.success("Resgate simulado com sucesso!");
+        setStatus('paid');
+        fetchOrder();
+        onPaymentSuccess();
+      } else {
+        toast.error(data.message || "Erro na simulação");
+      }
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    } finally {
+      setIsPayingWithBalance(false);
+    }
+  };
+
   const copyPix = () => {
     if (order?.pix_code) {
       navigator.clipboard.writeText(order.pix_code);
