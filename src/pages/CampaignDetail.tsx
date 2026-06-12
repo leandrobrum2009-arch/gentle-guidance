@@ -695,6 +695,14 @@ const CampaignDetail = () => {
           />
         );
 
+      case 'live_draw':
+        return (
+          <CampaignLiveDraw 
+            key={section}
+            campaign={campaign}
+          />
+        );
+
       case 'description':
         return (
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-4 md:space-y-6">
