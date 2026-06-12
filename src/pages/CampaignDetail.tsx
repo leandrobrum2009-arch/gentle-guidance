@@ -354,7 +354,7 @@ const CampaignDetail = () => {
     switch (section) {
       case 'gallery':
         return (
-          <div key={section} className="w-full bg-black relative overflow-x-hidden mt-8 md:mt-12 rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-border/10">
+          <div key={section} className="w-full bg-black relative overflow-x-hidden rounded-[2rem] md:rounded-[3rem] shadow-2xl border border-border/10">
             <RaffleGallery 
               images={Array.from(new Set([
                 campaign.image_url || "",
@@ -385,7 +385,7 @@ const CampaignDetail = () => {
       case 'header':
         const drawDateFull = campaign.draw_date ? new Date(campaign.draw_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' }) : null;
         return (
-          <div key={section} className="flex flex-col gap-6 -mt-4">
+          <div key={section} className="flex flex-col gap-6 mt-6 md:mt-8">
             <div className="space-y-4">
               <div className="flex flex-wrap items-center gap-2">
                 <div className="flex flex-wrap items-center gap-2">
