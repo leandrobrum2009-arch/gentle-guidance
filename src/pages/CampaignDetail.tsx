@@ -1559,38 +1559,6 @@ const CampaignDetail = () => {
           </div>
         );
 
-      case 'steps':
-        return (
-          <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border border-border shadow-sm space-y-6 md:space-y-8 overflow-hidden">
-            <div className="flex flex-col items-center text-center gap-2">
-              <Badge className="bg-primary/10 text-primary border-none text-[8px] md:text-[10px] font-black uppercase tracking-widest">Simples e Rápido</Badge>
-              <h2 className="text-xl md:text-3xl font-black uppercase italic tracking-tighter">Veja como <span className="text-animate-gradient">Participar</span></h2>
-              <p className="text-[9px] md:text-xs text-muted-foreground uppercase font-bold tracking-widest max-w-xs md:max-w-md">Siga os passos abaixo e comece a concorrer agora mesmo.</p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 relative">
-              {[
-                { step: "01", title: "Escolha suas Cotas", desc: "Selecione a quantidade de números ou escolha seus números da sorte favoritos.", icon: MousePointer2 },
-                { step: "02", title: "Faça o Pagamento", desc: "Pague via PIX com segurança. O processamento é instantâneo e automático.", icon: Zap },
-                { step: "03", title: "Aguarde o Sorteio", desc: "Pronto! Agora é só torcer. Você pode acompanhar tudo aqui pelo painel.", icon: Trophy }
-              ].map((item, i) => (
-                <div key={i} className="relative flex flex-col items-center text-center gap-3 md:gap-4 p-5 md:p-6 rounded-3xl bg-secondary/20 border border-border/50 group hover:border-primary/30 transition-all duration-300 overflow-hidden">
-                  <div className="absolute -top-2 -left-2 h-7 w-10 md:h-8 md:w-12 bg-primary text-black font-black italic flex items-center justify-center rounded-xl rotate-[-10deg] shadow-lg group-hover:rotate-0 transition-transform text-[10px] md:text-xs">
-                    {item.step}
-                  </div>
-                  <div className="h-12 w-12 md:h-14 md:w-14 rounded-2xl bg-background border border-border flex items-center justify-center text-primary shadow-inner group-hover:scale-110 transition-transform duration-300 shrink-0">
-                    <item.icon className="h-5 w-5 md:h-6 md:w-6" />
-                  </div>
-                  <div className="space-y-1 md:space-y-2 min-w-0">
-                    <h3 className="text-xs md:text-sm font-black uppercase tracking-tight text-foreground truncate">{item.title}</h3>
-                    <p className="text-[10px] md:text-[11px] font-medium text-muted-foreground leading-relaxed line-clamp-2">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
       default:
         return null;
     }
