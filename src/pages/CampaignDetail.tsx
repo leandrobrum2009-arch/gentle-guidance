@@ -685,6 +685,16 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'live_stream':
+        return (
+          <LiveStreamPlayer 
+            key={section}
+            url={campaign.live_stream_url}
+            enabled={campaign.live_stream_enabled}
+            campaignTitle={campaign.title}
+          />
+        );
+
       case 'description':
         return (
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-4 md:space-y-6">
