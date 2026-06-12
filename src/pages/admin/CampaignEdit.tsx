@@ -81,6 +81,9 @@ const empty: CampaignForm = {
   fake_progress_enabled: false,
   fake_progress_percentage: 0,
   progress_text: "",
+  mystery_box_available_count: 0,
+  roulette_available_count: 0,
+  scratch_cards_available_count: 0,
 };
 
 
