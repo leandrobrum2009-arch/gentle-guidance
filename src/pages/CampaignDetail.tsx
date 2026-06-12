@@ -167,7 +167,6 @@ const CampaignDetail = () => {
         return (
           <div key={section} className="w-full bg-black relative overflow-x-hidden shadow-2xl border border-border/10">
             <RaffleGallery images={Array.from(new Set([campaign.image_url || "", ...(campaign.gallery_urls || [])])).filter(url => url !== "")} videoUrl={campaign.video_url} />
-            <CampaignLiveDraw campaign={campaign} />
           </div>
         );
       case 'header':
@@ -176,8 +175,33 @@ const CampaignDetail = () => {
             <div className="space-y-4">
               <h1 className="text-3xl md:text-5xl font-black uppercase italic tracking-tighter text-animate-gradient">{campaign.title}</h1>
               {campaign.subtitle && <p className="text-muted-foreground">{campaign.subtitle}</p>}
-              <Button className="h-12 px-8 rounded-2xl font-black uppercase bg-primary text-black" onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}>PARTICIPE AGORA <Zap className="ml-2 h-4 w-4" /></Button>
+              
+              <div className="flex flex-wrap items-center gap-4">
+                <Button className="h-12 px-8 rounded-2xl font-black uppercase bg-primary text-black" onClick={() => document.getElementById('purchase-tabs')?.scrollIntoView({ behavior: 'smooth' })}>
+                  PARTICIPE AGORA <Zap className="ml-2 h-4 w-4" />
+                </Button>
+                
+                {campaign.show_timer && campaign.timer_end_date && (
+                  <CountdownTimer targetDate={campaign.timer_end_date} />
+                )}
+              </div>
             </div>
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
+                <span className="text-muted-foreground">{progressData.text}% VENDIDO</span>
+                <span className="text-primary italic">QUASE LÁ!</span>
+              </div>
+              <div className="h-3 w-full bg-secondary rounded-full overflow-hidden border border-border/50">
+                <motion.div 
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progressData.bar}%` }}
+                  className="h-full bg-primary shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]"
+                />
+              </div>
+            </div>
+            
+            <CampaignLiveDraw campaign={campaign} />
           </div>
         );
       case 'purchase':
@@ -186,32 +210,200 @@ const CampaignDetail = () => {
             <div className="lg:col-span-2 space-y-6">
               <div className="bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden" id="purchase-tabs">
                 <Tabs defaultValue="auto" className="w-full">
-                  <TabsContent value="auto" className="p-6"><CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} /></TabsContent>
+                  <div className="px-6 pt-6 flex items-center justify-between border-b border-border/50">
+                    <TabsList className="bg-secondary/50 h-10 p-1">
+                      <TabsTrigger value="auto" className="text-[10px] font-black uppercase tracking-widest px-4">Compra Rápida</TabsTrigger>
+                      {canManualSelect && (
+                        <TabsTrigger value="manual" className="text-[10px] font-black uppercase tracking-widest px-4">Escolher Números</TabsTrigger>
+                      )}
+                    </TabsList>
+                  </div>
+                  <TabsContent value="auto" className="p-6">
+                    <CampaignPricing campaign={campaign} onBuy={handleBuy} isPurchasing={isPurchasing} />
+                  </TabsContent>
+                  {canManualSelect && (
+                    <TabsContent value="manual" className="p-6">
+                      <TicketGrid 
+                        totalTickets={campaign.total_tickets}
+                        soldTickets={soldTickets}
+                        selectedTickets={selectedTickets}
+                        onSelect={handleToggleTicket}
+                        luckyNumbers={luckyNumbersList}
+                      />
+                      <div className="mt-6">
+                        <Button 
+                          className="w-full h-14 rounded-2xl font-black uppercase italic tracking-tighter text-lg"
+                          disabled={selectedTickets.length === 0 || isPurchasing}
+                          onClick={() => handleBuy(selectedTickets)}
+                        >
+                          COMPRAR {selectedTickets.length} NÚMEROS
+                        </Button>
+                      </div>
+                    </TabsContent>
+                  )}
                 </Tabs>
               </div>
+
+              {allLuckyNumbers.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-xl bg-amber-500/10 flex items-center justify-center border border-amber-500/20">
+                      <Medal className="h-5 w-5 text-amber-500" />
+                    </div>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter">Cotas Premiadas</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {allLuckyNumbers.map((p: any, i) => {
+                      const isSold = luckyNumbersStatus[p.number];
+                      const winner = luckyWinners?.find(w => w.number === p.number);
+                      
+                      return (
+                        <div key={i} className={cn(
+                          "flex items-center justify-between p-4 rounded-2xl border transition-all",
+                          isSold ? "bg-secondary/30 border-border opacity-60" : "bg-amber-500/5 border-amber-500/20 shadow-sm"
+                        )}>
+                          <div className="flex items-center gap-3">
+                            <div className={cn(
+                              "h-10 w-10 rounded-xl flex items-center justify-center font-black italic",
+                              isSold ? "bg-muted text-muted-foreground" : "bg-amber-500 text-white shadow-lg shadow-amber-500/20"
+                            )}>
+                              {p.number}
+                            </div>
+                            <div>
+                              <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">Prêmio</p>
+                              <p className="text-xs font-bold text-foreground italic">{p.prize}</p>
+                            </div>
+                          </div>
+                          {winner ? (
+                            <div className="text-right">
+                              <p className="text-[8px] font-black uppercase text-muted-foreground">Ganhador</p>
+                              <p className="text-[10px] font-bold text-amber-500 uppercase">{winner.profiles?.name || "Ganhador"}</p>
+                            </div>
+                          ) : isSold ? (
+                            <Badge variant="outline" className="text-[8px] font-black uppercase h-5">Vendido</Badge>
+                          ) : (
+                            <Badge className="bg-emerald-500 text-white text-[8px] font-black uppercase h-5">Disponível</Badge>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {luckyHours && luckyHours.length > 0 && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 rounded-xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                      <Clock className="h-5 w-5 text-primary" />
+                    </div>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter">Hora Premiada</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {luckyHours.map((hour, i) => (
+                      <div key={i} className={cn(
+                        "flex items-center justify-between p-4 rounded-2xl border transition-all bg-primary/5 border-primary/20"
+                      )}>
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 rounded-xl bg-primary text-black flex items-center justify-center font-black italic">
+                            {hour.draw_time.split(':')[0]}h
+                          </div>
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest leading-none mb-1">{hour.title}</p>
+                            <p className="text-xs font-bold text-foreground italic">{hour.prize_description}</p>
+                          </div>
+                        </div>
+                        {hour.winner_name ? (
+                          <div className="text-right">
+                            <p className="text-[8px] font-black uppercase text-muted-foreground">Sorteado</p>
+                            <p className="text-[10px] font-bold text-primary uppercase">{hour.winner_name}</p>
+                          </div>
+                        ) : (
+                          <Badge variant="outline" className="text-[8px] font-black uppercase h-5 border-primary/30 text-primary">Agendado</Badge>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-6">
+              <UserRanking users={campaignRanking} stats={ticketStats} />
+              
+              <div className="bg-card rounded-3xl p-6 border border-border shadow-sm">
+                <h3 className="text-sm font-black uppercase flex items-center gap-2 mb-4"><Gamepad2 className="h-4 w-4 text-primary" /> Jogos Disponíveis</h3>
+                <div className="flex flex-col gap-4">
+                  {campaign.roulette_enabled && (
+                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10">
+                          <div className="flex items-center gap-3 text-left">
+                            <RotateCw className="h-5 w-5 text-primary" />
+                            <div>
+                              <p className="text-xs font-black uppercase">Roleta da Sorte</p>
+                              <p className="text-[9px] text-muted-foreground">Tente sua sorte agora</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-primary text-white text-[9px]">{userSpinsAvailable}</Badge>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-2xl p-0 bg-transparent border-none">
+                        <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} onSpinStart={() => setIsGameInProgress(true)} onSpinComplete={() => setIsGameInProgress(false)} />
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  {campaign.scratch_cards_enabled && (
+                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10">
+                          <div className="flex items-center gap-3 text-left">
+                            <Sparkles className="h-5 w-5 text-amber-500" />
+                            <div>
+                              <p className="text-xs font-black uppercase">Raspadinha Premiada</p>
+                              <p className="text-[9px] text-muted-foreground">Raspe e ganhe instantâneo</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-amber-500 text-white text-[9px]">{userScratchesAvailable}</Badge>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-md p-6 bg-zinc-950 border border-white/10 rounded-3xl">
+                        <ScratchCard potentialPrizes={[]} campaignId={campaignId} availableScratches={userScratchesAvailable} onStart={() => setIsGameInProgress(true)} onComplete={() => setIsGameInProgress(false)} />
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                  {campaign.mystery_box_enabled && (
+                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                      <DialogTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10">
+                          <div className="flex items-center gap-3 text-left">
+                            <Gift className="h-5 w-5 text-purple-500" />
+                            <div>
+                              <p className="text-xs font-black uppercase">Caixas Misteriosas</p>
+                              <p className="text-[9px] text-muted-foreground">Desbloqueie itens raros</p>
+                            </div>
+                          </div>
+                          <Badge className="bg-purple-500 text-white text-[9px]">NOVO</Badge>
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent className="max-w-4xl p-6 bg-zinc-950 border border-white/10 rounded-3xl">
+                        <MysteryBox boxes={mysteryBoxes || []} campaignId={campaignId} />
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
+              </div>
+
               {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
                 <div className="space-y-4">
                   {campaign.roulette_enabled && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm">
-                      <h3 className="text-sm font-black uppercase flex items-center gap-2 mb-4"><RotateCw className="h-4 w-4 text-primary" /> Roletas Instantâneas</h3>
+                      <h3 className="text-sm font-black uppercase flex items-center gap-2 mb-4"><RotateCw className="h-4 w-4 text-primary" /> Regras da Roleta</h3>
                       <div className="flex flex-col gap-2">
                         {((campaign.roulette_rules as any[]) || []).map((rule, i) => (
                           <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-primary/10 border border-primary/20">
-                            <span className="text-xs font-black">A partir de {rule.min_tickets} títulos</span>
+                            <span className="text-xs font-black">A partir de {rule.min_tickets} cotas</span>
                             <span className="text-[10px] font-bold">{rule.spins} chance(s)</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {campaign.scratch_cards_enabled && (
-                    <div className="bg-card rounded-3xl p-6 border border-border shadow-sm">
-                      <h3 className="text-sm font-black uppercase flex items-center gap-2 mb-4"><Sparkles className="h-4 w-4 text-amber-500" /> Raspadinhas</h3>
-                      <div className="flex flex-col gap-2">
-                        {((campaign.scratch_card_rules as any[]) || []).map((rule, i) => (
-                          <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20">
-                            <span className="text-xs font-black">A partir de {rule.min_tickets} títulos</span>
-                            <span className="text-[10px] font-bold">{rule.quantity} chance(s)</span>
                           </div>
                         ))}
                       </div>
@@ -219,41 +411,38 @@ const CampaignDetail = () => {
                   )}
                 </div>
               )}
-            </div>
-            <div className="space-y-6">
+              
               <div className="bg-card rounded-3xl p-6 border border-border shadow-sm">
-                <h3 className="text-sm font-black uppercase flex items-center gap-2 mb-4"><Gamepad2 className="h-4 w-4 text-primary" /> Jogos Disponíveis</h3>
-                <div className="flex flex-col gap-4">
-                  {campaign.roulette_enabled && (
-                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
-                      <DialogTrigger asChild><Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-primary/20 bg-primary/5 hover:bg-primary/10">
-                        <div className="flex items-center gap-3 text-left"><RotateCw className="h-5 w-5 text-primary" /><div><p className="text-xs font-black uppercase">Roleta da Sorte</p><p className="text-[9px] text-muted-foreground">Tente sua sorte agora</p></div></div>
-                        <Badge className="bg-primary text-white text-[9px]">{userSpinsAvailable}</Badge>
-                      </Button></DialogTrigger>
-                      <DialogContent className="max-w-2xl p-0 bg-transparent border-none"><Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable} onSpinStart={() => setIsGameInProgress(true)} onSpinComplete={() => setIsGameInProgress(false)} /></DialogContent>
-                    </Dialog>
-                  )}
-                  {campaign.scratch_cards_enabled && (
-                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
-                      <DialogTrigger asChild><Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-amber-500/20 bg-amber-500/5 hover:bg-amber-500/10">
-                        <div className="flex items-center gap-3 text-left"><Sparkles className="h-5 w-5 text-amber-500" /><div><p className="text-xs font-black uppercase">Raspadinha Premiada</p><p className="text-[9px] text-muted-foreground">Raspe e ganhe instantâneo</p></div></div>
-                        <Badge className="bg-amber-500 text-white text-[9px]">{userScratchesAvailable}</Badge>
-                      </Button></DialogTrigger>
-                      <DialogContent className="max-w-md p-6 bg-zinc-950 border border-white/10 rounded-3xl"><ScratchCard potentialPrizes={[]} campaignId={campaignId} availableScratches={userScratchesAvailable} onStart={() => setIsGameInProgress(true)} onComplete={() => setIsGameInProgress(false)} /></DialogContent>
-                    </Dialog>
-                  )}
-                  {campaign.mystery_box_enabled && (
-                    <Dialog onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
-                      <DialogTrigger asChild><Button variant="outline" className="w-full justify-between h-14 rounded-2xl border-purple-500/20 bg-purple-500/5 hover:bg-purple-500/10">
-                        <div className="flex items-center gap-3 text-left"><Gift className="h-5 w-5 text-purple-500" /><div><p className="text-xs font-black uppercase">Caixas Misteriosas</p><p className="text-[9px] text-muted-foreground">Desbloqueie itens raros</p></div></div>
-                        <Badge className="bg-purple-500 text-white text-[9px]">NOVO</Badge>
-                      </Button></DialogTrigger>
-                      <DialogContent className="max-w-4xl p-6 bg-zinc-950 border border-white/10 rounded-3xl"><MysteryBox boxes={mysteryBoxes || []} campaignId={campaignId} /></DialogContent>
-                    </Dialog>
-                  )}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-10 w-10 rounded-2xl bg-primary/10 flex items-center justify-center border border-primary/20">
+                    <ShieldCheck className="h-6 w-6 text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-black uppercase italic tracking-tighter">Compra Segura</h3>
+                    <p className="text-[9px] text-muted-foreground font-bold uppercase">Sua segurança em primeiro lugar</p>
+                  </div>
                 </div>
+                <ul className="space-y-3">
+                  {[
+                    "Pagamento via PIX com aprovação imediata",
+                    "Números gerados aleatoriamente pelo sistema",
+                    "Sorteios baseados na Loteria Federal",
+                    "Suporte humanizado via WhatsApp"
+                  ].map((item, i) => (
+                    <li key={i} className="flex items-start gap-3 text-[10px] font-bold uppercase tracking-tight text-foreground/80">
+                      <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
+          </div>
+        );
+      case 'info':
+        return (
+          <div key={section} className="mt-8">
+            <CampaignPublicInfo campaign={campaign} />
           </div>
         );
       default: return null;
