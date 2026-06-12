@@ -18,6 +18,10 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
   // Function to transform YouTube URL to embed URL if needed
   const getEmbedUrl = (link: string) => {
+    if (link.includes("youtube.com/live/")) {
+      const id = link.split("/live/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+    }
     if (link.includes("youtube.com/watch?v=")) {
       return link.replace("watch?v=", "embed/") + "?autoplay=1&mute=1";
     }

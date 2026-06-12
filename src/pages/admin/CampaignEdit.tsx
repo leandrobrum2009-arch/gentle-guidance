@@ -324,18 +324,18 @@ export default function AdminCampaignEdit() {
         </div>
 
         <Tabs defaultValue="general" className="w-full">
-          <TabsList className="w-full justify-start bg-card border h-auto min-h-14 rounded-2xl p-1.5 flex flex-wrap lg:flex-nowrap overflow-x-auto overflow-y-hidden no-scrollbar">
-            <TabsTrigger value="general" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
-            <TabsTrigger value="pricing" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
-            <TabsTrigger value="media" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
-            <TabsTrigger value="prizes" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
-            <TabsTrigger value="lucky_hour" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Clock className="h-4 w-4" /> Hora Premiada</TabsTrigger>
+          <TabsList className="w-full h-auto bg-card border rounded-2xl p-1.5 flex flex-wrap gap-1.5 justify-start md:justify-center overflow-visible">
+            <TabsTrigger value="general" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><BookOpen className="h-4 w-4" /> Geral</TabsTrigger>
+            <TabsTrigger value="pricing" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Ticket className="h-4 w-4" /> Valores</TabsTrigger>
+            <TabsTrigger value="media" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><ImageIcon className="h-4 w-4" /> Mídia</TabsTrigger>
+            <TabsTrigger value="prizes" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Trophy className="h-4 w-4" /> Prêmios</TabsTrigger>
+            <TabsTrigger value="lucky_hour" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Clock className="h-4 w-4" /> Hora Premiada</TabsTrigger>
             {features?.roulette_enabled || features?.scratch_cards_enabled ? (
-              <TabsTrigger value="engagement" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
+              <TabsTrigger value="engagement" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Zap className="h-4 w-4" /> Engajamento</TabsTrigger>
             ) : null}
-            <TabsTrigger value="success_flow" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
+            <TabsTrigger value="success_flow" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Star className="h-4 w-4" /> Pós-Venda</TabsTrigger>
             {features?.page_editing_enabled && (
-              <TabsTrigger value="layout" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
+              <TabsTrigger value="layout" className="rounded-xl px-4 py-2 gap-2 text-xs font-bold flex-1 md:flex-none min-w-[120px]"><Settings2 className="h-4 w-4" /> Layout</TabsTrigger>
             )}
             {userRole === 'master' && (
               <TabsTrigger value="settings" className="rounded-xl px-4 md:px-6 py-2 gap-2 text-xs md:text-sm font-bold flex-1 md:flex-none whitespace-nowrap"><Settings2 className="h-4 w-4" /> Avançado</TabsTrigger>
