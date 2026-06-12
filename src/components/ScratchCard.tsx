@@ -565,18 +565,20 @@ const ScratchCard = ({
         )}
       </div>
 
-      <div className="pt-4 border-t border-white/5 w-full flex justify-center gap-6">
-        <div className="flex flex-col items-center gap-1">
-          <Trophy className="h-4 w-4 text-primary opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Grandes Prêmios</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <Zap className="h-4 w-4 text-amber-500 opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Instantâneo</span>
-        </div>
-        <div className="flex flex-col items-center gap-1">
-          <Gift className="h-4 w-4 text-secondary opacity-50" />
-          <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
+      <div className="pt-4 border-t border-white/5 w-full flex flex-col gap-4">
+        <div className="flex justify-center gap-6">
+          <div className="flex flex-col items-center gap-1">
+            <Trophy className="h-4 w-4 text-primary opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Grandes Prêmios</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Zap className="h-4 w-4 text-amber-500 opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Instantâneo</span>
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            <Gift className="h-4 w-4 text-secondary opacity-50" />
+            <span className="text-[8px] font-bold text-white/40 uppercase tracking-tighter">Prêmios VIP</span>
+          </div>
         </div>
       </div>
 
