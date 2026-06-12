@@ -36,7 +36,7 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
       animate={{ opacity: 1, y: 0 }}
       className={cn(
         "relative w-full overflow-hidden transition-all duration-500 z-40",
-        isExpanded ? "fixed inset-0 bg-black/90 p-4 md:p-10 flex items-center justify-center" : "rounded-2xl border border-primary/20 bg-card shadow-2xl mt-8"
+        isExpanded ? "fixed inset-0 bg-black/90 p-4 md:p-10 flex items-center justify-center" : "rounded-2xl border border-primary/20 bg-card shadow-2xl mt-0"
       )}
     >
       <div className={cn(
