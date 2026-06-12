@@ -200,7 +200,7 @@ export default function AdminSettings() {
       </div>
 
       <Tabs defaultValue="visual" className="space-y-6">
-        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex flex-wrap lg:flex-nowrap w-full justify-start border border-border/50 no-scrollbar gap-1.5 overflow-x-auto">
+        <TabsList className="bg-secondary/50 p-1.5 rounded-2xl h-auto flex flex-wrap lg:flex-nowrap w-full justify-start border border-border/50 no-scrollbar gap-1.5 overflow-x-auto overflow-y-hidden">
           <TabsTrigger value="visual" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Visual & Logo</TabsTrigger>
           <TabsTrigger value="sales" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Página de Venda</TabsTrigger>
           <TabsTrigger value="pwa" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Aplicativo (PWA)</TabsTrigger>
