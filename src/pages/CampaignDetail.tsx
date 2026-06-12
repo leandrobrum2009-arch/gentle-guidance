@@ -948,13 +948,13 @@ const CampaignDetail = () => {
                     <h4 className="text-xs font-black uppercase tracking-widest text-foreground">Cotas Já Premiadas</h4>
                     <div className="h-px flex-1 bg-gradient-to-r from-border to-transparent" />
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {wonPrizes.map((p: any, i: number) => {
+                   <div className="flex gap-3 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth">
+                     {wonPrizes.map((p: any, i: number) => {
                       const winner = luckyWinners?.find(w => w.number === p.number);
                       return (
                         <div 
                           key={i} 
-                          className="group flex items-center justify-between p-4 rounded-3xl border border-amber-500/10 bg-amber-500/5 transition-all duration-300 shadow-sm overflow-hidden relative"
+                          className="group flex items-center justify-between p-4 rounded-3xl border border-amber-500/10 bg-amber-500/5 transition-all duration-300 shadow-sm overflow-hidden relative shrink-0 w-[280px] snap-start"
                         >
                           <div className="flex items-center gap-4 overflow-hidden relative z-10">
                             <div className="px-5 h-10 shrink-0 rounded-full bg-amber-500 text-white shadow-inner flex items-center justify-center font-black italic text-sm">
