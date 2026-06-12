@@ -779,7 +779,42 @@ const CampaignDetail = () => {
                             })}
                           </div>
                         </div>
-                      )}
+                    )}
+
+                    {campaign.mystery_box_enabled && (
+                      <Dialog onOpenChange={(open) => {
+                        if (!open && isGameInProgress) return;
+                      }}>
+                        <DialogTrigger asChild>
+                          <button className="w-full mt-2 flex items-center justify-between p-4 rounded-2xl bg-purple-500/5 border border-purple-500/20 hover:border-purple-500/50 hover:bg-purple-500/10 transition-all group">
+                            <div className="flex items-center gap-3">
+                              <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500 group-hover:scale-110 transition-transform">
+                                <Gift className="h-5 w-5" />
+                              </div>
+                              <div className="text-left">
+                                <p className="text-xs font-black uppercase tracking-tight text-foreground">Abrir Caixa Misteriosa</p>
+                                <p className="text-[10px] font-medium text-muted-foreground">Tente desbloquear itens raros</p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Badge className="bg-purple-500 text-white border-none text-[9px] font-black">NOVO</Badge>
+                              <ArrowLeft className="h-4 w-4 text-purple-500 rotate-180" />
+                            </div>
+                          </button>
+                        </DialogTrigger>
+                        <DialogContent 
+                          className="max-w-4xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar"
+                          onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                          onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                        >
+                          <div className="bg-zinc-950/95 backdrop-blur-xl p-6 rounded-[2.5rem] border border-white/10">
+                            <MysteryBox 
+                              boxes={mysteryBoxes || []} 
+                              campaignId={campaignId} 
+                            />
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </div>
 
                     {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
