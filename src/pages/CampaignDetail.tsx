@@ -695,6 +695,14 @@ const CampaignDetail = () => {
           />
         );
 
+      case 'live_draw':
+        return (
+          <CampaignLiveDraw 
+            key={section}
+            campaign={campaign}
+          />
+        );
+
       case 'description':
         return (
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm space-y-4 md:space-y-6">
@@ -1310,7 +1318,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
   return (
     <div className="min-h-screen bg-background">
