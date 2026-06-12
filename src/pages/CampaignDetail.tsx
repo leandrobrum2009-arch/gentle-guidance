@@ -863,7 +863,7 @@ const CampaignDetail = () => {
                 )}
               </div>
             </div>
-        );
+          );
 
       case 'live_stream':
         return (
