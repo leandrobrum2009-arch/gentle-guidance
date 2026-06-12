@@ -72,6 +72,7 @@ const empty: CampaignForm = {
   ranking_prizes: [],
   prize_rules: [],
   live_stream_url: "",
+  live_stream_enabled: false,
   concurso: "",
   draw_number: "",
   fake_progress_enabled: false,
