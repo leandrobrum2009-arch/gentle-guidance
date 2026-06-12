@@ -642,7 +642,7 @@ const CampaignDetail = () => {
                       )}
                     </div>
 
-                    {campaign.roulette_enabled && (
+                    {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
                       <Dialog onOpenChange={(open) => {
                         if (!open && isGameInProgress) return;
                       }}>
