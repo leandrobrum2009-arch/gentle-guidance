@@ -285,10 +285,10 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
           </motion.div>
          )}
        </AnimatePresence>
-     </div>
-   );
- };
- 
+    </div>
+  );
+};
+
  const OpeningAnimation = ({ prize, potentialPrizes, rarityColor, onComplete, playSound }: any) => {
    const [stage, setStage] = useState<'shake' | 'roll' | 'reveal'>('shake');
    useEffect(() => {
