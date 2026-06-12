@@ -483,6 +483,15 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
                           <Copy className="h-5 w-5" /> COPIAR CÓDIGO PIX
                         </Button>
                         
+                        <Button 
+                          variant="ghost"
+                          className="w-full h-10 rounded-xl gap-2 font-black uppercase text-[9px] tracking-widest border border-dashed border-primary/20 text-primary/60 hover:text-primary hover:bg-primary/5" 
+                          onClick={handleSimulatePayment}
+                          disabled={isPayingWithBalance}
+                        >
+                          <Zap className="h-3.5 w-3.5" /> SIMULAR RESGATE (TESTE)
+                        </Button>
+                        
                         {userBalance > 0 && (
                           <div className="p-3 rounded-xl bg-secondary/50 border border-border text-center">
                             <p className="text-[10px] font-bold text-muted-foreground uppercase">
