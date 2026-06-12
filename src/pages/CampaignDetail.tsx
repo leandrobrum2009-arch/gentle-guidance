@@ -256,7 +256,19 @@ const CampaignDetail = () => {
       </div>
       <PurchaseAnimation isVisible={showSuccess} onComplete={() => setShowSuccess(false)} />
       <QuickRegisterDialog isOpen={isQuickRegisterOpen} onOpenChange={setIsQuickRegisterOpen} onSuccess={() => { if (pendingPurchase) handleBuy(pendingPurchase); }} />
-      <PaymentModal isOpen={isPaymentModalOpen} onOpenChange={handleOpenChange} orderId={currentOrderId} />
+      <PaymentModal 
+        isOpen={isPaymentModalOpen} 
+        onOpenChange={(open) => {
+          setIsPaymentModalOpen(open);
+          if (!open) {
+            setSearchParams({}, { replace: true });
+            setCurrentOrderId(null);
+          }
+        }} 
+        orderId={currentOrderId || ""} 
+        onPaymentSuccess={handlePaymentSuccess}
+        onBuyMore={(qty) => handleBuy(qty, true)}
+      />
       <Footer />
     </div>
   );
