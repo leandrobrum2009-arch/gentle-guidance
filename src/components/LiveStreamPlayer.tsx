@@ -16,45 +16,20 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
   if (!enabled || !url) return null;
 
-  // Function to transform YouTube or Twitch URL to embed URL if needed
+  // Function to transform YouTube URL to embed URL if needed
   const getEmbedUrl = (link: string) => {
-    try {
-      if (!link) return "";
-      const urlObj = new URL(link.startsWith('http') ? link : `https://${link}`);
-      const hostname = urlObj.hostname.toLowerCase();
-      const pathname = urlObj.pathname;
-
-      // Twitch Support
-      if (hostname.includes("twitch.tv")) {
-        const channel = pathname.split("/")[1]?.split("?")[0];
-        if (!channel) return "";
-        const parent = window.location.hostname;
-        return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=true`;
-      }
-
-      // YouTube Support
-      if (hostname.includes("youtube.com") || hostname.includes("youtu.be")) {
-        let id = "";
-        if (pathname.includes("/live/")) {
-          id = pathname.split("/live/")[1]?.split("?")[0];
-        } else if (hostname.includes("youtu.be")) {
-          id = pathname.split("/").pop() || "";
-        } else if (urlObj.searchParams.has("v")) {
-          id = urlObj.searchParams.get("v") || "";
-        } else if (pathname.includes("/embed/")) {
-          id = pathname.split("/embed/")[1]?.split("?")[0];
-        }
-        
-        if (!id) return "";
-        return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1&rel=0`;
-      }
-
-      // Generic fallback for other valid URLs
-      return link;
-    } catch (e) {
-      console.error("Invalid URL in LiveStreamPlayer:", link);
-      return "";
+    if (link.includes("youtube.com/live/")) {
+      const id = link.split("/live/")[1]?.split("?")[0];
+      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
     }
+    if (link.includes("youtube.com/watch?v=")) {
+      return link.replace("watch?v=", "embed/") + "?autoplay=1&mute=1";
+    }
+    if (link.includes("youtu.be/")) {
+      const id = link.split("/").pop();
+      return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
+    }
+    return link;
   };
 
   const embedUrl = getEmbedUrl(url);
@@ -111,30 +86,16 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
         {/* Video Frame */}
         <div className={cn(
-          "w-full h-full overflow-hidden rounded-xl bg-black border border-white/5 shadow-inner flex items-center justify-center",
+          "w-full h-full overflow-hidden rounded-xl bg-black border border-white/5 shadow-inner",
           isExpanded ? "aspect-video" : "h-full"
         )}>
-          {embedUrl ? (
-            <iframe
-              src={embedUrl}
-              title={`Live Stream - ${campaignTitle}`}
-              className="w-full h-full"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              allowFullScreen
-            />
-          ) : (
-            <div className="flex flex-col items-center gap-3 p-6 text-center">
-              <Video className="h-12 w-12 text-white/20" />
-              <div className="space-y-1">
-                <p className="text-sm font-bold text-white/40 uppercase tracking-widest">
-                  Transmissão Indisponível
-                </p>
-                <p className="text-[10px] text-white/20 font-medium uppercase">
-                  Verifique o link de transmissão nas configurações
-                </p>
-              </div>
-            </div>
-          )}
+          <iframe
+            src={embedUrl}
+            title={`Live Stream - ${campaignTitle}`}
+            className="w-full h-full"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
         </div>
 
         {/* Info Overlay (only in small mode) */}

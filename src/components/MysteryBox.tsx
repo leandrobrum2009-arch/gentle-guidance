@@ -382,7 +382,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
    );
  };
  
- export const PrizeIcon = ({ type, className, style }: { type: string, className?: string, style?: any }) => {
+ const PrizeIcon = ({ type, className, style }: { type: string, className?: string, style?: any }) => {
    switch (type) {
     case 'cash': return <CreditCard className={className} style={style} />;
     case 'credits': return <Coins className={className} style={style} />;
