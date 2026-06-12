@@ -658,97 +658,106 @@ const CampaignDetail = () => {
                     )}
 
  
-                     {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
-                       <div className="space-y-2">
-                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
-                         <div className="grid grid-cols-2 gap-2">
-                           {roulettePrizes.map((p, idx) => {
-                             const spinWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'roulette' && w.prize_description === p.label);
-                             return (
-                               <div key={idx} className="flex flex-col p-2 rounded-xl bg-primary/5 border border-primary/10 gap-1">
-                                 <div className="flex items-center justify-between gap-1">
-                                   <span className="text-[9px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{p.label}</span>
-                                   <Badge className="bg-primary/20 text-primary border-none text-[7px] font-black uppercase px-1 h-3.5">RORETA</Badge>
-                                 </div>
-                                 {spinWin ? (
-                                   <div className="flex items-center gap-1 mt-1">
-                                     <Avatar className="h-4 w-4 border border-primary/20">
-                                       <AvatarImage src={spinWin.avatar_url || ""} />
-                                       <AvatarFallback className="text-[6px] bg-primary/10 text-primary font-black">{spinWin.winner_name.substring(0, 1)}</AvatarFallback>
-                                     </Avatar>
-                                     <span className="text-[8px] font-bold text-emerald-500 uppercase truncate">{spinWin.winner_name}</span>
-                                   </div>
-                                 ) : (
-                                   <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
-                                 )}
-                               </div>
-                             );
-                           })}
+                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                        <div className="space-y-2">
+                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
+                          <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
+                            {roulettePrizes.map((p, idx) => {
+                              const spinWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'roulette' && w.prize_description === p.label);
+                              return (
+                                <div key={idx} className="flex flex-col p-3 rounded-xl bg-primary/5 border border-primary/10 gap-1.5 shrink-0 w-[160px] snap-start">
+                                  <div className="flex items-center justify-between gap-1">
+                                    <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{p.label}</span>
+                                    <Badge className="bg-primary/20 text-primary border-none text-[7px] font-black uppercase px-1 h-3.5">ROLETA</Badge>
+                                  </div>
+                                  {spinWin ? (
+                                    <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
+                                      <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
+                                        <AvatarImage src={spinWin.avatar_url || ""} />
+                                        <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{spinWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                      </Avatar>
+                                      <div className="flex flex-col min-w-0">
+                                        <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{spinWin.winner_name}</span>
+                                        <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                      </div>
+                                    </div>
+                                  ) : (
+                                    <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                  )}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+                     <div className="flex flex-col gap-4">
+                       {campaign.scratch_cards_enabled && (
+                         <div className="space-y-2">
+                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Raspadinhas</p>
+                           <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
+                             {/* In a real scenario, we might want to fetch actual scratch card prizes from the DB if they aren't in potentialPrizes */}
+                             {["R$ 500 no Pix", "R$ 100 no Pix", "R$ 50 no Pix"].map((label, idx) => {
+                                const scratchWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'scratchcard' && w.prize_description === label);
+                                return (
+                                  <div key={idx} className="flex flex-col p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 gap-1.5 shrink-0 w-[160px] snap-start">
+                                    <div className="flex items-center justify-between gap-1">
+                                      <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{label}</span>
+                                      <Badge className="bg-amber-500/20 text-amber-500 border-none text-[7px] font-black uppercase px-1 h-3.5">RASPADINHA</Badge>
+                                    </div>
+                                    {scratchWin ? (
+                                      <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
+                                        <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
+                                          <AvatarImage src={scratchWin.avatar_url || ""} />
+                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{scratchWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col min-w-0">
+                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{scratchWin.winner_name}</span>
+                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                    )}
+                                  </div>
+                                );
+                             })}
+                           </div>
                          </div>
-                       </div>
-                     )}
+                       )}
 
-                    <div className="grid grid-cols-1 gap-2">
-                      {campaign.scratch_cards_enabled && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Raspadinhas</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {/* In a real scenario, we might want to fetch actual scratch card prizes from the DB if they aren't in potentialPrizes */}
-                            {["R$ 500 no Pix", "R$ 100 no Pix", "R$ 50 no Pix"].map((label, idx) => {
-                               const scratchWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'scratchcard' && w.prize_description === label);
-                               return (
-                                 <div key={idx} className="flex flex-col p-2 rounded-xl bg-amber-500/5 border border-amber-500/10 gap-1">
-                                   <div className="flex items-center justify-between gap-1">
-                                     <span className="text-[9px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{label}</span>
-                                     <Badge className="bg-amber-500/20 text-amber-500 border-none text-[7px] font-black uppercase px-1 h-3.5">RASPADINHA</Badge>
-                                   </div>
-                                   {scratchWin ? (
-                                     <div className="flex items-center gap-1 mt-1">
-                                       <Avatar className="h-4 w-4 border border-amber-500/20">
-                                         <AvatarImage src={scratchWin.avatar_url || ""} />
-                                         <AvatarFallback className="text-[6px] bg-amber-500/10 text-amber-500 font-black">{scratchWin.winner_name.substring(0, 1)}</AvatarFallback>
-                                       </Avatar>
-                                       <span className="text-[8px] font-bold text-emerald-500 uppercase truncate">{scratchWin.winner_name}</span>
-                                     </div>
-                                   ) : (
-                                     <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
-                                   )}
-                                 </div>
-                               );
-                            })}
-                          </div>
-                        </div>
-                      )}
-
-                      {campaign.mystery_box_enabled && (
-                        <div className="space-y-2">
-                          <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Caixas Misteriosas</p>
-                          <div className="grid grid-cols-2 gap-2">
-                            {mysteryBoxes?.map((box, idx) => {
-                               const boxWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'lucky_number' && w.prize_description.includes(box.name));
-                               return (
-                                 <div key={idx} className="flex flex-col p-2 rounded-xl bg-purple-500/5 border border-purple-500/10 gap-1">
-                                   <div className="flex items-center justify-between gap-1">
-                                     <span className="text-[9px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{box.name}</span>
-                                     <Badge className="bg-purple-500/20 text-purple-500 border-none text-[7px] font-black uppercase px-1 h-3.5">CAIXA</Badge>
-                                   </div>
-                                   {boxWin ? (
-                                     <div className="flex items-center gap-1 mt-1">
-                                       <Avatar className="h-4 w-4 border border-purple-500/20">
-                                         <AvatarImage src={boxWin.avatar_url || ""} />
-                                         <AvatarFallback className="text-[6px] bg-purple-500/10 text-purple-500 font-black">{boxWin.winner_name.substring(0, 1)}</AvatarFallback>
-                                       </Avatar>
-                                       <span className="text-[8px] font-bold text-emerald-500 uppercase truncate">{boxWin.winner_name}</span>
-                                     </div>
-                                   ) : (
-                                     <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
-                                   )}
-                                 </div>
-                               );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                       {campaign.mystery_box_enabled && (
+                         <div className="space-y-2">
+                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Caixas Misteriosas</p>
+                           <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
+                             {mysteryBoxes?.map((box, idx) => {
+                                const boxWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'lucky_number' && w.prize_description.includes(box.name));
+                                return (
+                                  <div key={idx} className="flex flex-col p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 gap-1.5 shrink-0 w-[160px] snap-start">
+                                    <div className="flex items-center justify-between gap-1">
+                                      <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{box.name}</span>
+                                      <Badge className="bg-purple-500/20 text-purple-500 border-none text-[7px] font-black uppercase px-1 h-3.5">CAIXA</Badge>
+                                    </div>
+                                    {boxWin ? (
+                                      <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
+                                        <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
+                                          <AvatarImage src={boxWin.avatar_url || ""} />
+                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{boxWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                        </Avatar>
+                                        <div className="flex flex-col min-w-0">
+                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{boxWin.winner_name}</span>
+                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                    )}
+                                  </div>
+                                );
+                             })}
+                           </div>
+                         </div>
+                       )}
                     </div>
 
                     {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
