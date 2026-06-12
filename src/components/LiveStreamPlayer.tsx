@@ -16,8 +16,16 @@ const LiveStreamPlayer = ({ url, enabled, campaignTitle }: LiveStreamPlayerProps
 
   if (!enabled || !url) return null;
 
-  // Function to transform YouTube URL to embed URL if needed
+  // Function to transform YouTube or Twitch URL to embed URL if needed
   const getEmbedUrl = (link: string) => {
+    // Twitch Support
+    if (link.includes("twitch.tv/")) {
+      const channel = link.split("twitch.tv/")[1]?.split("/")[0]?.split("?")[0];
+      const parent = window.location.hostname;
+      return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=true`;
+    }
+
+    // YouTube Support
     if (link.includes("youtube.com/live/")) {
       const id = link.split("/live/")[1]?.split("?")[0];
       return `https://www.youtube.com/embed/${id}?autoplay=1&mute=1`;
