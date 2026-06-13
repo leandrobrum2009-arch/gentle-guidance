@@ -258,7 +258,7 @@ const ScratchCard = ({
       if (error) {
         toast.error(error.message || "Erro ao processar a raspadinha");
         setHasStarted(false);
-        setIsDrawing(false);
+        isDrawingRef.current = false;
         throw error;
       }
 
