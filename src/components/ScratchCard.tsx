@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState, useMemo, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, Trophy, Zap, RefreshCw, Info, FileText, Gift, History, Clock, User, Loader2, RotateCw } from "lucide-react";
+import { Sparkles, Trophy, Zap, RefreshCw, Gift, History, Clock, User, Loader2, RotateCw, Hand } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -70,9 +70,9 @@ const ScratchCard = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const [isScratched, setIsScratched] = useState(false);
   const [scratchPercentage, setScratchPercentage] = useState(0);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const isDrawingRef = useRef(false);
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-  const [lastPos, setLastPos] = useState<{x: number, y: number} | null>(null);
+  const lastPosRef = useRef<{x: number, y: number} | null>(null);
 
   const initCanvas = useCallback(() => {
     if (canvasRef.current && canvasSize.width > 0) {
@@ -80,66 +80,47 @@ const ScratchCard = ({
       const ctx = canvas.getContext("2d");
       if (!ctx) return;
 
-      // Clear any previous drawings
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.globalCompositeOperation = "source-over";
 
-      // Fill with a more realistic "silver/metallic" scratchable layer
-      // Base metallic gray
-      ctx.fillStyle = "#A0A0A0";
+      // Premium golden foil layer
+      const gradient = ctx.createLinearGradient(0, 0, canvasSize.width, canvasSize.height);
+      gradient.addColorStop(0, "#d4a437");
+      gradient.addColorStop(0.45, "#f4d976");
+      gradient.addColorStop(0.55, "#fff3b0");
+      gradient.addColorStop(1, "#b8861f");
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
-      // Add noise/texture
-      for (let i = 0; i < 5000; i++) {
-        const x = Math.random() * canvasSize.width;
-        const y = Math.random() * canvasSize.height;
-        const size = Math.random() * 2;
-        ctx.fillStyle = Math.random() > 0.5 ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.1)";
-        ctx.fillRect(x, y, size, size);
-      }
-
-      // Add "brushed metal" effect
-      ctx.strokeStyle = "rgba(255, 255, 255, 0.1)";
-      ctx.lineWidth = 1;
-      for (let i = 0; i < canvasSize.width; i += 4) {
+      // Subtle shimmer streaks
+      ctx.strokeStyle = "rgba(255, 255, 255, 0.18)";
+      ctx.lineWidth = 1.5;
+      for (let i = -canvasSize.height; i < canvasSize.width; i += 14) {
         ctx.beginPath();
         ctx.moveTo(i, 0);
-        ctx.lineTo(i + 20, canvasSize.height);
+        ctx.lineTo(i + canvasSize.height, canvasSize.height);
         ctx.stroke();
       }
 
-      // Add a border frame
-      ctx.strokeStyle = "rgba(0,0,0,0.3)";
-      ctx.lineWidth = 10;
-      ctx.strokeRect(0, 0, canvasSize.width, canvasSize.height);
+      // Vignette
+      const vignette = ctx.createRadialGradient(
+        canvasSize.width / 2, canvasSize.height / 2, canvasSize.width * 0.2,
+        canvasSize.width / 2, canvasSize.height / 2, canvasSize.width * 0.75
+      );
+      vignette.addColorStop(0, "rgba(0,0,0,0)");
+      vignette.addColorStop(1, "rgba(0,0,0,0.35)");
+      ctx.fillStyle = vignette;
+      ctx.fillRect(0, 0, canvasSize.width, canvasSize.height);
 
-      const drawText = () => {
-        ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
-        ctx.font = "bold 20px Inter";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.shadowColor = "rgba(255, 255, 255, 0.5)";
-        ctx.shadowBlur = 2;
-        ctx.fillText("RASPE COM CUIDADO", canvasSize.width / 2, canvasSize.height / 2 + 40);
-        ctx.shadowBlur = 0;
-      };
-
-      const logoUrl = localStorage.getItem('site_logo') || "";
-      if (logoUrl) {
-        const logoImg = new Image();
-        logoImg.crossOrigin = "anonymous";
-        logoImg.src = logoUrl;
-        logoImg.onload = () => {
-          const logoSize = 80;
-          ctx.globalAlpha = 0.5;
-          ctx.drawImage(logoImg, (canvasSize.width - logoSize) / 2, (canvasSize.height - logoSize) / 2 - 20, logoSize, logoSize);
-          ctx.globalAlpha = 1.0;
-          drawText();
-        };
-        logoImg.onerror = () => drawText();
-      } else {
-        drawText();
-      }
+      // Centered "RASPE AQUI" label
+      ctx.fillStyle = "rgba(60, 35, 0, 0.75)";
+      ctx.font = "900 28px Inter, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("RASPE AQUI", canvasSize.width / 2, canvasSize.height / 2 - 6);
+      ctx.fillStyle = "rgba(60, 35, 0, 0.55)";
+      ctx.font = "700 11px Inter, sans-serif";
+      ctx.fillText("USE O DEDO OU O MOUSE", canvasSize.width / 2, canvasSize.height / 2 + 22);
     }
   }, [canvasSize]);
 
@@ -195,7 +176,8 @@ const ScratchCard = ({
     setIsScratched(false);
     setApiReady(false);
     setScratchPercentage(0);
-    setIsDrawing(false);
+    isDrawingRef.current = false;
+    lastPosRef.current = null;
     setPrizeLabel("");
     setIsWinner(false);
     setGridSymbols([]);
@@ -229,14 +211,14 @@ const ScratchCard = ({
     };
   }, []);
 
-  const getMousePos = (e: React.MouseEvent | React.TouchEvent) => {
+  const getPointerPos = (e: React.PointerEvent) => {
     if (!canvasRef.current) return { x: 0, y: 0 };
     const rect = canvasRef.current.getBoundingClientRect();
-    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    const scaleX = canvasRef.current.width / rect.width;
+    const scaleY = canvasRef.current.height / rect.height;
     return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY,
     };
   };
 
@@ -253,14 +235,14 @@ const ScratchCard = ({
 
     if (!user) {
       toast.error("Entre para jogar e ganhar prêmios reais!");
-      setIsDrawing(false);
+      isDrawingRef.current = false;
       setHasStarted(false);
       return;
     }
 
     if (availableScratches <= 0 && cost <= 0) {
       toast.error("Você não possui raspadinhas disponíveis!");
-      setIsDrawing(false);
+      isDrawingRef.current = false;
       setHasStarted(false);
       return;
     }
@@ -295,18 +277,18 @@ const ScratchCard = ({
     } catch (error: any) {
       console.error("Scratch error:", error);
       setHasStarted(false);
-      setIsDrawing(false);
+      isDrawingRef.current = false;
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const scratch = async (x: number, y: number) => {
+  const scratch = (x: number, y: number) => {
     if (!canvasRef.current || isScratched) return;
 
     if (!hasStarted) {
       setHasStarted(true);
-      startScratch(); // Don't await, let it run in background
+      startScratch();
     }
 
     const canvas = canvasRef.current;
@@ -316,33 +298,39 @@ const ScratchCard = ({
     ctx.globalCompositeOperation = "destination-out";
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
-    ctx.lineWidth = 60; // Larger brush for better scratching feel
+    ctx.lineWidth = 80;
 
-    if (lastPos) {
+    if (lastPosRef.current) {
       ctx.beginPath();
-      ctx.moveTo(lastPos.x, lastPos.y);
+      ctx.moveTo(lastPosRef.current.x, lastPosRef.current.y);
       ctx.lineTo(x, y);
       ctx.stroke();
     } else {
       ctx.beginPath();
-      ctx.arc(x, y, 30, 0, Math.PI * 2);
+      ctx.arc(x, y, 40, 0, Math.PI * 2);
       ctx.fill();
     }
-    
-    setLastPos({ x, y });
 
-    // Calculate scratch percentage every few calls to save performance
-    if (Math.random() > 0.8) {
-      const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-      const pixels = imageData.data;
-      let transparentPixels = 0;
-      for (let i = 3; i < pixels.length; i += 4) {
-        if (pixels[i] === 0) transparentPixels++;
+    lastPosRef.current = { x, y };
+
+    // Sample percentage cheaply on a downscaled grid
+    if (Math.random() > 0.75) {
+      const step = 12;
+      const w = canvas.width;
+      const h = canvas.height;
+      const sample = ctx.getImageData(0, 0, w, h).data;
+      let cleared = 0;
+      let total = 0;
+      for (let py = 0; py < h; py += step) {
+        for (let px = 0; px < w; px += step) {
+          const idx = (py * w + px) * 4 + 3;
+          if (sample[idx] === 0) cleared++;
+          total++;
+        }
       }
-      const percentage = (transparentPixels / (pixels.length / 4)) * 100;
+      const percentage = (cleared / total) * 100;
       setScratchPercentage(percentage);
-
-      if (percentage > 45 && !isScratched) {
+      if (percentage > 40 && !isScratched) {
         reveal();
       }
     }
@@ -350,7 +338,12 @@ const ScratchCard = ({
 
   const reveal = () => {
     setIsScratched(true);
-    setLastPos(null);
+    lastPosRef.current = null;
+    // Fully clear so the prize is fully visible
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      ctx?.clearRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+    }
     if (isWinner && prizeLabel !== "Tente novamente") {
       playSound('win');
       confetti({
@@ -390,23 +383,25 @@ const ScratchCard = ({
     queryClient.invalidateQueries({ queryKey: ["global-scratch-card-scratches"] });
   };
 
-  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
-    setIsDrawing(true);
-    const { x, y } = getMousePos(e);
-    if (isScratched) return;
+  const handlePointerDown = (e: React.PointerEvent) => {
+    if (isScratched || isProcessing) return;
+    (e.currentTarget as HTMLCanvasElement).setPointerCapture(e.pointerId);
+    isDrawingRef.current = true;
+    const { x, y } = getPointerPos(e);
     scratch(x, y);
     hapticFeedback();
   };
 
-  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
-    if (!isDrawing) return;
-    const { x, y } = getMousePos(e);
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDrawingRef.current) return;
+    const { x, y } = getPointerPos(e);
     scratch(x, y);
   };
 
-  const handleMouseUp = () => {
-    setIsDrawing(false);
-    setLastPos(null);
+  const handlePointerUp = (e: React.PointerEvent) => {
+    isDrawingRef.current = false;
+    lastPosRef.current = null;
+    try { (e.currentTarget as HTMLCanvasElement).releasePointerCapture(e.pointerId); } catch {}
   };
 
   return (
@@ -444,61 +439,45 @@ const ScratchCard = ({
 
       <div 
         ref={containerRef}
-        className="relative w-full aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl border-4 border-zinc-800 bg-zinc-950 group"
-        style={{ cursor: isScratched ? "default" : "crosshair" }}
+        className="relative w-full aspect-[4/3] rounded-3xl overflow-hidden shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7)] ring-1 ring-white/10 bg-zinc-950 group"
+        style={{ cursor: isScratched ? "default" : "grab", touchAction: "none" }}
       >
-        {/* The Grid of hidden items */}
-        <div className="absolute inset-0 grid grid-cols-3 grid-rows-3 gap-2 p-2 bg-zinc-900">
-          {gridSymbols.map((symbol, i) => (
-            <div key={i} className="flex flex-col items-center justify-center bg-zinc-800 rounded-lg border border-white/5 p-1 text-center">
+        {/* Background revealed when scratched: single bold prize reveal */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-zinc-900 via-zinc-950 to-black p-6 text-center">
+          {apiReady ? (
+            <>
               <div className={cn(
-                "h-8 w-8 md:h-10 md:w-10 rounded-full mb-1 flex items-center justify-center",
-                symbol === "Tente novamente" ? "bg-zinc-700/50" : "bg-primary/20 shadow-[0_0_10px_rgba(var(--primary-rgb),0.2)]"
+                "h-20 w-20 md:h-24 md:w-24 rounded-full flex items-center justify-center mb-3 border",
+                isWinner ? "bg-primary/15 border-primary/40 shadow-[0_0_40px_rgba(34,197,94,0.4)]" : "bg-white/5 border-white/10"
               )}>
-                {symbol === "Tente novamente" ? (
-                  <Zap className="h-4 w-4 md:h-5 md:w-5 text-zinc-500" />
+                {isWinner ? (
+                  <Trophy className="h-10 w-10 md:h-12 md:w-12 text-primary" />
                 ) : (
-                  <Gift className="h-4 w-4 md:h-5 md:w-5 text-primary" />
+                  <Zap className="h-10 w-10 md:h-12 md:w-12 text-white/30" />
                 )}
               </div>
               <span className={cn(
-                "text-[7px] md:text-[9px] font-black uppercase leading-tight",
-                symbol === "Tente novamente" ? "text-zinc-500" : "text-white"
+                "text-[10px] font-black uppercase tracking-[0.25em] mb-1",
+                isWinner ? "text-primary" : "text-white/40"
               )}>
-                {symbol}
+                {isWinner ? "Você Ganhou" : "Não foi dessa vez"}
               </span>
+              <span className={cn(
+                "text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-none",
+                isWinner ? "text-white" : "text-white/60"
+              )}>
+                {prizeLabel || "Tente novamente"}
+              </span>
+            </>
+          ) : (
+            <div className="flex flex-col items-center gap-2 opacity-40">
+              <Gift className="h-14 w-14 text-white/40" />
+              <span className="text-[10px] font-black uppercase tracking-[0.25em] text-white/40">Prêmio Surpresa</span>
             </div>
-          ))}
+          )}
         </div>
 
         <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center pointer-events-none z-10">
-          <AnimatePresence>
-            {isScratched && (
-
-              <motion.div
-                initial={{ scale: 0.5, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                className="space-y-4"
-              >
-                <div className="h-24 w-24 rounded-full bg-primary/10 flex items-center justify-center mx-auto border-2 border-primary/20 shadow-[0_0_30px_rgba(var(--primary-rgb),0.3)]">
-                  {isWinner ? (
-                    <Trophy className="h-12 w-12 text-primary drop-shadow-[0_0_10px_rgba(var(--primary-rgb),0.5)]" />
-                  ) : (
-                    <Zap className="h-12 w-12 text-muted-foreground" />
-                  )}
-                </div>
-                <div className="space-y-1">
-                  <h3 className="text-xl font-black uppercase italic tracking-tighter text-white">
-                    {isWinner ? "PARABÉNS, VOCÊ GANHOU!" : "QUASE LÁ! TENTE DE NOVO"}
-                  </h3>
-                  <p className="text-2xl font-black text-primary neon-text-primary uppercase tracking-tighter">
-                    {prizeLabel}
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
-          
           {isProcessing && !apiReady && scratchPercentage > 40 && (
             <div className="absolute inset-0 z-40 flex flex-col items-center justify-center bg-black/40 backdrop-blur-[2px] rounded-2xl">
               <div className="bg-zinc-900/90 p-6 rounded-3xl border border-white/10 shadow-2xl flex flex-col items-center gap-3 scale-90 md:scale-100">
@@ -507,37 +486,33 @@ const ScratchCard = ({
               </div>
             </div>
           )}
-
-          {!isScratched && !isProcessing && (
-             <div className="opacity-10 scale-150 grayscale blur-sm">
-                <Gift className="h-20 w-20 text-white" />
-             </div>
-          )}
         </div>
 
         <canvas
           ref={canvasRef}
           width={canvasSize.width}
           height={canvasSize.height}
-          onMouseDown={handleMouseDown}
-          onMouseMove={handleMouseMove}
-          onMouseUp={handleMouseUp}
-          onMouseLeave={handleMouseUp}
-          onTouchStart={handleMouseDown}
-          onTouchMove={handleMouseMove}
-          onTouchEnd={handleMouseUp}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
+          style={{ touchAction: "none" }}
           className={cn(
-            "absolute inset-0 z-20 transition-opacity duration-1000",
+            "absolute inset-0 z-20 transition-opacity duration-500 select-none",
             (isScratched) && "opacity-0 pointer-events-none",
             isProcessing && "cursor-wait"
           )}
         />
-        
-        {!isScratched && !isProcessing && (
-          <div className="absolute inset-0 pointer-events-none z-30 opacity-0 group-hover:opacity-100 transition-opacity">
-            <Sparkles className="absolute top-4 left-4 h-4 w-4 text-primary animate-pulse" />
-            <Sparkles className="absolute bottom-4 right-4 h-4 w-4 text-secondary animate-pulse" />
-          </div>
+
+        {!hasStarted && !isScratched && (
+          <motion.div
+            initial={{ opacity: 0, y: 6 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="absolute bottom-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none flex items-center gap-2 bg-black/40 backdrop-blur px-3 py-1.5 rounded-full border border-white/10"
+          >
+            <Hand className="h-3 w-3 text-white/70 animate-pulse" />
+            <span className="text-[9px] font-black uppercase tracking-widest text-white/70">Arraste para raspar</span>
+          </motion.div>
         )}
       </div>
 
