@@ -665,11 +665,16 @@ const CampaignDetail = () => {
                             {roulettePrizes.map((p, idx) => {
                               const spinWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'roulette' && w.prize_description === p.label);
                               return (
-                                <div key={idx} className="flex flex-col p-3 rounded-xl bg-primary/5 border border-primary/10 gap-1.5 shrink-0 w-[160px] snap-start">
-                                  <div className="flex items-center justify-between gap-1">
-                                    <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{p.label}</span>
-                                    <Badge className="bg-primary/20 text-primary border-none text-[7px] font-black uppercase px-1 h-3.5">ROLETA</Badge>
-                                  </div>
+                                <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                                  <DialogTrigger asChild>
+                                    <button className="flex flex-col p-3 rounded-xl bg-primary/5 border border-primary/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-primary/40 hover:bg-primary/10 transition-all group">
+                                      <div className="flex items-center justify-between gap-1">
+                                        <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center text-primary shrink-0">
+                                          <RotateCw className="h-3 w-3" />
+                                        </motion.div>
+                                        <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate flex-1">{p.label}</span>
+                                        <Badge className="bg-primary/20 text-primary border-none text-[7px] font-black uppercase px-1 h-3.5">ROLETA</Badge>
+                                      </div>
                                   {spinWin ? (
                                     <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                       <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
@@ -682,9 +687,17 @@ const CampaignDetail = () => {
                                       </div>
                                     </div>
                                   ) : (
-                                    <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                    <span className="text-[8px] font-black text-primary uppercase opacity-90 group-hover:opacity-100">Toque para Girar →</span>
                                   )}
-                                </div>
+                                    </button>
+                                  </DialogTrigger>
+                                  <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar"
+                                    onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                                    onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
+                                    <Roulette prizes={roulettePrizes} campaign={campaign} availableSpins={userSpinsAvailable}
+                                      onSpinStart={() => setIsGameInProgress(true)} onSpinComplete={() => setIsGameInProgress(false)} />
+                                  </DialogContent>
+                                </Dialog>
                               );
                             })}
                           </div>
@@ -700,11 +713,16 @@ const CampaignDetail = () => {
                              {["R$ 500 no Pix", "R$ 100 no Pix", "R$ 50 no Pix"].map((label, idx) => {
                                 const scratchWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'scratchcard' && w.prize_description === label);
                                 return (
-                                  <div key={idx} className="flex flex-col p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 gap-1.5 shrink-0 w-[160px] snap-start">
-                                    <div className="flex items-center justify-between gap-1">
-                                      <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{label}</span>
-                                      <Badge className="bg-amber-500/20 text-amber-500 border-none text-[7px] font-black uppercase px-1 h-3.5">RASPADINHA</Badge>
-                                    </div>
+                                  <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                                    <DialogTrigger asChild>
+                                      <button className="flex flex-col p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-amber-500/40 hover:bg-amber-500/10 transition-all group">
+                                        <div className="flex items-center justify-between gap-1">
+                                          <motion.div animate={{ rotate: [-8, 8, -8] }} transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }} className="h-5 w-5 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-500 shrink-0">
+                                            <Sparkles className="h-3 w-3" />
+                                          </motion.div>
+                                          <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate flex-1">{label}</span>
+                                          <Badge className="bg-amber-500/20 text-amber-500 border-none text-[7px] font-black uppercase px-1 h-3.5">RASPADINHA</Badge>
+                                        </div>
                                     {scratchWin ? (
                                       <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                         <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
@@ -717,9 +735,24 @@ const CampaignDetail = () => {
                                         </div>
                                       </div>
                                     ) : (
-                                      <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                      <span className="text-[8px] font-black text-amber-500 uppercase opacity-90 group-hover:opacity-100">Toque para Raspar →</span>
                                     )}
-                                  </div>
+                                      </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-md p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar"
+                                      onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                                      onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
+                                      <ScratchCard
+                                        potentialPrizes={[...(roulettePrizes?.map(p => p.label) || []), ...(luckyNumbers?.map((p: any) => p.prize) || []), "R$ 50,00 no PIX", "Giro Grátis na Roleta"]}
+                                        isSimulation={false}
+                                        cost={campaign?.scratch_card_cost || 0}
+                                        campaignId={campaign?.id}
+                                        availableScratches={userScratchesAvailable}
+                                        onStart={() => setIsGameInProgress(true)}
+                                        onComplete={() => setIsGameInProgress(false)}
+                                      />
+                                    </DialogContent>
+                                  </Dialog>
                                 );
                              })}
                            </div>
@@ -733,11 +766,16 @@ const CampaignDetail = () => {
                              {mysteryBoxes?.map((box, idx) => {
                                 const boxWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'lucky_number' && w.prize_description.includes(box.name));
                                 return (
-                                  <div key={idx} className="flex flex-col p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 gap-1.5 shrink-0 w-[160px] snap-start">
-                                    <div className="flex items-center justify-between gap-1">
-                                      <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate">{box.name}</span>
-                                      <Badge className="bg-purple-500/20 text-purple-500 border-none text-[7px] font-black uppercase px-1 h-3.5">CAIXA</Badge>
-                                    </div>
+                                  <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
+                                    <DialogTrigger asChild>
+                                      <button className="flex flex-col p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-purple-500/40 hover:bg-purple-500/10 transition-all group">
+                                        <div className="flex items-center justify-between gap-1">
+                                          <motion.div animate={{ y: [0, -3, 0], rotate: [0, -6, 6, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }} className="h-5 w-5 rounded-full bg-purple-500/15 flex items-center justify-center text-purple-500 shrink-0">
+                                            <Gift className="h-3 w-3" />
+                                          </motion.div>
+                                          <span className="text-[10px] font-black text-foreground uppercase tracking-tighter leading-tight truncate flex-1">{box.name}</span>
+                                          <Badge className="bg-purple-500/20 text-purple-500 border-none text-[7px] font-black uppercase px-1 h-3.5">CAIXA</Badge>
+                                        </div>
                                     {boxWin ? (
                                       <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                         <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
@@ -750,9 +788,16 @@ const CampaignDetail = () => {
                                         </div>
                                       </div>
                                     ) : (
-                                      <span className="text-[7px] font-bold text-muted-foreground uppercase opacity-70">Disponível</span>
+                                      <span className="text-[8px] font-black text-purple-500 uppercase opacity-90 group-hover:opacity-100">Toque para Abrir →</span>
                                     )}
-                                  </div>
+                                      </button>
+                                    </DialogTrigger>
+                                    <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto no-scrollbar"
+                                      onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
+                                      onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
+                                      <MysteryBox boxes={[box]} campaignId={campaign?.id} />
+                                    </DialogContent>
+                                  </Dialog>
                                 );
                              })}
                            </div>
