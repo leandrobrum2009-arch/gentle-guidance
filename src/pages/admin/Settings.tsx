@@ -335,6 +335,17 @@ export default function AdminSettings() {
               <CardContent className="pt-6">
                 <div className="grid gap-8 md:grid-cols-3">
                   <SettingField 
+                    s={settings.find(s => s.key === 'layout_mode')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['layout_mode']}
+                    getIcon={getIcon}
+                    type="select"
+                    options={[
+                      { label: "Padrão (Hero + Cards)", value: "default" },
+                      { label: "Em Linha (Compacto Mobile)", value: "inline" }
+                    ]}
+                  />
+                  <SettingField 
                     s={settings.find(s => s.key === 'home_hero_style')} 
                     onUpdate={handleUpdate} 
                     label={settingNames['home_hero_style']}
