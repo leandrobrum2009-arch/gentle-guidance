@@ -10,6 +10,7 @@ import { ThemeToggle } from "./ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
+import HeaderInline from "./HeaderInline";
 
 const navLinks = [
   
@@ -50,6 +51,10 @@ const Header = () => {
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
   const headerRef = React.useRef<HTMLElement>(null);
+
+  if (siteSettings?.layout_mode === 'inline') {
+    return <HeaderInline />;
+  }
 
   useEffect(() => {
     if (headerRef.current) {
