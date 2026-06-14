@@ -157,7 +157,7 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {luckyNumbers.slice(0, 9).map((p: any, i: number) => {
             const won = !!luckyNumbersStatus[p.number];
-            const winner = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_number === p.number);
+            const winner = (allWinners || []).find(w => w.campaign_id === campaignId && w.ticket_number === p.number);
             return (
               <InlineRow
                 key={i}
