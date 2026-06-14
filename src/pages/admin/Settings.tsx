@@ -82,7 +82,8 @@ export default function AdminSettings() {
     sales_page_whatsapp: "WhatsApp de Vendas",
     pay2m_client_key: "Pay2m: Client Key",
     pay2m_client_secret: "Pay2m: Client Secret",
-    pay2m_enabled: "Habilitar Pay2m"
+    pay2m_enabled: "Habilitar Pay2m",
+    layout_mode: "Modelo de Layout das Campanhas"
   };
 
   useEffect(() => {
