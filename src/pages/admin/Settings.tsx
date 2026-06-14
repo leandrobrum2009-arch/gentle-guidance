@@ -82,7 +82,8 @@ export default function AdminSettings() {
     sales_page_whatsapp: "WhatsApp de Vendas",
     pay2m_client_key: "Pay2m: Client Key",
     pay2m_client_secret: "Pay2m: Client Secret",
-    pay2m_enabled: "Habilitar Pay2m"
+    pay2m_enabled: "Habilitar Pay2m",
+    layout_mode: "Modelo de Layout das Campanhas"
   };
 
   useEffect(() => {
@@ -333,6 +334,17 @@ export default function AdminSettings() {
               </CardHeader>
               <CardContent className="pt-6">
                 <div className="grid gap-8 md:grid-cols-3">
+                  <SettingField 
+                    s={settings.find(s => s.key === 'layout_mode')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['layout_mode']}
+                    getIcon={getIcon}
+                    type="select"
+                    options={[
+                      { label: "Padrão (Hero + Cards)", value: "default" },
+                      { label: "Em Linha (Compacto Mobile)", value: "inline" }
+                    ]}
+                  />
                   <SettingField 
                     s={settings.find(s => s.key === 'home_hero_style')} 
                     onUpdate={handleUpdate} 

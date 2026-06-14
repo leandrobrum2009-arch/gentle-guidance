@@ -41,11 +41,14 @@ import { PaymentModal } from "@/components/PaymentModal";
 import { SEO } from "@/components/SEO";
 import CampaignLiveDraw from "@/components/CampaignLiveDraw";
 import LiveStreamPlayer from "@/components/LiveStreamPlayer";
+import CampaignInlineView from "@/components/CampaignInlineView";
+import { useSiteSettings } from "@/hooks/useData";
 
 
 
 const CampaignDetail = () => {
   const queryClient = useQueryClient();
+  const { data: siteSettings } = useSiteSettings();
   const [showStickyBar, setShowStickyBar] = useState(false);
   const [isPurchaseVisible, setIsPurchaseVisible] = useState(false);
 
@@ -1489,6 +1492,8 @@ const CampaignDetail = () => {
 
   const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
+  const isInlineLayout = siteSettings?.layout_mode === 'inline';
+
   return (
     <div className="min-h-screen bg-background">
       <SEO 
@@ -1502,9 +1507,21 @@ const CampaignDetail = () => {
 
       
       <div className="container px-4 md:px-6 pb-20 pt-[var(--header-height,100px)]">
-        <div className="flex flex-col gap-8 md:gap-12 mt-0">
-          {sectionsOrder.map((section) => renderSection(section))}
-        </div>
+        {isInlineLayout ? (
+          <CampaignInlineView
+            campaign={campaign}
+            onBuy={(q) => handleBuy(q)}
+            isPurchasing={isPurchasing}
+            isGameInProgress={isGameInProgress}
+            setIsGameInProgress={setIsGameInProgress}
+            luckyNumbersStatus={luckyNumbersStatus}
+            userId={user?.id}
+          />
+        ) : (
+          <div className="flex flex-col gap-8 md:gap-12 mt-0">
+            {sectionsOrder.map((section) => renderSection(section))}
+          </div>
+        )}
       </div>
 
       <PurchaseAnimation 
