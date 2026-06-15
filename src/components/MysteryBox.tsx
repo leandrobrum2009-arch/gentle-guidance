@@ -132,7 +132,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
    };
  
   const renderBoxes = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <div className={cn("grid gap-4", boxes.length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4")}>
       {boxes.map((box) => {
         const config = RARITY_CONFIG[box.rarity as keyof typeof RARITY_CONFIG];
         const Icon = config.icon;
@@ -172,13 +172,15 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
   return (
     <div className="space-y-6">
       {/* Dynamic Rule Legend (Admin Configured) */}
-      <div className="bg-orange-500/5 p-4 rounded-2xl border border-orange-500/10 mb-2">
-        <div className="flex items-center gap-2 mb-2">
-          <Sparkles className="h-4 w-4 text-orange-500" />
-          <span className="text-xs font-black uppercase tracking-widest text-orange-500">Prêmios de Engajamento</span>
+      {boxes.length > 1 && (
+        <div className="bg-orange-500/5 p-4 rounded-2xl border border-orange-500/10 mb-2">
+          <div className="flex items-center gap-2 mb-2">
+            <Sparkles className="h-4 w-4 text-orange-500" />
+            <span className="text-xs font-black uppercase tracking-widest text-orange-500">Caixas Surpresas</span>
+          </div>
+          <p className="text-[10px] text-muted-foreground font-medium uppercase italic">Escolha uma caixa para abrir. Cada caixa tem seu próprio conjunto de prêmios e chances.</p>
         </div>
-        <p className="text-[10px] text-muted-foreground font-medium uppercase italic">Confira as regras e quantidades disponíveis para esta campanha no botão de giros.</p>
-      </div>
+      )}
 
       <div className="space-y-8">
         {isCompact ? (
