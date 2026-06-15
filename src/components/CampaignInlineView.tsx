@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Trophy, Users, TrendingUp, Gift, Sparkles, RotateCw, ChevronDown, X, Loader2, Award, Crown, Zap, Ticket
+  Trophy, Users, TrendingUp, Gift, Sparkles, RotateCw, ChevronDown, X, Loader2, Award, Crown, Zap, Ticket, Clock, Calendar, DollarSign, Star, PackageOpen
 } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
@@ -13,7 +13,7 @@ import ScratchCard from "./ScratchCard";
 import Roulette from "./Roulette";
 import {
   Campaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useCampaignRanking,
-  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats
+  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -70,6 +70,8 @@ const CampaignInlineView: React.FC<Props> = ({
   const campaignId = campaign.id;
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
+  const { data: scratchPrizes } = useScratchCardPrizes(campaignId);
+  const { data: luckyHours } = useLuckyHours(campaignId);
   const { data: allWinners } = useWinners();
   const { data: ranking } = useCampaignRanking(campaignId, 10);
   const { data: userSpins } = useUserCampaignSpins(userId || "", campaignId);
@@ -181,17 +183,11 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
-      {/* CAIXAS COMBOS */}
+      {/* CAIXAS - PRÊMIOS POR CAIXA */}
       {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
-        <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
-          {[1000, 2000, 3000].map((tier, idx) => (
-            <InlineRow
-              key={tier}
-              tone="primary"
-              left={<span className="text-foreground">A partir de {tier} títulos</span>}
-              right={<span className="text-white/90">{idx + 1} chance(s) de contemplação</span>}
-              icon={<Gift className="h-3.5 w-3.5 text-orange-400" />}
-            />
+        <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Prêmios">
+          {mysteryBoxes?.map((box) => (
+            <MysteryBoxPrizesList key={box.id} boxId={box.id} boxName={box.name} />
           ))}
         </SectionCard>
       )}
@@ -244,16 +240,16 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
-      {/* RASPADINHAS COMBOS */}
-      {campaign.scratch_cards_enabled && (
-        <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
-          {[1000, 2000, 3000].map((tier, idx) => (
+      {/* RASPADINHAS - LISTA DE PRÊMIOS */}
+      {campaign.scratch_cards_enabled && (scratchPrizes?.length || 0) > 0 && (
+        <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Prêmios">
+          {scratchPrizes?.map((prize) => (
             <InlineRow
-              key={tier}
+              key={prize.id}
               tone="primary"
-              left={<span className="text-foreground">A partir de {tier} títulos</span>}
-              right={<span className="text-white/90">{idx + 1} chance(s) de contemplação</span>}
-              icon={<Sparkles className="h-3.5 w-3.5 text-sky-300" />}
+              left={<span className="flex items-center gap-2"><Sparkles className="h-3.5 w-3.5 text-sky-300" /><span className="text-foreground">{prize.label}</span></span>}
+              right={<span className="text-white/90">{prize.value ? `R$ ${prize.value}` : prize.prize_type}</span>}
+              icon={<Star className="h-3 w-3 text-amber-400" />}
             />
           ))}
         </SectionCard>
@@ -311,18 +307,68 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
-      {/* ROLETAS COMBOS */}
+      {/* ROLETAS - LISTA DE PRÊMIOS */}
       {campaign.roulette_enabled && (roulettePrizes?.length || 0) > 0 && (
-        <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
-          {[1000, 2000, 3000].map((tier, idx) => (
+        <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Prêmios">
+          {roulettePrizes?.map((prize) => (
             <InlineRow
-              key={tier}
+              key={prize.id}
               tone="primary"
-              left={<span className="text-foreground">A partir de {tier} títulos</span>}
-              right={<span className="text-white/90">{idx + 1} chance(s) de contemplação</span>}
-              icon={<RotateCw className="h-3.5 w-3.5 text-rose-300" />}
+              left={
+                <span className="flex items-center gap-2">
+                  <RotateCw className="h-3.5 w-3.5 text-rose-300" />
+                  <span className="text-foreground">{prize.label}</span>
+                </span>
+              }
+              right={
+                <span className="text-white/90 flex items-center gap-1">
+                  {prize.prize_type === 'balance' && <DollarSign className="h-3 w-3 text-emerald-400" />}
+                  {prize.prize_type === 'ticket' && <Ticket className="h-3 w-3 text-primary" />}
+                  {prize.prize_type === 'points' && <Zap className="h-3 w-3 text-amber-400" />}
+                  {prize.prize_type === 'physical' && <Gift className="h-3 w-3 text-orange-400" />}
+                  {prize.value ? (prize.prize_type === 'balance' ? `R$ ${prize.value}` : `${prize.value}`) : prize.prize_type}
+                </span>
+              }
+              icon={<Star className="h-3 w-3 text-amber-400" />}
             />
           ))}
+        </SectionCard>
+      )}
+
+      {/* EVENTOS E PREMIAÇÕES */}
+      {(luckyHours?.length || 0) > 0 && (
+        <SectionCard
+          icon={<Calendar className="h-3.5 w-3.5 text-amber-500" />}
+          title="Eventos e Premiações"
+          tag={`${luckyHours?.length || 0}`}
+        >
+          {luckyHours?.map((draw) => {
+            const time = new Date(draw.draw_time).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+            const isDone = draw.status === 'completed';
+            return (
+              <InlineRow
+                key={draw.id}
+                tone={isDone ? "won" : "muted"}
+                left={
+                  <span className="flex items-center gap-2 min-w-0">
+                    {draw.draw_type === 'greater_smaller'
+                      ? <TrendingUp className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                      : <Clock className="h-3.5 w-3.5 text-amber-400 shrink-0" />}
+                    <span className="text-foreground truncate">{draw.title}</span>
+                  </span>
+                }
+                right={
+                  isDone && draw.winner_name ? (
+                    <span className="flex items-center gap-1.5 text-emerald-500 font-black">
+                      {draw.winner_name.split(' ')[0]} <Crown className="h-3 w-3" />
+                    </span>
+                  ) : (
+                    <span className="text-[10px] text-muted-foreground font-bold uppercase">{time}</span>
+                  )
+                }
+              />
+            );
+          })}
         </SectionCard>
       )}
 
@@ -473,3 +519,35 @@ const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) =
 );
 
 export default CampaignInlineView;
+
+const MysteryBoxPrizesList: React.FC<{ boxId: string; boxName: string }> = ({ boxId, boxName }) => {
+  const { data: prizes } = useMysteryBoxPrizes(boxId);
+  return (
+    <>
+      <div className="px-2 pt-1 pb-0.5 text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+        <PackageOpen className="h-3 w-3 text-orange-400" /> {boxName}
+      </div>
+      {(prizes || []).map((p) => (
+        <InlineRow
+          key={p.id}
+          tone="primary"
+          left={
+            <span className="flex items-center gap-2">
+              <Gift className="h-3.5 w-3.5 text-orange-300" />
+              <span className="text-foreground">{p.title}</span>
+            </span>
+          }
+          right={
+            <span className="text-white/90 flex items-center gap-1">
+              {p.prize_value ? `R$ ${p.prize_value}` : p.prize_type}
+            </span>
+          }
+          icon={<Star className="h-3 w-3 text-amber-400" />}
+        />
+      ))}
+      {(!prizes || prizes.length === 0) && (
+        <div className="px-3 py-1.5 text-[10px] text-muted-foreground italic">Sem prêmios cadastrados</div>
+      )}
+    </>
+  );
+};
