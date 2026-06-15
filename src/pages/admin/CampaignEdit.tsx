@@ -21,6 +21,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { compressImage } from "@/lib/image-upload";
 import LuckyHourManager from "@/components/admin/LuckyHourManager";
+import CampaignPrizesManager from "@/components/admin/CampaignPrizesManager";
 
 
 interface CampaignForm {
@@ -820,12 +821,15 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="prizes" className="mt-6 space-y-6">
              <Card className="p-6 rounded-2xl border-border shadow-sm">
-                <Label className="text-lg font-bold mb-4 block">Premiação Principal</Label>
+                <div className="mb-4">
+                  <Label className="text-lg font-bold block">Premiação Principal (Top 5)</Label>
+                  <p className="text-xs text-muted-foreground mt-1">Defina os prêmios do 1º ao 5º lugar do sorteio principal desta campanha.</p>
+                </div>
                 <div className="space-y-3">
                   {form.main_prizes.map((p, i) => (
                     <div key={i} className="flex items-center gap-4 bg-secondary/50 p-3 rounded-xl">
                       <span className="w-20 font-bold text-muted-foreground">{p.position}º Lugar</span>
-                      <Input value={p.prize} onChange={(e) => {
+                      <Input placeholder={`Descreva o prêmio do ${p.position}º lugar`} value={p.prize} onChange={(e) => {
                         const n = [...form.main_prizes];
                         n[i].prize = e.target.value;
                         set("main_prizes", n);
@@ -834,6 +838,10 @@ export default function AdminCampaignEdit() {
                   ))}
                 </div>
              </Card>
+
+             {id && id !== "new" && (
+               <CampaignPrizesManager campaignId={id} />
+             )}
 
              <Card className="p-6 rounded-2xl border-border shadow-sm overflow-hidden">
                <div className="flex justify-between items-center mb-6">
