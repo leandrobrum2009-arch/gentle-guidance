@@ -64,6 +64,33 @@ const InlineRow: React.FC<{ left: React.ReactNode; right: React.ReactNode; tone?
   );
 };
 
+const ComboRow: React.FC<{ minTickets: number; chances: number; icon: React.ReactNode; accent: "orange" | "sky" | "rose" }> = ({ minTickets, chances, icon, accent }) => {
+  const grad =
+    accent === "orange" ? "from-indigo-900 via-indigo-800 to-blue-700"
+    : accent === "sky" ? "from-indigo-900 via-indigo-800 to-blue-700"
+    : "from-indigo-900 via-indigo-800 to-blue-700";
+  const iconColor =
+    accent === "orange" ? "text-orange-400"
+    : accent === "sky" ? "text-sky-300"
+    : "text-rose-400";
+  return (
+    <motion.div
+      whileHover={{ scale: 1.01 }}
+      whileTap={{ scale: 0.99 }}
+      className={cn(
+        "flex items-center justify-between gap-2 rounded-lg px-3 h-11 text-white shadow-md bg-gradient-to-r",
+        grad
+      )}
+    >
+      <span className="text-[11px] font-black uppercase tracking-tight">A partir de {minTickets} títulos</span>
+      <div className="flex items-center gap-2 shrink-0">
+        <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider">{chances} chance(s) de contemplação</span>
+        <span className={cn("flex h-6 w-6 items-center justify-center", iconColor)}>{icon}</span>
+      </div>
+    </motion.div>
+  );
+};
+
 const CampaignInlineView: React.FC<Props> = ({
   campaign, onBuy, isPurchasing, isGameInProgress, setIsGameInProgress, luckyNumbersStatus, userId
 }) => {
@@ -192,6 +219,15 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
+      {/* CAIXAS - COMBOS */}
+      {campaign.mystery_box_enabled && Array.isArray(campaign.prize_rules) && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
+        <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
+          {(campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').map((rule: any, i: number) => (
+            <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.reward_quantity || rule.quantity || 1} icon={<Gift className="h-4 w-4" />} accent="orange" />
+          ))}
+        </SectionCard>
+      )}
+
       {/* CAIXAS GANHADORES (clicáveis abrem MysteryBox) */}
       {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
         <SectionCard
@@ -251,6 +287,15 @@ const CampaignInlineView: React.FC<Props> = ({
               right={<span className="text-white/90">{prize.value ? `R$ ${prize.value}` : prize.prize_type}</span>}
               icon={<Star className="h-3 w-3 text-amber-400" />}
             />
+          ))}
+        </SectionCard>
+      )}
+
+      {/* RASPADINHAS - COMBOS */}
+      {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
+        <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
+          {(campaign.scratch_card_rules as any[]).map((rule: any, i: number) => (
+            <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.quantity || rule.spins || 1} icon={<Sparkles className="h-4 w-4" />} accent="sky" />
           ))}
         </SectionCard>
       )}
@@ -331,6 +376,15 @@ const CampaignInlineView: React.FC<Props> = ({
               }
               icon={<Star className="h-3 w-3 text-amber-400" />}
             />
+          ))}
+        </SectionCard>
+      )}
+
+      {/* ROLETAS - COMBOS */}
+      {campaign.roulette_enabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
+        <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
+          {(campaign.roulette_rules as any[]).map((rule: any, i: number) => (
+            <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.spins || 1} icon={<RotateCw className="h-4 w-4" />} accent="rose" />
           ))}
         </SectionCard>
       )}
