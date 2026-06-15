@@ -619,7 +619,6 @@ const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => (
   </Dialog>
 );
 
-const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) => (
 const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) => {
   const { data: stats } = useCampaignTicketStats(campaignId);
   const { data: recent } = useQuery({
