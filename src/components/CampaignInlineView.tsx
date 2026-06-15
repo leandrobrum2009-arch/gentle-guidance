@@ -179,6 +179,33 @@ const CampaignInlineView: React.FC<Props> = ({
         <CampaignPricing campaign={campaign} onBuy={onBuy} isPurchasing={isPurchasing} />
       </div>
 
+      {/* MEU ACESSO - Entitlements do usuário após compra */}
+      {userId && (userSpinsAvailable > 0 || userScratchesAvailable > 0) && (
+        <SectionCard
+          icon={<Ticket className="h-3.5 w-3.5 text-emerald-400" />}
+          title="Meu acesso"
+          tag="Disponível"
+        >
+          <SectionCaption>
+            Você comprou cotas e ganhou estas chances extras. Toque em cada item abaixo para usar.
+          </SectionCaption>
+          {userScratchesAvailable > 0 && (
+            <InlineRow
+              tone="won"
+              left={<span className="flex items-center gap-2"><Sparkles className="h-3.5 w-3.5 text-sky-300" /><span>Raspadinhas para usar</span></span>}
+              right={<span className="text-emerald-400 font-black">{userScratchesAvailable}</span>}
+            />
+          )}
+          {userSpinsAvailable > 0 && (
+            <InlineRow
+              tone="won"
+              left={<span className="flex items-center gap-2"><RotateCw className="h-3.5 w-3.5 text-rose-300" /><span>Giros de roleta</span></span>}
+              right={<span className="text-emerald-400 font-black">{userSpinsAvailable}</span>}
+            />
+          )}
+        </SectionCard>
+      )}
+
       {/* TÍTULOS PREMIADOS */}
       {luckyNumbers.length > 0 && (
         <SectionCard
