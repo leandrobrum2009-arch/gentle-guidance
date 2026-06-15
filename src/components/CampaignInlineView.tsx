@@ -288,7 +288,13 @@ const CampaignInlineView: React.FC<Props> = ({
                     <InlineRow
                       clickable
                       tone="muted"
-                      left={<span className="text-foreground">{box.name}</span>}
+                      left={
+                        <span className="flex items-center gap-2 min-w-0">
+                          <Gift className="h-3.5 w-3.5 text-orange-400 shrink-0" />
+                          <span className="text-foreground truncate">{box.name}</span>
+                          <span className="text-[10px] font-black text-amber-400 shrink-0">R$ {Number(box.cost).toFixed(2)}</span>
+                        </span>
+                      }
                       right={win ? (
                         <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
@@ -360,17 +366,23 @@ const CampaignInlineView: React.FC<Props> = ({
             {scratchWinners.length}/10
           </Badge>}
         >
-          {Array.from({ length: showRaspas ? 10 : 10 }).map((_, i) => {
+          {((scratchPrizes && scratchPrizes.length > 0) ? scratchPrizes : []).map((prize: any, i: number) => {
             const win = scratchWinners[i];
-            const label = i === 0 || i === 1 ? "R$500 no Pix" : "R$100 no Pix";
+            const valueLabel = prize.value ? `R$ ${prize.value}` : prize.prize_type;
             return (
-              <Dialog key={i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
+              <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
                   <div>
                     <InlineRow
                       clickable
                       tone="muted"
-                      left={<span className="text-foreground">{label}</span>}
+                      left={
+                        <span className="flex items-center gap-2 min-w-0">
+                          <Sparkles className="h-3.5 w-3.5 text-sky-300 shrink-0" />
+                          <span className="text-foreground truncate">{prize.label}</span>
+                          <span className="text-[10px] font-black text-amber-400 shrink-0">{valueLabel}</span>
+                        </span>
+                      }
                       right={win ? (
                         <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
@@ -491,6 +503,7 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {(showRoletas ? roulettePrizes : roulettePrizes?.slice(0, 10))?.map((prize, i) => {
             const win = rouletteWinners.find(w => w.prize_description === prize.label);
+            const valueLabel = prize.value ? (prize.prize_type === 'balance' ? `R$ ${prize.value}` : `${prize.value}`) : prize.prize_type;
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -498,7 +511,13 @@ const CampaignInlineView: React.FC<Props> = ({
                     <InlineRow
                       clickable
                       tone="muted"
-                      left={<span className="text-foreground">{prize.label}</span>}
+                      left={
+                        <span className="flex items-center gap-2 min-w-0">
+                          <RotateCw className="h-3.5 w-3.5 text-rose-300 shrink-0" />
+                          <span className="text-foreground truncate">{prize.label}</span>
+                          <span className="text-[10px] font-black text-amber-400 shrink-0">{valueLabel}</span>
+                        </span>
+                      }
                       right={win ? (
                         <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
