@@ -23,7 +23,8 @@ import { useAuth } from "@/contexts/AuthContext";
     markNotificationsAsRead,
     useUserReferrals,
     useAffiliateCommissions,
-    useSiteSettings
+    useSiteSettings,
+    useUserPrizesByCampaign
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -84,14 +85,14 @@ import { PaymentModal } from "@/components/PaymentModal";
 
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
-      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate"];
+     const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate", "premios"];
      return validTabs.includes(hash) ? hash : "overview";
    });
  
    useEffect(() => {
      const handleHashChange = () => {
        const hash = window.location.hash.replace('#', '');
-       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate"];
+      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate", "premios"];
        if (validTabs.includes(hash)) {
          setActiveTab(hash);
        }
@@ -425,6 +426,7 @@ import { PaymentModal } from "@/components/PaymentModal";
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
                 { label: "Meus Títulos", id: "tickets", icon: Ticket },
+                { label: "Meus Prêmios", id: "premios", icon: Trophy },
                 { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
