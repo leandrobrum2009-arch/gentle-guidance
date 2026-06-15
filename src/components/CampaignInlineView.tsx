@@ -519,3 +519,35 @@ const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) =
 );
 
 export default CampaignInlineView;
+
+const MysteryBoxPrizesList: React.FC<{ boxId: string; boxName: string }> = ({ boxId, boxName }) => {
+  const { data: prizes } = useMysteryBoxPrizes(boxId);
+  return (
+    <>
+      <div className="px-2 pt-1 pb-0.5 text-[9px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-1.5">
+        <PackageOpen className="h-3 w-3 text-orange-400" /> {boxName}
+      </div>
+      {(prizes || []).map((p) => (
+        <InlineRow
+          key={p.id}
+          tone="primary"
+          left={
+            <span className="flex items-center gap-2">
+              <Gift className="h-3.5 w-3.5 text-orange-300" />
+              <span className="text-foreground">{p.title}</span>
+            </span>
+          }
+          right={
+            <span className="text-white/90 flex items-center gap-1">
+              {p.prize_value ? `R$ ${p.prize_value}` : p.prize_type}
+            </span>
+          }
+          icon={<Star className="h-3 w-3 text-amber-400" />}
+        />
+      ))}
+      {(!prizes || prizes.length === 0) && (
+        <div className="px-3 py-1.5 text-[10px] text-muted-foreground italic">Sem prêmios cadastrados</div>
+      )}
+    </>
+  );
+};
