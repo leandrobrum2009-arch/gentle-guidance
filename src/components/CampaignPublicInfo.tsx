@@ -55,7 +55,7 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
   }, [campaign.lucky_numbers_prizes]);
 
   const allWinners = useMemo(() => {
-    const combined = [
+    const combined: any[] = [
       ...(mysteryBoxWins?.map(w => ({ ...w, type: 'mystery' })) || []),
       ...(rouletteSpins?.filter((s: any) => s.prize_label && s.prize_type !== 'none').map(s => ({ ...s, type: 'roulette' })) || []),
       ...(luckyWinners?.map(l => ({ ...l, type: 'lucky' })) || [])
