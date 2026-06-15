@@ -41,6 +41,10 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; tag?: string
   </div>
 );
 
+const SectionCaption: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p className="px-1 -mt-1 text-[10px] leading-snug text-muted-foreground font-medium">{children}</p>
+);
+
 const InlineRow: React.FC<{ left: React.ReactNode; right: React.ReactNode; tone?: "muted" | "won" | "primary"; icon?: React.ReactNode; onClick?: () => void; clickable?: boolean }> = ({ left, right, tone = "muted", icon, onClick, clickable }) => {
   const toneCls =
     tone === "won" ? "bg-primary/15 border-primary/40 text-foreground"
