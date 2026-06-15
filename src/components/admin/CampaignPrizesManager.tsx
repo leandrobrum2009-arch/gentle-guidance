@@ -11,8 +11,9 @@ import { Plus, Trash2, Sparkles, Gift, RotateCw, Trophy, Loader2, ChevronDown, C
 
 type ScratchPrize = { id: string; campaign_id: string | null; label: string; value: number; prize_type: string; chance_percent: number; is_active: boolean };
 type RoulettePrize = { id: string; campaign_id: string | null; label: string; value: number | null; prize_type: string; chance_percent: number | null; color: string | null };
-type BoxConfig = { id: string; campaign_id: string | null; name: string; rarity: string; cost: number; is_active: boolean | null };
-type BoxPrize = { id: string; config_id: string | null; title: string; description: string | null; prize_type: string; prize_value: number | null; chance_percent: number; rarity: string };
+type Rarity = "common" | "rare" | "epic" | "legendary";
+type BoxConfig = { id: string; campaign_id: string | null; name: string; rarity: Rarity; cost: number; is_active: boolean | null };
+type BoxPrize = { id: string; config_id: string | null; title: string; description: string | null; prize_type: string; prize_value: number | null; chance_percent: number; rarity: Rarity };
 
 const PRIZE_TYPES = [
   { value: "balance", label: "Saldo (R$)" },
@@ -22,7 +23,7 @@ const PRIZE_TYPES = [
   { value: "none", label: "Sem prêmio" },
 ];
 
-const RARITIES = ["common", "rare", "epic", "legendary"];
+const RARITIES: Rarity[] = ["common", "rare", "epic", "legendary"];
 
 function SectionHeader({ icon: Icon, title, color, count, onAdd, addLabel }: any) {
   return (
