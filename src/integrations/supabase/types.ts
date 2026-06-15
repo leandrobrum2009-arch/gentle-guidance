@@ -1760,6 +1760,62 @@ export type Database = {
       }
     }
     Views: {
+      lucky_hours_public: {
+        Row: {
+          campaign_id: string | null
+          created_at: string | null
+          draw_time: string | null
+          draw_type: string | null
+          id: string | null
+          is_approved: boolean | null
+          prize_description: string | null
+          rule_id: string | null
+          status: string | null
+          title: string | null
+          updated_at: string | null
+          winner_name: string | null
+          winning_number: string | null
+        }
+        Insert: {
+          campaign_id?: string | null
+          created_at?: string | null
+          draw_time?: string | null
+          draw_type?: string | null
+          id?: string | null
+          is_approved?: boolean | null
+          prize_description?: string | null
+          rule_id?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          winner_name?: never
+          winning_number?: never
+        }
+        Update: {
+          campaign_id?: string | null
+          created_at?: string | null
+          draw_time?: string | null
+          draw_type?: string | null
+          id?: string | null
+          is_approved?: boolean | null
+          prize_description?: string | null
+          rule_id?: string | null
+          status?: string | null
+          title?: string | null
+          updated_at?: string | null
+          winner_name?: never
+          winning_number?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lucky_hours_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       orders_public_ranking: {
         Row: {
           campaign_id: string | null
