@@ -16,6 +16,8 @@ import {
   useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   campaign: Campaign;
@@ -169,7 +171,12 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* QUICK ACTION BUTTONS */}
       <div className="space-y-2">
-        <QuickActionPrizes luckyNumbers={luckyNumbers} luckyNumbersStatus={luckyNumbersStatus} />
+        <QuickActionPrizes
+          mainPrizes={(campaign as any).main_prizes || []}
+          mysteryBoxes={mysteryBoxes || []}
+          scratchPrizes={scratchPrizes || []}
+          roulettePrizes={roulettePrizes || []}
+        />
         <QuickActionRanking ranking={ranking} />
         <QuickActionExtremes campaignId={campaignId} />
       </div>
