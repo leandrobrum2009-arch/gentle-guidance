@@ -16,6 +16,8 @@ import {
   useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
   campaign: Campaign;
@@ -169,7 +171,12 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* QUICK ACTION BUTTONS */}
       <div className="space-y-2">
-        <QuickActionPrizes luckyNumbers={luckyNumbers} luckyNumbersStatus={luckyNumbersStatus} />
+        <QuickActionPrizes
+          mainPrizes={(campaign as any).main_prizes || []}
+          mysteryBoxes={mysteryBoxes || []}
+          scratchPrizes={scratchPrizes || []}
+          roulettePrizes={roulettePrizes || []}
+        />
         <QuickActionRanking ranking={ranking} />
         <QuickActionExtremes campaignId={campaignId} />
       </div>
@@ -531,34 +538,57 @@ const CampaignInlineView: React.FC<Props> = ({
 
 /* ============ Quick action buttons (open modals) ============ */
 
-const QuickActionPrizes: React.FC<{ luckyNumbers: any[]; luckyNumbersStatus: Record<string, boolean> }> = ({ luckyNumbers, luckyNumbersStatus }) => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
-        <Trophy className="h-4 w-4 text-amber-500" /> Prêmios
-      </button>
-    </DialogTrigger>
-    <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" /> Prêmios da Campanha</DialogTitle>
-        <DialogDescription>Lista dos números premiados</DialogDescription>
-      </DialogHeader>
+const QuickActionPrizes: React.FC<{
+  mainPrizes: { position: number; prize: string }[];
+  mysteryBoxes: any[];
+  scratchPrizes: any[];
+  roulettePrizes: any[];
+}> = ({ mainPrizes, mysteryBoxes, scratchPrizes, roulettePrizes }) => {
+  const Section = ({ title, icon, items }: { title: string; icon: React.ReactNode; items: { label: string; value?: string }[] }) =>
+    items.length === 0 ? null : (
       <div className="space-y-1.5">
-        {luckyNumbers.length === 0 && <p className="text-sm text-muted-foreground text-center py-6">Nenhum prêmio cadastrado.</p>}
-        {luckyNumbers.map((p: any, i: number) => {
-          const won = !!luckyNumbersStatus[p.number];
-          return (
-            <div key={i} className={cn("flex items-center justify-between rounded-lg border px-3 h-9 text-xs", won ? "bg-emerald-500/10 border-emerald-500/30" : "bg-secondary/40 border-border")}>
-              <span className="font-mono font-black">{p.number}</span>
-              <span className={cn("font-black", won ? "text-emerald-500" : "text-foreground")}>{p.prize ? `R$ ${p.prize}` : "—"}</span>
-              <Badge variant="outline" className="text-[9px] h-5 px-2 font-black">{won ? "Premiado" : "Disponível"}</Badge>
+        <div className="flex items-center gap-2 px-1">
+          {icon}
+          <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{title}</h4>
+        </div>
+        <div className="space-y-1">
+          {items.map((it, i) => (
+            <div key={i} className="flex items-center justify-between rounded-lg border border-border bg-secondary/40 px-3 h-9 text-[11px]">
+              <span className="font-bold text-foreground truncate">{it.label}</span>
+              {it.value && <span className="font-black text-emerald-400 shrink-0">{it.value}</span>}
             </div>
-          );
-        })}
+          ))}
+        </div>
       </div>
-    </DialogContent>
-  </Dialog>
-);
+    );
+  const mainItems = (mainPrizes || []).sort((a, b) => a.position - b.position).map((p) => ({ label: `${p.position}º Lugar`, value: p.prize }));
+  const boxItems = (mysteryBoxes || []).map((b: any) => ({ label: b.name, value: `R$ ${Number(b.cost || 0).toFixed(2)}` }));
+  const scratchItems = (scratchPrizes || []).map((p: any) => ({ label: p.label, value: p.value ? `R$ ${p.value}` : p.prize_type }));
+  const rouletteItems = (roulettePrizes || []).map((p: any) => ({ label: p.label, value: p.value ? (p.prize_type === 'balance' ? `R$ ${p.value}` : `${p.value}`) : p.prize_type }));
+  const total = mainItems.length + boxItems.length + scratchItems.length + rouletteItems.length;
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
+          <Trophy className="h-4 w-4 text-amber-500" /> Prêmios
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" /> Prêmios desta Rifa</DialogTitle>
+          <DialogDescription>Tudo o que você pode ganhar nesta campanha</DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4">
+          {total === 0 && <p className="text-sm text-muted-foreground text-center py-6">Nenhum prêmio cadastrado.</p>}
+          <Section title="Premiação Principal" icon={<Crown className="h-3.5 w-3.5 text-amber-500" />} items={mainItems} />
+          <Section title="Caixas Surpresas" icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} items={boxItems} />
+          <Section title="Raspadinhas" icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} items={scratchItems} />
+          <Section title="Roleta Instantânea" icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} items={rouletteItems} />
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => (
   <Dialog>
@@ -589,34 +619,71 @@ const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => (
   </Dialog>
 );
 
-const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) => (
-  <Dialog>
-    <DialogTrigger asChild>
-      <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
-        <TrendingUp className="h-4 w-4 text-emerald-500" /> Maior e Menor Cota
-      </button>
-    </DialogTrigger>
-    <DialogContent className="max-w-md">
-      <DialogHeader>
-        <DialogTitle className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-emerald-500" /> Maior e Menor Cota</DialogTitle>
-        <DialogDescription>Prêmios para os extremos da campanha</DialogDescription>
-      </DialogHeader>
-      <div className="grid grid-cols-2 gap-3">
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center">
-          <Crown className="h-5 w-5 text-emerald-500 mx-auto mb-1" />
-          <p className="text-[10px] font-black uppercase text-muted-foreground">Maior Cota</p>
-          <p className="text-lg font-black text-emerald-500">—</p>
+const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) => {
+  const { data: stats } = useCampaignTicketStats(campaignId);
+  const { data: recent } = useQuery({
+    queryKey: ["campaign-recent-buyers", campaignId],
+    enabled: !!campaignId,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("orders")
+        .select("quantity, created_at, profiles!user_id(name, avatar_url)")
+        .eq("campaign_id", campaignId)
+        .eq("payment_status", "paid")
+        .order("created_at", { ascending: false })
+        .limit(5);
+      if (error) throw error;
+      return data || [];
+    },
+  });
+  const highest = (stats as any)?.highestTickets?.[0];
+  const lowest = (stats as any)?.lowestTickets?.[0];
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
+          <TrendingUp className="h-4 w-4 text-emerald-500" /> Maior e Menor Cota
+        </button>
+      </DialogTrigger>
+      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2"><TrendingUp className="h-4 w-4 text-emerald-500" /> Maior e Menor Cota</DialogTitle>
+          <DialogDescription>Posições atuais — ainda podem mudar até o sorteio</DialogDescription>
+        </DialogHeader>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-center">
+            <Crown className="h-5 w-5 text-emerald-500 mx-auto mb-1" />
+            <p className="text-[10px] font-black uppercase text-muted-foreground">Maior Cota</p>
+            <p className="text-lg font-black text-emerald-500">{highest?.number ?? "—"}</p>
+            <p className="text-[10px] font-bold text-foreground truncate">{(highest as any)?.profiles?.name || ""}</p>
+          </div>
+          <div className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-3 text-center">
+            <Award className="h-5 w-5 text-sky-500 mx-auto mb-1" />
+            <p className="text-[10px] font-black uppercase text-muted-foreground">Menor Cota</p>
+            <p className="text-lg font-black text-sky-500">{lowest?.number ?? "—"}</p>
+            <p className="text-[10px] font-bold text-foreground truncate">{(lowest as any)?.profiles?.name || ""}</p>
+          </div>
         </div>
-        <div className="rounded-xl border border-sky-500/30 bg-sky-500/10 p-3 text-center">
-          <Award className="h-5 w-5 text-sky-500 mx-auto mb-1" />
-          <p className="text-[10px] font-black uppercase text-muted-foreground">Menor Cota</p>
-          <p className="text-lg font-black text-sky-500">—</p>
+        <div className="mt-4 space-y-2">
+          <div className="flex items-center gap-2 px-1">
+            <Users className="h-3.5 w-3.5 text-primary" />
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Últimos 5 compradores</h4>
+          </div>
+          {(recent || []).length === 0 && (
+            <p className="text-[11px] text-muted-foreground text-center py-3">Sem compradores recentes.</p>
+          )}
+          {(recent || []).map((r: any, i: number) => (
+            <div key={i} className="flex items-center gap-2 rounded-lg border border-border bg-secondary/40 px-3 h-9 text-[11px]">
+              <Avatar className="h-6 w-6"><AvatarImage src={r.profiles?.avatar_url} /><AvatarFallback>{(r.profiles?.name || "?")[0]}</AvatarFallback></Avatar>
+              <span className="flex-1 font-bold text-foreground truncate">{r.profiles?.name || "Anônimo"}</span>
+              <span className="font-black text-primary">{r.quantity} cotas</span>
+            </div>
+          ))}
         </div>
-      </div>
-      <p className="text-[10px] text-muted-foreground text-center mt-2">Os prêmios serão definidos no horário do sorteio.</p>
-    </DialogContent>
-  </Dialog>
-);
+      </DialogContent>
+    </Dialog>
+  );
+};
 
 export default CampaignInlineView;
 
