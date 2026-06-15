@@ -41,6 +41,10 @@ const SectionCard: React.FC<{ icon: React.ReactNode; title: string; tag?: string
   </div>
 );
 
+const SectionCaption: React.FC<{ children: React.ReactNode }> = ({ children }) => (
+  <p className="px-1 -mt-1 text-[10px] leading-snug text-muted-foreground font-medium">{children}</p>
+);
+
 const InlineRow: React.FC<{ left: React.ReactNode; right: React.ReactNode; tone?: "muted" | "won" | "primary"; icon?: React.ReactNode; onClick?: () => void; clickable?: boolean }> = ({ left, right, tone = "muted", icon, onClick, clickable }) => {
   const toneCls =
     tone === "won" ? "bg-primary/15 border-primary/40 text-foreground"
@@ -175,6 +179,33 @@ const CampaignInlineView: React.FC<Props> = ({
         <CampaignPricing campaign={campaign} onBuy={onBuy} isPurchasing={isPurchasing} />
       </div>
 
+      {/* MEU ACESSO - Entitlements do usuário após compra */}
+      {userId && (userSpinsAvailable > 0 || userScratchesAvailable > 0) && (
+        <SectionCard
+          icon={<Ticket className="h-3.5 w-3.5 text-emerald-400" />}
+          title="Meu acesso"
+          tag="Disponível"
+        >
+          <SectionCaption>
+            Você comprou cotas e ganhou estas chances extras. Toque em cada item abaixo para usar.
+          </SectionCaption>
+          {userScratchesAvailable > 0 && (
+            <InlineRow
+              tone="won"
+              left={<span className="flex items-center gap-2"><Sparkles className="h-3.5 w-3.5 text-sky-300" /><span>Raspadinhas para usar</span></span>}
+              right={<span className="text-emerald-400 font-black">{userScratchesAvailable}</span>}
+            />
+          )}
+          {userSpinsAvailable > 0 && (
+            <InlineRow
+              tone="won"
+              left={<span className="flex items-center gap-2"><RotateCw className="h-3.5 w-3.5 text-rose-300" /><span>Giros de roleta</span></span>}
+              right={<span className="text-emerald-400 font-black">{userSpinsAvailable}</span>}
+            />
+          )}
+        </SectionCard>
+      )}
+
       {/* TÍTULOS PREMIADOS */}
       {luckyNumbers.length > 0 && (
         <SectionCard
@@ -222,6 +253,9 @@ const CampaignInlineView: React.FC<Props> = ({
       {/* CAIXAS - COMBOS */}
       {campaign.mystery_box_enabled && Array.isArray(campaign.prize_rules) && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
         <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
+          <SectionCaption>
+            Comprando a quantidade mínima de cotas abaixo, você ganha aberturas grátis de Caixa Surpresa para concorrer aos prêmios listados acima.
+          </SectionCaption>
           {(campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').map((rule: any, i: number) => (
             <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.reward_quantity || rule.quantity || 1} icon={<Gift className="h-4 w-4" />} accent="orange" />
           ))}
@@ -256,14 +290,20 @@ const CampaignInlineView: React.FC<Props> = ({
                     />
                   </div>
                 </DialogTrigger>
-                <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto"
+                <DialogContent className="max-w-lg p-0 w-[95vw] md:w-full max-h-[90vh] overflow-y-auto bg-zinc-950 border border-white/10 rounded-2xl"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
                   onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
-                  <DialogHeader className="sr-only">
-                    <DialogTitle>{box.name}</DialogTitle>
-                    <DialogDescription>Abra a caixa surpresa e descubra seu prêmio</DialogDescription>
+                  <DialogHeader className="px-4 pt-4 pb-2 border-b border-white/10">
+                    <DialogTitle className="text-base font-black uppercase italic tracking-tighter flex items-center gap-2">
+                      <Gift className="h-4 w-4 text-orange-500" /> {box.name}
+                    </DialogTitle>
+                    <DialogDescription className="text-[11px] text-muted-foreground">
+                      Abra a caixa e descubra seu prêmio. Custo: R$ {Number(box.cost).toFixed(2)}.
+                    </DialogDescription>
                   </DialogHeader>
-                  <MysteryBox boxes={[box]} campaignId={campaignId} />
+                  <div className="p-3">
+                    <MysteryBox boxes={[box]} campaignId={campaignId} />
+                  </div>
                 </DialogContent>
               </Dialog>
             );
@@ -294,6 +334,9 @@ const CampaignInlineView: React.FC<Props> = ({
       {/* RASPADINHAS - COMBOS */}
       {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
         <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
+          <SectionCaption>
+            A cada faixa de cotas compradas você libera raspadinhas grátis com chance de ganhar saldo, pontos ou cotas extras.
+          </SectionCaption>
           {(campaign.scratch_card_rules as any[]).map((rule: any, i: number) => (
             <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.quantity || rule.spins || 1} icon={<Sparkles className="h-4 w-4" />} accent="sky" />
           ))}
@@ -383,6 +426,9 @@ const CampaignInlineView: React.FC<Props> = ({
       {/* ROLETAS - COMBOS */}
       {campaign.roulette_enabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
         <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
+          <SectionCaption>
+            Compre a partir da quantidade indicada e ganhe giros grátis na roleta para concorrer aos prêmios instantâneos.
+          </SectionCaption>
           {(campaign.roulette_rules as any[]).map((rule: any, i: number) => (
             <ComboRow key={i} minTickets={rule.min_tickets} chances={rule.spins || 1} icon={<RotateCw className="h-4 w-4" />} accent="rose" />
           ))}
