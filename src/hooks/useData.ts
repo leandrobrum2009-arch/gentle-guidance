@@ -981,3 +981,81 @@ export const useGlobalStats = () =>
     },
     refetchInterval: 30000, // Refresh every 30s
   });
+
+// User prizes grouped by campaign — for the "Meus Prêmios" panel.
+export const useUserPrizesByCampaign = (userId: string) =>
+  useQuery({
+    queryKey: ["user-prizes-by-campaign", userId],
+    enabled: !!userId,
+    queryFn: async () => {
+      const [ordersRes, spinsRes, scratchesRes, boxWinsRes] = await Promise.all([
+        supabase
+          .from("orders")
+          .select("id, campaign_id, payment_status, created_at, campaigns(id, title, slug, image_url, draw_number, status, draw_date), tickets(number, is_lucky)")
+          .eq("user_id", userId)
+          .eq("payment_status", "paid"),
+        supabase
+          .from("roulette_spins")
+          .select("id, campaign_id, prize_label, prize_value, prize_type, created_at, campaigns(id, title, slug, image_url)")
+          .eq("user_id", userId)
+          .not("prize_label", "is", null)
+          .neq("prize_type", "none"),
+        supabase
+          .from("scratch_card_scratches")
+          .select("id, campaign_id, prize_label, prize_value, prize_type, created_at, is_winner, campaigns(id, title, slug, image_url)")
+          .eq("user_id", userId)
+          .eq("is_winner", true),
+        supabase
+          .from("mystery_box_wins")
+          .select("id, prize_title, prize_value, created_at, mystery_box_configs!config_id(campaign_id, name, campaigns(id, title, slug, image_url))")
+          .eq("user_id", userId),
+      ]);
+
+      const map: Record<string, any> = {};
+      const touch = (camp: any) => {
+        if (!camp?.id) return null;
+        if (!map[camp.id]) {
+          map[camp.id] = {
+            campaign: camp,
+            mainPrize: null as any,
+            spins: [] as any[],
+            scratches: [] as any[],
+            boxes: [] as any[],
+            total: 0,
+          };
+        }
+        return map[camp.id];
+      };
+
+      (ordersRes.data || []).forEach((o: any) => {
+        const bucket = touch(o.campaigns);
+        if (!bucket) return;
+        const drawNumber = o.campaigns?.draw_number;
+        if (drawNumber) {
+          const win = (o.tickets || []).find((t: any) => t.number === drawNumber);
+          if (win) bucket.mainPrize = { number: drawNumber, draw_date: o.campaigns?.draw_date };
+        }
+      });
+      (spinsRes.data || []).forEach((s: any) => {
+        const bucket = touch(s.campaigns);
+        if (!bucket) return;
+        bucket.spins.push(s);
+        bucket.total += Number(s.prize_value || 0);
+      });
+      (scratchesRes.data || []).forEach((s: any) => {
+        const bucket = touch(s.campaigns);
+        if (!bucket) return;
+        bucket.scratches.push(s);
+        bucket.total += Number(s.prize_value || 0);
+      });
+      (boxWinsRes.data || []).forEach((b: any) => {
+        const camp = b.mystery_box_configs?.campaigns;
+        const bucket = touch(camp);
+        if (!bucket) return;
+        bucket.boxes.push({ ...b, box_name: b.mystery_box_configs?.name });
+        bucket.total += Number(b.prize_value || 0);
+      });
+
+      return Object.values(map).sort((a: any, b: any) => b.total - a.total);
+    },
+  });

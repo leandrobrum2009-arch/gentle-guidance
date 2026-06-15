@@ -23,7 +23,8 @@ import { useAuth } from "@/contexts/AuthContext";
     markNotificationsAsRead,
     useUserReferrals,
     useAffiliateCommissions,
-    useSiteSettings
+    useSiteSettings,
+    useUserPrizesByCampaign
  } from "@/hooks/useData";
  import { useIsAdmin } from "@/hooks/useAdmin";
  import { useQueryClient } from "@tanstack/react-query";
@@ -84,14 +85,14 @@ import { PaymentModal } from "@/components/PaymentModal";
 
    const [activeTab, setActiveTab] = useState(() => {
      const hash = window.location.hash.replace('#', '');
-      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate"];
+     const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate", "premios"];
      return validTabs.includes(hash) ? hash : "overview";
    });
  
    useEffect(() => {
      const handleHashChange = () => {
        const hash = window.location.hash.replace('#', '');
-       const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate"];
+      const validTabs = ["overview", "tickets", "notifications", "finance", "ranking", "achievements", "games", "affiliate", "premios"];
        if (validTabs.includes(hash)) {
          setActiveTab(hash);
        }
@@ -425,6 +426,7 @@ import { PaymentModal } from "@/components/PaymentModal";
               {[
                 { label: "Painel Geral", id: "overview", icon: Activity },
                 { label: "Meus Títulos", id: "tickets", icon: Ticket },
+                { label: "Meus Prêmios", id: "premios", icon: Trophy },
                 { label: "Notificações", id: "notifications", icon: Bell },
                 { label: "Carteira & PIX", id: "finance", icon: Wallet },
                 { label: "Ranking Global", id: "ranking", icon: Trophy },
@@ -799,7 +801,11 @@ import { PaymentModal } from "@/components/PaymentModal";
                  </Card>
                </TabsContent>
 
-               <TabsContent value="finance" className="space-y-6">
+              <TabsContent value="premios" className="space-y-6">
+                <PrizesByCampaignPanel userId={user?.id || ""} />
+              </TabsContent>
+
+              <TabsContent value="finance" className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                      <Card className="bg-gradient-to-br from-primary/20 to-zinc-900/50 border-primary/20 p-8 rounded-[32px] overflow-hidden relative group">
                         <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
@@ -1299,6 +1305,103 @@ import { PaymentModal } from "@/components/PaymentModal";
       />
 
       <Footer />
+    </div>
+  );
+}
+
+function PrizesByCampaignPanel({ userId }: { userId: string }) {
+  const { data: groups, isLoading } = useUserPrizesByCampaign(userId);
+
+  if (!userId || isLoading) {
+    return (
+      <Card className="bg-card/50 border-border p-10 text-center">
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Carregando seus prêmios...</p>
+      </Card>
+    );
+  }
+
+  if (!groups || groups.length === 0) {
+    return (
+      <Card className="bg-card/50 border-border p-10 text-center">
+        <Trophy className="h-12 w-12 mx-auto mb-3 text-muted-foreground opacity-30" />
+        <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Você ainda não ganhou prêmios.</p>
+        <p className="text-[10px] text-muted-foreground mt-2">Participe de uma campanha, gire a roleta, abra caixas ou raspe raspadinhas para ver seus prêmios aqui.</p>
+      </Card>
+    );
+  }
+
+  return (
+    <div className="space-y-4">
+      {(groups as any[]).map((g) => (
+        <Card key={g.campaign.id} className="bg-card border-border overflow-hidden">
+          <div className="flex items-center gap-3 p-4 border-b border-border bg-secondary/30">
+            <img src={g.campaign.image_url || "/placeholder.svg"} className="h-12 w-12 rounded-xl object-cover" />
+            <div className="flex-1 min-w-0">
+              <Link to={`/campanha/${g.campaign.slug || g.campaign.id}`} className="text-sm font-black uppercase tracking-tight hover:text-primary truncate block">
+                {g.campaign.title}
+              </Link>
+              <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">
+                {g.mainPrize ? `Sorteio: nº ${g.mainPrize.number}` : g.campaign.draw_number ? `Nº oficial: ${g.campaign.draw_number}` : "Sorteio pendente"}
+              </p>
+            </div>
+            <Badge className="bg-emerald-500/15 text-emerald-400 border-emerald-500/30 text-[10px] font-black uppercase">
+              R$ {Number(g.total).toFixed(2)}
+            </Badge>
+          </div>
+
+          <div className="p-4 space-y-3">
+            {g.mainPrize && (
+              <div className="flex items-center justify-between p-3 rounded-xl bg-amber-500/10 border border-amber-500/30">
+                <div className="flex items-center gap-2">
+                  <Trophy className="h-4 w-4 text-amber-400" />
+                  <div>
+                    <p className="text-xs font-black uppercase">Prêmio Principal da Rifa</p>
+                    <p className="text-[10px] text-muted-foreground font-bold">Número premiado: {g.mainPrize.number}</p>
+                  </div>
+                </div>
+                <Badge className="bg-amber-500 text-white text-[10px] font-black uppercase border-none">Reivindicar</Badge>
+              </div>
+            )}
+
+            {g.spins.length > 0 && (
+              <PrizeGroupList icon={<RotateCw className="h-3.5 w-3.5 text-primary" />} title={`Roleta (${g.spins.length})`} items={g.spins.map((s: any) => ({ label: s.prize_label, value: s.prize_value, date: s.created_at, type: s.prize_type }))} accent="text-primary" />
+            )}
+            {g.scratches.length > 0 && (
+              <PrizeGroupList icon={<Zap className="h-3.5 w-3.5 text-sky-400" />} title={`Raspadinhas (${g.scratches.length})`} items={g.scratches.map((s: any) => ({ label: s.prize_label, value: s.prize_value, date: s.created_at, type: s.prize_type }))} accent="text-sky-400" />
+            )}
+            {g.boxes.length > 0 && (
+              <PrizeGroupList icon={<Package className="h-3.5 w-3.5 text-orange-400" />} title={`Caixas Surpresas (${g.boxes.length})`} items={g.boxes.map((b: any) => ({ label: `${b.box_name ? b.box_name + " · " : ""}${b.prize_title}`, value: b.prize_value, date: b.created_at }))} accent="text-orange-400" />
+            )}
+          </div>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+function PrizeGroupList({ icon, title, items, accent }: { icon: React.ReactNode; title: string; items: { label: string; value: number; date: string; type?: string }[]; accent: string }) {
+  return (
+    <div className="space-y-2">
+      <div className="flex items-center gap-2">
+        {icon}
+        <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{title}</h4>
+      </div>
+      <div className="space-y-1.5">
+        {items.map((it, i) => (
+          <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-secondary/40 border border-border">
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-tight truncate">{it.label}</p>
+              <p className="text-[9px] text-muted-foreground font-bold uppercase">{format(new Date(it.date), "dd/MM/yy HH:mm")}</p>
+            </div>
+            <div className="text-right">
+              <p className={cn("text-xs font-black", accent)}>R$ {Number(it.value || 0).toFixed(2)}</p>
+              {it.type && it.type !== "balance" && (
+                <p className="text-[9px] text-muted-foreground font-bold uppercase">{it.type}</p>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
