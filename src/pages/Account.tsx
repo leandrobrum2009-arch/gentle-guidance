@@ -802,6 +802,13 @@ import { PaymentModal } from "@/components/PaymentModal";
                </TabsContent>
 
                <TabsContent value="finance" className="space-y-6">
+              </TabsContent>
+
+              <TabsContent value="premios" className="space-y-6">
+                <PrizesByCampaignPanel userId={user?.id || ""} />
+              </TabsContent>
+
+              <TabsContent value="__finance_placeholder__" className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                      <Card className="bg-gradient-to-br from-primary/20 to-zinc-900/50 border-primary/20 p-8 rounded-[32px] overflow-hidden relative group">
                         <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
