@@ -297,20 +297,16 @@ export const useCampaignLuckyWinners = (campaignId: string) =>
     queryKey: ["campaign-lucky-winners", campaignId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tickets")
-        .select(`
-          number,
-          user_id,
-          profiles!user_id (
-            name
-          )
-        `)
+        .from("winners")
+        .select("ticket_number, winner_name")
         .eq("campaign_id", campaignId)
-        .eq("is_lucky", true)
-        .eq("status", "confirmed");
+        .eq("winner_type", "lucky_number");
       
       if (error) throw error;
-      return data as any[];
+      return (data as any[]).map((w) => ({
+        number: w.ticket_number,
+        profiles: { name: w.winner_name },
+      }));
     },
     enabled: !!campaignId,
   });
@@ -514,7 +510,7 @@ export const useLuckyHours = (campaignId: string) =>
     queryKey: ["lucky_hours", campaignId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("lucky_hours")
+        .from("lucky_hours_public" as any)
         .select("*")
         .eq("campaign_id", campaignId)
         .order("draw_time", { ascending: true });
@@ -783,7 +779,7 @@ export const useTickets = (campaignId: string, enabled = true) =>
     queryKey: ["tickets", campaignId, enabled],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("tickets")
+        .from("tickets_public" as any)
         .select("*")
         .eq("campaign_id", campaignId);
       if (error) throw error;
