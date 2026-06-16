@@ -1175,6 +1175,13 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'winners':
+        return (
+          <div key={section} className="bg-card rounded-3xl p-6 md:p-8 border border-border shadow-sm">
+            <CampaignPublicInfo campaign={campaign} />
+          </div>
+        );
+
       case 'roulette_footer':
         return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
           <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
@@ -1565,7 +1572,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
 
   const isInlineLayout = siteSettings?.layout_mode === 'inline';
 
@@ -1591,6 +1598,7 @@ const CampaignDetail = () => {
             setIsGameInProgress={setIsGameInProgress}
             luckyNumbersStatus={luckyNumbersStatus}
             userId={user?.id}
+            sectionsOrder={sectionsOrder}
           />
         ) : (
           <div className="flex flex-col gap-8 md:gap-12 mt-0">
