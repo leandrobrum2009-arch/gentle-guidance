@@ -13,7 +13,8 @@ import ScratchCard from "./ScratchCard";
 import Roulette from "./Roulette";
 import {
   Campaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useCampaignRanking,
-  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes
+  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes,
+  useCampaignRouletteSpins, useCampaignMysteryBoxWins, useCampaignScratchWins
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
@@ -111,6 +112,9 @@ const CampaignInlineView: React.FC<Props> = ({
   const { data: userSpins } = useUserCampaignSpins(userId || "", campaignId);
   const { data: userScratches } = useUserCampaignScratches(userId || "", campaignId);
   const { data: ticketStats } = useCampaignTicketStats(campaignId);
+  const { data: rouletteWinSpins } = useCampaignRouletteSpins(campaignId, 200);
+  const { data: boxWinList } = useCampaignMysteryBoxWins(campaignId, 200);
+  const { data: scratchWinList } = useCampaignScratchWins(campaignId, 200);
 
   const [showBoxes, setShowBoxes] = useState(false);
   const [showRaspas, setShowRaspas] = useState(false);
@@ -121,11 +125,54 @@ const CampaignInlineView: React.FC<Props> = ({
 
   const luckyNumbers: any[] = campaign.lucky_numbers_prizes || [];
 
-  // Win lookups for caixas/raspadinhas/roletas
-  const winnersBy = (type: string) => (allWinners || []).filter(w => w.campaign_id === campaignId && w.winner_type === type);
-  const boxWinners = winnersBy('lucky_number');
-  const scratchWinners = winnersBy('scratchcard');
-  const rouletteWinners = winnersBy('roulette');
+  // Win lookups: prizes already taken in this campaign (from actual game tables)
+  const rouletteWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (rouletteWinSpins || []).forEach((s: any) => {
+      if (!s.prize_label || s.prize_label === 'Tente novamente') return;
+      const arr = map.get(s.prize_label) || [];
+      arr.push(s);
+      map.set(s.prize_label, arr);
+    });
+    return map;
+  }, [rouletteWinSpins]);
+  const scratchWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (scratchWinList || []).forEach((s: any) => {
+      if (!s.prize_label) return;
+      const arr = map.get(s.prize_label) || [];
+      arr.push(s);
+      map.set(s.prize_label, arr);
+    });
+    return map;
+  }, [scratchWinList]);
+  const boxWinsByName = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (boxWinList || []).forEach((w: any) => {
+      const key = w.prize_title || '';
+      const arr = map.get(key) || [];
+      arr.push(w);
+      map.set(key, arr);
+    });
+    return map;
+  }, [boxWinList]);
+
+  // Counters used while rendering rows (consumes one win per matching prize row)
+  const rouletteUsage = useMemo(() => new Map<string, number>(), [rouletteWinsByLabel]);
+  const scratchUsage = useMemo(() => new Map<string, number>(), [scratchWinsByLabel]);
+  const boxUsage = useMemo(() => new Map<string, number>(), [boxWinsByName]);
+
+  const takeWin = (map: Map<string, any[]>, usage: Map<string, number>, key: string) => {
+    const pool = map.get(key) || [];
+    const used = usage.get(key) || 0;
+    if (used >= pool.length) return null;
+    usage.set(key, used + 1);
+    return pool[used];
+  };
+
+  const totalRouletteWins = (rouletteWinSpins || []).filter((s: any) => s.prize_label && s.prize_label !== 'Tente novamente').length;
+  const totalScratchWins = (scratchWinList || []).length;
+  const totalBoxWins = (boxWinList || []).length;
 
   const progress = useMemo(() => {
     if (!campaign) return 0;
