@@ -224,6 +224,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
   const SectionSlot: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
     if (!isSectionEnabled(id)) return null;
+    if (children === null || children === undefined || children === false) return null;
     return <div style={{ order: sectionOrder(id) }}>{children}</div>;
   };
 
@@ -255,8 +256,12 @@ const CampaignInlineView: React.FC<Props> = ({
                   Últimos {Math.max(1, 100 - Math.round(progress))}%
                 </Badge>
               )}
-              <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
-              {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
+              {!isSectionEnabled("header") && (
+                <>
+                  <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
+                  {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
+                </>
+              )}
             </div>
           </>
         )}
@@ -274,11 +279,25 @@ const CampaignInlineView: React.FC<Props> = ({
       </SectionSlot>
 
       <SectionSlot id="header">
-      {Number(campaign.ticket_price) === 0 && (
-        <div className="flex justify-center">
-          <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-3 h-5">GRÁTIS</Badge>
+        <div className="rounded-2xl border border-border bg-card p-3 space-y-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge className="bg-primary/15 text-primary border-primary/30 text-[9px] font-black uppercase tracking-widest px-2 h-5">
+              {campaign.status === "active" ? "Sorteio Ativo" : campaign.status}
+            </Badge>
+            {campaign.draw_date && (
+              <Badge variant="outline" className="text-[9px] h-5 px-2 font-black uppercase border-border">
+                {new Date(campaign.draw_date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
+              </Badge>
+            )}
+            {Number(campaign.ticket_price) === 0 && (
+              <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-2 h-5">GRÁTIS</Badge>
+            )}
+          </div>
+          <div>
+            <h1 className="text-lg font-black uppercase italic tracking-tight leading-tight text-foreground">{campaign.title}</h1>
+            {campaign.subtitle && <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1 leading-snug">{campaign.subtitle}</p>}
+          </div>
         </div>
-      )}
       </SectionSlot>
 
       {/* QUICK ACTION BUTTONS */}
