@@ -236,6 +236,7 @@ const CampaignInlineView: React.FC<Props> = ({
   return (
     <div className="mx-auto flex w-full max-w-[480px] flex-col gap-3">
       {/* HERO */}
+      <SectionSlot id="gallery">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
         {campaign.image_url && (
           <img src={campaign.image_url} alt={campaign.title} className="aspect-[4/5] w-full object-cover" />
@@ -260,22 +261,28 @@ const CampaignInlineView: React.FC<Props> = ({
           </>
         )}
       </div>
+      </SectionSlot>
 
       {/* PROGRESS BAR */}
+      <SectionSlot id="progress">
       <div className="rounded-xl border border-border bg-card overflow-hidden">
         <div className="h-3 w-full bg-secondary/50 relative">
           <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-emerald-400 transition-all" style={{ width: `${progress}%` }} />
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] font-black text-foreground/80">{progress.toFixed(1).replace('.', ',')}%</span>
         </div>
       </div>
+      </SectionSlot>
 
+      <SectionSlot id="header">
       {Number(campaign.ticket_price) === 0 && (
         <div className="flex justify-center">
           <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-3 h-5">GRÁTIS</Badge>
         </div>
       )}
+      </SectionSlot>
 
       {/* QUICK ACTION BUTTONS */}
+      <SectionSlot id="prizes">
       <div className="space-y-2">
         <QuickActionPrizes
           mainPrizes={(campaign as any).main_prizes || []}
@@ -289,13 +296,17 @@ const CampaignInlineView: React.FC<Props> = ({
         <QuickActionRanking ranking={ranking} />
         <QuickActionExtremes campaignId={campaignId} />
       </div>
+      </SectionSlot>
 
       {/* PRICING */}
+      <SectionSlot id="purchase">
       <div className="rounded-2xl border border-border bg-card p-3">
         <CampaignPricing campaign={campaign} onBuy={onBuy} isPurchasing={isPurchasing} />
       </div>
+      </SectionSlot>
 
       {/* MEU ACESSO - Entitlements do usuário após compra */}
+      <SectionSlot id="purchase">
       {userId && (userSpinsAvailable > 0 || userScratchesAvailable > 0) && (
         <SectionCard
           icon={<Ticket className="h-3.5 w-3.5 text-emerald-400" />}
@@ -321,8 +332,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TÍTULOS PREMIADOS */}
+      <SectionSlot id="prizes">
       {luckyNumbers.length > 0 && (
         <SectionCard
           icon={<Trophy className="h-3.5 w-3.5 text-amber-500" />}
@@ -356,8 +369,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* CAIXAS - COMBOS */}
+      <SectionSlot id="prizes">
       {campaign.mystery_box_enabled && Array.isArray(campaign.prize_rules) && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
         <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
           <SectionCaption>
@@ -368,8 +383,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* CAIXAS GANHADORES (clicáveis abrem MysteryBox) */}
+      <SectionSlot id="prizes">
       {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
         <SectionCard
           icon={<Gift className="h-3.5 w-3.5 text-orange-500" />}
@@ -436,6 +453,7 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* RASPADINHAS - COMBOS */}
       {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
