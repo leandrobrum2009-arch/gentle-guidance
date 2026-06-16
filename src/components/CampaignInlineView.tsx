@@ -207,6 +207,22 @@ const CampaignInlineView: React.FC<Props> = ({
   const totalScratchWins = (scratchWinList || []).length;
   const totalBoxWins = (boxWinList || []).length;
 
+  const recentWinners = useMemo(() => {
+    const rows = [
+      ...((rouletteWinSpins || [])
+        .filter((s: any) => s.prize_label && s.prize_label !== 'Tente novamente')
+        .map((s: any) => ({ name: s.winner_name || s.profiles?.name || 'Ganhador', prize: s.prize_label, type: 'Roleta', created_at: s.created_at }))),
+      ...((scratchWinList || [])
+        .map((s: any) => ({ name: s.winner_name || s.profiles?.name || 'Ganhador', prize: s.prize_label, type: 'Raspadinha', created_at: s.created_at }))),
+      ...((boxWinList || [])
+        .map((w: any) => ({ name: w.winner_name || w.profiles?.name || 'Ganhador', prize: w.prize_title || w.box_name || 'Caixa premiada', type: 'Caixa', created_at: w.created_at }))),
+      ...((allWinners || [])
+        .filter((w: any) => w.campaign_id === campaignId)
+        .map((w: any) => ({ name: w.winner_name || 'Ganhador', prize: w.prize_description || w.ticket_number || 'Prêmio', type: 'Cota', created_at: w.draw_date || w.created_at }))),
+    ];
+    return rows.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()).slice(0, 6);
+  }, [rouletteWinSpins, scratchWinList, boxWinList, allWinners, campaignId]);
+
   const activeSections = useMemo(() => {
     const configured = sectionsOrder?.length ? sectionsOrder : DEFAULT_INLINE_SECTIONS;
     if (campaign.show_timer && !configured.includes("timer")) {
@@ -312,9 +328,14 @@ const CampaignInlineView: React.FC<Props> = ({
           scratchWinsByLabel={scratchWinsByLabel}
           rouletteWinsByLabel={rouletteWinsByLabel}
         />
-        <QuickActionRanking ranking={ranking} />
-        <QuickActionExtremes campaignId={campaignId} />
       </div>
+      </SectionSlot>
+
+      <SectionSlot id="ranking">
+        <div className="space-y-2">
+          {campaign.ranking_enabled && <QuickActionRanking ranking={ranking} />}
+          <QuickActionExtremes campaignId={campaignId} />
+        </div>
       </SectionSlot>
 
       {/* PRICING */}
