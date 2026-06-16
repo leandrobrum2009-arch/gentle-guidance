@@ -697,6 +697,50 @@ const CampaignInlineView: React.FC<Props> = ({
 
 /* ============ Quick action buttons (open modals) ============ */
 
+const InlineDescription: React.FC<{ description?: string | null; regulations?: string | null }> = ({ description, regulations }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-2">
+      <p className={cn("text-[11px] text-muted-foreground leading-relaxed whitespace-pre-wrap", !open && "line-clamp-3")}>
+        {description}
+      </p>
+      {open && regulations && (
+        <div className="rounded-lg border border-border bg-secondary/30 p-2.5 space-y-1">
+          <p className="text-[9px] font-black uppercase tracking-widest text-foreground flex items-center gap-1.5">
+            <BookOpen className="h-3 w-3 text-primary" /> Regulamento
+          </p>
+          <p className="text-[10px] whitespace-pre-wrap text-muted-foreground leading-relaxed">{regulations}</p>
+        </div>
+      )}
+      {(description || regulations) && (
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="w-full text-[10px] font-black uppercase tracking-widest text-primary py-1.5 flex items-center justify-center gap-1"
+        >
+          {open ? <>Recolher <ChevronDown className="h-3 w-3 rotate-180" /></> : <>Ler tudo <ChevronDown className="h-3 w-3" /></>}
+        </button>
+      )}
+    </div>
+  );
+};
+
+const FaqRow: React.FC<{ q: string; a: string; Icon: any }> = ({ q, a, Icon }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-lg border border-border/60 bg-secondary/30 overflow-hidden">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-2 px-3 py-2 text-left"
+      >
+        <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
+        <span className="text-[11px] font-black uppercase tracking-tight text-foreground flex-1">{q}</span>
+        <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", open && "rotate-180")} />
+      </button>
+      {open && <p className="px-3 pb-2 text-[10px] text-muted-foreground leading-relaxed">{a}</p>}
+    </div>
+  );
+};
+
 const QuickActionPrizes: React.FC<{
   mainPrizes: { position: number; prize: string }[];
   mysteryBoxes: any[];
