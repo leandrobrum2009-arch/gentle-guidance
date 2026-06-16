@@ -72,26 +72,27 @@ const InlineRow: React.FC<{ left: React.ReactNode; right: React.ReactNode; tone?
 
 const ComboRow: React.FC<{ minTickets: number; chances: number; icon: React.ReactNode; accent: "orange" | "sky" | "rose" }> = ({ minTickets, chances, icon, accent }) => {
   const grad =
-    accent === "orange" ? "from-indigo-900 via-indigo-800 to-blue-700"
-    : accent === "sky" ? "from-indigo-900 via-indigo-800 to-blue-700"
-    : "from-indigo-900 via-indigo-800 to-blue-700";
-  const iconColor =
-    accent === "orange" ? "text-orange-400"
-    : accent === "sky" ? "text-sky-300"
-    : "text-rose-400";
+    accent === "orange" ? "from-orange-700 via-orange-600 to-amber-500"
+    : accent === "sky" ? "from-sky-700 via-sky-600 to-cyan-500"
+    : "from-rose-700 via-rose-600 to-pink-500";
+  const ring =
+    accent === "orange" ? "ring-orange-400/40 shadow-orange-500/20"
+    : accent === "sky" ? "ring-sky-400/40 shadow-sky-500/20"
+    : "ring-rose-400/40 shadow-rose-500/20";
+  const iconColor = "text-white";
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       className={cn(
-        "flex items-center justify-between gap-2 rounded-lg px-3 h-11 text-white shadow-md bg-gradient-to-r",
-        grad
+        "flex items-center justify-between gap-2 rounded-lg px-3 h-11 text-white shadow-lg bg-gradient-to-r ring-1",
+        grad, ring
       )}
     >
       <span className="text-[11px] font-black uppercase tracking-tight">A partir de {minTickets} títulos</span>
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider">{chances} chance(s) de contemplação</span>
-        <span className={cn("flex h-6 w-6 items-center justify-center", iconColor)}>{icon}</span>
+        <span className={cn("flex h-6 w-6 items-center justify-center rounded-md bg-white/15", iconColor)}>{icon}</span>
       </div>
     </motion.div>
   );
@@ -292,7 +293,7 @@ const CampaignInlineView: React.FC<Props> = ({
                         <span className="flex items-center gap-2 min-w-0">
                           <Gift className="h-3.5 w-3.5 text-orange-400 shrink-0" />
                           <span className="text-foreground truncate">{box.name}</span>
-                          <span className="text-[10px] font-black text-amber-400 shrink-0">R$ {Number(box.cost).toFixed(2)}</span>
+                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>R$ {Number(box.cost).toFixed(2)}</span>
                         </span>
                       }
                       right={win ? (
@@ -380,7 +381,7 @@ const CampaignInlineView: React.FC<Props> = ({
                         <span className="flex items-center gap-2 min-w-0">
                           <Sparkles className="h-3.5 w-3.5 text-sky-300 shrink-0" />
                           <span className="text-foreground truncate">{prize.label}</span>
-                          <span className="text-[10px] font-black text-amber-400 shrink-0">{valueLabel}</span>
+                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>{valueLabel}</span>
                         </span>
                       }
                       right={win ? (
@@ -456,39 +457,51 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* EVENTOS E PREMIAÇÕES */}
       {(luckyHours?.length || 0) > 0 && (
-        <SectionCard
-          icon={<Calendar className="h-3.5 w-3.5 text-amber-500" />}
-          title="Eventos e Premiações"
-          tag={`${luckyHours?.length || 0}`}
-        >
+        <div className="rounded-2xl border border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-950/40 via-violet-950/30 to-purple-950/40 backdrop-blur-sm overflow-hidden shadow-[0_0_20px_rgba(217,70,239,0.15)]">
+          <div className="flex items-center justify-between px-3 py-2.5 border-b border-fuchsia-500/30 bg-fuchsia-500/10">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-fuchsia-500/20 animate-pulse">
+                <Clock className="h-3.5 w-3.5 text-fuchsia-300" />
+              </span>
+              <span className="text-xs font-black uppercase tracking-tight text-fuchsia-200 truncate">Hora Premiada</span>
+              <Badge className="text-[9px] h-5 px-2 font-black bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40 animate-pulse">AO VIVO</Badge>
+            </div>
+            <span className="text-[9px] font-bold uppercase text-fuchsia-300/70 tracking-wider">{luckyHours?.length || 0}</span>
+          </div>
+          <div className="p-2 space-y-1.5">
           {luckyHours?.map((draw) => {
             const time = new Date(draw.draw_time).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             const isDone = draw.status === 'completed';
             return (
-              <InlineRow
+              <div
                 key={draw.id}
-                tone={isDone ? "won" : "muted"}
-                left={
-                  <span className="flex items-center gap-2 min-w-0">
+                className={cn(
+                  "flex items-center justify-between gap-2 rounded-lg border px-3 h-9 text-[11px] font-bold",
+                  isDone
+                    ? "bg-emerald-500/15 border-emerald-500/40 text-foreground"
+                    : "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-100"
+                )}
+              >
+                <span className="flex items-center gap-2 min-w-0 truncate">
                     {draw.draw_type === 'greater_smaller'
                       ? <TrendingUp className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                      : <Clock className="h-3.5 w-3.5 text-amber-400 shrink-0" />}
-                    <span className="text-foreground truncate">{draw.title}</span>
-                  </span>
-                }
-                right={
-                  isDone && draw.winner_name ? (
-                    <span className="flex items-center gap-1.5 text-emerald-500 font-black">
+                      : <Clock className="h-3.5 w-3.5 text-fuchsia-300 shrink-0 animate-pulse" />}
+                    <span className="truncate">{draw.title}</span>
+                </span>
+                <span className="shrink-0">
+                  {isDone && draw.winner_name ? (
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-black">
                       {draw.winner_name.split(' ')[0]} <Crown className="h-3 w-3" />
                     </span>
                   ) : (
-                    <span className="text-[10px] text-muted-foreground font-bold uppercase">{time}</span>
-                  )
-                }
-              />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-fuchsia-200">{time}</span>
+                  )}
+                </span>
+              </div>
             );
           })}
-        </SectionCard>
+          </div>
+        </div>
       )}
 
       {/* ROLETAS GANHADORES (clicáveis) */}
@@ -574,32 +587,61 @@ const QuickActionPrizes: React.FC<{
           {items.map((it, i) => (
             <div key={i} className="flex items-center justify-between rounded-lg border border-border bg-secondary/40 px-3 h-9 text-[11px]">
               <span className="font-bold text-foreground truncate">{it.label}</span>
-              {it.value && <span className="font-black text-emerald-400 shrink-0">{it.value}</span>}
+              {it.value && <span className="font-black text-emerald-400 shrink-0 animate-pulse">{it.value}</span>}
             </div>
           ))}
         </div>
       </div>
     );
-  const mainItems = (mainPrizes || []).sort((a, b) => a.position - b.position).map((p) => ({ label: `${p.position}º Lugar`, value: p.prize }));
+  const sortedMain = (mainPrizes || []).slice().sort((a, b) => a.position - b.position);
   const boxItems = (mysteryBoxes || []).map((b: any) => ({ label: b.name, value: `R$ ${Number(b.cost || 0).toFixed(2)}` }));
   const scratchItems = (scratchPrizes || []).map((p: any) => ({ label: p.label, value: p.value ? `R$ ${p.value}` : p.prize_type }));
   const rouletteItems = (roulettePrizes || []).map((p: any) => ({ label: p.label, value: p.value ? (p.prize_type === 'balance' ? `R$ ${p.value}` : `${p.value}`) : p.prize_type }));
-  const total = mainItems.length + boxItems.length + scratchItems.length + rouletteItems.length;
+  const total = sortedMain.length + boxItems.length + scratchItems.length + rouletteItems.length;
+  const positionStyle = (pos: number) =>
+    pos === 1 ? { bg: "bg-gradient-to-br from-amber-500/30 to-amber-700/20 border-amber-400/50", chip: "bg-amber-500 text-white", label: "O GRANDE PRÊMIO" }
+    : pos === 2 ? { bg: "bg-gradient-to-br from-slate-400/25 to-slate-600/15 border-slate-300/40", chip: "bg-slate-300 text-slate-900", label: "2º LUGAR" }
+    : pos === 3 ? { bg: "bg-gradient-to-br from-orange-700/30 to-orange-900/20 border-orange-500/40", chip: "bg-orange-600 text-white", label: "3º LUGAR" }
+    : { bg: "bg-secondary/40 border-border", chip: "bg-secondary text-foreground", label: `${pos}º LUGAR` };
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
-          <Trophy className="h-4 w-4 text-amber-500" /> Prêmios
+        <button className="w-full h-10 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/20 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)]">
+          <Trophy className="h-4 w-4 text-amber-500 animate-pulse" /> Prêmios da Rifa
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" /> Prêmios desta Rifa</DialogTitle>
-          <DialogDescription>Tudo o que você pode ganhar nesta campanha</DialogDescription>
+          <DialogDescription>O prêmio principal vai para o número sorteado. Veja também 2º ao 5º lugar e os combos extras.</DialogDescription>
         </DialogHeader>
-        <div className="space-y-4">
+        <div className="space-y-5">
           {total === 0 && <p className="text-sm text-muted-foreground text-center py-6">Nenhum prêmio cadastrado.</p>}
-          <Section title="Premiação Principal" icon={<Crown className="h-3.5 w-3.5 text-amber-500" />} items={mainItems} />
+          {sortedMain.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 px-1">
+                <Crown className="h-3.5 w-3.5 text-amber-500" />
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-amber-400">Premiação Principal (Top 5)</h4>
+              </div>
+              <div className="space-y-2">
+                {sortedMain.map((p) => {
+                  const st = positionStyle(p.position);
+                  return (
+                    <div key={p.position} className={cn("flex items-center gap-3 rounded-xl border p-3", st.bg)}>
+                      <span className={cn("h-9 w-9 rounded-lg flex items-center justify-center text-sm font-black shrink-0", st.chip)}>
+                        {p.position}º
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">{st.label}</p>
+                        <p className={cn("text-sm font-black uppercase italic tracking-tight truncate", p.position === 1 && "text-amber-300 animate-pulse")}>{p.prize}</p>
+                      </div>
+                      {p.position === 1 && <Trophy className="h-5 w-5 text-amber-400 shrink-0 animate-pulse" />}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
           <Section title="Caixas Surpresas" icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} items={boxItems} />
           <Section title="Raspadinhas" icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} items={scratchItems} />
           <Section title="Roleta Instantânea" icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} items={rouletteItems} />
