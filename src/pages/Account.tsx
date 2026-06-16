@@ -1312,7 +1312,18 @@ function PrizesByCampaignPanel({ userId }: { userId: string }) {
                     <p className="text-[10px] text-muted-foreground font-bold">Número premiado: {g.mainPrize.number}</p>
                   </div>
                 </div>
-                <Badge className="bg-amber-500 text-white text-[10px] font-black uppercase border-none">Reivindicar</Badge>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    const msg = encodeURIComponent(`Olá! Quero reivindicar o prêmio principal da campanha "${g.campaign.title}" (número ${g.mainPrize.number}).`);
+                    const wa = (typeof window !== "undefined" && (window as any).__siteSupportWhatsapp) || "";
+                    if (wa) window.open(`https://wa.me/${wa}?text=${msg}`, "_blank");
+                    else { navigator.clipboard.writeText(decodeURIComponent(msg)); toast.success("Mensagem copiada! Envie ao suporte para reivindicar."); }
+                  }}
+                  className="h-8 px-3 bg-amber-500 hover:bg-amber-600 text-white text-[10px] font-black uppercase"
+                >
+                  Reivindicar
+                </Button>
               </div>
             )}
 
