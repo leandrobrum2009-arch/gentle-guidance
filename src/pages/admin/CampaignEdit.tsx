@@ -49,6 +49,7 @@ interface CampaignForm {
   mystery_box_available_count: number;
   roulette_available_count: number;
   scratch_cards_available_count: number;
+  image_overlay_enabled: boolean;
 }
 
 
@@ -85,6 +86,7 @@ const empty: CampaignForm = {
   mystery_box_available_count: 0,
   roulette_available_count: 0,
   scratch_cards_available_count: 0,
+  image_overlay_enabled: true,
 };
 
 
@@ -123,6 +125,7 @@ export default function AdminCampaignEdit() {
       mystery_box_available_count: data.mystery_box_available_count ?? 0,
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
+      image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as unknown as CampaignForm);
     setLoading(false);
@@ -764,6 +767,17 @@ export default function AdminCampaignEdit() {
                      </Label>
                    </div>
                  </div>
+               </div>
+
+               <div className="flex items-center justify-between rounded-xl border border-border p-3">
+                 <div className="flex flex-col gap-0.5">
+                   <Label className="text-sm font-bold">Mostrar faixa com nome sobre a imagem</Label>
+                   <p className="text-[11px] text-muted-foreground">Desative para deixar a capa limpa, sem o degradê preto e o título embaixo.</p>
+                 </div>
+                 <Switch
+                   checked={form.image_overlay_enabled}
+                   onCheckedChange={(v) => set("image_overlay_enabled", v)}
+                 />
                </div>
 
                <Separator />
