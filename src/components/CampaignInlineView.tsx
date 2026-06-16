@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Trophy, Users, TrendingUp, Gift, Sparkles, RotateCw, ChevronDown, X, Loader2, Award, Crown, Zap, Ticket, Clock, Calendar, DollarSign, Star, PackageOpen
@@ -18,6 +18,7 @@ import {
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Props {
@@ -115,6 +116,27 @@ const CampaignInlineView: React.FC<Props> = ({
   const { data: rouletteWinSpins } = useCampaignRouletteSpins(campaignId, 200);
   const { data: boxWinList } = useCampaignMysteryBoxWins(campaignId, 200);
   const { data: scratchWinList } = useCampaignScratchWins(campaignId, 200);
+
+  // Realtime: when anyone wins a roulette/scratch/box prize, refresh availability
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    if (!campaignId) return;
+    const channel = supabase
+      .channel(`campaign-prizes-${campaignId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'roulette_spins', filter: `campaign_id=eq.${campaignId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-roulette-spins', campaignId] });
+        if (userId) queryClient.invalidateQueries({ queryKey: ['user-campaign-spins', userId, campaignId] });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'scratch_card_scratches', filter: `campaign_id=eq.${campaignId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-scratch-wins', campaignId] });
+        if (userId) queryClient.invalidateQueries({ queryKey: ['user-campaign-scratches', userId, campaignId] });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mystery_box_wins' }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-mystery-box-wins', campaignId] });
+      })
+      .subscribe();
+    return () => { supabase.removeChannel(channel); };
+  }, [campaignId, userId, queryClient]);
 
   const [showBoxes, setShowBoxes] = useState(false);
   const [showRaspas, setShowRaspas] = useState(false);
