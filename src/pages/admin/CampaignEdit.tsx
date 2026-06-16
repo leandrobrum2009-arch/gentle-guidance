@@ -1414,58 +1414,10 @@ export default function AdminCampaignEdit() {
                   </div>
 
                   <div className="space-y-4">
-                    <Label className="text-base font-bold">Ordem das Seções</Label>
-                    <p className="text-xs text-muted-foreground mb-4">Arraste para reordenar como os elementos aparecem na página da campanha.</p>
-                    
-                    <div className="grid gap-2">
-                      {form.sections_order.map((section, index) => (
-                        <div key={section} className="flex items-center gap-3 p-3 bg-card border border-border rounded-xl shadow-sm">
-                          <div className="h-8 w-8 rounded-lg bg-secondary flex items-center justify-center text-muted-foreground font-bold text-xs">
-                            {index + 1}
-                          </div>
-                          <div className="flex-1">
-                            <p className="text-sm font-bold capitalize">
-                              {section === 'gallery' ? 'Galeria de Imagens' :
-                               section === 'header' ? 'Título e Informações' :
-                               section === 'progress' ? 'Barra de Progresso' :
-                               section === 'purchase' ? 'Área de Compra' :
-                               section === 'description' ? 'Descrição da Rifa' :
-                               section === 'prizes' ? 'Cotas Premiadas' :
-                               section === 'roulette_footer' ? 'Simulador de Roleta (Final)' :
-                               section === 'scratch_footer' ? 'Simulador de Raspadinha (Final)' :
-                               section === 'winners' ? 'Histórico de Ganhadores' :
-                               section === 'ranking' ? 'Ranking de Compradores' : section}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-1">
-                            <Button 
-                              variant="ghost" 
-                              size="icon" 
-                              disabled={index === 0}
-                              onClick={() => {
-                                const newOrder = [...form.sections_order];
-                                [newOrder[index - 1], newOrder[index]] = [newOrder[index], newOrder[index - 1]];
-                                set("sections_order", newOrder);
-                              }}
-                            >
-                              <ArrowLeft className="h-4 w-4 rotate-90" />
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="icon"
-                              disabled={index === form.sections_order.length - 1}
-                              onClick={() => {
-                                const newOrder = [...form.sections_order];
-                                [newOrder[index + 1], newOrder[index]] = [newOrder[index], newOrder[index + 1]];
-                                set("sections_order", newOrder);
-                              }}
-                            >
-                              <ArrowLeft className="h-4 w-4 -rotate-90" />
-                            </Button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <SectionsOrderManager
+                      value={form.sections_order}
+                      onChange={(next) => set("sections_order", next)}
+                    />
                   </div>
                </div>
             </Card>
