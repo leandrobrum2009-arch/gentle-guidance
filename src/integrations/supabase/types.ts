@@ -1909,6 +1909,45 @@ export type Database = {
         }[]
       }
       duplicate_campaign: { Args: { p_campaign_id: string }; Returns: string }
+      get_campaign_mystery_box_wins: {
+        Args: { p_campaign_id: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          box_name: string
+          config_id: string
+          created_at: string
+          id: string
+          prize_title: string
+          prize_value: number
+          winner_name: string
+        }[]
+      }
+      get_campaign_roulette_wins: {
+        Args: { p_campaign_id: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          campaign_id: string
+          created_at: string
+          id: string
+          prize_label: string
+          prize_type: string
+          prize_value: number
+          winner_name: string
+        }[]
+      }
+      get_campaign_scratch_wins: {
+        Args: { p_campaign_id: string; p_limit?: number }
+        Returns: {
+          avatar_url: string
+          campaign_id: string
+          created_at: string
+          id: string
+          prize_label: string
+          prize_type: string
+          prize_value: number
+          winner_name: string
+        }[]
+      }
       get_order_inconsistencies: {
         Args: never
         Returns: {

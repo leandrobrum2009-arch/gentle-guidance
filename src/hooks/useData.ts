@@ -195,6 +195,8 @@ export interface RouletteSpin {
   prize_type: string;
   prize_value: number | null;
   created_at: string;
+  winner_name?: string;
+  avatar_url?: string | null;
   profiles?: { name: string; avatar_url: string | null } | null;
   campaigns?: { title: string } | null;
 }
@@ -218,6 +220,8 @@ export interface ScratchCardScratch {
   prize_value: number | null;
   is_winner: boolean;
   created_at: string;
+  winner_name?: string;
+  avatar_url?: string | null;
   profiles?: { name: string; avatar_url: string | null } | null;
 }
 
@@ -557,23 +561,15 @@ export const useCampaignMysteryBoxWins = (campaignId: string, limit = 10) =>
   useQuery({
     queryKey: ["campaign-mystery-box-wins", campaignId, limit],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("mystery_box_wins")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          ),
-          mystery_box_configs!config_id (
-            campaign_id
-          )
-        `)
-        .eq("mystery_box_configs.campaign_id", campaignId)
-        .order("created_at", { ascending: false })
-        .limit(limit);
+      const { data, error } = await (supabase as any).rpc("get_campaign_mystery_box_wins", {
+        p_campaign_id: campaignId,
+        p_limit: limit,
+      });
       if (error) throw error;
-      return (data as any) as MysteryBoxWin[];
+      return ((data || []) as any[]).map((w) => ({
+        ...w,
+        profiles: { name: w.winner_name || "Ganhador", avatar_url: w.avatar_url || null },
+      })) as MysteryBoxWin[];
     },
     enabled: !!campaignId,
   });
@@ -582,20 +578,15 @@ export const useCampaignRouletteSpins = (campaignId: string, limit = 10) =>
   useQuery({
     queryKey: ["campaign-roulette-spins", campaignId, limit],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("roulette_spins")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          )
-        `)
-        .eq("campaign_id", campaignId)
-        .order("created_at", { ascending: false })
-        .limit(limit);
+      const { data, error } = await (supabase as any).rpc("get_campaign_roulette_wins", {
+        p_campaign_id: campaignId,
+        p_limit: limit,
+      });
       if (error) throw error;
-       return (data as any) as RouletteSpin[];
+       return ((data || []) as any[]).map((s) => ({
+         ...s,
+         profiles: { name: s.winner_name || "Ganhador", avatar_url: s.avatar_url || null },
+       })) as RouletteSpin[];
      },
      enabled: !!campaignId,
    });
@@ -687,15 +678,16 @@ export const useCampaignScratchWins = (campaignId: string, limit = 100) =>
   useQuery({
     queryKey: ["campaign-scratch-wins", campaignId, limit],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("scratch_card_scratches")
-        .select(`*, profiles!user_id ( name, avatar_url )`)
-        .eq("campaign_id", campaignId)
-        .eq("is_winner", true)
-        .order("created_at", { ascending: false })
-        .limit(limit);
+      const { data, error } = await (supabase as any).rpc("get_campaign_scratch_wins", {
+        p_campaign_id: campaignId,
+        p_limit: limit,
+      });
       if (error) throw error;
-      return (data as any) as ScratchCardScratch[];
+      return ((data || []) as any[]).map((s) => ({
+        ...s,
+        is_winner: true,
+        profiles: { name: s.winner_name || "Ganhador", avatar_url: s.avatar_url || null },
+      })) as ScratchCardScratch[];
     },
     enabled: !!campaignId,
   });
