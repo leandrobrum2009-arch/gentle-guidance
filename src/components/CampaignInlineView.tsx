@@ -34,7 +34,13 @@ interface Props {
   setIsGameInProgress: (v: boolean) => void;
   luckyNumbersStatus: Record<string, boolean>;
   userId?: string;
+  sectionsOrder?: string[];
 }
+
+const DEFAULT_INLINE_SECTIONS = [
+  "gallery", "header", "progress", "purchase", "prizes", "roulette_footer", "scratch_footer",
+  "events", "timer", "live_stream", "live_draw", "steps", "description", "faq", "cta"
+];
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; tag?: string; right?: React.ReactNode; children: React.ReactNode; tone?: string }> = ({ icon, title, tag, right, children, tone = "primary" }) => (
   <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm overflow-hidden">
@@ -106,7 +112,7 @@ const ComboRow: React.FC<{ minTickets: number; chances: number; icon: React.Reac
 };
 
 const CampaignInlineView: React.FC<Props> = ({
-  campaign, onBuy, isPurchasing, isGameInProgress, setIsGameInProgress, luckyNumbersStatus, userId
+  campaign, onBuy, isPurchasing, isGameInProgress, setIsGameInProgress, luckyNumbersStatus, userId, sectionsOrder
 }) => {
   const campaignId = campaign.id;
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
@@ -201,6 +207,26 @@ const CampaignInlineView: React.FC<Props> = ({
   const totalScratchWins = (scratchWinList || []).length;
   const totalBoxWins = (boxWinList || []).length;
 
+  const activeSections = useMemo(() => {
+    const configured = sectionsOrder?.length ? sectionsOrder : DEFAULT_INLINE_SECTIONS;
+    if (campaign.show_timer && !configured.includes("timer")) {
+      const headerIndex = configured.indexOf("header");
+      const next = [...configured];
+      next.splice(headerIndex >= 0 ? headerIndex + 1 : 1, 0, "timer");
+      return next;
+    }
+    return configured;
+  }, [campaign.show_timer, sectionsOrder]);
+
+  const sectionOrderIndex = useMemo(() => new Map(activeSections.map((id, index) => [id, index])), [activeSections]);
+  const isSectionEnabled = (id: string) => sectionOrderIndex.has(id);
+  const sectionOrder = (id: string) => sectionOrderIndex.get(id) ?? 999;
+
+  const SectionSlot: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+    if (!isSectionEnabled(id)) return null;
+    return <div style={{ order: sectionOrder(id) }}>{children}</div>;
+  };
+
   const progress = useMemo(() => {
     if (!campaign) return 0;
     if (campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined) return campaign.fake_progress_percentage;
@@ -208,7 +234,7 @@ const CampaignInlineView: React.FC<Props> = ({
   }, [campaign]);
 
   return (
-    <div className="mx-auto w-full max-w-[480px] space-y-3">
+    <div className="mx-auto flex w-full max-w-[480px] flex-col gap-3">
       {/* HERO */}
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
         {campaign.image_url && (
