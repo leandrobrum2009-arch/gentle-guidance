@@ -456,6 +456,7 @@ const CampaignInlineView: React.FC<Props> = ({
       </SectionSlot>
 
       {/* RASPADINHAS - COMBOS */}
+      <SectionSlot id="scratch_footer">
       {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
         <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
           <SectionCaption>
@@ -466,8 +467,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* RASPADINHAS GANHADORES */}
+      <SectionSlot id="scratch_footer">
       {campaign.scratch_cards_enabled && (
         <SectionCard
           icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />}
@@ -532,8 +535,10 @@ const CampaignInlineView: React.FC<Props> = ({
           })}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* ROLETAS - COMBOS */}
+      <SectionSlot id="roulette_footer">
       {campaign.roulette_enabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
         <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
           <SectionCaption>
@@ -544,8 +549,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* EVENTOS E PREMIAÇÕES */}
+      <SectionSlot id="events">
       {(luckyHours?.length || 0) > 0 && (
         <div className="rounded-2xl border border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-950/40 via-violet-950/30 to-purple-950/40 backdrop-blur-sm overflow-hidden shadow-[0_0_20px_rgba(217,70,239,0.15)]">
           <div className="flex items-center justify-between px-3 py-2.5 border-b border-fuchsia-500/30 bg-fuchsia-500/10">
@@ -593,8 +600,10 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </div>
       )}
+      </SectionSlot>
 
       {/* ROLETAS GANHADORES (clicáveis) */}
+      <SectionSlot id="roulette_footer">
       {campaign.roulette_enabled && (roulettePrizes?.length || 0) > 0 && (
         <SectionCard
           icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />}
@@ -662,8 +671,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TEMPO RESTANTE */}
+      <SectionSlot id="timer">
       {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
         <SectionCard icon={<Clock className="h-3.5 w-3.5 text-primary" />} title="Tempo restante" tag="Sorteio">
           <div className="flex flex-col items-center justify-center py-4 w-full">
@@ -671,8 +682,10 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TRANSMISSÃO AO VIVO */}
+      <SectionSlot id="live_stream">
       {campaign.live_stream_enabled && campaign.live_stream_url && (
         <SectionCard icon={<Video className="h-3.5 w-3.5 text-rose-500" />} title="Ao vivo" tag="Transmissão">
           <div className="-mx-2 -mb-2 [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:h-auto [&_video]:w-full [&_video]:aspect-video [&_video]:h-auto">
@@ -680,13 +693,17 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* SORTEIO AO VIVO */}
+      <SectionSlot id="live_draw">
       <div className="-mx-0">
         <CampaignLiveDraw campaign={campaign} />
       </div>
+      </SectionSlot>
 
       {/* COMO PARTICIPAR */}
+      <SectionSlot id="steps">
       <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-primary" />} title="Como participar" tag="3 passos">
         {[
           { step: "01", title: "Escolha suas cotas", desc: "Selecione a quantidade ou escolha seus números da sorte.", icon: MousePointer2 },
@@ -703,15 +720,19 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         ))}
       </SectionCard>
+      </SectionSlot>
 
       {/* DESCRIÇÃO E REGULAMENTO */}
+      <SectionSlot id="description">
       {(campaign.description || campaign.regulations) && (
         <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Descrição e regras">
           <InlineDescription description={campaign.description} regulations={campaign.regulations} />
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* FAQ */}
+      <SectionSlot id="faq">
       <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Dúvidas frequentes" tag="FAQ">
         {[
           { q: "Como os ganhadores são escolhidos?", a: "Sorteio automatizado e transparente entre os bilhetes pagos.", icon: Trophy },
@@ -722,8 +743,10 @@ const CampaignInlineView: React.FC<Props> = ({
           <FaqRow key={i} q={item.q} a={item.a} Icon={item.icon} />
         ))}
       </SectionCard>
+      </SectionSlot>
 
       {/* COMPARTILHAR */}
+      <SectionSlot id="cta">
       <SectionCard icon={<Share2 className="h-3.5 w-3.5 text-primary" />} title="Indique e ganhe" tag="Compartilhar">
         <Button
           variant="outline"
@@ -741,6 +764,7 @@ const CampaignInlineView: React.FC<Props> = ({
           <Share2 className="h-3.5 w-3.5" /> Compartilhar campanha
         </Button>
       </SectionCard>
+      </SectionSlot>
     </div>
   );
 };
