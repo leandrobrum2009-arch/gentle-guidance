@@ -769,6 +769,17 @@ export default function AdminCampaignEdit() {
                  </div>
                </div>
 
+               <div className="flex items-center justify-between rounded-xl border border-border p-3">
+                 <div className="flex flex-col gap-0.5">
+                   <Label className="text-sm font-bold">Mostrar faixa com nome sobre a imagem</Label>
+                   <p className="text-[11px] text-muted-foreground">Desative para deixar a capa limpa, sem o degradê preto e o título embaixo.</p>
+                 </div>
+                 <Switch
+                   checked={form.image_overlay_enabled}
+                   onCheckedChange={(v) => set("image_overlay_enabled", v)}
+                 />
+               </div>
+
                <Separator />
 
                <div className="space-y-4">
