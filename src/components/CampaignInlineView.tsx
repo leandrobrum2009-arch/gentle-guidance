@@ -799,7 +799,6 @@ const QuickActionPrizes: React.FC<{
 };
 
 const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => {
-  // placeholder marker
   const top5 = (ranking || []).slice(0, 5);
   return (
   <Dialog>
