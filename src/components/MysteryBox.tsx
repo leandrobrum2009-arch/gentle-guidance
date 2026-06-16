@@ -188,8 +188,10 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
         </div>
       )}
 
-      <div className="space-y-8">
+      <div className={isCompact ? "" : "space-y-8"}>
         {isCompact ? (
+          renderBoxes()
+        ) : false ? (
           <Dialog>
             <DialogTrigger asChild>
               <button className="w-full flex items-center justify-between p-4 rounded-2xl bg-secondary/50 border border-border hover:border-orange-500/50 hover:bg-card transition-all group">
