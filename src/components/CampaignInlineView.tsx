@@ -377,7 +377,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     </span>
                   </button>
                 </DialogTrigger>
-                <DialogContent className="max-w-xs p-0 w-[92vw] sm:w-full max-h-[80vh] overflow-hidden bg-zinc-950 border border-white/10 rounded-2xl"
+                <DialogContent className="max-w-sm p-0 w-[94vw] sm:w-full max-h-[92vh] h-[92vh] overflow-hidden bg-zinc-950 border border-white/10 rounded-2xl flex flex-col"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
                   onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
                   <DialogHeader className="px-3 pt-3 pb-2 border-b border-white/10">
@@ -388,7 +388,7 @@ const CampaignInlineView: React.FC<Props> = ({
                       Custo: R$ {Number(box.cost).toFixed(2)}
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="p-2">
+                  <div className="p-2 flex-1 overflow-y-auto relative">
                     <MysteryBox boxes={[box]} campaignId={campaignId} isCompact />
                   </div>
                 </DialogContent>

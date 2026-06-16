@@ -119,7 +119,9 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       config_id: selectedBox.id,
        prize_id: prize.id,
        prize_title: prize.title,
-       prize_value: prize.prize_value
+       prize_value: prize.prize_value,
+       box_name: selectedBox.name,
+       campaign_id: campaignId ?? null,
      });
 
       // Add notification for mystery box win
@@ -134,7 +136,10 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
         await supabase.rpc('increment_balance', { amount: prize.prize_value, user_uuid: user.id });
         fetchUserProfile();
      }
-     queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] });
+      queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] });
+      if (campaignId) {
+        queryClient.invalidateQueries({ queryKey: ["campaign-mystery-box-wins", campaignId] });
+      }
    };
  
   const renderBoxes = () => (
