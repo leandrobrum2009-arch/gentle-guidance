@@ -632,7 +632,11 @@ const QuickActionPrizes: React.FC<{
         </div>
       </div>
     );
-  const sortedMain = (mainPrizes || []).slice().sort((a, b) => a.position - b.position);
+  const sortedMain = (mainPrizes || [])
+    .filter((p) => p && (p.prize ?? "").toString().trim().length > 0)
+    .slice()
+    .sort((a, b) => a.position - b.position)
+    .slice(0, 5);
   const boxItems = (mysteryBoxes || []).map((b: any) => ({ label: b.name, value: `R$ ${Number(b.cost || 0).toFixed(2)}` }));
   const scratchItems = (scratchPrizes || []).map((p: any) => ({ label: p.label, value: p.value ? `R$ ${p.value}` : p.prize_type }));
   const rouletteItems = (roulettePrizes || []).map((p: any) => ({ label: p.label, value: p.value ? (p.prize_type === 'balance' ? `R$ ${p.value}` : `${p.value}`) : p.prize_type }));
@@ -645,8 +649,24 @@ const QuickActionPrizes: React.FC<{
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <button className="w-full h-10 rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/20 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)]">
-          <Trophy className="h-4 w-4 text-amber-500 animate-pulse" /> Prêmios da Rifa
+        <button className="w-full rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/20 text-foreground transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] overflow-hidden">
+          <div className="h-10 px-3 flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wide">
+            <span className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500 animate-pulse" /> Prêmios da Rifa</span>
+            <span className="text-[9px] font-black text-amber-400">{sortedMain.length > 0 ? `1º ao ${sortedMain.length}º` : "Ver"}</span>
+          </div>
+          {sortedMain.length > 0 && (
+            <div className="px-3 pb-2 space-y-1">
+              {sortedMain.map((p) => (
+                <div key={p.position} className="flex items-center gap-2 text-[10px]">
+                  <span className={cn("h-4 w-4 rounded flex items-center justify-center text-[8px] font-black shrink-0",
+                    p.position === 1 ? "bg-amber-500 text-white" :
+                    p.position === 2 ? "bg-slate-300 text-slate-900" :
+                    p.position === 3 ? "bg-orange-600 text-white" : "bg-secondary text-foreground")}>{p.position}º</span>
+                  <span className="font-bold truncate text-left text-foreground/90">{p.prize}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </button>
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
