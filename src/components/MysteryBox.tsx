@@ -226,11 +226,14 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
 
        <AnimatePresence>
          {isOpening && selectedBox && (
-           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4">
-             <button onClick={() => { setIsOpening(false); setIsRevealing(false); setWinningPrize(null); }} className="absolute top-8 right-8 text-white/40 hover:text-white"><X className="h-8 w-8" /></button>
-             <div className="w-full max-w-xl text-center space-y-12">
+           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className={cn(
+             "flex items-center justify-center bg-black/95 backdrop-blur-xl",
+             isCompact ? "absolute inset-0 z-30 p-3 rounded-2xl" : "fixed inset-0 z-[100] p-4"
+           )}>
+             <button onClick={() => { setIsOpening(false); setIsRevealing(false); setWinningPrize(null); }} className={cn("absolute text-white/40 hover:text-white", isCompact ? "top-2 right-2" : "top-8 right-8")}><X className={isCompact ? "h-5 w-5" : "h-8 w-8"} /></button>
+             <div className={cn("w-full text-center", isCompact ? "max-w-xs space-y-4" : "max-w-xl space-y-12")}>
                {!isRevealing ? (
-                <div className="space-y-8">
+                <div className={isCompact ? "space-y-4" : "space-y-8"}>
                   <div className="relative inline-block">
                     <motion.div
                       animate={{ 
@@ -241,7 +244,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
                       transition={{ duration: 2, repeat: Infinity }}
                       className="relative z-10"
                     >
-                      <Box className="h-64 w-64" style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }} />
+                      <Box className={isCompact ? "h-24 w-24" : "h-64 w-64"} style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }} />
                     </motion.div>
                     {/* Neon Smoke Effect */}
                     <div className="absolute inset-0 -z-10">
@@ -255,18 +258,18 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
                     </div>
                   </div>
 
-                  <div className="space-y-4">
-                    <h2 className="text-4xl font-black uppercase italic tracking-tighter text-white">
+                  <div className={isCompact ? "space-y-2" : "space-y-4"}>
+                    <h2 className={cn("font-black uppercase italic tracking-tighter text-white", isCompact ? "text-lg" : "text-4xl")}>
                       CAIXA <span style={{ color: RARITY_CONFIG[selectedBox.rarity as keyof typeof RARITY_CONFIG].color }}>{selectedBox.rarity.toUpperCase()}</span>
                     </h2>
-                    <p className="text-white/60 text-sm uppercase tracking-widest font-bold">Confirmar abertura por R$ {Number(selectedBox.cost).toFixed(2)}?</p>
+                    <p className={cn("text-white/60 uppercase tracking-widest font-bold", isCompact ? "text-[10px]" : "text-sm")}>Confirmar abertura por R$ {Number(selectedBox.cost).toFixed(2)}?</p>
                   </div>
 
                   <div className="flex gap-4 justify-center">
                     <Button 
-                      size="lg" 
+                      size={isCompact ? "sm" : "lg"}
                       onClick={handleFinalOpen} 
-                      className="h-16 px-12 rounded-2xl font-black uppercase italic tracking-widest text-xl glow-primary"
+                      className={cn("rounded-2xl font-black uppercase italic tracking-widest glow-primary", isCompact ? "h-10 px-6 text-sm" : "h-16 px-12 text-xl")}
                     >
                       ABRIR AGORA
                     </Button>
