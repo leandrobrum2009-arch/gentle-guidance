@@ -500,13 +500,15 @@ const CampaignDetail = () => {
               </div>
             </div>
 
-            {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
-              <div className="flex flex-col items-center justify-center p-8 bg-card border-2 border-primary/20 rounded-[2.5rem] shadow-xl shadow-primary/5 relative overflow-hidden group">
-                <div className="absolute inset-0 bg-primary/5 animate-pulse" />
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 relative z-10">Tempo restante para o sorteio</p>
-                <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125 md:scale-150 relative z-10" />
-              </div>
-            )}
+          </div>
+        );
+
+      case 'timer':
+        return campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
+          <div key={section} className="flex flex-col items-center justify-center p-8 bg-card border-2 border-primary/20 rounded-[2.5rem] shadow-xl shadow-primary/5 relative overflow-hidden group">
+            <div className="absolute inset-0 bg-primary/5 animate-pulse" />
+            <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-4 relative z-10">Tempo restante para o sorteio</p>
+            <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125 md:scale-150 relative z-10" />
           </div>
         );
 
