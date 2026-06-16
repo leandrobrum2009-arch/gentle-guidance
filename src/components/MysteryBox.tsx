@@ -176,7 +176,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className={cn("space-y-6", isCompact && "relative")}>
       {/* Dynamic Rule Legend (Admin Configured) */}
       {boxes.length > 1 && (
         <div className="bg-orange-500/5 p-4 rounded-2xl border border-orange-500/10 mb-2">
