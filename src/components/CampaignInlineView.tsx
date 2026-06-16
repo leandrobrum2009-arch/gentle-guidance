@@ -209,20 +209,25 @@ const CampaignInlineView: React.FC<Props> = ({
         {campaign.image_url && (
           <img src={campaign.image_url} alt={campaign.title} className="aspect-[4/5] w-full object-cover" />
         )}
-        <div className="absolute top-2 right-2">
-          <Badge className="bg-purple-500 text-white border-none text-[9px] font-black uppercase tracking-widest px-2 h-5">
+        <div className="absolute top-2 right-2 z-10">
+          <Badge className="bg-purple-500 text-white border-none text-[9px] font-black uppercase tracking-widest px-2 h-5 shadow-lg">
             {Math.round(progress)}%
           </Badge>
         </div>
-        <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-3 space-y-2">
-          {progress > 50 && (
-            <Badge className="bg-purple-500 text-white border-none text-[9px] font-black uppercase tracking-widest px-2 h-5">
-              Últimos {Math.max(1, 100 - Math.round(progress))}%
-            </Badge>
-          )}
-          <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight">{campaign.title}</p>
-          {campaign.subtitle && <p className="text-[10px] text-white/80 font-bold uppercase tracking-wider">{campaign.subtitle}</p>}
-        </div>
+        {(campaign as any).image_overlay_enabled !== false && (
+          <>
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-black via-black/70 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-3 space-y-1.5">
+              {progress > 50 && (
+                <Badge className="bg-purple-500 text-white border-none text-[9px] font-black uppercase tracking-widest px-2 h-5 shadow-lg">
+                  Últimos {Math.max(1, 100 - Math.round(progress))}%
+                </Badge>
+              )}
+              <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
+              {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
+            </div>
+          </>
+        )}
       </div>
 
       {/* PROGRESS BAR */}
