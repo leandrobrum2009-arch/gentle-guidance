@@ -72,26 +72,27 @@ const InlineRow: React.FC<{ left: React.ReactNode; right: React.ReactNode; tone?
 
 const ComboRow: React.FC<{ minTickets: number; chances: number; icon: React.ReactNode; accent: "orange" | "sky" | "rose" }> = ({ minTickets, chances, icon, accent }) => {
   const grad =
-    accent === "orange" ? "from-indigo-900 via-indigo-800 to-blue-700"
-    : accent === "sky" ? "from-indigo-900 via-indigo-800 to-blue-700"
-    : "from-indigo-900 via-indigo-800 to-blue-700";
-  const iconColor =
-    accent === "orange" ? "text-orange-400"
-    : accent === "sky" ? "text-sky-300"
-    : "text-rose-400";
+    accent === "orange" ? "from-orange-700 via-orange-600 to-amber-500"
+    : accent === "sky" ? "from-sky-700 via-sky-600 to-cyan-500"
+    : "from-rose-700 via-rose-600 to-pink-500";
+  const ring =
+    accent === "orange" ? "ring-orange-400/40 shadow-orange-500/20"
+    : accent === "sky" ? "ring-sky-400/40 shadow-sky-500/20"
+    : "ring-rose-400/40 shadow-rose-500/20";
+  const iconColor = "text-white";
   return (
     <motion.div
       whileHover={{ scale: 1.01 }}
       whileTap={{ scale: 0.99 }}
       className={cn(
-        "flex items-center justify-between gap-2 rounded-lg px-3 h-11 text-white shadow-md bg-gradient-to-r",
-        grad
+        "flex items-center justify-between gap-2 rounded-lg px-3 h-11 text-white shadow-lg bg-gradient-to-r ring-1",
+        grad, ring
       )}
     >
       <span className="text-[11px] font-black uppercase tracking-tight">A partir de {minTickets} títulos</span>
       <div className="flex items-center gap-2 shrink-0">
         <span className="text-[10px] font-bold text-white/80 uppercase tracking-wider">{chances} chance(s) de contemplação</span>
-        <span className={cn("flex h-6 w-6 items-center justify-center", iconColor)}>{icon}</span>
+        <span className={cn("flex h-6 w-6 items-center justify-center rounded-md bg-white/15", iconColor)}>{icon}</span>
       </div>
     </motion.div>
   );
