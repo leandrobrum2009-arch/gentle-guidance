@@ -617,8 +617,8 @@ const CampaignInlineView: React.FC<Props> = ({
       {/* TEMPO RESTANTE */}
       {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
         <SectionCard icon={<Clock className="h-3.5 w-3.5 text-primary" />} title="Tempo restante" tag="Sorteio">
-          <div className="flex flex-col items-center justify-center py-3">
-            <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-90" />
+          <div className="flex flex-col items-center justify-center py-4 w-full">
+            <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-125 sm:scale-150 origin-center my-3" />
           </div>
         </SectionCard>
       )}
@@ -626,7 +626,7 @@ const CampaignInlineView: React.FC<Props> = ({
       {/* TRANSMISSÃO AO VIVO */}
       {campaign.live_stream_enabled && campaign.live_stream_url && (
         <SectionCard icon={<Video className="h-3.5 w-3.5 text-rose-500" />} title="Ao vivo" tag="Transmissão">
-          <div className="-m-2">
+          <div className="-mx-2 -mb-2 [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:h-auto [&_video]:w-full [&_video]:aspect-video [&_video]:h-auto">
             <LiveStreamPlayer url={campaign.live_stream_url} enabled={campaign.live_stream_enabled} campaignTitle={campaign.title} />
           </div>
         </SectionCard>
@@ -644,12 +644,13 @@ const CampaignInlineView: React.FC<Props> = ({
           { step: "02", title: "Pague via PIX", desc: "Pagamento instantâneo e seguro. Cotas validadas na hora.", icon: Zap },
           { step: "03", title: "Aguarde o sorteio", desc: "Acompanhe tudo em tempo real pelo seu painel.", icon: Trophy },
         ].map((s, i) => (
-          <div key={i} className="flex items-start gap-3 rounded-lg border border-border/60 bg-secondary/30 px-3 py-2">
-            <span className="h-7 w-7 rounded-md bg-primary text-primary-foreground font-black text-[11px] flex items-center justify-center shrink-0">{s.step}</span>
-            <div className="min-w-0">
-              <p className="text-[11px] font-black uppercase tracking-tight text-foreground leading-tight">{s.title}</p>
-              <p className="text-[10px] text-muted-foreground leading-snug">{s.desc}</p>
+          <div key={i} className="flex items-start gap-3 rounded-xl border border-border/60 bg-secondary/30 px-4 py-3">
+            <span className="h-10 w-10 rounded-lg bg-primary text-primary-foreground font-black text-sm flex items-center justify-center shrink-0">{s.step}</span>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-black uppercase tracking-tight text-foreground leading-tight">{s.title}</p>
+              <p className="text-xs text-muted-foreground leading-snug mt-1">{s.desc}</p>
             </div>
+            <s.icon className="h-5 w-5 text-primary/70 shrink-0 mt-0.5" />
           </div>
         ))}
       </SectionCard>
