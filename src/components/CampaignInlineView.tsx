@@ -184,10 +184,10 @@ const CampaignInlineView: React.FC<Props> = ({
     return map;
   }, [boxWinList]);
 
-  // Counters used while rendering rows (consumes one win per matching prize row)
-  const rouletteUsage = useMemo(() => new Map<string, number>(), [rouletteWinsByLabel]);
-  const scratchUsage = useMemo(() => new Map<string, number>(), [scratchWinsByLabel]);
-  const boxUsage = useMemo(() => new Map<string, number>(), [boxWinsByName]);
+  // Counters used while rendering rows (fresh each render, so closing a game modal doesn't mark won rows as available again)
+  const rouletteUsage = new Map<string, number>();
+  const scratchUsage = new Map<string, number>();
+  const boxUsage = new Map<string, number>();
 
   const takeWin = (map: Map<string, any[]>, usage: Map<string, number>, key: string) => {
     const pool = map.get(key) || [];
@@ -372,7 +372,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {(win.winner_name || win.profiles?.name || 'Ganhador').split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-orange-300 font-black uppercase text-[10px] tracking-wider">
