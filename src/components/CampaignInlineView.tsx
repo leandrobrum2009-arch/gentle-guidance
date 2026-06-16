@@ -171,7 +171,7 @@ const CampaignInlineView: React.FC<Props> = ({
   const boxWinsByName = useMemo(() => {
     const map = new Map<string, any[]>();
     (boxWinList || []).forEach((w: any) => {
-      const key = w.prize_title || '';
+      const key = w.box_name || w.prize_title || '';
       const arr = map.get(key) || [];
       arr.push(w);
       map.set(key, arr);

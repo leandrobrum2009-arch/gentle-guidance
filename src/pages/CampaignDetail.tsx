@@ -17,7 +17,8 @@ import {
   useCampaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useTickets,
   useCampaignRanking, useCampaignMysteryBoxWins, useCampaignRouletteSpins,
   useUserCampaignSpins, useCampaignLuckyWinners, useCampaignTicketStats,
-  useUserTickets, useUserCampaignScratches, useLuckyHours
+  useUserTickets, useUserCampaignScratches, useLuckyHours, useCampaignScratchWins,
+  useScratchCardPrizes
 } from "@/hooks/useData";
 
 import { supabase } from "@/integrations/supabase/client";
@@ -86,6 +87,10 @@ const CampaignDetail = () => {
   
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
+  const { data: scratchPrizes } = useScratchCardPrizes(campaignId);
+  const { data: rouletteWins } = useCampaignRouletteSpins(campaignId, 200);
+  const { data: scratchWins } = useCampaignScratchWins(campaignId, 200);
+  const { data: boxWins } = useCampaignMysteryBoxWins(campaignId, 200);
   const { data: allWinners } = useWinners();
   const raffleWinners = allWinners?.filter(w => w.campaign_id === campaignId && w.winner_type === 'raffle') || [];
   const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
@@ -214,6 +219,51 @@ const CampaignDetail = () => {
     if (!userScratches) return 0;
     return userScratches.filter((s: any) => !s.prize_label).length;
   }, [userScratches]);
+
+  const rouletteWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (rouletteWins || []).forEach((win: any) => {
+      if (!win.prize_label || win.prize_label === "Tente novamente" || win.prize_type === "none") return;
+      const list = map.get(win.prize_label) || [];
+      list.push(win);
+      map.set(win.prize_label, list);
+    });
+    return map;
+  }, [rouletteWins]);
+
+  const scratchWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (scratchWins || []).forEach((win: any) => {
+      if (!win.prize_label) return;
+      const list = map.get(win.prize_label) || [];
+      list.push(win);
+      map.set(win.prize_label, list);
+    });
+    return map;
+  }, [scratchWins]);
+
+  const getWinnerName = (win: any) => win?.winner_name || win?.profiles?.name || "Ganhador";
+  const getWinnerAvatar = (win: any) => win?.avatar_url || win?.profiles?.avatar_url || "";
+
+  useEffect(() => {
+    if (!campaignId) return;
+    const channel = supabase
+      .channel(`campaign-detail-prizes-${campaignId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'roulette_spins', filter: `campaign_id=eq.${campaignId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-roulette-spins', campaignId] });
+        if (user?.id) queryClient.invalidateQueries({ queryKey: ['user-campaign-spins', user.id, campaignId] });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'scratch_card_scratches', filter: `campaign_id=eq.${campaignId}` }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-scratch-wins', campaignId] });
+        if (user?.id) queryClient.invalidateQueries({ queryKey: ['user-campaign-scratches', user.id, campaignId] });
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'mystery_box_wins' }, () => {
+        queryClient.invalidateQueries({ queryKey: ['campaign-mystery-box-wins', campaignId] });
+      })
+      .subscribe();
+
+    return () => { supabase.removeChannel(channel); };
+  }, [campaignId, queryClient, user?.id]);
 
   const progressData = useMemo(() => {
     if (!campaign) return { bar: 0, text: "0" };
@@ -666,11 +716,12 @@ const CampaignDetail = () => {
                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
                           <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
                             {roulettePrizes.map((p, idx) => {
-                              const spinWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'roulette' && w.prize_description === p.label);
+                              const spinWin = rouletteWinsByLabel.get(p.label)?.[0];
+                              const spinWinnerName = getWinnerName(spinWin);
                               return (
                                 <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
                                   <DialogTrigger asChild>
-                                    <button className="flex flex-col p-3 rounded-xl bg-primary/5 border border-primary/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-primary/40 hover:bg-primary/10 transition-all group">
+                                    <button className={cn("flex flex-col p-3 rounded-xl border gap-1.5 shrink-0 w-[160px] snap-start text-left transition-all group", spinWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-primary/5 border-primary/10 hover:border-primary/40 hover:bg-primary/10")}>
                                       <div className="flex items-center justify-between gap-1">
                                         <motion.div animate={{ rotate: [0, 360] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="h-5 w-5 rounded-full bg-primary/15 flex items-center justify-center text-primary shrink-0">
                                           <RotateCw className="h-3 w-3" />
@@ -681,12 +732,12 @@ const CampaignDetail = () => {
                                   {spinWin ? (
                                     <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                       <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
-                                        <AvatarImage src={spinWin.avatar_url || ""} />
-                                        <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{spinWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                        <AvatarImage src={getWinnerAvatar(spinWin)} />
+                                        <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{spinWinnerName.substring(0, 1)}</AvatarFallback>
                                       </Avatar>
                                       <div className="flex flex-col min-w-0">
-                                        <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{spinWin.winner_name}</span>
-                                        <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                        <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{spinWinnerName}</span>
+                                        <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">SAIU PARA</span>
                                       </div>
                                     </div>
                                   ) : (
@@ -712,13 +763,14 @@ const CampaignDetail = () => {
                          <div className="space-y-2">
                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Raspadinhas</p>
                            <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
-                             {/* In a real scenario, we might want to fetch actual scratch card prizes from the DB if they aren't in potentialPrizes */}
-                             {["R$ 500 no Pix", "R$ 100 no Pix", "R$ 50 no Pix"].map((label, idx) => {
-                                const scratchWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'scratchcard' && w.prize_description === label);
+                              {(scratchPrizes || []).map((prize: any, idx) => {
+                                 const label = prize.label;
+                                 const scratchWin = scratchWinsByLabel.get(label)?.[0];
+                                 const scratchWinnerName = getWinnerName(scratchWin);
                                 return (
                                   <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
                                     <DialogTrigger asChild>
-                                      <button className="flex flex-col p-3 rounded-xl bg-amber-500/5 border border-amber-500/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-amber-500/40 hover:bg-amber-500/10 transition-all group">
+                                       <button className={cn("flex flex-col p-3 rounded-xl border gap-1.5 shrink-0 w-[160px] snap-start text-left transition-all group", scratchWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-amber-500/5 border-amber-500/10 hover:border-amber-500/40 hover:bg-amber-500/10")}>
                                         <div className="flex items-center justify-between gap-1">
                                           <motion.div animate={{ rotate: [-8, 8, -8] }} transition={{ duration: 1.2, repeat: Infinity, ease: "easeInOut" }} className="h-5 w-5 rounded-full bg-amber-500/15 flex items-center justify-center text-amber-500 shrink-0">
                                             <Sparkles className="h-3 w-3" />
@@ -729,12 +781,12 @@ const CampaignDetail = () => {
                                     {scratchWin ? (
                                       <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                         <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
-                                          <AvatarImage src={scratchWin.avatar_url || ""} />
-                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{scratchWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                          <AvatarImage src={getWinnerAvatar(scratchWin)} />
+                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{scratchWinnerName.substring(0, 1)}</AvatarFallback>
                                         </Avatar>
                                         <div className="flex flex-col min-w-0">
-                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{scratchWin.winner_name}</span>
-                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{scratchWinnerName}</span>
+                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">SAIU PARA</span>
                                         </div>
                                       </div>
                                     ) : (
@@ -767,11 +819,12 @@ const CampaignDetail = () => {
                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Caixas Misteriosas</p>
                            <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
                              {mysteryBoxes?.map((box, idx) => {
-                                const boxWin = (allWinners || []).find(w => w.campaign_id === campaignId && w.winner_type === 'lucky_number' && w.prize_description.includes(box.name));
+                                 const boxWin = (boxWins || []).find((w: any) => w.config_id === box.id || w.box_name === box.name);
+                                 const boxWinnerName = getWinnerName(boxWin);
                                 return (
                                   <Dialog key={idx} onOpenChange={(open) => { if (!open && isGameInProgress) return; }}>
                                     <DialogTrigger asChild>
-                                      <button className="flex flex-col p-3 rounded-xl bg-purple-500/5 border border-purple-500/10 gap-1.5 shrink-0 w-[160px] snap-start text-left hover:border-purple-500/40 hover:bg-purple-500/10 transition-all group">
+                                       <button className={cn("flex flex-col p-3 rounded-xl border gap-1.5 shrink-0 w-[160px] snap-start text-left transition-all group", boxWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-purple-500/5 border-purple-500/10 hover:border-purple-500/40 hover:bg-purple-500/10")}>
                                         <div className="flex items-center justify-between gap-1">
                                           <motion.div animate={{ y: [0, -3, 0], rotate: [0, -6, 6, 0] }} transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }} className="h-5 w-5 rounded-full bg-purple-500/15 flex items-center justify-center text-purple-500 shrink-0">
                                             <Gift className="h-3 w-3" />
@@ -782,12 +835,12 @@ const CampaignDetail = () => {
                                     {boxWin ? (
                                       <div className="flex items-center gap-1.5 mt-1 bg-emerald-500/10 p-1 rounded-lg border border-emerald-500/20">
                                         <Avatar className="h-4.5 w-4.5 border border-emerald-500/20">
-                                          <AvatarImage src={boxWin.avatar_url || ""} />
-                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{boxWin.winner_name.substring(0, 1)}</AvatarFallback>
+                                          <AvatarImage src={getWinnerAvatar(boxWin)} />
+                                          <AvatarFallback className="text-[6px] bg-emerald-500/10 text-emerald-500 font-black">{boxWinnerName.substring(0, 1)}</AvatarFallback>
                                         </Avatar>
                                         <div className="flex flex-col min-w-0">
-                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{boxWin.winner_name}</span>
-                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">GANHOU</span>
+                                          <span className="text-[8px] font-black text-emerald-500 uppercase truncate leading-none">{boxWinnerName}</span>
+                                          <span className="text-[6px] font-bold text-muted-foreground uppercase leading-none mt-0.5">SAIU PARA</span>
                                         </div>
                                       </div>
                                     ) : (
