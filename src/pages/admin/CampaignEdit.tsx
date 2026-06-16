@@ -22,6 +22,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { compressImage } from "@/lib/image-upload";
 import LuckyHourManager from "@/components/admin/LuckyHourManager";
 import CampaignPrizesManager from "@/components/admin/CampaignPrizesManager";
+import SectionsOrderManager from "@/components/admin/SectionsOrderManager";
 
 
 interface CampaignForm {
