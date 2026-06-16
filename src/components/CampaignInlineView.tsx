@@ -372,19 +372,19 @@ const CampaignInlineView: React.FC<Props> = ({
                     </span>
                   </button>
                 </DialogTrigger>
-                <DialogContent className="max-w-lg p-0 w-[95vw] md:w-full max-h-[90vh] overflow-y-auto bg-zinc-950 border border-white/10 rounded-2xl"
+                <DialogContent className="max-w-xs p-0 w-[92vw] sm:w-full max-h-[80vh] overflow-hidden bg-zinc-950 border border-white/10 rounded-2xl"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
                   onEscapeKeyDown={(e) => { if (isGameInProgress) e.preventDefault(); }}>
-                  <DialogHeader className="px-4 pt-4 pb-2 border-b border-white/10">
-                    <DialogTitle className="text-base font-black uppercase italic tracking-tighter flex items-center gap-2">
-                      <Gift className="h-4 w-4 text-orange-500" /> {box.name}
+                  <DialogHeader className="px-3 pt-3 pb-2 border-b border-white/10">
+                    <DialogTitle className="text-sm font-black uppercase italic tracking-tighter flex items-center gap-2">
+                      <Gift className="h-3.5 w-3.5 text-orange-500" /> {box.name}
                     </DialogTitle>
-                    <DialogDescription className="text-[11px] text-muted-foreground">
-                      Abra a caixa e descubra seu prêmio. Custo: R$ {Number(box.cost).toFixed(2)}.
+                    <DialogDescription className="text-[10px] text-muted-foreground">
+                      Custo: R$ {Number(box.cost).toFixed(2)}
                     </DialogDescription>
                   </DialogHeader>
-                  <div className="p-3">
-                    <MysteryBox boxes={[box]} campaignId={campaignId} />
+                  <div className="p-2">
+                    <MysteryBox boxes={[box]} campaignId={campaignId} isCompact />
                   </div>
                 </DialogContent>
               </Dialog>
