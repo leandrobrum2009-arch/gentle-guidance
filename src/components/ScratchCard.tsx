@@ -273,6 +273,12 @@ const ScratchCard = ({
       
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["user-campaign-scratches"] });
+      if (campaignId) {
+        queryClient.invalidateQueries({ queryKey: ["campaign-scratch-wins", campaignId] });
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "campaign-scratch-wins" && query.queryKey[1] === campaignId,
+        });
+      }
       queryClient.invalidateQueries({ queryKey: ["admin-scratch-card-stats"] });
     } catch (error: any) {
       console.error("Scratch error:", error);
