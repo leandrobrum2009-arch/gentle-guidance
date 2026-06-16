@@ -683,6 +683,23 @@ export const useUserCampaignSpins = (userId: string, campaignId: string) =>
     enabled: !!userId && !!campaignId,
   });
 
+export const useCampaignScratchWins = (campaignId: string, limit = 100) =>
+  useQuery({
+    queryKey: ["campaign-scratch-wins", campaignId, limit],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("scratch_card_scratches")
+        .select(`*, profiles!user_id ( name, avatar_url )`)
+        .eq("campaign_id", campaignId)
+        .eq("is_winner", true)
+        .order("created_at", { ascending: false })
+        .limit(limit);
+      if (error) throw error;
+      return (data as any) as ScratchCardScratch[];
+    },
+    enabled: !!campaignId,
+  });
+
 export const useUserCampaignScratches = (userId: string, campaignId: string) =>
   useQuery({
     queryKey: ["user-campaign-scratches", userId, campaignId],
