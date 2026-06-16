@@ -13,7 +13,8 @@ import ScratchCard from "./ScratchCard";
 import Roulette from "./Roulette";
 import {
   Campaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useCampaignRanking,
-  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes
+  useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes,
+  useCampaignRouletteSpins, useCampaignMysteryBoxWins, useCampaignScratchWins
 } from "@/hooks/useData";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useQuery } from "@tanstack/react-query";
@@ -111,6 +112,9 @@ const CampaignInlineView: React.FC<Props> = ({
   const { data: userSpins } = useUserCampaignSpins(userId || "", campaignId);
   const { data: userScratches } = useUserCampaignScratches(userId || "", campaignId);
   const { data: ticketStats } = useCampaignTicketStats(campaignId);
+  const { data: rouletteWinSpins } = useCampaignRouletteSpins(campaignId, 200);
+  const { data: boxWinList } = useCampaignMysteryBoxWins(campaignId, 200);
+  const { data: scratchWinList } = useCampaignScratchWins(campaignId, 200);
 
   const [showBoxes, setShowBoxes] = useState(false);
   const [showRaspas, setShowRaspas] = useState(false);
@@ -121,11 +125,54 @@ const CampaignInlineView: React.FC<Props> = ({
 
   const luckyNumbers: any[] = campaign.lucky_numbers_prizes || [];
 
-  // Win lookups for caixas/raspadinhas/roletas
-  const winnersBy = (type: string) => (allWinners || []).filter(w => w.campaign_id === campaignId && w.winner_type === type);
-  const boxWinners = winnersBy('lucky_number');
-  const scratchWinners = winnersBy('scratchcard');
-  const rouletteWinners = winnersBy('roulette');
+  // Win lookups: prizes already taken in this campaign (from actual game tables)
+  const rouletteWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (rouletteWinSpins || []).forEach((s: any) => {
+      if (!s.prize_label || s.prize_label === 'Tente novamente') return;
+      const arr = map.get(s.prize_label) || [];
+      arr.push(s);
+      map.set(s.prize_label, arr);
+    });
+    return map;
+  }, [rouletteWinSpins]);
+  const scratchWinsByLabel = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (scratchWinList || []).forEach((s: any) => {
+      if (!s.prize_label) return;
+      const arr = map.get(s.prize_label) || [];
+      arr.push(s);
+      map.set(s.prize_label, arr);
+    });
+    return map;
+  }, [scratchWinList]);
+  const boxWinsByName = useMemo(() => {
+    const map = new Map<string, any[]>();
+    (boxWinList || []).forEach((w: any) => {
+      const key = w.prize_title || '';
+      const arr = map.get(key) || [];
+      arr.push(w);
+      map.set(key, arr);
+    });
+    return map;
+  }, [boxWinList]);
+
+  // Counters used while rendering rows (consumes one win per matching prize row)
+  const rouletteUsage = useMemo(() => new Map<string, number>(), [rouletteWinsByLabel]);
+  const scratchUsage = useMemo(() => new Map<string, number>(), [scratchWinsByLabel]);
+  const boxUsage = useMemo(() => new Map<string, number>(), [boxWinsByName]);
+
+  const takeWin = (map: Map<string, any[]>, usage: Map<string, number>, key: string) => {
+    const pool = map.get(key) || [];
+    const used = usage.get(key) || 0;
+    if (used >= pool.length) return null;
+    usage.set(key, used + 1);
+    return pool[used];
+  };
+
+  const totalRouletteWins = (rouletteWinSpins || []).filter((s: any) => s.prize_label && s.prize_label !== 'Tente novamente').length;
+  const totalScratchWins = (scratchWinList || []).length;
+  const totalBoxWins = (boxWinList || []).length;
 
   const progress = useMemo(() => {
     if (!campaign) return 0;
@@ -268,11 +315,11 @@ const CampaignInlineView: React.FC<Props> = ({
           title="Caixas Surpresas"
           tag="Ganhadores"
           right={<Badge variant="outline" className="text-[9px] h-5 px-2 font-black bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-            {boxWinners.length}/{(mysteryBoxes?.length || 0) * 3}
+            {totalBoxWins}/{(mysteryBoxes?.length || 0)}
           </Badge>}
         >
           {(showBoxes ? mysteryBoxes : mysteryBoxes?.slice(0, 10))?.map((box, i) => {
-            const win = boxWinners.find(w => w.prize_description?.includes(box.name));
+            const win: any = takeWin(boxWinsByName, boxUsage, box.name);
             return (
               <Dialog key={box.id} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -293,7 +340,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-orange-300 font-black uppercase text-[10px] tracking-wider">
@@ -348,11 +395,11 @@ const CampaignInlineView: React.FC<Props> = ({
           title="Raspadinhas"
           tag="Ganhadores"
           right={<Badge variant="outline" className="text-[9px] h-5 px-2 font-black bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-            {scratchWinners.length}/10
+            {totalScratchWins}/{(scratchPrizes?.length || 0)}
           </Badge>}
         >
           {((scratchPrizes && scratchPrizes.length > 0) ? scratchPrizes : []).map((prize: any, i: number) => {
-            const win = scratchWinners[i];
+            const win: any = takeWin(scratchWinsByLabel, scratchUsage, prize.label);
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -373,7 +420,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-sky-300 font-black uppercase text-[10px] tracking-wider">
@@ -474,11 +521,11 @@ const CampaignInlineView: React.FC<Props> = ({
           title="Roletas Instantâneas"
           tag="Ganhadores"
           right={<Badge variant="outline" className="text-[9px] h-5 px-2 font-black bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-            {rouletteWinners.length}/{roulettePrizes?.length || 0}
+            {totalRouletteWins}/{roulettePrizes?.length || 0}
           </Badge>}
         >
           {(showRoletas ? roulettePrizes : roulettePrizes?.slice(0, 10))?.map((prize, i) => {
-            const win = rouletteWinners.find(w => w.prize_description === prize.label);
+            const win: any = takeWin(rouletteWinsByLabel, rouletteUsage, prize.label);
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -499,7 +546,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-rose-300 font-black uppercase text-[10px] tracking-wider">
