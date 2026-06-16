@@ -2006,6 +2006,7 @@ export type Database = {
         }
         Returns: string
       }
+      process_mystery_box_open: { Args: { p_config_id: string }; Returns: Json }
       process_overdue_lucky_hours: { Args: never; Returns: undefined }
       process_roulette_spin: {
         Args: { p_campaign_id: string; p_multiplier: number }

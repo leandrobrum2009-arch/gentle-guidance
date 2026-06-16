@@ -88,55 +88,32 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
  
     const handleFinalOpen = async () => {
       if (!selectedBox || !user || !potentialPrizes.length) return;
-      const cost = Number(selectedBox.cost) || 0;
-      if (cost > 0) {
-        const { error: balanceError } = await supabase.rpc('increment_balance', {
-          amount: -cost,
-          user_uuid: user.id,
-        });
-        if (balanceError) {
-          toast.error("Erro ao processar pagamento.");
-          return;
-        }
+      const { data, error } = await (supabase as any).rpc('process_mystery_box_open', {
+        p_config_id: selectedBox.id,
+      });
+
+      if (error) {
+        toast.error(error.message || "Erro ao abrir a caixa.");
+        return;
       }
-      fetchUserProfile();
-     const totalWeight = potentialPrizes.reduce((acc, p) => acc + Number(p.chance_percent), 0);
-     let random = Math.random() * totalWeight;
-     let prize = potentialPrizes[0];
-     for (const p of potentialPrizes) {
-       if (random < Number(p.chance_percent)) {
-         prize = p;
-         break;
-       }
-       random -= Number(p.chance_percent);
-     }
+
+      const prize = (data as any)?.prize as MysteryBoxPrize;
+      if (!prize) {
+        toast.error("Não foi possível revelar o prêmio.");
+        return;
+      }
+
      setWinningPrize(prize);
       setIsRevealing(true);
       playSound('open');
-     await supabase.from("mystery_box_wins").insert({
-       user_id: user.id,
-      box_id: selectedBox.id,
-      config_id: selectedBox.id,
-       prize_id: prize.id,
-       prize_title: prize.title,
-        prize_value: prize.prize_value,
-     });
-
-      // Add notification for mystery box win
-      await supabase.from("notifications").insert({
-        user_id: user.id,
-        title: "Item desbloqueado!",
-        message: `Parabéns! Você abriu uma caixa ${selectedBox.name} e ganhou: ${prize.title}.`,
-        type: "win"
-      });
-
-     if (prize.prize_type === 'cash' && prize.prize_value) {
-        await supabase.rpc('increment_balance', { amount: prize.prize_value, user_uuid: user.id });
-        fetchUserProfile();
-     }
+      setUserProfile((prev: any) => ({ ...prev, balance: (data as any)?.new_balance ?? prev?.balance }));
       queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
       if (campaignId) {
         queryClient.invalidateQueries({ queryKey: ["campaign-mystery-box-wins", campaignId] });
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "campaign-mystery-box-wins" && query.queryKey[1] === campaignId,
+        });
       }
    };
  

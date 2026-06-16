@@ -1183,20 +1183,23 @@ const CampaignDetail = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {roulettePrizes.map((p, i) => (
-                <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/30 border border-border/50">
-                  <div className="flex items-center gap-3">
+              {roulettePrizes.map((p, i) => {
+                const spinWin = rouletteWinsByLabel.get(p.label)?.[0];
+                const spinWinnerName = getWinnerName(spinWin);
+                return (
+                <div key={i} className={cn("flex items-center justify-between p-4 rounded-2xl border", spinWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-secondary/30 border-border/50")}>
+                  <div className="flex items-center gap-3 min-w-0">
                     <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
                       <RotateCw className="h-5 w-5" />
                     </div>
-                    <div>
+                    <div className="min-w-0">
                       <p className="text-sm font-black uppercase tracking-tight text-foreground">{p.label}</p>
-                      <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Disponível na Roleta</p>
+                      <p className={cn("text-[10px] font-bold uppercase tracking-widest", spinWin ? "text-emerald-500" : "text-muted-foreground")}>{spinWin ? `Saiu para ${spinWinnerName}` : "Disponível na Roleta"}</p>
                     </div>
                   </div>
-                  <Badge className="bg-primary/20 text-primary border-none text-[8px] font-black uppercase">BENEFÍCIO</Badge>
+                  <Badge className={cn("border-none text-[8px] font-black uppercase", spinWin ? "bg-emerald-500 text-white" : "bg-primary/20 text-primary")}>{spinWin ? "SORTEADO" : "BENEFÍCIO"}</Badge>
                 </div>
-              ))}
+              )})}
             </div>
 
           </div>
@@ -1212,6 +1215,23 @@ const CampaignDetail = () => {
                 Tente ganhar prêmios reais raspando agora!
               </p>
             </div>
+            {(scratchPrizes?.length || 0) > 0 && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 mb-6">
+                {scratchPrizes?.map((prize: any, i: number) => {
+                  const scratchWin = scratchWinsByLabel.get(prize.label)?.[0];
+                  const scratchWinnerName = getWinnerName(scratchWin);
+                  return (
+                    <div key={prize.id || i} className={cn("flex items-center justify-between p-4 rounded-2xl border", scratchWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-amber-500/5 border-amber-500/20")}>
+                      <div className="min-w-0">
+                        <p className="text-sm font-black uppercase tracking-tight text-foreground truncate">{prize.label}</p>
+                        <p className={cn("text-[10px] font-bold uppercase tracking-widest", scratchWin ? "text-emerald-500" : "text-muted-foreground")}>{scratchWin ? `Saiu para ${scratchWinnerName}` : "Disponível na Raspadinha"}</p>
+                      </div>
+                      <Badge className={cn("border-none text-[8px] font-black uppercase", scratchWin ? "bg-emerald-500 text-white" : "bg-amber-500/20 text-amber-500")}>{scratchWin ? "SORTEADA" : "PRÊMIO"}</Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
             <ScratchCard 
               potentialPrizes={[
                 ...(roulettePrizes?.map(p => p.label) || []),

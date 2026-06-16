@@ -629,10 +629,7 @@ export const useScratchCardPrizes = (campaignId?: string) =>
         query = query.is("campaign_id", null);
       }
       
-      const { data, error } = await supabase
-        .from("scratch_card_prizes")
-        .select("*")
-        .eq("is_active", true);
+      const { data, error } = await query.order("created_at", { ascending: true });
         
       if (error) throw error;
       return data as ScratchCardPrize[];

@@ -240,6 +240,9 @@ const Roulette = ({ prizes: initialPrizes, onSpinComplete, onSpinStart, campaign
       queryClient.invalidateQueries({ queryKey: ["roulette_spins"] });
       queryClient.invalidateQueries({ queryKey: ["user-campaign-spins"] });
       queryClient.invalidateQueries({ queryKey: ["campaign-roulette-spins", campaign.id] });
+      queryClient.invalidateQueries({
+        predicate: (query) => query.queryKey[0] === "campaign-roulette-spins" && query.queryKey[1] === campaign.id,
+      });
       queryClient.invalidateQueries({ queryKey: ["user-prizes-by-campaign", user?.id] });
       if (new_balance !== undefined) setUserProfile(prev => ({ ...prev, balance: new_balance }));
 
