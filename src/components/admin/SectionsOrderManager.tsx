@@ -9,6 +9,7 @@ const SECTION_LABELS: Record<string, string> = {
   gallery: "Galeria de Imagens",
   features: "Selos de Confiança",
   header: "Título e Informações",
+  timer: "Cronômetro / Tempo Restante",
   live_stream: "Transmissão ao Vivo",
   steps: "Como Participar (3 passos)",
   progress: "Barra de Progresso",
@@ -26,7 +27,8 @@ const SECTION_LABELS: Record<string, string> = {
   winners: "Histórico de Ganhadores",
 };
 
-const ALL_SECTIONS = Object.keys(SECTION_LABELS);
+const DEFAULT_ORDER = ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+const ALL_SECTIONS = DEFAULT_ORDER.filter((section) => SECTION_LABELS[section]);
 
 function SortableRow({ id, index, onToggle }: { id: string; index: number; onToggle: (id: string, enabled: boolean) => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });

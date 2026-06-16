@@ -67,7 +67,7 @@ const empty: CampaignForm = {
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
-  show_timer: false, sections_order: ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
+  show_timer: false, sections_order: ["gallery", "header", "timer", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
   timer_end_date: "",
   vip_group_link: "",
   vip_group_video_url: "",
@@ -127,7 +127,16 @@ export default function AdminCampaignEdit() {
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
-      sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
+      sections_order: (() => {
+        const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]);
+        if (data.show_timer && !order.includes("timer")) {
+          const next = [...order];
+          const headerIndex = next.indexOf("header");
+          next.splice(headerIndex >= 0 ? headerIndex + 1 : 1, 0, "timer");
+          return next;
+        }
+        return order;
+      })()
     } as unknown as CampaignForm);
     setLoading(false);
   };
@@ -237,6 +246,16 @@ export default function AdminCampaignEdit() {
     }
     if (k === "fake_progress_percentage") {
       v = Math.min(100, Math.max(0, parseInt(v) || 0));
+    }
+    if (k === "show_timer" && v) {
+      setForm((p) => {
+        if (p.sections_order.includes("timer")) return { ...p, show_timer: v };
+        const next = [...p.sections_order];
+        const headerIndex = next.indexOf("header");
+        next.splice(headerIndex >= 0 ? headerIndex + 1 : 1, 0, "timer");
+        return { ...p, show_timer: v, sections_order: next };
+      });
+      return;
     }
     setForm((p) => ({ ...p, [k]: v }));
   };

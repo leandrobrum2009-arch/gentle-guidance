@@ -34,7 +34,13 @@ interface Props {
   setIsGameInProgress: (v: boolean) => void;
   luckyNumbersStatus: Record<string, boolean>;
   userId?: string;
+  sectionsOrder?: string[];
 }
+
+const DEFAULT_INLINE_SECTIONS = [
+  "gallery", "header", "progress", "purchase", "prizes", "roulette_footer", "scratch_footer",
+  "events", "timer", "live_stream", "live_draw", "steps", "ranking", "winners", "description", "faq", "cta"
+];
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; tag?: string; right?: React.ReactNode; children: React.ReactNode; tone?: string }> = ({ icon, title, tag, right, children, tone = "primary" }) => (
   <div className="rounded-2xl border border-border bg-card/60 backdrop-blur-sm overflow-hidden">
@@ -106,7 +112,7 @@ const ComboRow: React.FC<{ minTickets: number; chances: number; icon: React.Reac
 };
 
 const CampaignInlineView: React.FC<Props> = ({
-  campaign, onBuy, isPurchasing, isGameInProgress, setIsGameInProgress, luckyNumbersStatus, userId
+  campaign, onBuy, isPurchasing, isGameInProgress, setIsGameInProgress, luckyNumbersStatus, userId, sectionsOrder
 }) => {
   const campaignId = campaign.id;
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
@@ -201,6 +207,43 @@ const CampaignInlineView: React.FC<Props> = ({
   const totalScratchWins = (scratchWinList || []).length;
   const totalBoxWins = (boxWinList || []).length;
 
+  const recentWinners = useMemo(() => {
+    const rows = [
+      ...((rouletteWinSpins || [])
+        .filter((s: any) => s.prize_label && s.prize_label !== 'Tente novamente')
+        .map((s: any) => ({ name: s.winner_name || s.profiles?.name || 'Ganhador', prize: s.prize_label, type: 'Roleta', created_at: s.created_at }))),
+      ...((scratchWinList || [])
+        .map((s: any) => ({ name: s.winner_name || s.profiles?.name || 'Ganhador', prize: s.prize_label, type: 'Raspadinha', created_at: s.created_at }))),
+      ...((boxWinList || [])
+        .map((w: any) => ({ name: w.winner_name || w.profiles?.name || 'Ganhador', prize: w.prize_title || w.box_name || 'Caixa premiada', type: 'Caixa', created_at: w.created_at }))),
+      ...((allWinners || [])
+        .filter((w: any) => w.campaign_id === campaignId)
+        .map((w: any) => ({ name: w.winner_name || 'Ganhador', prize: w.prize_description || w.ticket_number || 'Prêmio', type: 'Cota', created_at: w.draw_date || w.created_at }))),
+    ];
+    return rows.sort((a, b) => new Date(b.created_at || 0).getTime() - new Date(a.created_at || 0).getTime()).slice(0, 6);
+  }, [rouletteWinSpins, scratchWinList, boxWinList, allWinners, campaignId]);
+
+  const activeSections = useMemo(() => {
+    const configured = sectionsOrder?.length ? sectionsOrder : DEFAULT_INLINE_SECTIONS;
+    if (campaign.show_timer && !configured.includes("timer")) {
+      const headerIndex = configured.indexOf("header");
+      const next = [...configured];
+      next.splice(headerIndex >= 0 ? headerIndex + 1 : 1, 0, "timer");
+      return next;
+    }
+    return configured;
+  }, [campaign.show_timer, sectionsOrder]);
+
+  const sectionOrderIndex = useMemo(() => new Map(activeSections.map((id, index) => [id, index])), [activeSections]);
+  const isSectionEnabled = (id: string) => sectionOrderIndex.has(id);
+  const sectionOrder = (id: string) => sectionOrderIndex.get(id) ?? 999;
+
+  const SectionSlot: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
+    if (!isSectionEnabled(id)) return null;
+    if (children === null || children === undefined || children === false) return null;
+    return <div style={{ order: sectionOrder(id) }}>{children}</div>;
+  };
+
   const progress = useMemo(() => {
     if (!campaign) return 0;
     if (campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined) return campaign.fake_progress_percentage;
@@ -208,8 +251,9 @@ const CampaignInlineView: React.FC<Props> = ({
   }, [campaign]);
 
   return (
-    <div className="mx-auto w-full max-w-[480px] space-y-3">
+    <div className="mx-auto flex w-full max-w-[480px] flex-col gap-3">
       {/* HERO */}
+      <SectionSlot id="gallery">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
         {campaign.image_url && (
           <img src={campaign.image_url} alt={campaign.title} className="aspect-[4/5] w-full object-cover" />
@@ -228,28 +272,69 @@ const CampaignInlineView: React.FC<Props> = ({
                   Últimos {Math.max(1, 100 - Math.round(progress))}%
                 </Badge>
               )}
-              <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
-              {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
+              {!isSectionEnabled("header") && (
+                <>
+                  <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
+                  {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
+                </>
+              )}
             </div>
           </>
         )}
       </div>
+      </SectionSlot>
 
       {/* PROGRESS BAR */}
+      <SectionSlot id="progress">
       <div className="rounded-xl border border-border bg-card overflow-hidden">
         <div className="h-3 w-full bg-secondary/50 relative">
           <div className="absolute inset-y-0 left-0 bg-gradient-to-r from-primary to-emerald-400 transition-all" style={{ width: `${progress}%` }} />
           <span className="absolute left-2 top-1/2 -translate-y-1/2 text-[9px] font-black text-foreground/80">{progress.toFixed(1).replace('.', ',')}%</span>
         </div>
       </div>
+      </SectionSlot>
 
-      {Number(campaign.ticket_price) === 0 && (
-        <div className="flex justify-center">
-          <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-3 h-5">GRÁTIS</Badge>
+      <SectionSlot id="header">
+        <div className="rounded-2xl border border-border bg-card p-3 space-y-2">
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Badge className="bg-primary/15 text-primary border-primary/30 text-[9px] font-black uppercase tracking-widest px-2 h-5">
+              {campaign.status === "active" ? "Sorteio Ativo" : campaign.status}
+            </Badge>
+            {campaign.draw_date && (
+              <Badge variant="outline" className="text-[9px] h-5 px-2 font-black uppercase border-border">
+                {new Date(campaign.draw_date).toLocaleDateString("pt-BR", { day: "2-digit", month: "2-digit" })}
+              </Badge>
+            )}
+            {Number(campaign.ticket_price) === 0 && (
+              <Badge className="bg-emerald-500/15 text-emerald-500 border-emerald-500/30 text-[9px] font-black uppercase tracking-widest px-2 h-5">GRÁTIS</Badge>
+            )}
+          </div>
+          <div>
+            <h1 className="text-lg font-black uppercase italic tracking-tight leading-tight text-foreground">{campaign.title}</h1>
+            {campaign.subtitle && <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-wider mt-1 leading-snug">{campaign.subtitle}</p>}
+          </div>
         </div>
-      )}
+      </SectionSlot>
+
+      <SectionSlot id="features">
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { icon: Zap, title: "Rápido", desc: "PIX instantâneo" },
+            { icon: Trophy, title: "Transparente", desc: "Ganhadores reais" },
+            { icon: Ticket, title: "Seguro", desc: "Cotas validadas" },
+            { icon: Smartphone, title: "Mobile", desc: "Acompanhe tudo" },
+          ].map((item, index) => (
+            <div key={index} className="rounded-xl border border-border bg-card p-3 text-center space-y-1">
+              <item.icon className="h-4 w-4 mx-auto text-primary" />
+              <p className="text-[10px] font-black uppercase tracking-tight text-foreground">{item.title}</p>
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground truncate">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </SectionSlot>
 
       {/* QUICK ACTION BUTTONS */}
+      <SectionSlot id="prizes">
       <div className="space-y-2">
         <QuickActionPrizes
           mainPrizes={(campaign as any).main_prizes || []}
@@ -260,16 +345,25 @@ const CampaignInlineView: React.FC<Props> = ({
           scratchWinsByLabel={scratchWinsByLabel}
           rouletteWinsByLabel={rouletteWinsByLabel}
         />
-        <QuickActionRanking ranking={ranking} />
-        <QuickActionExtremes campaignId={campaignId} />
       </div>
+      </SectionSlot>
+
+      <SectionSlot id="ranking">
+        <div className="space-y-2">
+          {campaign.ranking_enabled && <QuickActionRanking ranking={ranking} />}
+          <QuickActionExtremes campaignId={campaignId} />
+        </div>
+      </SectionSlot>
 
       {/* PRICING */}
+      <SectionSlot id="purchase">
       <div className="rounded-2xl border border-border bg-card p-3">
         <CampaignPricing campaign={campaign} onBuy={onBuy} isPurchasing={isPurchasing} />
       </div>
+      </SectionSlot>
 
       {/* MEU ACESSO - Entitlements do usuário após compra */}
+      <SectionSlot id="purchase">
       {userId && (userSpinsAvailable > 0 || userScratchesAvailable > 0) && (
         <SectionCard
           icon={<Ticket className="h-3.5 w-3.5 text-emerald-400" />}
@@ -295,8 +389,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TÍTULOS PREMIADOS */}
+      <SectionSlot id="prizes">
       {luckyNumbers.length > 0 && (
         <SectionCard
           icon={<Trophy className="h-3.5 w-3.5 text-amber-500" />}
@@ -330,8 +426,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* CAIXAS - COMBOS */}
+      <SectionSlot id="prizes">
       {campaign.mystery_box_enabled && Array.isArray(campaign.prize_rules) && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
         <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
           <SectionCaption>
@@ -342,8 +440,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* CAIXAS GANHADORES (clicáveis abrem MysteryBox) */}
+      <SectionSlot id="prizes">
       {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
         <SectionCard
           icon={<Gift className="h-3.5 w-3.5 text-orange-500" />}
@@ -410,8 +510,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* RASPADINHAS - COMBOS */}
+      <SectionSlot id="scratch_footer">
       {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
         <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
           <SectionCaption>
@@ -422,8 +524,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* RASPADINHAS GANHADORES */}
+      <SectionSlot id="scratch_footer">
       {campaign.scratch_cards_enabled && (
         <SectionCard
           icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />}
@@ -488,8 +592,10 @@ const CampaignInlineView: React.FC<Props> = ({
           })}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* ROLETAS - COMBOS */}
+      <SectionSlot id="roulette_footer">
       {campaign.roulette_enabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
         <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
           <SectionCaption>
@@ -500,8 +606,10 @@ const CampaignInlineView: React.FC<Props> = ({
           ))}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* EVENTOS E PREMIAÇÕES */}
+      <SectionSlot id="events">
       {(luckyHours?.length || 0) > 0 && (
         <div className="rounded-2xl border border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-950/40 via-violet-950/30 to-purple-950/40 backdrop-blur-sm overflow-hidden shadow-[0_0_20px_rgba(217,70,239,0.15)]">
           <div className="flex items-center justify-between px-3 py-2.5 border-b border-fuchsia-500/30 bg-fuchsia-500/10">
@@ -549,8 +657,10 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </div>
       )}
+      </SectionSlot>
 
       {/* ROLETAS GANHADORES (clicáveis) */}
+      <SectionSlot id="roulette_footer">
       {campaign.roulette_enabled && (roulettePrizes?.length || 0) > 0 && (
         <SectionCard
           icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />}
@@ -618,8 +728,10 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TEMPO RESTANTE */}
+      <SectionSlot id="timer">
       {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
         <SectionCard icon={<Clock className="h-3.5 w-3.5 text-primary" />} title="Tempo restante" tag="Sorteio">
           <div className="flex flex-col items-center justify-center py-4 w-full">
@@ -627,8 +739,10 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* TRANSMISSÃO AO VIVO */}
+      <SectionSlot id="live_stream">
       {campaign.live_stream_enabled && campaign.live_stream_url && (
         <SectionCard icon={<Video className="h-3.5 w-3.5 text-rose-500" />} title="Ao vivo" tag="Transmissão">
           <div className="-mx-2 -mb-2 [&_iframe]:w-full [&_iframe]:aspect-video [&_iframe]:h-auto [&_video]:w-full [&_video]:aspect-video [&_video]:h-auto">
@@ -636,13 +750,17 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         </SectionCard>
       )}
+      </SectionSlot>
 
       {/* SORTEIO AO VIVO */}
+      <SectionSlot id="live_draw">
       <div className="-mx-0">
         <CampaignLiveDraw campaign={campaign} />
       </div>
+      </SectionSlot>
 
       {/* COMO PARTICIPAR */}
+      <SectionSlot id="steps">
       <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-primary" />} title="Como participar" tag="3 passos">
         {[
           { step: "01", title: "Escolha suas cotas", desc: "Selecione a quantidade ou escolha seus números da sorte.", icon: MousePointer2 },
@@ -659,15 +777,54 @@ const CampaignInlineView: React.FC<Props> = ({
           </div>
         ))}
       </SectionCard>
+      </SectionSlot>
 
       {/* DESCRIÇÃO E REGULAMENTO */}
+      <SectionSlot id="description">
       {(campaign.description || campaign.regulations) && (
         <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Descrição e regras">
           <InlineDescription description={campaign.description} regulations={campaign.regulations} />
         </SectionCard>
       )}
+      </SectionSlot>
+
+      <SectionSlot id="winners">
+        <SectionCard icon={<Trophy className="h-3.5 w-3.5 text-amber-500" />} title="Histórico de ganhadores" tag="Campanha">
+          {recentWinners.length > 0 ? recentWinners.map((winner, index) => (
+            <div key={`${winner.type}-${index}`} className="flex items-center justify-between gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 h-10 text-[11px]">
+              <span className="flex items-center gap-2 min-w-0">
+                <Crown className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                <span className="font-black text-foreground truncate">{winner.name}</span>
+              </span>
+              <span className="text-[10px] font-bold text-emerald-400 uppercase truncate max-w-[130px]">{winner.type}: {winner.prize}</span>
+            </div>
+          )) : (
+            <p className="rounded-lg border border-dashed border-border bg-secondary/30 px-3 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              Nenhum ganhador registrado ainda.
+            </p>
+          )}
+        </SectionCard>
+      </SectionSlot>
+
+      <SectionSlot id="social_proof">
+        <SectionCard icon={<Star className="h-3.5 w-3.5 text-amber-500" />} title="Prova social" tag="Verificado">
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { label: "Compradores", value: ranking?.length || 0 },
+              { label: "Prêmios", value: recentWinners.length },
+              { label: "Cotas", value: campaign.sold_tickets },
+            ].map((item) => (
+              <div key={item.label} className="rounded-lg border border-border bg-secondary/30 p-2 text-center">
+                <p className="text-sm font-black text-primary leading-none">{Number(item.value).toLocaleString("pt-BR")}</p>
+                <p className="mt-1 text-[8px] font-bold uppercase tracking-tight text-muted-foreground truncate">{item.label}</p>
+              </div>
+            ))}
+          </div>
+        </SectionCard>
+      </SectionSlot>
 
       {/* FAQ */}
+      <SectionSlot id="faq">
       <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Dúvidas frequentes" tag="FAQ">
         {[
           { q: "Como os ganhadores são escolhidos?", a: "Sorteio automatizado e transparente entre os bilhetes pagos.", icon: Trophy },
@@ -678,8 +835,10 @@ const CampaignInlineView: React.FC<Props> = ({
           <FaqRow key={i} q={item.q} a={item.a} Icon={item.icon} />
         ))}
       </SectionCard>
+      </SectionSlot>
 
       {/* COMPARTILHAR */}
+      <SectionSlot id="cta">
       <SectionCard icon={<Share2 className="h-3.5 w-3.5 text-primary" />} title="Indique e ganhe" tag="Compartilhar">
         <Button
           variant="outline"
@@ -697,6 +856,7 @@ const CampaignInlineView: React.FC<Props> = ({
           <Share2 className="h-3.5 w-3.5" /> Compartilhar campanha
         </Button>
       </SectionCard>
+      </SectionSlot>
     </div>
   );
 };
