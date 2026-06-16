@@ -293,7 +293,7 @@ const CampaignInlineView: React.FC<Props> = ({
                         <span className="flex items-center gap-2 min-w-0">
                           <Gift className="h-3.5 w-3.5 text-orange-400 shrink-0" />
                           <span className="text-foreground truncate">{box.name}</span>
-                          <span className="text-[10px] font-black text-amber-400 shrink-0">R$ {Number(box.cost).toFixed(2)}</span>
+                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>R$ {Number(box.cost).toFixed(2)}</span>
                         </span>
                       }
                       right={win ? (
@@ -381,7 +381,7 @@ const CampaignInlineView: React.FC<Props> = ({
                         <span className="flex items-center gap-2 min-w-0">
                           <Sparkles className="h-3.5 w-3.5 text-sky-300 shrink-0" />
                           <span className="text-foreground truncate">{prize.label}</span>
-                          <span className="text-[10px] font-black text-amber-400 shrink-0">{valueLabel}</span>
+                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>{valueLabel}</span>
                         </span>
                       }
                       right={win ? (
