@@ -138,7 +138,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
    };
  
   const renderBoxes = () => (
-    <div className={cn("grid gap-4", boxes.length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4")}>
+    <div className={cn("grid", isCompact ? "gap-2" : "gap-4", boxes.length === 1 ? "grid-cols-1" : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4")}>
       {boxes.map((box) => {
         const config = RARITY_CONFIG[box.rarity as keyof typeof RARITY_CONFIG];
         const Icon = config.icon;
@@ -148,24 +148,24 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
             whileHover={{ y: -5, scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
              onClick={() => { handleStartOpening(box); playSound('click'); hapticFeedback(); }}
-            className={cn("group relative overflow-hidden rounded-2xl md:rounded-3xl border p-6 cursor-pointer transition-all duration-500", config.border, config.bg, "hover:" + config.glow)}
+            className={cn("group relative overflow-hidden rounded-2xl border cursor-pointer transition-all duration-500", isCompact ? "p-3" : "p-6 md:rounded-3xl", config.border, config.bg, "hover:" + config.glow)}
           >
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0" />
-            <div className="relative z-10 space-y-4">
+            <div className={cn("relative z-10", isCompact ? "space-y-2" : "space-y-4")}>
               <div className="flex items-center justify-between">
-                <Badge className="bg-white/10 backdrop-blur-md text-[10px] font-black uppercase tracking-widest">{config.label}</Badge>
-                <Icon className="h-5 w-5 opacity-50" style={{ color: config.color }} />
+                <Badge className="bg-white/10 backdrop-blur-md text-[9px] font-black uppercase tracking-widest">{config.label}</Badge>
+                <Icon className={cn("opacity-50", isCompact ? "h-4 w-4" : "h-5 w-5")} style={{ color: config.color }} />
               </div>
-              <div className="aspect-square relative flex items-center justify-center py-4">
+              <div className={cn("relative flex items-center justify-center", isCompact ? "py-2" : "aspect-square py-4")}>
                  <motion.div animate={{ y: [0, -10, 0], rotate: [0, -2, 2, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
-                    <Box className="h-24 w-24 drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] group-hover:drop-shadow-[0_0_30px_rgba(var(--primary-rgb),0.5)] transition-all duration-500" style={{ color: config.color }} />
+                    <Box className={cn("drop-shadow-[0_0_20px_rgba(255,255,255,0.2)] transition-all duration-500", isCompact ? "h-14 w-14" : "h-24 w-24")} style={{ color: config.color }} />
                  </motion.div>
               </div>
               <div className="text-center space-y-1">
-                <h3 className="font-black uppercase tracking-tighter text-lg">{box.name}</h3>
+                <h3 className={cn("font-black uppercase tracking-tighter", isCompact ? "text-xs" : "text-lg")}>{box.name}</h3>
                 <div className="flex items-center justify-center gap-1 text-primary">
-                  <Coins className="h-4 w-4" />
-                  <span className="font-bold text-xl">R$ {Number(box.cost).toFixed(2)}</span>
+                  <Coins className={isCompact ? "h-3 w-3" : "h-4 w-4"} />
+                  <span className={cn("font-bold", isCompact ? "text-sm" : "text-xl")}>R$ {Number(box.cost).toFixed(2)}</span>
                 </div>
               </div>
             </div>
