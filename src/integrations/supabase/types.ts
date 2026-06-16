@@ -335,6 +335,7 @@ export type Database = {
           federal_lottery_draw: boolean | null
           gallery_urls: Json | null
           id: string
+          image_overlay_enabled: boolean
           image_url: string | null
           live_stream_enabled: boolean | null
           live_stream_url: string | null
@@ -400,6 +401,7 @@ export type Database = {
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
           id?: string
+          image_overlay_enabled?: boolean
           image_url?: string | null
           live_stream_enabled?: boolean | null
           live_stream_url?: string | null
@@ -465,6 +467,7 @@ export type Database = {
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
           id?: string
+          image_overlay_enabled?: boolean
           image_url?: string | null
           live_stream_enabled?: boolean | null
           live_stream_url?: string | null
