@@ -457,10 +457,10 @@ import { PaymentModal } from "@/components/PaymentModal";
             <div className="grid gap-3 sm:gap-4 grid-cols-2 sm:grid-cols-4">
               {[
                 { label: "Saldo", val: `R$ ${Number(profile?.balance || 0).toFixed(2)}`, icon: Wallet, color: "text-emerald-400" },
-                { label: "Cashback", val: `R$ ${Number(profile?.cashback_balance || 0).toFixed(2)}`, icon: Coins, color: "text-amber-400" },
-                { label: "Giros", val: `${profile?.xp || 0}`, icon: RotateCw, color: "text-primary" },
-                { label: "Vitórias", val: orders?.filter((o:any) => o.payment_status === 'won').length || 0, icon: Trophy, color: "text-purple-400" },
-              ].map((stat, i) => (
+                { label: "Títulos Ativos", val: orders?.filter((o:any) => o.payment_status === 'paid').length || 0, icon: Ticket, color: "text-primary", hint: "Cotas pagas em campanhas" },
+                { label: "Giros Disponíveis", val: `${spins?.filter((s:any) => !s.used).length || 0}`, icon: RotateCw, color: "text-amber-400", hint: "Roletas para girar" },
+                { label: "Prêmios Ganhos", val: (spins?.filter((s:any)=>s.prize_value>0).length || 0) + (boxWins?.length || 0), icon: Trophy, color: "text-purple-400", hint: "Em jogos e rifas" },
+              ].map((stat: any, i) => (
                 <Card key={i} className="bg-card border-border p-3 sm:p-4 group hover:bg-secondary/50 transition-all duration-300">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg sm:rounded-xl bg-secondary/50 flex items-center justify-center group-hover:scale-110 transition-transform shrink-0">
@@ -469,6 +469,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                     <div className="min-w-0">
                       <p className="text-[8px] sm:text-[9px] uppercase font-bold text-muted-foreground truncate">{stat.label}</p>
                       <p className="font-bold text-sm sm:text-lg truncate">{stat.val}</p>
+                      {stat.hint && <p className="text-[8px] text-muted-foreground/70 truncate hidden sm:block">{stat.hint}</p>}
                     </div>
                   </div>
                 </Card>
@@ -477,14 +478,24 @@ import { PaymentModal } from "@/components/PaymentModal";
 
             <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
               <TabsContent value="overview" className="space-y-6">
+                <div className="grid sm:grid-cols-2 gap-3">
+                  <Button onClick={() => setIsDepositOpen(true)} className="h-14 rounded-2xl bg-primary text-primary-foreground font-black uppercase italic tracking-widest hover:brightness-110 gap-2">
+                    <ArrowUpRight className="h-4 w-4" /> Depositar via PIX
+                  </Button>
+                  <Button onClick={() => setIsWithdrawOpen(true)} className="h-14 rounded-2xl bg-emerald-500 text-white font-black uppercase italic tracking-widest hover:bg-emerald-600 gap-2">
+                    <ArrowDownLeft className="h-4 w-4" /> Solicitar Saque
+                  </Button>
+                </div>
+
                 <div className="grid lg:grid-cols-2 gap-6">
                   <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
                     <CardHeader className="p-0 mb-6">
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <TrendingUp className="h-4 w-4 text-primary" /> Performance Financeira
                       </CardTitle>
-                      <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Últimos 10 lançamentos</CardDescription>
+                      <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">Movimentações da sua carteira</CardDescription>
                     </CardHeader>
+                    {chartData.length > 0 ? (
                     <div className="h-[200px] w-full">
                       <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={chartData}>
@@ -507,6 +518,13 @@ import { PaymentModal } from "@/components/PaymentModal";
                         </AreaChart>
                       </ResponsiveContainer>
                     </div>
+                    ) : (
+                      <div className="h-[200px] flex flex-col items-center justify-center text-center gap-3">
+                        <TrendingUp className="h-8 w-8 text-muted-foreground/30" />
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Sem movimentações ainda</p>
+                        <Button size="sm" variant="outline" onClick={() => setIsDepositOpen(true)} className="text-[10px] font-black uppercase">Fazer 1º depósito</Button>
+                      </div>
+                    )}
                   </Card>
 
                   <Card className="bg-card/50 border-border p-6 backdrop-blur-xl">
@@ -514,9 +532,10 @@ import { PaymentModal } from "@/components/PaymentModal";
                       <CardTitle className="text-sm font-black uppercase tracking-widest flex items-center gap-2">
                         <Star className="h-4 w-4 text-amber-400" /> Suas Conquistas
                       </CardTitle>
+                      <CardDescription className="text-[10px] uppercase font-bold text-muted-foreground">{achievements?.length || 0} de {ALL_ACHIEVEMENTS.length} desbloqueadas</CardDescription>
                     </CardHeader>
                     <div className="space-y-3 max-h-[200px] overflow-auto pr-2 custom-scrollbar">
-                      {achievements?.length ? achievements.map((a: any) => (
+                      {achievements?.length ? achievements.slice(0,4).map((a: any) => (
                         <div key={a.id} className="flex items-center gap-3 p-3 bg-secondary/30 rounded-xl border border-border hover:border-amber-500/30 transition-all">
                           <div className="h-10 w-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
                             <Star className="h-5 w-5 text-amber-400" />
@@ -527,8 +546,10 @@ import { PaymentModal } from "@/components/PaymentModal";
                           </div>
                         </div>
                       )) : (
-                        <div className="text-center py-8">
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest italic">Nenhuma conquista ainda</p>
+                        <div className="text-center py-6 space-y-3">
+                          <Star className="h-8 w-8 text-muted-foreground/30 mx-auto" />
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Participe de rifas e jogos para desbloquear conquistas</p>
+                          <Button size="sm" variant="outline" onClick={() => setActiveTab("achievements")} className="text-[10px] font-black uppercase">Ver conquistas</Button>
                         </div>
                       )}
                     </div>
