@@ -710,11 +710,31 @@ const QuickActionPrizes: React.FC<{
   );
 };
 
-const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => (
+const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => {
+  const top5 = (ranking || []).slice(0, 5);
+  return (
   <Dialog>
     <DialogTrigger asChild>
-      <button className="w-full h-10 rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground text-xs font-bold uppercase tracking-wide flex items-center justify-center gap-2 transition-all">
-        <Users className="h-4 w-4 text-primary" /> Top Compradores
+      <button className="w-full rounded-xl border border-border bg-card hover:bg-secondary/50 text-foreground transition-all overflow-hidden">
+        <div className="h-10 px-3 flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wide">
+          <span className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" /> Top Compradores</span>
+          <span className="text-[9px] font-black text-primary">{top5.length > 0 ? `Top ${top5.length}` : "Ver"}</span>
+        </div>
+        {top5.length > 0 && (
+          <div className="px-3 pb-2 space-y-1">
+            {top5.map((r: any, i: number) => (
+              <div key={i} className="flex items-center gap-2 text-[10px]">
+                <span className={cn("h-4 w-4 rounded-full flex items-center justify-center text-[8px] font-black shrink-0",
+                  i === 0 ? "bg-amber-500/30 text-amber-400" :
+                  i === 1 ? "bg-slate-400/30 text-slate-200" :
+                  i === 2 ? "bg-orange-700/30 text-orange-300" : "bg-secondary text-muted-foreground")}>{i + 1}</span>
+                <Avatar className="h-4 w-4"><AvatarImage src={r.avatar_url} /><AvatarFallback className="text-[8px]">{(r.user_name || "?")[0]}</AvatarFallback></Avatar>
+                <span className="flex-1 font-bold truncate text-left text-foreground/90">{r.user_name}</span>
+                <span className="font-black text-primary shrink-0">{r.total_tickets}</span>
+              </div>
+            ))}
+          </div>
+        )}
       </button>
     </DialogTrigger>
     <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
@@ -737,7 +757,8 @@ const QuickActionRanking: React.FC<{ ranking?: any[] }> = ({ ranking }) => (
       </div>
     </DialogContent>
   </Dialog>
-);
+  );
+};
 
 const QuickActionExtremes: React.FC<{ campaignId: string }> = ({ campaignId }) => {
   const { data: stats } = useCampaignTicketStats(campaignId);
