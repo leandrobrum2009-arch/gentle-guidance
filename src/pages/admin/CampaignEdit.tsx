@@ -49,6 +49,7 @@ interface CampaignForm {
   mystery_box_available_count: number;
   roulette_available_count: number;
   scratch_cards_available_count: number;
+  image_overlay_enabled: boolean;
 }
 
 
@@ -85,6 +86,7 @@ const empty: CampaignForm = {
   mystery_box_available_count: 0,
   roulette_available_count: 0,
   scratch_cards_available_count: 0,
+  image_overlay_enabled: true,
 };
 
 
@@ -123,6 +125,7 @@ export default function AdminCampaignEdit() {
       mystery_box_available_count: data.mystery_box_available_count ?? 0,
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
+      image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
       sections_order: (data.sections_order as string[]) ?? ["gallery", "header", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]
     } as unknown as CampaignForm);
     setLoading(false);
