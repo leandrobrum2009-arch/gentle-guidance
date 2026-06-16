@@ -256,6 +256,9 @@ const CampaignInlineView: React.FC<Props> = ({
           mysteryBoxes={mysteryBoxes || []}
           scratchPrizes={scratchPrizes || []}
           roulettePrizes={roulettePrizes || []}
+          boxWinsByKey={boxWinsByName}
+          scratchWinsByLabel={scratchWinsByLabel}
+          rouletteWinsByLabel={rouletteWinsByLabel}
         />
         <QuickActionRanking ranking={ranking} />
         <QuickActionExtremes campaignId={campaignId} />
@@ -749,8 +752,12 @@ const QuickActionPrizes: React.FC<{
   mysteryBoxes: any[];
   scratchPrizes: any[];
   roulettePrizes: any[];
-}> = ({ mainPrizes, mysteryBoxes, scratchPrizes, roulettePrizes }) => {
-  const Section = ({ title, icon, items }: { title: string; icon: React.ReactNode; items: { label: string; value?: string }[] }) =>
+  boxWinsByKey?: Map<string, any[]>;
+  scratchWinsByLabel?: Map<string, any[]>;
+  rouletteWinsByLabel?: Map<string, any[]>;
+}> = ({ mainPrizes, mysteryBoxes, scratchPrizes, roulettePrizes, boxWinsByKey, scratchWinsByLabel, rouletteWinsByLabel }) => {
+  const winnerName = (win: any) => win?.winner_name || win?.profiles?.name || "Ganhador";
+  const Section = ({ title, icon, items }: { title: string; icon: React.ReactNode; items: { label: string; value?: string; win?: any }[] }) =>
     items.length === 0 ? null : (
       <div className="space-y-1.5">
         <div className="flex items-center gap-2 px-1">
@@ -759,9 +766,9 @@ const QuickActionPrizes: React.FC<{
         </div>
         <div className="space-y-1">
           {items.map((it, i) => (
-            <div key={i} className="flex items-center justify-between rounded-lg border border-border bg-secondary/40 px-3 h-9 text-[11px]">
+            <div key={i} className={cn("flex items-center justify-between gap-2 rounded-lg border px-3 h-9 text-[11px]", it.win ? "border-emerald-500/40 bg-emerald-500/10" : "border-border bg-secondary/40")}>
               <span className="font-bold text-foreground truncate">{it.label}</span>
-              {it.value && <span className="font-black text-emerald-400 shrink-0 animate-pulse">{it.value}</span>}
+              {it.win ? <span className="font-black text-emerald-400 shrink-0 truncate max-w-[120px]">{winnerName(it.win).split(' ')[0]}</span> : it.value && <span className="font-black text-emerald-400 shrink-0 animate-pulse">{it.value}</span>}
             </div>
           ))}
         </div>
@@ -772,9 +779,9 @@ const QuickActionPrizes: React.FC<{
     .slice()
     .sort((a, b) => a.position - b.position)
     .slice(0, 5);
-  const boxItems = (mysteryBoxes || []).map((b: any) => ({ label: b.name, value: `R$ ${Number(b.cost || 0).toFixed(2)}` }));
-  const scratchItems = (scratchPrizes || []).map((p: any) => ({ label: p.label, value: p.value ? `R$ ${p.value}` : p.prize_type }));
-  const rouletteItems = (roulettePrizes || []).map((p: any) => ({ label: p.label, value: p.value ? (p.prize_type === 'balance' ? `R$ ${p.value}` : `${p.value}`) : p.prize_type }));
+  const boxItems = (mysteryBoxes || []).map((b: any) => ({ label: b.name, value: `R$ ${Number(b.cost || 0).toFixed(2)}`, win: boxWinsByKey?.get(b.id)?.[0] || boxWinsByKey?.get(b.name)?.[0] }));
+  const scratchItems = (scratchPrizes || []).map((p: any) => ({ label: p.label, value: p.value ? `R$ ${p.value}` : p.prize_type, win: scratchWinsByLabel?.get(p.label)?.[0] }));
+  const rouletteItems = (roulettePrizes || []).map((p: any) => ({ label: p.label, value: p.value ? (p.prize_type === 'balance' ? `R$ ${p.value}` : `${p.value}`) : p.prize_type, win: rouletteWinsByLabel?.get(p.label)?.[0] }));
   const total = sortedMain.length + boxItems.length + scratchItems.length + rouletteItems.length;
   const positionStyle = (pos: number) =>
     pos === 1 ? { bg: "bg-gradient-to-br from-amber-500/30 to-amber-700/20 border-amber-400/50", chip: "bg-amber-500 text-white", label: "O GRANDE PRÊMIO" }
