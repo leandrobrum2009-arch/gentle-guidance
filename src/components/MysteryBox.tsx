@@ -119,9 +119,7 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       config_id: selectedBox.id,
        prize_id: prize.id,
        prize_title: prize.title,
-       prize_value: prize.prize_value,
-       box_name: selectedBox.name,
-       campaign_id: campaignId ?? null,
+        prize_value: prize.prize_value,
      });
 
       // Add notification for mystery box win
