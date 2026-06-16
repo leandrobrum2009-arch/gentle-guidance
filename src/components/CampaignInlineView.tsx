@@ -176,7 +176,7 @@ const CampaignInlineView: React.FC<Props> = ({
   const boxWinsByName = useMemo(() => {
     const map = new Map<string, any[]>();
     (boxWinList || []).forEach((w: any) => {
-      const key = w.box_name || w.prize_title || '';
+      const key = w.config_id || w.box_name || w.prize_title || '';
       const arr = map.get(key) || [];
       arr.push(w);
       map.set(key, arr);
@@ -351,7 +351,7 @@ const CampaignInlineView: React.FC<Props> = ({
           </Badge>}
         >
           {(showBoxes ? mysteryBoxes : mysteryBoxes?.slice(0, 10))?.map((box, i) => {
-            const win: any = takeWin(boxWinsByName, boxUsage, box.name);
+            const win: any = takeWin(boxWinsByName, boxUsage, box.id) || takeWin(boxWinsByName, boxUsage, box.name);
             return (
               <Dialog key={box.id} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -432,6 +432,7 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {((scratchPrizes && scratchPrizes.length > 0) ? scratchPrizes : []).map((prize: any, i: number) => {
             const win: any = takeWin(scratchWinsByLabel, scratchUsage, prize.label);
+            const winnerName = win?.winner_name || win?.profiles?.name || 'Ganhador';
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -452,7 +453,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {winnerName.split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-sky-300 font-black uppercase text-[10px] tracking-wider">
@@ -558,6 +559,7 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {(showRoletas ? roulettePrizes : roulettePrizes?.slice(0, 10))?.map((prize, i) => {
             const win: any = takeWin(rouletteWinsByLabel, rouletteUsage, prize.label);
+            const winnerName = win?.winner_name || win?.profiles?.name || 'Ganhador';
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -578,7 +580,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {winnerName.split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-rose-300 font-black uppercase text-[10px] tracking-wider">
