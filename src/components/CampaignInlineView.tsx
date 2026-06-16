@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import {
   Trophy, Users, TrendingUp, Gift, Sparkles, RotateCw, ChevronDown, X, Loader2, Award, Crown, Zap, Ticket, Clock, Calendar, DollarSign, Star, PackageOpen
 } from "lucide-react";
+import { Share2, Info, BookOpen, MousePointer2, Bell, Smartphone, Video } from "lucide-react";
 import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,10 @@ import CampaignPricing from "./CampaignPricing";
 import MysteryBox from "./MysteryBox";
 import ScratchCard from "./ScratchCard";
 import Roulette from "./Roulette";
+import CountdownTimer from "./CountdownTimer";
+import LiveStreamPlayer from "./LiveStreamPlayer";
+import CampaignLiveDraw from "./CampaignLiveDraw";
+import { toast } from "sonner";
 import {
   Campaign, useMysteryBoxConfigs, useRoulettePrizes, useWinners, useCampaignRanking,
   useUserCampaignSpins, useUserCampaignScratches, useCampaignTicketStats, useLuckyHours, useMysteryBoxPrizes, useScratchCardPrizes,
@@ -608,11 +613,133 @@ const CampaignInlineView: React.FC<Props> = ({
           )}
         </SectionCard>
       )}
+
+      {/* TEMPO RESTANTE */}
+      {campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
+        <SectionCard icon={<Clock className="h-3.5 w-3.5 text-primary" />} title="Tempo restante" tag="Sorteio">
+          <div className="flex flex-col items-center justify-center py-3">
+            <CountdownTimer targetDate={campaign.timer_end_date || campaign.draw_date!} className="scale-90" />
+          </div>
+        </SectionCard>
+      )}
+
+      {/* TRANSMISSÃO AO VIVO */}
+      {campaign.live_stream_enabled && campaign.live_stream_url && (
+        <SectionCard icon={<Video className="h-3.5 w-3.5 text-rose-500" />} title="Ao vivo" tag="Transmissão">
+          <div className="-m-2">
+            <LiveStreamPlayer url={campaign.live_stream_url} enabled={campaign.live_stream_enabled} campaignTitle={campaign.title} />
+          </div>
+        </SectionCard>
+      )}
+
+      {/* SORTEIO AO VIVO */}
+      <div className="-mx-0">
+        <CampaignLiveDraw campaign={campaign} />
+      </div>
+
+      {/* COMO PARTICIPAR */}
+      <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-primary" />} title="Como participar" tag="3 passos">
+        {[
+          { step: "01", title: "Escolha suas cotas", desc: "Selecione a quantidade ou escolha seus números da sorte.", icon: MousePointer2 },
+          { step: "02", title: "Pague via PIX", desc: "Pagamento instantâneo e seguro. Cotas validadas na hora.", icon: Zap },
+          { step: "03", title: "Aguarde o sorteio", desc: "Acompanhe tudo em tempo real pelo seu painel.", icon: Trophy },
+        ].map((s, i) => (
+          <div key={i} className="flex items-start gap-3 rounded-lg border border-border/60 bg-secondary/30 px-3 py-2">
+            <span className="h-7 w-7 rounded-md bg-primary text-primary-foreground font-black text-[11px] flex items-center justify-center shrink-0">{s.step}</span>
+            <div className="min-w-0">
+              <p className="text-[11px] font-black uppercase tracking-tight text-foreground leading-tight">{s.title}</p>
+              <p className="text-[10px] text-muted-foreground leading-snug">{s.desc}</p>
+            </div>
+          </div>
+        ))}
+      </SectionCard>
+
+      {/* DESCRIÇÃO E REGULAMENTO */}
+      {(campaign.description || campaign.regulations) && (
+        <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Descrição e regras">
+          <InlineDescription description={campaign.description} regulations={campaign.regulations} />
+        </SectionCard>
+      )}
+
+      {/* FAQ */}
+      <SectionCard icon={<Info className="h-3.5 w-3.5 text-primary" />} title="Dúvidas frequentes" tag="FAQ">
+        {[
+          { q: "Como os ganhadores são escolhidos?", a: "Sorteio automatizado e transparente entre os bilhetes pagos.", icon: Trophy },
+          { q: "Como sei se ganhei?", a: "Aparece no painel de ganhadores e entramos em contato via WhatsApp.", icon: Bell },
+          { q: "Quais as formas de pagamento?", a: "PIX com compensação imediata.", icon: Zap },
+          { q: "Posso comprar quantas cotas quiser?", a: "Sim, até o limite da campanha. Mais cotas = mais chances.", icon: Ticket },
+        ].map((item, i) => (
+          <FaqRow key={i} q={item.q} a={item.a} Icon={item.icon} />
+        ))}
+      </SectionCard>
+
+      {/* COMPARTILHAR */}
+      <SectionCard icon={<Share2 className="h-3.5 w-3.5 text-primary" />} title="Indique e ganhe" tag="Compartilhar">
+        <Button
+          variant="outline"
+          className="w-full h-10 rounded-lg font-black uppercase tracking-widest text-[10px] gap-2"
+          onClick={async () => {
+            const url = window.location.href;
+            if (navigator.share) {
+              try { await navigator.share({ title: campaign.title, url }); } catch {}
+            } else {
+              await navigator.clipboard.writeText(url);
+              toast.success("Link copiado!");
+            }
+          }}
+        >
+          <Share2 className="h-3.5 w-3.5" /> Compartilhar campanha
+        </Button>
+      </SectionCard>
     </div>
   );
 };
 
 /* ============ Quick action buttons (open modals) ============ */
+
+const InlineDescription: React.FC<{ description?: string | null; regulations?: string | null }> = ({ description, regulations }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="space-y-2">
+      <p className={cn("text-[11px] text-muted-foreground leading-relaxed whitespace-pre-wrap", !open && "line-clamp-3")}>
+        {description}
+      </p>
+      {open && regulations && (
+        <div className="rounded-lg border border-border bg-secondary/30 p-2.5 space-y-1">
+          <p className="text-[9px] font-black uppercase tracking-widest text-foreground flex items-center gap-1.5">
+            <BookOpen className="h-3 w-3 text-primary" /> Regulamento
+          </p>
+          <p className="text-[10px] whitespace-pre-wrap text-muted-foreground leading-relaxed">{regulations}</p>
+        </div>
+      )}
+      {(description || regulations) && (
+        <button
+          onClick={() => setOpen(o => !o)}
+          className="w-full text-[10px] font-black uppercase tracking-widest text-primary py-1.5 flex items-center justify-center gap-1"
+        >
+          {open ? <>Recolher <ChevronDown className="h-3 w-3 rotate-180" /></> : <>Ler tudo <ChevronDown className="h-3 w-3" /></>}
+        </button>
+      )}
+    </div>
+  );
+};
+
+const FaqRow: React.FC<{ q: string; a: string; Icon: any }> = ({ q, a, Icon }) => {
+  const [open, setOpen] = useState(false);
+  return (
+    <div className="rounded-lg border border-border/60 bg-secondary/30 overflow-hidden">
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center gap-2 px-3 py-2 text-left"
+      >
+        <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
+        <span className="text-[11px] font-black uppercase tracking-tight text-foreground flex-1">{q}</span>
+        <ChevronDown className={cn("h-3 w-3 text-muted-foreground transition-transform", open && "rotate-180")} />
+      </button>
+      {open && <p className="px-3 pb-2 text-[10px] text-muted-foreground leading-relaxed">{a}</p>}
+    </div>
+  );
+};
 
 const QuickActionPrizes: React.FC<{
   mainPrizes: { position: number; prize: string }[];
