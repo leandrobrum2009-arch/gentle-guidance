@@ -315,11 +315,11 @@ const CampaignInlineView: React.FC<Props> = ({
           title="Caixas Surpresas"
           tag="Ganhadores"
           right={<Badge variant="outline" className="text-[9px] h-5 px-2 font-black bg-emerald-500/10 text-emerald-500 border-emerald-500/30">
-            {boxWinners.length}/{(mysteryBoxes?.length || 0) * 3}
+            {totalBoxWins}/{(mysteryBoxes?.length || 0)}
           </Badge>}
         >
           {(showBoxes ? mysteryBoxes : mysteryBoxes?.slice(0, 10))?.map((box, i) => {
-            const win = boxWinners.find(w => w.prize_description?.includes(box.name));
+            const win: any = takeWin(boxWinsByName, boxUsage, box.name);
             return (
               <Dialog key={box.id} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
@@ -340,7 +340,7 @@ const CampaignInlineView: React.FC<Props> = ({
                     <span className="shrink-0 relative z-10">
                       {win ? (
                         <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
-                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
+                          <Crown className="h-3 w-3" /> {(win.profiles?.name || 'Ganhador').split(' ')[0]}
                         </span>
                       ) : (
                         <span className="flex items-center gap-1 text-orange-300 font-black uppercase text-[10px] tracking-wider">
