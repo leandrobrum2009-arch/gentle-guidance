@@ -39,7 +39,7 @@ interface Props {
 
 const DEFAULT_INLINE_SECTIONS = [
   "gallery", "header", "progress", "purchase", "prizes", "roulette_footer", "scratch_footer",
-  "events", "timer", "live_stream", "live_draw", "steps", "description", "faq", "cta"
+  "events", "timer", "live_stream", "live_draw", "steps", "ranking", "winners", "description", "faq", "cta"
 ];
 
 const SectionCard: React.FC<{ icon: React.ReactNode; title: string; tag?: string; right?: React.ReactNode; children: React.ReactNode; tone?: string }> = ({ icon, title, tag, right, children, tone = "primary" }) => (
