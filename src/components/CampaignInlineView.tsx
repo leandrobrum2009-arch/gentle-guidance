@@ -316,6 +316,23 @@ const CampaignInlineView: React.FC<Props> = ({
         </div>
       </SectionSlot>
 
+      <SectionSlot id="features">
+        <div className="grid grid-cols-2 gap-2">
+          {[
+            { icon: Zap, title: "Rápido", desc: "PIX instantâneo" },
+            { icon: Trophy, title: "Transparente", desc: "Ganhadores reais" },
+            { icon: Ticket, title: "Seguro", desc: "Cotas validadas" },
+            { icon: Smartphone, title: "Mobile", desc: "Acompanhe tudo" },
+          ].map((item, index) => (
+            <div key={index} className="rounded-xl border border-border bg-card p-3 text-center space-y-1">
+              <item.icon className="h-4 w-4 mx-auto text-primary" />
+              <p className="text-[10px] font-black uppercase tracking-tight text-foreground">{item.title}</p>
+              <p className="text-[8px] font-bold uppercase tracking-wider text-muted-foreground truncate">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </SectionSlot>
+
       {/* QUICK ACTION BUTTONS */}
       <SectionSlot id="prizes">
       <div className="space-y-2">
@@ -786,6 +803,23 @@ const CampaignInlineView: React.FC<Props> = ({
               Nenhum ganhador registrado ainda.
             </p>
           )}
+        </SectionCard>
+      </SectionSlot>
+
+      <SectionSlot id="social_proof">
+        <SectionCard icon={<Star className="h-3.5 w-3.5 text-amber-500" />} title="Prova social" tag="Verificado">
+          <div className="grid grid-cols-3 gap-1.5">
+            {[
+              { label: "Compradores", value: ranking?.length || 0 },
+              { label: "Prêmios", value: recentWinners.length },
+              { label: "Cotas", value: campaign.sold_tickets },
+            ].map((item) => (
+              <div key={item.label} className="rounded-lg border border-border bg-secondary/30 p-2 text-center">
+                <p className="text-sm font-black text-primary leading-none">{Number(item.value).toLocaleString("pt-BR")}</p>
+                <p className="mt-1 text-[8px] font-bold uppercase tracking-tight text-muted-foreground truncate">{item.label}</p>
+              </div>
+            ))}
+          </div>
         </SectionCard>
       </SectionSlot>
 
