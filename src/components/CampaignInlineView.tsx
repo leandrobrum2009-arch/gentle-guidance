@@ -457,39 +457,51 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* EVENTOS E PREMIAÇÕES */}
       {(luckyHours?.length || 0) > 0 && (
-        <SectionCard
-          icon={<Calendar className="h-3.5 w-3.5 text-amber-500" />}
-          title="Eventos e Premiações"
-          tag={`${luckyHours?.length || 0}`}
-        >
+        <div className="rounded-2xl border border-fuchsia-500/40 bg-gradient-to-br from-fuchsia-950/40 via-violet-950/30 to-purple-950/40 backdrop-blur-sm overflow-hidden shadow-[0_0_20px_rgba(217,70,239,0.15)]">
+          <div className="flex items-center justify-between px-3 py-2.5 border-b border-fuchsia-500/30 bg-fuchsia-500/10">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="flex h-6 w-6 items-center justify-center rounded-md bg-fuchsia-500/20 animate-pulse">
+                <Clock className="h-3.5 w-3.5 text-fuchsia-300" />
+              </span>
+              <span className="text-xs font-black uppercase tracking-tight text-fuchsia-200 truncate">Hora Premiada</span>
+              <Badge className="text-[9px] h-5 px-2 font-black bg-fuchsia-500/20 text-fuchsia-200 border-fuchsia-500/40 animate-pulse">AO VIVO</Badge>
+            </div>
+            <span className="text-[9px] font-bold uppercase text-fuchsia-300/70 tracking-wider">{luckyHours?.length || 0}</span>
+          </div>
+          <div className="p-2 space-y-1.5">
           {luckyHours?.map((draw) => {
             const time = new Date(draw.draw_time).toLocaleString('pt-BR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
             const isDone = draw.status === 'completed';
             return (
-              <InlineRow
+              <div
                 key={draw.id}
-                tone={isDone ? "won" : "muted"}
-                left={
-                  <span className="flex items-center gap-2 min-w-0">
+                className={cn(
+                  "flex items-center justify-between gap-2 rounded-lg border px-3 h-9 text-[11px] font-bold",
+                  isDone
+                    ? "bg-emerald-500/15 border-emerald-500/40 text-foreground"
+                    : "bg-fuchsia-500/10 border-fuchsia-500/30 text-fuchsia-100"
+                )}
+              >
+                <span className="flex items-center gap-2 min-w-0 truncate">
                     {draw.draw_type === 'greater_smaller'
                       ? <TrendingUp className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
-                      : <Clock className="h-3.5 w-3.5 text-amber-400 shrink-0" />}
-                    <span className="text-foreground truncate">{draw.title}</span>
-                  </span>
-                }
-                right={
-                  isDone && draw.winner_name ? (
-                    <span className="flex items-center gap-1.5 text-emerald-500 font-black">
+                      : <Clock className="h-3.5 w-3.5 text-fuchsia-300 shrink-0 animate-pulse" />}
+                    <span className="truncate">{draw.title}</span>
+                </span>
+                <span className="shrink-0">
+                  {isDone && draw.winner_name ? (
+                    <span className="flex items-center gap-1.5 text-emerald-400 font-black">
                       {draw.winner_name.split(' ')[0]} <Crown className="h-3 w-3" />
                     </span>
                   ) : (
-                    <span className="text-[10px] text-muted-foreground font-bold uppercase">{time}</span>
-                  )
-                }
-              />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-fuchsia-200">{time}</span>
+                  )}
+                </span>
+              </div>
             );
           })}
-        </SectionCard>
+          </div>
+        </div>
       )}
 
       {/* ROLETAS GANHADORES (clicáveis) */}
