@@ -137,6 +137,9 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       queryClient.invalidateQueries({ queryKey: ["mystery_box_wins"] });
       if (campaignId) {
         queryClient.invalidateQueries({ queryKey: ["campaign-mystery-box-wins", campaignId] });
+        queryClient.invalidateQueries({
+          predicate: (query) => query.queryKey[0] === "campaign-mystery-box-wins" && query.queryKey[1] === campaignId,
+        });
       }
    };
  
