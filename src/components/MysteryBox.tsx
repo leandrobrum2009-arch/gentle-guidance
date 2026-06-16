@@ -86,14 +86,20 @@ const MysteryBox = ({ boxes, campaignId, isCompact }: MysteryBoxProps) => {
       setIsOpening(true);
     };
  
-   const handleFinalOpen = async () => {
-     if (!selectedBox || !user || !potentialPrizes.length) return;
-     const { error: balanceError } = await supabase.from('profiles').update({ balance: Number(userProfile.balance) - Number(selectedBox.cost) }).eq('user_id', user.id);
-     if (balanceError) {
-       toast.error("Erro ao processar pagamento.");
-       return;
-     }
-     fetchUserProfile();
+    const handleFinalOpen = async () => {
+      if (!selectedBox || !user || !potentialPrizes.length) return;
+      const cost = Number(selectedBox.cost) || 0;
+      if (cost > 0) {
+        const { error: balanceError } = await supabase.rpc('increment_balance', {
+          amount: -cost,
+          user_uuid: user.id,
+        });
+        if (balanceError) {
+          toast.error("Erro ao processar pagamento.");
+          return;
+        }
+      }
+      fetchUserProfile();
      const totalWeight = potentialPrizes.reduce((acc, p) => acc + Number(p.chance_percent), 0);
      let random = Math.random() * totalWeight;
      let prize = potentialPrizes[0];
