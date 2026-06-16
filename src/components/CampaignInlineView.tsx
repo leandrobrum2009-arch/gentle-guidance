@@ -249,15 +249,6 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
-      {/* CAIXAS - PRÊMIOS POR CAIXA */}
-      {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
-        <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Prêmios">
-          {mysteryBoxes?.map((box) => (
-            <MysteryBoxPrizesList key={box.id} boxId={box.id} boxName={box.name} />
-          ))}
-        </SectionCard>
-      )}
-
       {/* CAIXAS - COMBOS */}
       {campaign.mystery_box_enabled && Array.isArray(campaign.prize_rules) && (campaign.prize_rules as any[]).filter((r: any) => r.type === 'mystery_box').length > 0 && (
         <SectionCard icon={<Gift className="h-3.5 w-3.5 text-orange-500" />} title="Caixas Surpresas" tag="Combos">
@@ -285,24 +276,32 @@ const CampaignInlineView: React.FC<Props> = ({
             return (
               <Dialog key={box.id} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
-                  <div>
-                    <InlineRow
-                      clickable
-                      tone="muted"
-                      left={
-                        <span className="flex items-center gap-2 min-w-0">
-                          <Gift className="h-3.5 w-3.5 text-orange-400 shrink-0" />
-                          <span className="text-foreground truncate">{box.name}</span>
-                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>R$ {Number(box.cost).toFixed(2)}</span>
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative flex w-full items-center justify-between gap-2 rounded-lg border px-3 h-10 text-[11px] font-bold transition-all overflow-hidden",
+                      win
+                        ? "bg-emerald-500/10 border-emerald-500/40 text-foreground"
+                        : "bg-orange-500/10 border-orange-500/40 text-foreground hover:scale-[1.01] hover:shadow-md hover:shadow-orange-500/30 animate-pulse"
+                    )}
+                  >
+                    <span className="flex items-center gap-2 min-w-0 truncate relative z-10">
+                      <Gift className="h-3.5 w-3.5 text-orange-400 shrink-0" />
+                      <span className="text-foreground truncate font-black">Caixa #{i + 1}</span>
+                      <span className="text-muted-foreground truncate">{box.name}</span>
+                    </span>
+                    <span className="shrink-0 relative z-10">
+                      {win ? (
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
+                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
                         </span>
-                      }
-                      right={win ? (
-                        <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
-                        <span>Disponível</span>
+                        <span className="flex items-center gap-1 text-orange-300 font-black uppercase text-[10px] tracking-wider">
+                          <span className="h-1.5 w-1.5 rounded-full bg-orange-400 animate-ping" /> Disponível
+                        </span>
                       )}
-                    />
-                  </div>
+                    </span>
+                  </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-lg p-0 w-[95vw] md:w-full max-h-[90vh] overflow-y-auto bg-zinc-950 border border-white/10 rounded-2xl"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
@@ -330,21 +329,6 @@ const CampaignInlineView: React.FC<Props> = ({
         </SectionCard>
       )}
 
-      {/* RASPADINHAS - LISTA DE PRÊMIOS */}
-      {campaign.scratch_cards_enabled && (scratchPrizes?.length || 0) > 0 && (
-        <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Prêmios">
-          {scratchPrizes?.map((prize) => (
-            <InlineRow
-              key={prize.id}
-              tone="primary"
-              left={<span className="flex items-center gap-2"><Sparkles className="h-3.5 w-3.5 text-sky-300" /><span className="text-foreground">{prize.label}</span></span>}
-              right={<span className="text-white/90">{prize.value ? `R$ ${prize.value}` : prize.prize_type}</span>}
-              icon={<Star className="h-3 w-3 text-amber-400" />}
-            />
-          ))}
-        </SectionCard>
-      )}
-
       {/* RASPADINHAS - COMBOS */}
       {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
         <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
@@ -369,28 +353,35 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {((scratchPrizes && scratchPrizes.length > 0) ? scratchPrizes : []).map((prize: any, i: number) => {
             const win = scratchWinners[i];
-            const valueLabel = prize.value ? `R$ ${prize.value}` : prize.prize_type;
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
-                  <div>
-                    <InlineRow
-                      clickable
-                      tone="muted"
-                      left={
-                        <span className="flex items-center gap-2 min-w-0">
-                          <Sparkles className="h-3.5 w-3.5 text-sky-300 shrink-0" />
-                          <span className="text-foreground truncate">{prize.label}</span>
-                          <span className={cn("text-[10px] font-black text-amber-400 shrink-0", !win && "animate-pulse drop-shadow-[0_0_4px_rgba(245,158,11,0.6)]")}>{valueLabel}</span>
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative flex w-full items-center justify-between gap-2 rounded-lg border px-3 h-10 text-[11px] font-bold transition-all overflow-hidden",
+                      win
+                        ? "bg-emerald-500/10 border-emerald-500/40 text-foreground"
+                        : "bg-sky-500/10 border-sky-500/40 text-foreground hover:scale-[1.01] hover:shadow-md hover:shadow-sky-500/30 animate-pulse"
+                    )}
+                  >
+                    <span className="flex items-center gap-2 min-w-0 truncate relative z-10">
+                      <Sparkles className="h-3.5 w-3.5 text-sky-300 shrink-0" />
+                      <span className="text-foreground truncate font-black">Raspadinha #{i + 1}</span>
+                      <span className="text-muted-foreground truncate">{prize.label}</span>
+                    </span>
+                    <span className="shrink-0 relative z-10">
+                      {win ? (
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
+                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
                         </span>
-                      }
-                      right={win ? (
-                        <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
-                        <span>Disponível</span>
+                        <span className="flex items-center gap-1 text-sky-300 font-black uppercase text-[10px] tracking-wider">
+                          <span className="h-1.5 w-1.5 rounded-full bg-sky-400 animate-ping" /> Disponível
+                        </span>
                       )}
-                    />
-                  </div>
+                    </span>
+                  </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-md p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
@@ -412,34 +403,6 @@ const CampaignInlineView: React.FC<Props> = ({
               </Dialog>
             );
           })}
-        </SectionCard>
-      )}
-
-      {/* ROLETAS - LISTA DE PRÊMIOS */}
-      {campaign.roulette_enabled && (roulettePrizes?.length || 0) > 0 && (
-        <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Prêmios">
-          {roulettePrizes?.map((prize) => (
-            <InlineRow
-              key={prize.id}
-              tone="primary"
-              left={
-                <span className="flex items-center gap-2">
-                  <RotateCw className="h-3.5 w-3.5 text-rose-300" />
-                  <span className="text-foreground">{prize.label}</span>
-                </span>
-              }
-              right={
-                <span className="text-white/90 flex items-center gap-1">
-                  {prize.prize_type === 'balance' && <DollarSign className="h-3 w-3 text-emerald-400" />}
-                  {prize.prize_type === 'ticket' && <Ticket className="h-3 w-3 text-primary" />}
-                  {prize.prize_type === 'points' && <Zap className="h-3 w-3 text-amber-400" />}
-                  {prize.prize_type === 'physical' && <Gift className="h-3 w-3 text-orange-400" />}
-                  {prize.value ? (prize.prize_type === 'balance' ? `R$ ${prize.value}` : `${prize.value}`) : prize.prize_type}
-                </span>
-              }
-              icon={<Star className="h-3 w-3 text-amber-400" />}
-            />
-          ))}
         </SectionCard>
       )}
 
@@ -516,28 +479,35 @@ const CampaignInlineView: React.FC<Props> = ({
         >
           {(showRoletas ? roulettePrizes : roulettePrizes?.slice(0, 10))?.map((prize, i) => {
             const win = rouletteWinners.find(w => w.prize_description === prize.label);
-            const valueLabel = prize.value ? (prize.prize_type === 'balance' ? `R$ ${prize.value}` : `${prize.value}`) : prize.prize_type;
             return (
               <Dialog key={prize.id || i} onOpenChange={(o) => { if (!o && isGameInProgress) return; }}>
                 <DialogTrigger asChild>
-                  <div>
-                    <InlineRow
-                      clickable
-                      tone="muted"
-                      left={
-                        <span className="flex items-center gap-2 min-w-0">
-                          <RotateCw className="h-3.5 w-3.5 text-rose-300 shrink-0" />
-                          <span className="text-foreground truncate">{prize.label}</span>
-                          <span className="text-[10px] font-black text-amber-400 shrink-0">{valueLabel}</span>
+                  <button
+                    type="button"
+                    className={cn(
+                      "relative flex w-full items-center justify-between gap-2 rounded-lg border px-3 h-10 text-[11px] font-bold transition-all overflow-hidden",
+                      win
+                        ? "bg-emerald-500/10 border-emerald-500/40 text-foreground"
+                        : "bg-rose-500/10 border-rose-500/40 text-foreground hover:scale-[1.01] hover:shadow-md hover:shadow-rose-500/30 animate-pulse"
+                    )}
+                  >
+                    <span className="flex items-center gap-2 min-w-0 truncate relative z-10">
+                      <RotateCw className="h-3.5 w-3.5 text-rose-300 shrink-0" />
+                      <span className="text-foreground truncate font-black">Roleta #{i + 1}</span>
+                      <span className="text-muted-foreground truncate">{prize.label}</span>
+                    </span>
+                    <span className="shrink-0 relative z-10">
+                      {win ? (
+                        <span className="flex items-center gap-1.5 text-emerald-400 font-black uppercase text-[10px]">
+                          <Crown className="h-3 w-3" /> {win.winner_name?.split(' ')[0]}
                         </span>
-                      }
-                      right={win ? (
-                        <span className="flex items-center gap-1.5 text-emerald-500 font-black">{win.winner_name?.split(' ')[0]} <Crown className="h-3 w-3" /></span>
                       ) : (
-                        <span>Disponível</span>
+                        <span className="flex items-center gap-1 text-rose-300 font-black uppercase text-[10px] tracking-wider">
+                          <span className="h-1.5 w-1.5 rounded-full bg-rose-400 animate-ping" /> Disponível
+                        </span>
                       )}
-                    />
-                  </div>
+                    </span>
+                  </button>
                 </DialogTrigger>
                 <DialogContent className="max-w-2xl p-0 bg-transparent border-none w-[95vw] md:w-full max-h-[90vh] overflow-y-auto"
                   onInteractOutside={(e) => { if (isGameInProgress) e.preventDefault(); }}
