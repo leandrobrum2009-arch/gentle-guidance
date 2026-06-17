@@ -542,18 +542,15 @@ export const useMysteryBoxWins = (limit = 5) =>
     queryKey: ["mystery_box_wins", limit],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("mystery_box_wins")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          )
-        `)
+        .from("mystery_box_wins_public" as any)
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data as any) as MysteryBoxWin[];
+      return ((data as any[]) || []).map((w) => ({
+        ...w,
+        profiles: { name: w.winner_name || "Ganhador", avatar_url: w.avatar_url || null },
+      })) as MysteryBoxWin[];
     },
   });
 
@@ -596,21 +593,15 @@ export const useGlobalRouletteSpins = (limit = 20) =>
     queryKey: ["global-roulette-spins", limit],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("roulette_spins")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          ),
-          campaigns (
-            title
-          )
-        `)
+        .from("roulette_spins_public" as any)
+        .select("*, campaigns(title)")
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data as any) as (RouletteSpin & { campaigns: { title: string } })[];
+      return ((data as any[]) || []).map((s) => ({
+        ...s,
+        profiles: { name: s.winner_name || "Ganhador", avatar_url: s.avatar_url || null },
+      })) as (RouletteSpin & { campaigns: { title: string } })[];
     },
   });
 
@@ -641,18 +632,15 @@ export const useGlobalScratchCardScratches = (limit = 20) =>
     queryKey: ["global-scratch-card-scratches", limit],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("scratch_card_scratches")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          )
-        `)
+        .from("scratch_card_scratches_public" as any)
+        .select("*")
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data as any) as ScratchCardScratch[];
+      return ((data as any[]) || []).map((s) => ({
+        ...s,
+        profiles: { name: s.winner_name || "Ganhador", avatar_url: s.avatar_url || null },
+      })) as ScratchCardScratch[];
     },
   });
 
@@ -802,21 +790,15 @@ export const useRouletteSpins = (limit = 10) =>
     queryKey: ["roulette_spins", limit],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("roulette_spins")
-        .select(`
-          *,
-          profiles!user_id (
-            name,
-            avatar_url
-          ),
-          campaigns (
-            title
-          )
-        `)
+        .from("roulette_spins_public" as any)
+        .select("*, campaigns(title)")
         .order("created_at", { ascending: false })
         .limit(limit);
       if (error) throw error;
-      return (data as any) as RouletteSpin[];
+      return ((data as any[]) || []).map((s) => ({
+        ...s,
+        profiles: { name: s.winner_name || "Ganhador", avatar_url: s.avatar_url || null },
+      })) as RouletteSpin[];
     },
   });
 
