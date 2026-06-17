@@ -1259,6 +1259,41 @@ const CampaignDetail = () => {
         );
 
       case 'events':
+        // handled below
+        return luckyHours && luckyHours.length > 0 && renderEventsBlock(section);
+
+      case 'box_footer':
+        return campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
+          <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
+            <div className="flex flex-col items-center text-center">
+              <Badge className="bg-purple-500/20 text-purple-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Surpresas</Badge>
+              <h2 className="text-3xl font-black uppercase italic tracking-tighter">Caixas <span className="text-animate-gradient">Surpresas</span></h2>
+              <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mt-2 max-w-xs">Abra caixas misteriosas e descubra prêmios instantâneos!</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {mysteryBoxes.map((box: any, i: number) => {
+                const boxWin = (boxWins || []).find((w: any) => w.config_id === box.id || w.box_name === box.name);
+                const boxWinnerName = getWinnerName(boxWin);
+                return (
+                  <div key={box.id || i} className={cn("flex items-center justify-between p-4 rounded-2xl border", boxWin ? "bg-emerald-500/10 border-emerald-500/30" : "bg-purple-500/5 border-purple-500/20")}>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-500">
+                        <Gift className="h-5 w-5" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-sm font-black uppercase tracking-tight text-foreground truncate">{box.name}</p>
+                        <p className={cn("text-[10px] font-bold uppercase tracking-widest", boxWin ? "text-emerald-500" : "text-muted-foreground")}>{boxWin ? `Saiu para ${boxWinnerName}` : `Disponível por R$ ${Number(box.cost || 0).toFixed(2)}`}</p>
+                      </div>
+                    </div>
+                    <Badge className={cn("border-none text-[8px] font-black uppercase", boxWin ? "bg-emerald-500 text-white" : "bg-purple-500/20 text-purple-500")}>{boxWin ? "ABERTA" : "CAIXA"}</Badge>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+
+      case '__events_legacy__':
         return luckyHours && luckyHours.length > 0 && (
           <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
@@ -1572,7 +1607,7 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
 
   const isInlineLayout = siteSettings?.layout_mode === 'inline';
 
