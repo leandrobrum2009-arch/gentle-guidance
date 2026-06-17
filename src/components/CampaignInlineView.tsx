@@ -38,7 +38,7 @@ interface Props {
 }
 
 const DEFAULT_INLINE_SECTIONS = [
-  "gallery", "header", "progress", "purchase", "prizes", "roulette_footer", "scratch_footer",
+  "gallery", "header", "prizes", "progress", "purchase", "roulette_footer", "scratch_footer",
   "events", "timer", "live_stream", "live_draw", "steps", "ranking", "winners", "description", "faq", "cta"
 ];
 

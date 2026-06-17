@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { Clock } from "lucide-react";
 
 interface CountdownTimerProps {
@@ -59,18 +58,9 @@ export default function CountdownTimer({ targetDate, className = "" }: Countdown
 function TimeUnit({ value, label }: { value: number; label: string }) {
   return (
     <div className="flex items-baseline gap-0.5">
-      <AnimatePresence mode="popLayout">
-        <motion.span
-          key={value}
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -10, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="text-primary neon-text-primary min-w-[14px] text-center"
-        >
-          {value.toString().padStart(2, '0')}
-        </motion.span>
-      </AnimatePresence>
+      <span className="text-primary neon-text-primary min-w-[14px] text-center tabular-nums">
+        {value.toString().padStart(2, '0')}
+      </span>
       <span className="text-[8px] text-muted-foreground font-black italic">{label}</span>
     </div>
   );
