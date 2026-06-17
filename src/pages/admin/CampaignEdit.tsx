@@ -67,7 +67,7 @@ const empty: CampaignForm = {
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
-  show_timer: false, sections_order: ["gallery", "header", "timer", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"],
+  show_timer: false, sections_order: ["gallery", "header", "timer", "progress", "purchase", "events", "description", "prizes", "roulette_footer", "scratch_footer", "box_footer", "winners", "ranking"],
   timer_end_date: "",
   vip_group_link: "",
   vip_group_video_url: "",
@@ -128,7 +128,7 @@ export default function AdminCampaignEdit() {
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
       sections_order: (() => {
-        const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "description", "prizes", "roulette_footer", "scratch_footer", "winners", "ranking"]);
+        const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "events", "description", "prizes", "roulette_footer", "scratch_footer", "box_footer", "winners", "ranking"]);
         if (data.show_timer && !order.includes("timer")) {
           const next = [...order];
           const headerIndex = next.indexOf("header");

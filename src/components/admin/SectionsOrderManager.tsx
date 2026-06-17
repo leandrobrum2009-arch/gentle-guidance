@@ -15,19 +15,20 @@ const SECTION_LABELS: Record<string, string> = {
   progress: "Barra de Progresso",
   purchase: "Área de Compra",
   live_draw: "Sorteio ao Vivo",
-  events: "Próximos Eventos",
+  events: "Hora Premiada / Próximos Eventos",
   prizes: "Cotas Premiadas",
   ranking: "Ranking de Compradores",
   description: "Descrição da Rifa",
   social_proof: "Depoimentos e Prova Social",
   faq: "Dúvidas Frequentes (FAQ)",
   cta: "Chamada Final (CTA)",
-  roulette_footer: "Simulador de Roleta (Final)",
-  scratch_footer: "Simulador de Raspadinha (Final)",
+  roulette_footer: "Roleta - Prêmios e Ganhadores",
+  scratch_footer: "Raspadinha - Prêmios e Ganhadores",
+  box_footer: "Caixas Surpresas - Prêmios e Ganhadores",
   winners: "Histórico de Ganhadores",
 };
 
-const DEFAULT_ORDER = ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer"];
+const DEFAULT_ORDER = ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
 const ALL_SECTIONS = DEFAULT_ORDER.filter((section) => SECTION_LABELS[section]);
 
 function SortableRow({ id, index, onToggle }: { id: string; index: number; onToggle: (id: string, enabled: boolean) => void }) {
