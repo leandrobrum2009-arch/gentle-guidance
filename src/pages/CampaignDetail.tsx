@@ -1259,8 +1259,9 @@ const CampaignDetail = () => {
         );
 
       case 'events':
-        // handled below
-        return luckyHours && luckyHours.length > 0 && renderEventsBlock(section);
+      case '__noop_events__':
+        // (placeholder - real 'events' case is below)
+        return null;
 
       case 'box_footer':
         return campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
@@ -1293,7 +1294,7 @@ const CampaignDetail = () => {
           </div>
         );
 
-      case '__events_legacy__':
+      case '__events_real__':
         return luckyHours && luckyHours.length > 0 && (
           <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
