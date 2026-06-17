@@ -1258,11 +1258,6 @@ const CampaignDetail = () => {
           </div>
         );
 
-      case 'events':
-      case '__noop_events__':
-        // (placeholder - real 'events' case is below)
-        return null;
-
       case 'box_footer':
         return campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
           <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
@@ -1294,7 +1289,7 @@ const CampaignDetail = () => {
           </div>
         );
 
-      case '__events_real__':
+      case 'events':
         return luckyHours && luckyHours.length > 0 && (
           <div key={section} className="bg-card rounded-[2rem] p-6 md:p-8 border-2 border-primary/20 shadow-lg shadow-primary/5 space-y-6 md:space-y-8">
             <div className="flex items-center justify-between">
