@@ -50,6 +50,9 @@ export default function AccountInline() {
   const { data: txs } = useUserWalletTransactions(user?.id || "");
   const { data: notifications } = useUserNotifications(user?.id || "");
   const { data: prizesData } = useUserPrizesByCampaign(user?.id || "");
+  const { data: affiliateData } = useAffiliateData();
+  const { data: allCampaigns } = useCampaigns();
+  const [nextLuckyHour, setNextLuckyHour] = useState<any>(null);
 
   const [profile, setProfile] = useState<any>(null);
   const [affiliate, setAffiliate] = useState<any>(null);
@@ -69,6 +72,37 @@ export default function AccountInline() {
       setProfile(p); setAffiliate(a); setLoading(false);
     })();
   }, [user]);
+
+  // Insights: next lucky hour across active campaigns
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("lucky_hours_public")
+        .select("*, campaigns(title, slug)")
+        .gte("draw_time", new Date().toISOString())
+        .order("draw_time", { ascending: true })
+        .limit(1);
+      setNextLuckyHour(data?.[0] || null);
+    })();
+  }, []);
+
+  // Real-time: refresh affiliate commissions when new sales happen
+  useEffect(() => {
+    const affId = affiliateData?.affiliate?.id;
+    if (!affId) return;
+    const ch = supabase
+      .channel(`aff-commissions-${affId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "affiliate_commissions", filter: `affiliate_id=eq.${affId}` },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["affiliate-data", user?.id] });
+          toast.success("Nova venda registrada!");
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [affiliateData?.affiliate?.id, user?.id, queryClient]);
 
   const balance = Number(profile?.balance || 0);
   const unreadCount = (notifications || []).filter((n: any) => !n.read).length;
