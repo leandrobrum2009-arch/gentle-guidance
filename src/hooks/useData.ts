@@ -284,11 +284,11 @@ export const useActiveBanners = () => {
     queryFn: async () => {
       if (!tenantId) return [];
 
-      const query = supabase
+      const query = (supabase as any)
         .from("banners")
         .select("id, title, subtitle, image_url, link_url, order_index, is_active")
         .eq("is_active", true)
-        .eq("tenant_id" as any, tenantId)
+        .eq("tenant_id", tenantId)
         .order("order_index", { ascending: true });
 
       const { data, error } = await query;
