@@ -289,7 +289,7 @@ export const useActiveBanners = () => {
         .order("order_index", { ascending: true });
 
       if (tenantId) {
-        query = query.eq("tenant_id", tenantId);
+        query = (query as any).eq("tenant_id", tenantId);
       }
 
       const { data, error } = await query;
