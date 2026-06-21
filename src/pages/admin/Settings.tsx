@@ -348,6 +348,20 @@ export default function AdminSettings() {
                     ]}
                   />
                   <SettingField 
+                    s={settings.find(s => s.key === 'inline_testimonials_count')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['inline_testimonials_count']}
+                    getIcon={getIcon}
+                    type="number"
+                    placeholder="3"
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'inline_show_finished_raffles')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['inline_show_finished_raffles']}
+                    getIcon={getIcon}
+                  />
+                  <SettingField 
                     s={settings.find(s => s.key === 'home_hero_style')} 
                     onUpdate={handleUpdate} 
                     label={settingNames['home_hero_style']}
