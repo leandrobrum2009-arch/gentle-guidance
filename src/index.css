@@ -381,3 +381,28 @@ aside:has(a[href*="lovable.dev"]) {
       scrollbar-color: hsl(var(--sidebar-border)) transparent;
     }
 }
+/* ============================================================
+   INLINE MODE — Mobile-locked compact layout site-wide
+   ============================================================ */
+html.inline-mode body {
+  background: hsl(var(--background));
+}
+html.inline-mode #root {
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: 100vh;
+  box-shadow: 0 0 60px hsl(0 0% 0% / 0.4);
+  background: hsl(var(--background));
+}
+@media (min-width: 481px) {
+  html.inline-mode #root {
+    border-left: 1px solid hsl(var(--border));
+    border-right: 1px solid hsl(var(--border));
+  }
+}
+html.inline-mode .container {
+  max-width: 100% !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+}
