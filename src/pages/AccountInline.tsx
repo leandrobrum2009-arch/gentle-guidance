@@ -792,6 +792,20 @@ export default function AccountInline() {
   );
 }
 
+function MiniStat({ label, value, accent = "primary" }: { label: string; value: string; accent?: "emerald" | "amber" | "primary" }) {
+  const colors: Record<string, string> = {
+    emerald: "text-emerald-500",
+    amber: "text-amber-500",
+    primary: "text-primary",
+  };
+  return (
+    <div className="rounded-xl bg-background/60 border border-border p-2.5 text-center">
+      <p className={`text-sm font-black truncate ${colors[accent]}`}>{value}</p>
+      <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mt-0.5">{label}</p>
+    </div>
+  );
+}
+
 function StatCard({ icon: Icon, label, value, highlight }: any) {
   return (
     <div className={`rounded-2xl border p-3 text-center ${highlight ? "border-primary/40 bg-primary/5" : "border-border bg-card"}`}>
