@@ -83,7 +83,9 @@ export default function AdminSettings() {
     pay2m_client_key: "Pay2m: Client Key",
     pay2m_client_secret: "Pay2m: Client Secret",
     pay2m_enabled: "Habilitar Pay2m",
-    layout_mode: "Modelo de Layout das Campanhas"
+    layout_mode: "Modelo de Layout das Campanhas",
+    inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
+    inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)"
   };
 
   useEffect(() => {
