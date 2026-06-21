@@ -39,6 +39,7 @@ import { useSiteSettings } from "@/hooks/useData";
 import { ThemeProvider } from "./components/ThemeProvider";
 import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
+import IndexInline from "./pages/IndexInline";
 import SalesPage from "./pages/SalesPage";
 import CampaignDetail from "./pages/CampaignDetail";
 import Register from "./pages/Register";
@@ -79,6 +80,7 @@ const RouteExtras = () => {
 const AppContent = () => {
   const { data: settings, isLoading } = useSiteSettings();
   const showSalesPage = String(settings?.show_sales_page) === "true";
+  const isInline = settings?.layout_mode === "inline";
 
   useEffect(() => {
     runContrastAudit();
@@ -110,8 +112,8 @@ const AppContent = () => {
         <AffiliateTracker />
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={showSalesPage ? <SalesPage /> : <Index />} />
-          <Route path="/demonstracao" element={<Index />} />
+          <Route path="/" element={showSalesPage ? <SalesPage /> : (isInline ? <IndexInline /> : <Index />)} />
+          <Route path="/demonstracao" element={isInline ? <IndexInline /> : <Index />} />
           <Route path="/campanhas" element={<Navigate to={showSalesPage ? "/demonstracao" : "/"} replace />} />
           <Route path="/campanha/:id" element={<CampaignDetail />} />
           <Route path="/rifa/:id" element={<CampaignRedirect />} />

@@ -83,7 +83,9 @@ export default function AdminSettings() {
     pay2m_client_key: "Pay2m: Client Key",
     pay2m_client_secret: "Pay2m: Client Secret",
     pay2m_enabled: "Habilitar Pay2m",
-    layout_mode: "Modelo de Layout das Campanhas"
+    layout_mode: "Modelo de Layout das Campanhas",
+    inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
+    inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)"
   };
 
   useEffect(() => {
@@ -344,6 +346,20 @@ export default function AdminSettings() {
                       { label: "Padrão (Hero + Cards)", value: "default" },
                       { label: "Em Linha (Compacto Mobile)", value: "inline" }
                     ]}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'inline_testimonials_count')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['inline_testimonials_count']}
+                    getIcon={getIcon}
+                    type="number"
+                    placeholder="3"
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'inline_show_finished_raffles')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['inline_show_finished_raffles']}
+                    getIcon={getIcon}
                   />
                   <SettingField 
                     s={settings.find(s => s.key === 'home_hero_style')} 

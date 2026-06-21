@@ -7,6 +7,13 @@ export const SiteSettingsInjector = () => {
   useEffect(() => {
     if (!settings) return;
 
+    // Toggle global inline-mode class (mobile-locked compact layout for entire site)
+    if (settings.layout_mode === "inline") {
+      document.documentElement.classList.add("inline-mode");
+    } else {
+      document.documentElement.classList.remove("inline-mode");
+    }
+
     // Cache basic settings for early injection on next load
     if (settings.primary_color) localStorage.setItem('cached_primary_color', settings.primary_color);
     if (settings.site_name) localStorage.setItem('cached_site_name', settings.site_name);
