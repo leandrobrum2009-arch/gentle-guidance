@@ -660,10 +660,13 @@ export default function AccountInline() {
 
       {/* BOTTOM NAV */}
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-40 bg-background/95 backdrop-blur-xl border-t border-border">
-        <div className="grid grid-cols-4">
+        <div className={`grid ${isAffiliate ? "grid-cols-5" : "grid-cols-4"}`}>
           <TabButton icon={Home} label="Início" active={tab === "home"} onClick={() => setTab("home")} />
           <TabButton icon={Ticket} label="Bilhetes" active={tab === "bilhetes"} onClick={() => setTab("bilhetes")} />
           <TabButton icon={Trophy} label="Prêmios" active={tab === "premios"} onClick={() => setTab("premios")} />
+          {isAffiliate && (
+            <TabButton icon={Crown} label="Afiliado" active={tab === "afiliado"} onClick={() => setTab("afiliado")} />
+          )}
           <TabButton icon={User} label="Perfil" active={tab === "perfil"} onClick={() => setTab("perfil")} />
         </div>
       </nav>
