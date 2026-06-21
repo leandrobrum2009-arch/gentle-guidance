@@ -590,3 +590,146 @@ function EmptyState({ icon: Icon, text, cta, to }: any) {
     </div>
   );
 }
+
+function EditProfileDialog({
+  open, onOpenChange, profile, userId, onSaved,
+}: {
+  open: boolean;
+  onOpenChange: (o: boolean) => void;
+  profile: any;
+  userId: string;
+  onSaved: (p: any) => void;
+}) {
+  const [name, setName] = useState(profile?.name || "");
+  const [phone, setPhone] = useState(profile?.phone || "");
+  const [cpf, setCpf] = useState(profile?.cpf || "");
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || "");
+  const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setName(profile?.name || "");
+      setPhone(profile?.phone || "");
+      setCpf(profile?.cpf || "");
+      setAvatarUrl(profile?.avatar_url || "");
+    }
+  }, [open, profile]);
+
+  const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !userId) return;
+    const ALLOWED = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+    if (!ALLOWED.includes(file.type)) {
+      toast.error("Imagem inválida (JPG, PNG, WebP ou GIF).");
+      return;
+    }
+    setUploading(true);
+    try {
+      const processed = await compressImage(file);
+      if (processed.size > 5 * 1024 * 1024) throw new Error("Imagem maior que 5MB.");
+      const ext = processed.name.split(".").pop();
+      const path = `${userId}/${Date.now()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("avatars").upload(path, processed, { upsert: true });
+      if (upErr) throw upErr;
+      const { data: { publicUrl } } = supabase.storage.from("avatars").getPublicUrl(path);
+      setAvatarUrl(publicUrl);
+      toast.success("Foto carregada. Clique em salvar para aplicar.");
+    } catch (err: any) {
+      toast.error("Erro: " + err.message);
+    } finally {
+      setUploading(false);
+      e.target.value = "";
+    }
+  };
+
+  const handleSave = async () => {
+    if (!userId) return;
+    setSaving(true);
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .update({
+          name: name.trim() || null,
+          phone: phone.replace(/\D/g, "") || null,
+          cpf: cpf.replace(/\D/g, "") || null,
+          avatar_url: avatarUrl || null,
+        })
+        .eq("user_id", userId)
+        .select()
+        .single();
+      if (error) throw error;
+      onSaved(data);
+      toast.success("Perfil atualizado!");
+      onOpenChange(false);
+    } catch (err: any) {
+      toast.error("Erro ao salvar: " + err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-[440px] rounded-2xl">
+        <DialogHeader>
+          <DialogTitle className="text-lg font-black">Editar perfil</DialogTitle>
+          <DialogDescription className="text-xs">Atualize seus dados pessoais e foto.</DialogDescription>
+        </DialogHeader>
+
+        <div className="space-y-4">
+          <div className="flex flex-col items-center gap-2">
+            <div className="relative h-24 w-24 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black text-3xl overflow-hidden ring-2 ring-primary/30">
+              {avatarUrl
+                ? <img src={avatarUrl} alt="" className="h-full w-full object-cover" />
+                : (name || "U")[0]?.toUpperCase()}
+              {uploading && (
+                <div className="absolute inset-0 bg-background/60 flex items-center justify-center">
+                  <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                </div>
+              )}
+            </div>
+            <label className="cursor-pointer text-xs font-black uppercase tracking-wider text-primary flex items-center gap-1">
+              <Camera className="h-4 w-4" /> Trocar foto
+              <input type="file" accept="image/*" className="hidden" onChange={handleAvatar} disabled={uploading} />
+            </label>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="ip-name" className="text-xs font-black uppercase tracking-wider">Nome</Label>
+            <Input id="ip-name" value={name} onChange={(e) => setName(e.target.value)} className="h-11 rounded-xl" />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="ip-phone" className="text-xs font-black uppercase tracking-wider">WhatsApp</Label>
+            <Input
+              id="ip-phone"
+              value={maskPhone(phone)}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="(00) 00000-0000"
+              className="h-11 rounded-xl"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="ip-cpf" className="text-xs font-black uppercase tracking-wider">CPF</Label>
+            <Input
+              id="ip-cpf"
+              value={maskCPF(cpf)}
+              onChange={(e) => setCpf(e.target.value)}
+              placeholder="000.000.000-00"
+              className="h-11 rounded-xl"
+            />
+          </div>
+        </div>
+
+        <DialogFooter className="gap-2">
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="h-11 rounded-xl text-xs font-black">
+            Cancelar
+          </Button>
+          <Button onClick={handleSave} disabled={saving || uploading} className="h-11 rounded-xl text-xs font-black">
+            {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Salvar"}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
