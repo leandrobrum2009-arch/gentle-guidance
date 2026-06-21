@@ -299,8 +299,8 @@ export default function AccountInline() {
         </div>
       </nav>
 
-      <DepositModal open={depositOpen} onOpenChange={setDepositOpen} />
-      <WithdrawModal open={withdrawOpen} onOpenChange={setWithdrawOpen} balance={balance} />
+      <DepositModal isOpen={depositOpen} onOpenChange={setDepositOpen} />
+      <WithdrawModal isOpen={withdrawOpen} onOpenChange={setWithdrawOpen} userBalance={balance} />
     </div>
   );
 }
