@@ -542,6 +542,17 @@ export default function AccountInline() {
         userBalance={balance}
         onSuccess={() => queryClient.invalidateQueries({ queryKey: ["user-wallet-transactions", user?.id] })}
       />
+
+      <EditProfileDialog
+        open={editOpen}
+        onOpenChange={setEditOpen}
+        profile={profile}
+        userId={user?.id || ""}
+        onSaved={(p) => {
+          setProfile(p);
+          queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
+        }}
+      />
     </div>
   );
 }
