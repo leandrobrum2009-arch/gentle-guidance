@@ -254,28 +254,149 @@ export default function AccountInline() {
         {tab === "bilhetes" && (
           <section className="rounded-2xl bg-card border border-border p-4">
             <h3 className="text-sm font-black uppercase tracking-wide mb-3">Meus bilhetes</h3>
-            {paidOrders.length === 0 ? (
+            {ordersByCampaign.length === 0 ? (
               <EmptyState icon={Ticket} text="Você ainda não tem bilhetes pagos." cta="Ver campanhas" to="/" />
             ) : (
-              <div className="space-y-2">
-                {paidOrders.map((o: any) => (
-                  <Link
-                    key={o.id}
-                    to={`/campanha/${o.campaign_id}`}
-                    className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-3 hover:border-primary/40 transition-colors"
-                  >
-                    {o.campaigns?.image_url && (
-                      <img src={o.campaigns.image_url} alt="" className="h-12 w-12 rounded-lg object-cover shrink-0" />
-                    )}
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-bold truncate">{o.campaigns?.title}</p>
-                      <p className="text-[11px] text-muted-foreground">
-                        {(o.tickets || []).length} bilhete(s) · {fmtBRL(o.total)}
-                      </p>
+              <div className="space-y-2.5">
+                {ordersByCampaign.map((group: any) => {
+                  const camp = group.campaign;
+                  const isOpen = expandedTicketOrder === group.campaign_id;
+                  const allTickets = group.orders.flatMap((o: any) => o.tickets || []);
+                  const drawNumber = camp?.draw_number;
+                  const drawn = camp?.status === "finished" && drawNumber != null;
+                  const winningTicket = drawn ? allTickets.find((t: any) => t.number === drawNumber) : null;
+                  const campPrizes = prizes.find((p: any) => p.campaign?.id === group.campaign_id);
+                  const extraPrizes = [
+                    ...(campPrizes?.spins || []).map((s: any) => ({ kind: "Roleta", label: s.prize_label, value: s.prize_value })),
+                    ...(campPrizes?.scratches || []).map((s: any) => ({ kind: "Raspadinha", label: s.prize_label, value: s.prize_value })),
+                    ...(campPrizes?.boxes || []).map((b: any) => ({ kind: "Caixa", label: b.prize_title, value: b.prize_value })),
+                  ];
+
+                  return (
+                    <div key={group.campaign_id} className="rounded-xl border border-border bg-background/40 overflow-hidden">
+                      <button
+                        onClick={() => setExpandedTicketOrder(isOpen ? null : group.campaign_id)}
+                        className="w-full flex items-center gap-3 p-3 text-left"
+                      >
+                        {camp?.image_url && (
+                          <img src={camp.image_url} alt="" className="h-12 w-12 rounded-lg object-cover shrink-0" />
+                        )}
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold truncate">{camp?.title}</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {group.totalTickets} bilhete(s) · {fmtBRL(group.totalSpent)}
+                          </p>
+                        </div>
+                        {drawn && (
+                          <Badge className={`text-[9px] font-black ${winningTicket ? "bg-emerald-500 text-white" : "bg-muted text-muted-foreground"}`}>
+                            {winningTicket ? "GANHOU" : "FINALIZADA"}
+                          </Badge>
+                        )}
+                        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                      </button>
+
+                      {isOpen && (
+                        <div className="border-t border-border p-3 space-y-3 bg-card/40">
+                          {/* DRAW RESULT PANEL */}
+                          {drawn ? (
+                            <div className={`rounded-xl p-3 border ${winningTicket ? "border-emerald-500/50 bg-emerald-500/10" : "border-border bg-background/40"}`}>
+                              <div className="flex items-center gap-2 mb-1">
+                                {winningTicket
+                                  ? <CheckCircle2 className="h-4 w-4 text-emerald-500" />
+                                  : <XCircle className="h-4 w-4 text-muted-foreground" />}
+                                <p className="text-[11px] font-black uppercase tracking-wider">
+                                  {winningTicket ? "Você foi sorteado!" : "Sorteio realizado"}
+                                </p>
+                              </div>
+                              <p className="text-xs text-muted-foreground">
+                                Número sorteado: <span className="font-black text-foreground text-base ml-1">#{drawNumber}</span>
+                              </p>
+                              {camp?.draw_date && (
+                                <p className="text-[10px] text-muted-foreground mt-1">
+                                  {format(new Date(camp.draw_date), "dd 'de' MMM yyyy", { locale: ptBR })}
+                                </p>
+                              )}
+                              {winningTicket && (
+                                <Button
+                                  onClick={() => claimPrize(camp?.title, `Prêmio principal (nº ${drawNumber})`)}
+                                  className="mt-3 w-full h-10 rounded-lg text-xs font-black gap-2 bg-emerald-500 hover:bg-emerald-600 text-white"
+                                >
+                                  <MessageCircle className="h-4 w-4" /> Reivindicar prêmio
+                                </Button>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="rounded-xl p-3 border border-border bg-background/40">
+                              <p className="text-[11px] font-black uppercase tracking-wider text-muted-foreground">
+                                Aguardando sorteio
+                              </p>
+                            </div>
+                          )}
+
+                          {/* TICKET NUMBERS */}
+                          <div>
+                            <p className="text-[11px] font-black uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
+                              <Hash className="h-3 w-3" /> Seus números ({allTickets.length})
+                            </p>
+                            <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto">
+                              {allTickets.map((t: any, i: number) => {
+                                const isWin = drawn && t.number === drawNumber;
+                                return (
+                                  <span
+                                    key={`${t.number}-${i}`}
+                                    className={`text-[11px] font-black px-2 py-1 rounded-md ${
+                                      isWin
+                                        ? "bg-emerald-500 text-white"
+                                        : t.is_lucky
+                                          ? "bg-yellow-500/20 text-yellow-500 border border-yellow-500/40"
+                                          : "bg-background border border-border"
+                                    }`}
+                                  >
+                                    {String(t.number).padStart(String(camp?.total_tickets || 1000).length, "0")}
+                                  </span>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* EXTRA PRIZES IN THIS CAMPAIGN */}
+                          {extraPrizes.length > 0 && (
+                            <div>
+                              <p className="text-[11px] font-black uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
+                                <Sparkles className="h-3 w-3" /> Prêmios extras nesta rifa
+                              </p>
+                              <div className="space-y-1.5">
+                                {extraPrizes.map((p, i) => (
+                                  <div key={i} className="flex items-center gap-2 rounded-lg border border-border bg-background/40 p-2">
+                                    <Badge variant="outline" className="text-[9px] font-black shrink-0">{p.kind}</Badge>
+                                    <p className="text-xs font-bold truncate flex-1">{p.label}</p>
+                                    {Number(p.value) > 0 && (
+                                      <p className="text-xs font-black text-emerald-500 shrink-0">{fmtBRL(p.value)}</p>
+                                    )}
+                                    <button
+                                      onClick={() => claimPrize(camp?.title, p.label)}
+                                      className="text-primary"
+                                      aria-label="Reivindicar"
+                                    >
+                                      <MessageCircle className="h-4 w-4" />
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+
+                          <Link
+                            to={`/campanha/${camp?.slug || group.campaign_id}`}
+                            className="block text-center text-[11px] font-black uppercase tracking-wider text-primary py-1"
+                          >
+                            Ver campanha completa →
+                          </Link>
+                        </div>
+                      )}
                     </div>
-                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                  </Link>
-                ))}
+                  );
+                })}
               </div>
             )}
           </section>
@@ -287,15 +408,59 @@ export default function AccountInline() {
             {prizes.length === 0 ? (
               <EmptyState icon={Trophy} text="Nenhum prêmio ainda. Boa sorte!" cta="Jogar agora" to="/roleta-premiada" />
             ) : (
-              <div className="space-y-2">
-                {prizes.map((p: any) => (
-                  <div key={p.campaign?.id} className="rounded-xl border border-border bg-background/40 p-3">
-                    <p className="text-sm font-bold truncate">{p.campaign?.title}</p>
-                    <p className="text-[11px] text-muted-foreground mt-1">
-                      {p.mainPrize ? `Número premiado: ${p.mainPrize.number}` : `${(p.spins?.length || 0) + (p.scratches?.length || 0) + (p.boxes?.length || 0)} prêmio(s)`}
-                    </p>
-                  </div>
-                ))}
+              <div className="space-y-2.5">
+                {prizes.map((p: any) => {
+                  const isOpen = expandedPrizeCamp === p.campaign?.id;
+                  const items = [
+                    ...(p.mainPrize ? [{ kind: "Sorteio", label: `Número premiado #${p.mainPrize.number}`, value: 0 }] : []),
+                    ...(p.spins || []).map((s: any) => ({ kind: "Roleta", label: s.prize_label, value: s.prize_value })),
+                    ...(p.scratches || []).map((s: any) => ({ kind: "Raspadinha", label: s.prize_label, value: s.prize_value })),
+                    ...(p.boxes || []).map((b: any) => ({ kind: "Caixa", label: b.prize_title, value: b.prize_value })),
+                  ];
+                  return (
+                    <div key={p.campaign?.id} className="rounded-xl border border-border bg-background/40 overflow-hidden">
+                      <button
+                        onClick={() => setExpandedPrizeCamp(isOpen ? null : p.campaign?.id)}
+                        className="w-full flex items-center gap-3 p-3 text-left"
+                      >
+                        <Award className="h-5 w-5 text-yellow-500 shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-bold truncate">{p.campaign?.title}</p>
+                          <p className="text-[11px] text-muted-foreground">
+                            {items.length} prêmio(s) · {fmtBRL(p.total)}
+                          </p>
+                        </div>
+                        <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                      </button>
+                      {isOpen && (
+                        <div className="border-t border-border p-3 space-y-1.5 bg-card/40">
+                          {items.map((it, i) => (
+                            <div key={i} className="flex items-center gap-2 rounded-lg border border-border bg-background/40 p-2">
+                              <Badge variant="outline" className="text-[9px] font-black shrink-0">{it.kind}</Badge>
+                              <p className="text-xs font-bold truncate flex-1">{it.label}</p>
+                              {Number(it.value) > 0 && (
+                                <p className="text-xs font-black text-emerald-500 shrink-0">{fmtBRL(it.value)}</p>
+                              )}
+                              <button
+                                onClick={() => claimPrize(p.campaign?.title, it.label)}
+                                className="text-primary"
+                                aria-label="Reivindicar"
+                              >
+                                <MessageCircle className="h-4 w-4" />
+                              </button>
+                            </div>
+                          ))}
+                          <Button
+                            onClick={() => claimPrize(p.campaign?.title, `Todos os prêmios (${items.length})`)}
+                            className="mt-2 w-full h-10 rounded-lg text-xs font-black gap-2"
+                          >
+                            <MessageCircle className="h-4 w-4" /> Falar com suporte
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             )}
           </section>
