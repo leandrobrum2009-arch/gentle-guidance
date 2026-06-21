@@ -247,12 +247,89 @@ export default function AccountInline() {
 
         {tab === "home" && (
           <>
+            {/* AFFILIATE EVIDENCE CARD */}
+            {isAffiliate && (
+              <section className="rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-card p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-primary" />
+                  <p className="text-sm font-black uppercase tracking-wide flex-1">
+                    {aff?.type === "influencer" ? "Painel Influenciador" : "Painel Afiliado"}
+                  </p>
+                  <Badge className="text-[10px] font-black bg-primary/20 text-primary border-0">
+                    {Math.round((aff?.commission_rate || 0) * 100)}%
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <MiniStat label="Ganhos" value={fmtBRL(totalEarnings)} accent="emerald" />
+                  <MiniStat label="Pendente" value={fmtBRL(pendingEarnings)} accent="amber" />
+                  <MiniStat label="Cliques" value={String(totalClicks)} accent="primary" />
+                </div>
+                <div className="rounded-xl bg-background/60 border border-border p-2.5 flex items-center gap-2">
+                  <LinkIcon className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <code className="text-[11px] font-mono font-bold truncate flex-1">
+                    /?ref={aff?.referral_code}
+                  </code>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button onClick={shareReferral} className="h-11 rounded-xl text-xs font-black gap-1.5">
+                    <Share2 className="h-4 w-4" /> Divulgar
+                  </Button>
+                  <Button onClick={() => setTab("afiliado")} variant="outline" className="h-11 rounded-xl text-xs font-black gap-1.5">
+                    <TrendingUp className="h-4 w-4" /> Ver vendas
+                  </Button>
+                </div>
+              </section>
+            )}
+
             {/* QUICK STATS */}
             <section className="grid grid-cols-3 gap-2.5">
               <StatCard icon={Ticket} label="Bilhetes" value={paidOrders.length} />
               <StatCard icon={Trophy} label="Prêmios" value={prizes.length} />
               <StatCard icon={Bell} label="Avisos" value={unreadCount} highlight={unreadCount > 0} />
             </section>
+
+            {/* INSIGHTS */}
+            {(upcomingCampaigns.length > 0 || nextLuckyHour) && (
+              <section className="rounded-2xl bg-card border border-border p-4 space-y-2.5">
+                <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" /> Para você
+                </h3>
+                {nextLuckyHour && (
+                  <Link
+                    to={`/campanha/${nextLuckyHour.campaigns?.slug || nextLuckyHour.campaign_id}`}
+                    className="flex items-center gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-3"
+                  >
+                    <div className="h-9 w-9 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 shrink-0">
+                      <Clock className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-yellow-500">Próxima Hora Premiada</p>
+                      <p className="text-xs font-bold truncate">{nextLuckyHour.campaigns?.title}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {format(new Date(nextLuckyHour.draw_time), "dd MMM 'às' HH:mm", { locale: ptBR })}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                )}
+                {upcomingCampaigns.map((c: any) => (
+                  <Link
+                    key={c.id}
+                    to={`/campanha/${c.slug || c.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-3"
+                  >
+                    {c.image_url && <img src={c.image_url} alt="" className="h-10 w-10 rounded-lg object-cover shrink-0" />}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold truncate">{c.title}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Sorteio {format(new Date(c.draw_date), "dd MMM", { locale: ptBR })} · {fmtBRL(c.ticket_price)}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                ))}
+              </section>
+            )}
 
             {/* NOTIFICATIONS */}
             <section className="rounded-2xl bg-card border border-border p-4">
