@@ -235,14 +235,13 @@ const CampaignInlineView: React.FC<Props> = ({
   }, [campaign.show_timer, sectionsOrder]);
 
   const sectionOrderIndex = useMemo(() => new Map(activeSections.map((id, index) => [id, index])), [activeSections]);
-  const isSectionEnabled = (id: string) => sectionOrderIndex.has(id);
-  const sectionOrder = (id: string) => sectionOrderIndex.get(id) ?? 999;
 
-  const SectionSlot: React.FC<{ id: string; children: React.ReactNode }> = ({ id, children }) => {
-    if (!isSectionEnabled(id)) return null;
+  const SectionSlot = useCallback<React.FC<{ id: string; children: React.ReactNode }>>(({ id, children }) => {
+    const order = sectionOrderIndex.get(id);
+    if (order === undefined) return null;
     if (children === null || children === undefined || children === false) return null;
-    return <div style={{ order: sectionOrder(id) }}>{children}</div>;
-  };
+    return <div style={{ order }}>{children}</div>;
+  }, [sectionOrderIndex]);
 
   const progress = useMemo(() => {
     if (!campaign) return 0;
