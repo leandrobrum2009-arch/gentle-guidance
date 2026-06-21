@@ -255,7 +255,11 @@ const CampaignInlineView: React.FC<Props> = ({
       <SectionSlot id="gallery">
       <div className="relative overflow-hidden rounded-2xl border border-border bg-card">
         {campaign.image_url && (
-          <img src={campaign.image_url} alt={campaign.title} className="aspect-[4/5] w-full object-cover" />
+          <img
+            src={campaign.image_url}
+            alt={campaign.title}
+            className="w-full h-auto object-contain block"
+          />
         )}
         <div className="absolute top-2 right-2 z-10">
           <Badge className="bg-purple-500 text-white border-none text-[9px] font-black uppercase tracking-widest px-2 h-5 shadow-lg">
