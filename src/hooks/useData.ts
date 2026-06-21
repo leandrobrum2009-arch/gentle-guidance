@@ -68,6 +68,16 @@ export interface Campaign {
   winners?: Winner[];
 }
 
+export interface Banner {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  image_url: string;
+  link_url: string | null;
+  order_index: number | null;
+  is_active: boolean | null;
+}
+
  export type MysteryBoxRarity = 'common' | 'rare' | 'epic' | 'legendary';
  
  export interface MysteryBoxConfig {
@@ -265,6 +275,30 @@ export const useCampaigns = () =>
       return (data as any) as Campaign[];
     },
   });
+
+export const useActiveBanners = () => {
+  const tenantId = import.meta.env.VITE_TENANT_ID;
+
+  return useQuery({
+    queryKey: ["active-banners", tenantId],
+    queryFn: async () => {
+      let query = supabase
+        .from("banners")
+        .select("id, title, subtitle, image_url, link_url, order_index, is_active")
+        .eq("is_active", true)
+        .order("order_index", { ascending: true });
+
+      if (tenantId) {
+        query = query.eq("tenant_id", tenantId);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+      return (data as any) as Banner[];
+    },
+    staleTime: 1000 * 60 * 5,
+  });
+};
 
 export const useCampaignRanking = (campaignId: string, limit = 10) =>
   useQuery({
