@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CampaignCard from "@/components/CampaignCard";
 import { useCampaigns, useSiteSettings } from "@/hooks/useData";
+import BannersInline from "@/components/inline/BannersInline";
 import FinishedRafflesInline from "@/components/inline/FinishedRafflesInline";
 import TestimonialsCarouselInline from "@/components/inline/TestimonialsCarouselInline";
 import { SEO } from "@/components/SEO";
@@ -32,6 +33,8 @@ const IndexInline = () => {
     <div className="min-h-screen bg-background">
       <SEO title={settings?.site_title || settings?.site_name || "Rifas Online"} />
       <Header />
+
+      <BannersInline />
 
       {/* Hero compacto */}
       <section className="px-3 pt-4 pb-3">
