@@ -299,8 +299,17 @@ export default function AccountInline() {
         </div>
       </nav>
 
-      <DepositModal isOpen={depositOpen} onOpenChange={setDepositOpen} />
-      <WithdrawModal isOpen={withdrawOpen} onOpenChange={setWithdrawOpen} userBalance={balance} />
+      <DepositModal
+        isOpen={depositOpen}
+        onOpenChange={setDepositOpen}
+        onSuccess={() => queryClient.invalidateQueries({ queryKey: ["user-wallet-transactions", user?.id] })}
+      />
+      <WithdrawModal
+        isOpen={withdrawOpen}
+        onOpenChange={setWithdrawOpen}
+        userBalance={balance}
+        onSuccess={() => queryClient.invalidateQueries({ queryKey: ["user-wallet-transactions", user?.id] })}
+      />
     </div>
   );
 }
