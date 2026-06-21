@@ -2,7 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   User, Wallet, Ticket, Trophy, Bell, LogOut, ArrowDownLeft, ArrowUpRight,
-  Plus, Minus, ChevronRight, Home, Gift, Settings, Copy, Share2, Loader2, ShieldCheck
+  Plus, Minus, ChevronRight, ChevronDown, Home, Gift, Settings, Copy, Share2,
+  Loader2, ShieldCheck, Camera, MessageCircle, Sparkles, Award, CheckCircle2,
+  XCircle, Pencil, Hash
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,6 +16,11 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription
+} from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
@@ -22,6 +29,8 @@ import HeaderInline from "@/components/HeaderInline";
 import FooterInline from "@/components/inline/FooterInline";
 import { DepositModal } from "@/components/DepositModal";
 import { WithdrawModal } from "@/components/WithdrawModal";
+import { compressImage } from "@/lib/image-upload";
+import { maskCPF, maskPhone } from "@/lib/validations";
 
 type TabKey = "home" | "bilhetes" | "premios" | "perfil";
 
@@ -46,6 +55,9 @@ export default function AccountInline() {
   const [tab, setTab] = useState<TabKey>("home");
   const [depositOpen, setDepositOpen] = useState(false);
   const [withdrawOpen, setWithdrawOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [expandedTicketOrder, setExpandedTicketOrder] = useState<string | null>(null);
+  const [expandedPrizeCamp, setExpandedPrizeCamp] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
@@ -60,6 +72,40 @@ export default function AccountInline() {
   const unreadCount = (notifications || []).filter((n: any) => !n.read).length;
   const prizes = Array.isArray(prizesData) ? prizesData : [];
   const paidOrders = (orders || []).filter((o: any) => o.payment_status === "paid");
+
+  // Group paid orders by campaign for cleaner ticket list
+  const ordersByCampaign = paidOrders.reduce((acc: any[], o: any) => {
+    const existing = acc.find((x) => x.campaign_id === o.campaign_id);
+    if (existing) {
+      existing.orders.push(o);
+      existing.totalTickets += (o.tickets || []).length;
+      existing.totalSpent += Number(o.total || 0);
+    } else {
+      acc.push({
+        campaign_id: o.campaign_id,
+        campaign: o.campaigns,
+        orders: [o],
+        totalTickets: (o.tickets || []).length,
+        totalSpent: Number(o.total || 0),
+      });
+    }
+    return acc;
+  }, []);
+
+  const supportWhats = (siteSettings as any)?.support_whatsapp
+    ? String((siteSettings as any).support_whatsapp).replace(/\D/g, "")
+    : "";
+
+  const claimPrize = (campaignTitle: string, prizeLabel: string) => {
+    if (!supportWhats) {
+      toast.error("Suporte indisponível. Tente novamente em instantes.");
+      return;
+    }
+    const msg = encodeURIComponent(
+      `Olá! Sou ${profile?.name || user?.email}. Quero reivindicar meu prêmio "${prizeLabel}" da campanha "${campaignTitle}".`
+    );
+    window.open(`https://wa.me/${supportWhats}?text=${msg}`, "_blank");
+  };
 
   const copyReferral = async () => {
     if (!affiliate?.referral_code) return toast.error("Você ainda não possui código de indicação.");
@@ -92,15 +138,29 @@ export default function AccountInline() {
         {/* USER CARD */}
         <section className="rounded-2xl bg-gradient-to-br from-primary/15 via-card to-card border border-border p-5">
           <div className="flex items-center gap-3">
-            <div className="h-14 w-14 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black text-xl shrink-0 overflow-hidden">
+            <button
+              onClick={() => setEditOpen(true)}
+              className="relative h-14 w-14 rounded-full bg-primary/20 text-primary flex items-center justify-center font-black text-xl shrink-0 overflow-hidden ring-2 ring-primary/30"
+              aria-label="Editar perfil"
+            >
               {profile?.avatar_url
                 ? <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
                 : (profile?.name || user?.email || "U")[0].toUpperCase()}
-            </div>
+              <span className="absolute -bottom-0.5 -right-0.5 h-5 w-5 rounded-full bg-primary text-primary-foreground flex items-center justify-center">
+                <Camera className="h-3 w-3" />
+              </span>
+            </button>
             <div className="min-w-0 flex-1">
               <p className="text-base font-black truncate">{profile?.name || user?.email}</p>
               <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
             </div>
+            <button
+              onClick={() => setEditOpen(true)}
+              className="h-9 w-9 rounded-full bg-background/60 border border-border flex items-center justify-center text-muted-foreground hover:text-primary"
+              aria-label="Editar"
+            >
+              <Pencil className="h-4 w-4" />
+            </button>
           </div>
 
           <div className="mt-5 rounded-xl bg-background/60 border border-border p-4">
