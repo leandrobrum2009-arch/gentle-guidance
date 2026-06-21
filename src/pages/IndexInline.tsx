@@ -71,8 +71,8 @@ const IndexInline = () => {
           <p className="text-xs text-muted-foreground italic">Nenhuma rifa ativa no momento.</p>
         ) : (
           <div className="grid grid-cols-1 gap-3">
-            {active.slice(0, 6).map((c: any) => (
-              <CampaignCard key={c.id} campaign={c} />
+            {active.slice(0, 6).map((c: any, i: number) => (
+              <CampaignCard key={c.id} campaign={c} index={i} />
             ))}
           </div>
         )}
