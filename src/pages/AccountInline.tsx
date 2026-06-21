@@ -468,6 +468,13 @@ export default function AccountInline() {
 
         {tab === "perfil" && (
           <section className="space-y-3">
+            <Button
+              onClick={() => setEditOpen(true)}
+              className="w-full h-12 rounded-xl gap-2 text-sm font-black"
+            >
+              <Pencil className="h-4 w-4" /> Editar perfil
+            </Button>
+
             <div className="rounded-2xl bg-card border border-border p-4 space-y-1">
               <p className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground">Nome</p>
               <p className="text-sm font-bold">{profile?.name || "—"}</p>
