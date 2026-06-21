@@ -603,6 +603,101 @@ export default function AccountInline() {
           </section>
         )}
 
+        {tab === "afiliado" && isAffiliate && (
+          <section className="space-y-3">
+            {/* HERO CARD */}
+            <div className="rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-card p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <p className="text-sm font-black uppercase tracking-wide flex-1">Seu link de afiliado</p>
+              </div>
+              <div className="rounded-xl bg-background/60 border border-border p-3 flex items-center gap-2">
+                <LinkIcon className="h-4 w-4 text-primary shrink-0" />
+                <code className="text-xs font-mono font-bold truncate flex-1">
+                  {window.location.origin}/?ref={aff?.referral_code}
+                </code>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button onClick={shareReferral} className="h-12 rounded-xl text-sm font-black gap-2">
+                  <Share2 className="h-4 w-4" /> Divulgar
+                </Button>
+                <Button onClick={copyReferral} variant="outline" className="h-12 rounded-xl text-sm font-black gap-2">
+                  <Copy className="h-4 w-4" /> Copiar
+                </Button>
+              </div>
+            </div>
+
+            {/* STATS */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                <DollarSign className="h-4 w-4 text-emerald-500 mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Total ganho</p>
+                <p className="text-lg font-black text-emerald-500 mt-0.5">{fmtBRL(totalEarnings)}</p>
+              </div>
+              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+                <Clock className="h-4 w-4 text-amber-500 mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Pendente</p>
+                <p className="text-lg font-black text-amber-500 mt-0.5">{fmtBRL(pendingEarnings)}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <Users className="h-4 w-4 text-primary mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Cliques</p>
+                <p className="text-lg font-black mt-0.5">{totalClicks}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <TrendingUp className="h-4 w-4 text-primary mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Vendas</p>
+                <p className="text-lg font-black mt-0.5">{commissions.length}</p>
+              </div>
+            </div>
+
+            {/* SALES LIST */}
+            <div className="rounded-2xl bg-card border border-border p-4">
+              <h3 className="text-sm font-black uppercase tracking-wide mb-3 flex items-center gap-2">
+                <Megaphone className="h-4 w-4 text-primary" /> Vendas em tempo real
+              </h3>
+              {commissions.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-6 text-center">
+                  Ainda sem vendas. Divulgue seu link!
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {commissions.slice(0, 20).map((c: any) => (
+                    <div key={c.id} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
+                      <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${c.status === "paid" ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"}`}>
+                        <DollarSign className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold truncate">{c.campaigns?.title || "Campanha"}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {format(new Date(c.created_at), "dd MMM, HH:mm", { locale: ptBR })}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black text-emerald-500">+{fmtBRL(c.amount)}</p>
+                        <p className="text-[9px] font-black uppercase text-muted-foreground">{c.status === "paid" ? "Pago" : "Pendente"}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* RULES */}
+            <div className="rounded-2xl bg-card border border-border p-4 space-y-2">
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> Regras do programa
+              </h3>
+              <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
+                <li>• Você ganha <span className="font-black text-foreground">{Math.round((aff?.commission_rate || 0) * 100)}%</span> sobre cada venda paga feita pelo seu link.</li>
+                <li>• Comissões são liberadas após a confirmação do pagamento PIX do comprador.</li>
+                <li>• O saldo de afiliado é creditado em sua carteira e pode ser sacado conforme as regras de saque.</li>
+                <li>• Divulgação enganosa, spam ou auto-compras podem suspender sua conta de afiliado.</li>
+              </ul>
+            </div>
+          </section>
+        )}
+
         {tab === "perfil" && (
           <section className="space-y-3">
             <Button
