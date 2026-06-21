@@ -144,11 +144,35 @@ export default function AccountInline() {
   };
 
   const copyReferral = async () => {
-    if (!affiliate?.referral_code) return toast.error("Você ainda não possui código de indicação.");
-    const link = `${window.location.origin}/?ref=${affiliate.referral_code}`;
+    const code = affiliateData?.affiliate?.referral_code || affiliate?.referral_code;
+    if (!code) return toast.error("Você ainda não possui código de indicação.");
+    const link = `${window.location.origin}/?ref=${code}`;
     await navigator.clipboard.writeText(link);
     toast.success("Link copiado!");
   };
+
+  const shareReferral = async () => {
+    const code = affiliateData?.affiliate?.referral_code || affiliate?.referral_code;
+    if (!code) return;
+    const link = `${window.location.origin}/?ref=${code}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "Participe da rifa!", url: link }); }
+      catch { copyReferral(); }
+    } else copyReferral();
+  };
+
+  const isAffiliate = !!affiliateData?.isAffiliate;
+  const aff = affiliateData?.affiliate;
+  const commissions = affiliateData?.commissions || [];
+  const totalEarnings = commissions.reduce((s: number, c: any) => s + Number(c.amount || 0), 0);
+  const pendingEarnings = commissions.filter((c: any) => c.status === "pending").reduce((s: number, c: any) => s + Number(c.amount || 0), 0);
+  const totalClicks = affiliateData?.totalClicks || 0;
+
+  // Upcoming campaigns: active, future draw, soonest first
+  const upcomingCampaigns = (allCampaigns || [])
+    .filter((c: any) => c.status === "active" && c.draw_date && new Date(c.draw_date) > new Date())
+    .sort((a: any, b: any) => new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime())
+    .slice(0, 3);
 
   const handleMarkAllRead = async () => {
     if (!user) return;
