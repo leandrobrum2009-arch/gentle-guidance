@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
 import {
   Trophy, Users, TrendingUp, Gift, Sparkles, RotateCw, ChevronDown, X, Loader2, Award, Crown, Zap, Ticket, Clock, Calendar, DollarSign, Star, PackageOpen
@@ -271,7 +271,7 @@ const CampaignInlineView: React.FC<Props> = ({
                   Últimos {Math.max(1, 100 - Math.round(progress))}%
                 </Badge>
               )}
-              {!isSectionEnabled("header") && (
+              {!sectionOrderIndex.has("header") && (
                 <>
                   <p className="text-base font-black uppercase italic tracking-tight text-white leading-tight drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">{campaign.title}</p>
                   {campaign.subtitle && <p className="text-[10px] text-white/90 font-bold uppercase tracking-wider drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">{campaign.subtitle}</p>}
