@@ -215,7 +215,7 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         <SidebarContent />
       </aside>
 
-      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen relative z-10">
+      <div className="flex flex-1 flex-col lg:pl-64 min-h-screen relative z-10 min-w-0 w-full">
         {/* Mobile Header */}
         <header className="sticky top-0 z-50 flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-4 lg:hidden shadow-sm">
           <div className="flex items-center gap-3">
@@ -246,8 +246,8 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
         </header>
 
         {/* Main */}
-        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8 overflow-x-hidden">
-          <div className="mx-auto max-w-7xl animate-in fade-in slide-in-from-bottom-2 duration-500 pb-20">
+        <main className="flex-1 bg-background p-3 sm:p-4 lg:p-8 overflow-x-hidden w-full max-w-full min-w-0">
+          <div className="mx-auto max-w-7xl w-full min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-500 pb-20">
             {children}
           </div>
         </main>

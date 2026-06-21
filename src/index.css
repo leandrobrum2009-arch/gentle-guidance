@@ -13,6 +13,13 @@ aside:has(a[href*="lovable.dev"]) {
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .admin-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 .holographic-card::before {
   content: "";
   position: absolute;
