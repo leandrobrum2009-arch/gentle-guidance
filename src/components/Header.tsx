@@ -52,10 +52,6 @@ const Header = () => {
   const navigate = useNavigate();
   const headerRef = React.useRef<HTMLElement>(null);
 
-  if (siteSettings?.layout_mode === 'inline') {
-    return <HeaderInline />;
-  }
-
   useEffect(() => {
     if (headerRef.current) {
       const height = headerRef.current.offsetHeight;
@@ -153,6 +149,12 @@ const Header = () => {
     await signOut();
     navigate("/");
   };
+
+  // Global layout mode (defined in admin) — applies to ALL users, ALL pages.
+  // Standard mode never renders the inline header, and vice-versa.
+  if (siteSettings?.layout_mode === 'inline') {
+    return <HeaderInline />;
+  }
 
   return (
     <header ref={headerRef} className={`fixed top-0 z-50 w-full transition-all duration-500 ${scrolled ? 'border-b bg-background/80 backdrop-blur-xl shadow-lg' : 'bg-background/95 backdrop-blur-md'}`}>
