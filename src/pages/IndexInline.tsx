@@ -34,10 +34,11 @@ const IndexInline = () => {
       <SEO title={settings?.site_title || settings?.site_name || "Rifas Online"} />
       <Header />
 
-      <BannersInline />
+      <main className="pt-[calc(var(--header-height,64px)+0.75rem)]">
+        <BannersInline />
 
-      {/* Hero compacto */}
-      <section className="px-3 pt-4 pb-3">
+        {/* Hero compacto */}
+        <section className="px-3 pt-1 pb-3">
         <div className="rounded-2xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 p-4">
           <h1 className="text-lg font-black uppercase italic tracking-tighter leading-tight">
             Concorra a <span className="text-primary">Prêmios Incríveis</span>
@@ -86,6 +87,7 @@ const IndexInline = () => {
 
       {/* Depoimentos carrossel */}
       <TestimonialsCarouselInline count={testimonialsCount} />
+      </main>
 
       <FooterInline settings={settings} />
     </div>
