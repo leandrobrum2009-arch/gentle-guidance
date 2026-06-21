@@ -51,7 +51,7 @@ const HeaderInline = () => {
 
   return (
     <>
-      <header className="fixed top-0 z-50 w-full bg-background/95 backdrop-blur-xl border-b border-border/60">
+      <header className="fixed left-1/2 top-0 z-50 w-full max-w-[480px] -translate-x-1/2 bg-background/95 backdrop-blur-xl border-b border-border/60">
         <div className="relative mx-auto flex h-16 max-w-[480px] items-center justify-between px-4">
           <button
             onClick={() => setOpen(true)}
@@ -85,7 +85,7 @@ const HeaderInline = () => {
       </header>
 
       {/* Floating side widgets */}
-      <div className="fixed right-3 top-28 z-40 flex flex-col gap-2.5 items-end">
+      <div className="fixed top-28 z-40 flex flex-col gap-2.5 items-end right-[max(0.75rem,calc((100vw-480px)/2+0.75rem))]">
         <button
           onClick={handleShare}
           aria-label="Compartilhar"
@@ -112,12 +112,13 @@ const HeaderInline = () => {
             <motion.div
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setOpen(false)}
-              className="fixed inset-0 z-[60] bg-black/60 backdrop-blur-sm"
+              className="fixed left-1/2 top-0 z-[60] h-dvh w-full max-w-[480px] -translate-x-1/2 bg-background/80 backdrop-blur-sm"
             />
             <motion.aside
               initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 28, stiffness: 260 }}
               className="fixed left-0 top-0 z-[61] h-full w-[82%] max-w-sm bg-card border-r border-border shadow-2xl flex flex-col"
+              style={{ left: "max(0px, calc((100vw - 480px) / 2))" }}
             >
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <Link to="/" onClick={() => setOpen(false)} className="flex items-center gap-2">
