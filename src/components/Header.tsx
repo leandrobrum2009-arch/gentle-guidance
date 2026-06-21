@@ -52,10 +52,6 @@ const Header = () => {
   const navigate = useNavigate();
   const headerRef = React.useRef<HTMLElement>(null);
 
-  if (siteSettings?.layout_mode === 'inline') {
-    return <HeaderInline />;
-  }
-
   useEffect(() => {
     if (headerRef.current) {
       const height = headerRef.current.offsetHeight;
