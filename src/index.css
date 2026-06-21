@@ -387,7 +387,14 @@ aside:has(a[href*="lovable.dev"]) {
 html.inline-mode body {
   background: hsl(var(--background));
 }
+html.inline-mode,
+html.inline-mode body {
+  width: 100%;
+  overflow-x: hidden;
+}
 html.inline-mode #root {
+  position: relative;
+  width: 100%;
   max-width: 480px;
   margin-left: auto;
   margin-right: auto;
