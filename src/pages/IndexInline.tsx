@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Gamepad2, Gift, RotateCw } from "lucide-react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import CampaignCard from "@/components/CampaignCard";
 import { useCampaigns, useSiteSettings } from "@/hooks/useData";
+import BannersInline from "@/components/inline/BannersInline";
+import FooterInline from "@/components/inline/FooterInline";
 import FinishedRafflesInline from "@/components/inline/FinishedRafflesInline";
 import TestimonialsCarouselInline from "@/components/inline/TestimonialsCarouselInline";
 import { SEO } from "@/components/SEO";
@@ -33,8 +34,11 @@ const IndexInline = () => {
       <SEO title={settings?.site_title || settings?.site_name || "Rifas Online"} />
       <Header />
 
-      {/* Hero compacto */}
-      <section className="px-3 pt-4 pb-3">
+      <main className="pt-[calc(var(--header-height,64px)+0.75rem)]">
+        <BannersInline />
+
+        {/* Hero compacto */}
+        <section className="px-3 pt-1 pb-3">
         <div className="rounded-2xl bg-gradient-to-br from-primary/20 via-primary/5 to-transparent border border-primary/20 p-4">
           <h1 className="text-lg font-black uppercase italic tracking-tighter leading-tight">
             Concorra a <span className="text-primary">Prêmios Incríveis</span>
@@ -83,8 +87,9 @@ const IndexInline = () => {
 
       {/* Depoimentos carrossel */}
       <TestimonialsCarouselInline count={testimonialsCount} />
+      </main>
 
-      <Footer />
+      <FooterInline settings={settings} />
     </div>
   );
 };
