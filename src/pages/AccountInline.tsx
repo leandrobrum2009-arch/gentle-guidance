@@ -4,14 +4,16 @@ import {
   User, Wallet, Ticket, Trophy, Bell, LogOut, ArrowDownLeft, ArrowUpRight,
   Plus, Minus, ChevronRight, ChevronDown, Home, Gift, Settings, Copy, Share2,
   Loader2, ShieldCheck, Camera, MessageCircle, Sparkles, Award, CheckCircle2,
-  XCircle, Pencil, Hash
+  XCircle, Pencil, Hash, TrendingUp, Users, DollarSign, Clock, Megaphone, Crown,
+  Link as LinkIcon, Info
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useUserOrders, useUserWalletTransactions, useUserNotifications,
-  useUserPrizesByCampaign, useSiteSettings, markNotificationsAsRead,
+  useUserPrizesByCampaign, useSiteSettings, markNotificationsAsRead, useCampaigns,
 } from "@/hooks/useData";
+import { useAffiliateData } from "@/hooks/useAffiliate";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,7 +34,7 @@ import { WithdrawModal } from "@/components/WithdrawModal";
 import { compressImage } from "@/lib/image-upload";
 import { maskCPF, maskPhone } from "@/lib/validations";
 
-type TabKey = "home" | "bilhetes" | "premios" | "perfil";
+type TabKey = "home" | "bilhetes" | "premios" | "afiliado" | "perfil";
 
 const fmtBRL = (n: number | string | null | undefined) =>
   Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
