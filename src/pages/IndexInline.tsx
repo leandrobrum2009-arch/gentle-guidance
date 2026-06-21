@@ -1,10 +1,10 @@
 import { Link } from "react-router-dom";
 import { Sparkles, Gamepad2, Gift, RotateCw } from "lucide-react";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import CampaignCard from "@/components/CampaignCard";
 import { useCampaigns, useSiteSettings } from "@/hooks/useData";
 import BannersInline from "@/components/inline/BannersInline";
+import FooterInline from "@/components/inline/FooterInline";
 import FinishedRafflesInline from "@/components/inline/FinishedRafflesInline";
 import TestimonialsCarouselInline from "@/components/inline/TestimonialsCarouselInline";
 import { SEO } from "@/components/SEO";
@@ -87,7 +87,7 @@ const IndexInline = () => {
       {/* Depoimentos carrossel */}
       <TestimonialsCarouselInline count={testimonialsCount} />
 
-      <Footer />
+      <FooterInline settings={settings} />
     </div>
   );
 };
