@@ -54,6 +54,16 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<any>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Admin panel must never be clamped by the site-wide "inline-mode" (480px) layout.
+  useEffect(() => {
+    const root = document.documentElement;
+    const had = root.classList.contains("inline-mode");
+    if (had) root.classList.remove("inline-mode");
+    return () => {
+      if (had) root.classList.add("inline-mode");
+    };
+  }, []);
+
   useEffect(() => {
     if (user) {
       const fetchProfile = async () => {
