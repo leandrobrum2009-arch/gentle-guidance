@@ -27,6 +27,7 @@ import AdminAuditLogs from "./pages/admin/AuditLogs";
 import AdminTransactions from "./pages/admin/Transactions";
 import Checkout from "./pages/Checkout";
 import Account from "./pages/Account";
+import AccountInline from "./pages/AccountInline";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -139,7 +140,7 @@ const AppContent = () => {
           <Route path="/checkout/:orderId" element={<ProtectedRoute><Checkout /></ProtectedRoute>} />
           
           {/* Protected Routes */}
-          <Route path="/minha-conta" element={<ProtectedRoute><Account /></ProtectedRoute>} />
+          <Route path="/minha-conta" element={<ProtectedRoute>{isInline ? <AccountInline /> : <Account />}</ProtectedRoute>} />
           <Route path="/conta" element={<Navigate to="/minha-conta" replace />} />
           
           {/* Admin Routes */}
