@@ -4,14 +4,16 @@ import {
   User, Wallet, Ticket, Trophy, Bell, LogOut, ArrowDownLeft, ArrowUpRight,
   Plus, Minus, ChevronRight, ChevronDown, Home, Gift, Settings, Copy, Share2,
   Loader2, ShieldCheck, Camera, MessageCircle, Sparkles, Award, CheckCircle2,
-  XCircle, Pencil, Hash
+  XCircle, Pencil, Hash, TrendingUp, Users, DollarSign, Clock, Megaphone, Crown,
+  Link as LinkIcon, Info
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import {
   useUserOrders, useUserWalletTransactions, useUserNotifications,
-  useUserPrizesByCampaign, useSiteSettings, markNotificationsAsRead,
+  useUserPrizesByCampaign, useSiteSettings, markNotificationsAsRead, useCampaigns,
 } from "@/hooks/useData";
+import { useAffiliateData } from "@/hooks/useAffiliate";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -32,7 +34,7 @@ import { WithdrawModal } from "@/components/WithdrawModal";
 import { compressImage } from "@/lib/image-upload";
 import { maskCPF, maskPhone } from "@/lib/validations";
 
-type TabKey = "home" | "bilhetes" | "premios" | "perfil";
+type TabKey = "home" | "bilhetes" | "premios" | "afiliado" | "perfil";
 
 const fmtBRL = (n: number | string | null | undefined) =>
   Number(n || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
@@ -48,6 +50,9 @@ export default function AccountInline() {
   const { data: txs } = useUserWalletTransactions(user?.id || "");
   const { data: notifications } = useUserNotifications(user?.id || "");
   const { data: prizesData } = useUserPrizesByCampaign(user?.id || "");
+  const { data: affiliateData } = useAffiliateData();
+  const { data: allCampaigns } = useCampaigns();
+  const [nextLuckyHour, setNextLuckyHour] = useState<any>(null);
 
   const [profile, setProfile] = useState<any>(null);
   const [affiliate, setAffiliate] = useState<any>(null);
@@ -67,6 +72,37 @@ export default function AccountInline() {
       setProfile(p); setAffiliate(a); setLoading(false);
     })();
   }, [user]);
+
+  // Insights: next lucky hour across active campaigns
+  useEffect(() => {
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("lucky_hours_public")
+        .select("*, campaigns(title, slug)")
+        .gte("draw_time", new Date().toISOString())
+        .order("draw_time", { ascending: true })
+        .limit(1);
+      setNextLuckyHour(data?.[0] || null);
+    })();
+  }, []);
+
+  // Real-time: refresh affiliate commissions when new sales happen
+  useEffect(() => {
+    const affId = affiliateData?.affiliate?.id;
+    if (!affId) return;
+    const ch = supabase
+      .channel(`aff-commissions-${affId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "affiliate_commissions", filter: `affiliate_id=eq.${affId}` },
+        () => {
+          queryClient.invalidateQueries({ queryKey: ["affiliate-data", user?.id] });
+          toast.success("Nova venda registrada!");
+        }
+      )
+      .subscribe();
+    return () => { supabase.removeChannel(ch); };
+  }, [affiliateData?.affiliate?.id, user?.id, queryClient]);
 
   const balance = Number(profile?.balance || 0);
   const unreadCount = (notifications || []).filter((n: any) => !n.read).length;
@@ -108,11 +144,35 @@ export default function AccountInline() {
   };
 
   const copyReferral = async () => {
-    if (!affiliate?.referral_code) return toast.error("Você ainda não possui código de indicação.");
-    const link = `${window.location.origin}/?ref=${affiliate.referral_code}`;
+    const code = affiliateData?.affiliate?.referral_code || affiliate?.referral_code;
+    if (!code) return toast.error("Você ainda não possui código de indicação.");
+    const link = `${window.location.origin}/?ref=${code}`;
     await navigator.clipboard.writeText(link);
     toast.success("Link copiado!");
   };
+
+  const shareReferral = async () => {
+    const code = affiliateData?.affiliate?.referral_code || affiliate?.referral_code;
+    if (!code) return;
+    const link = `${window.location.origin}/?ref=${code}`;
+    if (navigator.share) {
+      try { await navigator.share({ title: "Participe da rifa!", url: link }); }
+      catch { copyReferral(); }
+    } else copyReferral();
+  };
+
+  const isAffiliate = !!affiliateData?.isAffiliate;
+  const aff = affiliateData?.affiliate;
+  const commissions = affiliateData?.commissions || [];
+  const totalEarnings = commissions.reduce((s: number, c: any) => s + Number(c.amount || 0), 0);
+  const pendingEarnings = commissions.filter((c: any) => c.status === "pending").reduce((s: number, c: any) => s + Number(c.amount || 0), 0);
+  const totalClicks = affiliateData?.totalClicks || 0;
+
+  // Upcoming campaigns: active, future draw, soonest first
+  const upcomingCampaigns = (allCampaigns || [])
+    .filter((c: any) => c.status === "active" && c.draw_date && new Date(c.draw_date) > new Date())
+    .sort((a: any, b: any) => new Date(a.draw_date).getTime() - new Date(b.draw_date).getTime())
+    .slice(0, 3);
 
   const handleMarkAllRead = async () => {
     if (!user) return;
@@ -187,12 +247,89 @@ export default function AccountInline() {
 
         {tab === "home" && (
           <>
+            {/* AFFILIATE EVIDENCE CARD */}
+            {isAffiliate && (
+              <section className="rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-card p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Crown className="h-5 w-5 text-primary" />
+                  <p className="text-sm font-black uppercase tracking-wide flex-1">
+                    {aff?.type === "influencer" ? "Painel Influenciador" : "Painel Afiliado"}
+                  </p>
+                  <Badge className="text-[10px] font-black bg-primary/20 text-primary border-0">
+                    {Math.round((aff?.commission_rate || 0) * 100)}%
+                  </Badge>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  <MiniStat label="Ganhos" value={fmtBRL(totalEarnings)} accent="emerald" />
+                  <MiniStat label="Pendente" value={fmtBRL(pendingEarnings)} accent="amber" />
+                  <MiniStat label="Cliques" value={String(totalClicks)} accent="primary" />
+                </div>
+                <div className="rounded-xl bg-background/60 border border-border p-2.5 flex items-center gap-2">
+                  <LinkIcon className="h-3.5 w-3.5 text-primary shrink-0" />
+                  <code className="text-[11px] font-mono font-bold truncate flex-1">
+                    /?ref={aff?.referral_code}
+                  </code>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <Button onClick={shareReferral} className="h-11 rounded-xl text-xs font-black gap-1.5">
+                    <Share2 className="h-4 w-4" /> Divulgar
+                  </Button>
+                  <Button onClick={() => setTab("afiliado")} variant="outline" className="h-11 rounded-xl text-xs font-black gap-1.5">
+                    <TrendingUp className="h-4 w-4" /> Ver vendas
+                  </Button>
+                </div>
+              </section>
+            )}
+
             {/* QUICK STATS */}
             <section className="grid grid-cols-3 gap-2.5">
               <StatCard icon={Ticket} label="Bilhetes" value={paidOrders.length} />
               <StatCard icon={Trophy} label="Prêmios" value={prizes.length} />
               <StatCard icon={Bell} label="Avisos" value={unreadCount} highlight={unreadCount > 0} />
             </section>
+
+            {/* INSIGHTS */}
+            {(upcomingCampaigns.length > 0 || nextLuckyHour) && (
+              <section className="rounded-2xl bg-card border border-border p-4 space-y-2.5">
+                <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2">
+                  <Sparkles className="h-4 w-4 text-primary" /> Para você
+                </h3>
+                {nextLuckyHour && (
+                  <Link
+                    to={`/campanha/${nextLuckyHour.campaigns?.slug || nextLuckyHour.campaign_id}`}
+                    className="flex items-center gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/5 p-3"
+                  >
+                    <div className="h-9 w-9 rounded-full bg-yellow-500/20 flex items-center justify-center text-yellow-500 shrink-0">
+                      <Clock className="h-4 w-4" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black uppercase tracking-wider text-yellow-500">Próxima Hora Premiada</p>
+                      <p className="text-xs font-bold truncate">{nextLuckyHour.campaigns?.title}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        {format(new Date(nextLuckyHour.draw_time), "dd MMM 'às' HH:mm", { locale: ptBR })}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                )}
+                {upcomingCampaigns.map((c: any) => (
+                  <Link
+                    key={c.id}
+                    to={`/campanha/${c.slug || c.id}`}
+                    className="flex items-center gap-3 rounded-xl border border-border bg-background/40 p-3"
+                  >
+                    {c.image_url && <img src={c.image_url} alt="" className="h-10 w-10 rounded-lg object-cover shrink-0" />}
+                    <div className="min-w-0 flex-1">
+                      <p className="text-xs font-bold truncate">{c.title}</p>
+                      <p className="text-[11px] text-muted-foreground">
+                        Sorteio {format(new Date(c.draw_date), "dd MMM", { locale: ptBR })} · {fmtBRL(c.ticket_price)}
+                      </p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                  </Link>
+                ))}
+              </section>
+            )}
 
             {/* NOTIFICATIONS */}
             <section className="rounded-2xl bg-card border border-border p-4">
@@ -466,6 +603,101 @@ export default function AccountInline() {
           </section>
         )}
 
+        {tab === "afiliado" && isAffiliate && (
+          <section className="space-y-3">
+            {/* HERO CARD */}
+            <div className="rounded-2xl border-2 border-primary/40 bg-gradient-to-br from-primary/15 via-primary/5 to-card p-4 space-y-3">
+              <div className="flex items-center gap-2">
+                <Crown className="h-5 w-5 text-primary" />
+                <p className="text-sm font-black uppercase tracking-wide flex-1">Seu link de afiliado</p>
+              </div>
+              <div className="rounded-xl bg-background/60 border border-border p-3 flex items-center gap-2">
+                <LinkIcon className="h-4 w-4 text-primary shrink-0" />
+                <code className="text-xs font-mono font-bold truncate flex-1">
+                  {window.location.origin}/?ref={aff?.referral_code}
+                </code>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <Button onClick={shareReferral} className="h-12 rounded-xl text-sm font-black gap-2">
+                  <Share2 className="h-4 w-4" /> Divulgar
+                </Button>
+                <Button onClick={copyReferral} variant="outline" className="h-12 rounded-xl text-sm font-black gap-2">
+                  <Copy className="h-4 w-4" /> Copiar
+                </Button>
+              </div>
+            </div>
+
+            {/* STATS */}
+            <div className="grid grid-cols-2 gap-2.5">
+              <div className="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                <DollarSign className="h-4 w-4 text-emerald-500 mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Total ganho</p>
+                <p className="text-lg font-black text-emerald-500 mt-0.5">{fmtBRL(totalEarnings)}</p>
+              </div>
+              <div className="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-4">
+                <Clock className="h-4 w-4 text-amber-500 mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Pendente</p>
+                <p className="text-lg font-black text-amber-500 mt-0.5">{fmtBRL(pendingEarnings)}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <Users className="h-4 w-4 text-primary mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Cliques</p>
+                <p className="text-lg font-black mt-0.5">{totalClicks}</p>
+              </div>
+              <div className="rounded-2xl border border-border bg-card p-4">
+                <TrendingUp className="h-4 w-4 text-primary mb-2" />
+                <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">Vendas</p>
+                <p className="text-lg font-black mt-0.5">{commissions.length}</p>
+              </div>
+            </div>
+
+            {/* SALES LIST */}
+            <div className="rounded-2xl bg-card border border-border p-4">
+              <h3 className="text-sm font-black uppercase tracking-wide mb-3 flex items-center gap-2">
+                <Megaphone className="h-4 w-4 text-primary" /> Vendas em tempo real
+              </h3>
+              {commissions.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-6 text-center">
+                  Ainda sem vendas. Divulgue seu link!
+                </p>
+              ) : (
+                <div className="space-y-2">
+                  {commissions.slice(0, 20).map((c: any) => (
+                    <div key={c.id} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
+                      <div className={`h-9 w-9 rounded-full flex items-center justify-center shrink-0 ${c.status === "paid" ? "bg-emerald-500/10 text-emerald-500" : "bg-amber-500/10 text-amber-500"}`}>
+                        <DollarSign className="h-4 w-4" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-xs font-bold truncate">{c.campaigns?.title || "Campanha"}</p>
+                        <p className="text-[11px] text-muted-foreground">
+                          {format(new Date(c.created_at), "dd MMM, HH:mm", { locale: ptBR })}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm font-black text-emerald-500">+{fmtBRL(c.amount)}</p>
+                        <p className="text-[9px] font-black uppercase text-muted-foreground">{c.status === "paid" ? "Pago" : "Pendente"}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* RULES */}
+            <div className="rounded-2xl bg-card border border-border p-4 space-y-2">
+              <h3 className="text-sm font-black uppercase tracking-wide flex items-center gap-2">
+                <Info className="h-4 w-4 text-primary" /> Regras do programa
+              </h3>
+              <ul className="space-y-1.5 text-xs text-muted-foreground leading-relaxed">
+                <li>• Você ganha <span className="font-black text-foreground">{Math.round((aff?.commission_rate || 0) * 100)}%</span> sobre cada venda paga feita pelo seu link.</li>
+                <li>• Comissões são liberadas após a confirmação do pagamento PIX do comprador.</li>
+                <li>• O saldo de afiliado é creditado em sua carteira e pode ser sacado conforme as regras de saque.</li>
+                <li>• Divulgação enganosa, spam ou auto-compras podem suspender sua conta de afiliado.</li>
+              </ul>
+            </div>
+          </section>
+        )}
+
         {tab === "perfil" && (
           <section className="space-y-3">
             <Button
@@ -523,10 +755,13 @@ export default function AccountInline() {
 
       {/* BOTTOM NAV */}
       <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[480px] z-40 bg-background/95 backdrop-blur-xl border-t border-border">
-        <div className="grid grid-cols-4">
+        <div className={`grid ${isAffiliate ? "grid-cols-5" : "grid-cols-4"}`}>
           <TabButton icon={Home} label="Início" active={tab === "home"} onClick={() => setTab("home")} />
           <TabButton icon={Ticket} label="Bilhetes" active={tab === "bilhetes"} onClick={() => setTab("bilhetes")} />
           <TabButton icon={Trophy} label="Prêmios" active={tab === "premios"} onClick={() => setTab("premios")} />
+          {isAffiliate && (
+            <TabButton icon={Crown} label="Afiliado" active={tab === "afiliado"} onClick={() => setTab("afiliado")} />
+          )}
           <TabButton icon={User} label="Perfil" active={tab === "perfil"} onClick={() => setTab("perfil")} />
         </div>
       </nav>
@@ -553,6 +788,20 @@ export default function AccountInline() {
           queryClient.invalidateQueries({ queryKey: ["profile", user?.id] });
         }}
       />
+    </div>
+  );
+}
+
+function MiniStat({ label, value, accent = "primary" }: { label: string; value: string; accent?: "emerald" | "amber" | "primary" }) {
+  const colors: Record<string, string> = {
+    emerald: "text-emerald-500",
+    amber: "text-amber-500",
+    primary: "text-primary",
+  };
+  return (
+    <div className="rounded-xl bg-background/60 border border-border p-2.5 text-center">
+      <p className={`text-sm font-black truncate ${colors[accent]}`}>{value}</p>
+      <p className="text-[9px] font-black uppercase tracking-wider text-muted-foreground mt-0.5">{label}</p>
     </div>
   );
 }
