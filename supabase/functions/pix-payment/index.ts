@@ -45,6 +45,13 @@ serve(async (req) => {
 
       if (orderError || !order) throw new Error("Pedido não encontrado")
 
+      const amount = Number(order.total_amount)
+      if (!amount || isNaN(amount) || amount <= 0) {
+        throw new Error(
+          `Valor do pedido inválido (R$ ${order.total_amount}). Refaça a seleção de bilhetes e tente novamente.`
+        )
+      }
+
       // If already has PIX and is pending, return it
       if (order.pix_code && order.pix_qr_code_base64 && order.payment_status === 'pending') {
         return new Response(JSON.stringify({
@@ -84,7 +91,7 @@ serve(async (req) => {
             "X-Idempotency-Key": orderId
           },
           body: JSON.stringify({
-            transaction_amount: Number(order.total_amount),
+            transaction_amount: amount,
             description: `Rifa - ${order.campaigns?.title || 'Pedido'} - ${orderId.slice(0, 8)}`,
             payment_method_id: "pix",
             payer: {
@@ -194,7 +201,7 @@ serve(async (req) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            value: Number(order.total_amount),
+            value: amount,
             generator_name: (order.profiles?.name || "Cliente").slice(0, 100),
             external_reference: orderId,
             payer_message: `Rifa - ${order.campaigns?.title || 'Pedido'}`.slice(0, 100),
