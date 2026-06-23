@@ -91,7 +91,7 @@ serve(async (req) => {
             "X-Idempotency-Key": orderId
           },
           body: JSON.stringify({
-            transaction_amount: Number(order.total_amount),
+            transaction_amount: amount,
             description: `Rifa - ${order.campaigns?.title || 'Pedido'} - ${orderId.slice(0, 8)}`,
             payment_method_id: "pix",
             payer: {
@@ -201,7 +201,7 @@ serve(async (req) => {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            value: Number(order.total_amount),
+            value: amount,
             generator_name: (order.profiles?.name || "Cliente").slice(0, 100),
             external_reference: orderId,
             payer_message: `Rifa - ${order.campaigns?.title || 'Pedido'}`.slice(0, 100),
