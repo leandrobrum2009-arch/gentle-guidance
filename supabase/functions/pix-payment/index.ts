@@ -45,6 +45,13 @@ serve(async (req) => {
 
       if (orderError || !order) throw new Error("Pedido não encontrado")
 
+      const amount = Number(order.total_amount)
+      if (!amount || isNaN(amount) || amount <= 0) {
+        throw new Error(
+          `Valor do pedido inválido (R$ ${order.total_amount}). Refaça a seleção de bilhetes e tente novamente.`
+        )
+      }
+
       // If already has PIX and is pending, return it
       if (order.pix_code && order.pix_qr_code_base64 && order.payment_status === 'pending') {
         return new Response(JSON.stringify({
