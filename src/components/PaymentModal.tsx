@@ -67,9 +67,25 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
             body: { orderId, path: 'create' },
             method: 'POST'
           });
-          
-          if (pixError) throw pixError;
-          
+
+          if (pixError) {
+            // Try to extract real error message from edge function response body
+            let realMessage = pixError.message;
+            try {
+              const ctx: any = (pixError as any).context;
+              if (ctx && typeof ctx.json === 'function') {
+                const body = await ctx.json();
+                if (body?.error) realMessage = body.error;
+              } else if (ctx?.body) {
+                const parsed = typeof ctx.body === 'string' ? JSON.parse(ctx.body) : ctx.body;
+                if (parsed?.error) realMessage = parsed.error;
+              }
+            } catch {}
+            throw new Error(realMessage);
+          }
+
+          if (pixData?.error) throw new Error(pixData.error);
+
           if (pixData) {
             setOrder((prev: any) => ({ 
               ...prev, 
