@@ -67,12 +67,15 @@ const CampaignRedirect = () => {
 
 const RouteExtras = () => {
   const { pathname } = useLocation();
+  const { data: settings } = useSiteSettings();
 
   if (pathname.startsWith("/admin")) return null;
 
+  const showLiveActivity = String(settings?.home_show_live_activity) === "true";
+
   return (
     <>
-      <LiveNotifications />
+      {showLiveActivity && <LiveNotifications />}
       <PWAInstallBanner />
     </>
   );
