@@ -2025,7 +2025,9 @@ export type Database = {
         Returns: string
       }
       run_lucky_hour_draw: { Args: { p_lucky_hour_id: string }; Returns: Json }
+      slugify: { Args: { input: string }; Returns: string }
       sync_federal_lottery: { Args: never; Returns: undefined }
+      unaccent: { Args: { "": string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "moderator" | "user" | "master" | "client_admin"
