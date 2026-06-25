@@ -85,7 +85,8 @@ export default function AdminSettings() {
     pay2m_enabled: "Habilitar Pay2m",
     layout_mode: "Modelo de Layout das Campanhas",
     inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
-    inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)"
+    inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)",
+    site_theme: "Tema do Site (Claro/Escuro)"
   };
 
   useEffect(() => {
@@ -345,6 +346,18 @@ export default function AdminSettings() {
                     options={[
                       { label: "Padrão (Hero + Cards)", value: "default" },
                       { label: "Em Linha (Compacto Mobile)", value: "inline" }
+                    ]}
+                  />
+                  <SettingField 
+                    s={settings.find(s => s.key === 'site_theme')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_theme']}
+                    getIcon={getIcon}
+                    type="select"
+                    options={[
+                      { label: "Escuro (Dark)", value: "dark" },
+                      { label: "Claro (Light)", value: "light" },
+                      { label: "Automático (Sistema)", value: "system" }
                     ]}
                   />
                   <SettingField 

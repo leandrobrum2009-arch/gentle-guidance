@@ -14,6 +14,17 @@ export const SiteSettingsInjector = () => {
       document.documentElement.classList.remove("inline-mode");
     }
 
+    // Apply global theme (admin-controlled, overrides per-user preference)
+    const theme = settings.site_theme || "dark";
+    const root = document.documentElement;
+    root.classList.remove("light", "dark");
+    if (theme === "system") {
+      const sys = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+      root.classList.add(sys);
+    } else {
+      root.classList.add(theme);
+    }
+
     // Cache basic settings for early injection on next load
     if (settings.primary_color) localStorage.setItem('cached_primary_color', settings.primary_color);
     if (settings.site_name) localStorage.setItem('cached_site_name', settings.site_name);
