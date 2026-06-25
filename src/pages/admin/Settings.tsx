@@ -349,6 +349,18 @@ export default function AdminSettings() {
                     ]}
                   />
                   <SettingField 
+                    s={settings.find(s => s.key === 'site_theme')} 
+                    onUpdate={handleUpdate} 
+                    label={settingNames['site_theme']}
+                    getIcon={getIcon}
+                    type="select"
+                    options={[
+                      { label: "Escuro (Dark)", value: "dark" },
+                      { label: "Claro (Light)", value: "light" },
+                      { label: "Automático (Sistema)", value: "system" }
+                    ]}
+                  />
+                  <SettingField 
                     s={settings.find(s => s.key === 'inline_testimonials_count')} 
                     onUpdate={handleUpdate} 
                     label={settingNames['inline_testimonials_count']}
