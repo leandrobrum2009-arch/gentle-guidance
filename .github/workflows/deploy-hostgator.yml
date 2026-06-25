@@ -1,0 +1,44 @@
+name: Deploy HostGator (itskin.com.br)
+
+on:
+  push:
+      branches: [deploy/itskin]
+        workflow_dispatch:
+
+        jobs:
+          deploy:
+              runs-on: ubuntu-latest
+                  steps:
+                        - name: Checkout
+                                uses: actions/checkout@v4
+
+                                      - name: Setup Bun
+                                              uses: oven-sh/setup-bun@v2
+
+                                                    - name: Install dependencies
+                                                            run: bun install
+
+                                                                  - name: Build
+                                                                          run: bun run build
+
+                                                                                - name: Verify build output
+                                                                                        run: |
+                                                                                                  test -f dist/index.html
+                                                                                                            test -f dist/.htaccess
+                                                                                                            
+                                                                                                                  - name: Deploy via FTP
+                                                                                                                          uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+                                                                                                                                  with:
+                                                                                                                                            server: ${{ secrets.HOSTGATOR_FTP_HOST }}
+                                                                                                                                                      username: ${{ secrets.HOSTGATOR_FTP_USERNAME }}
+                                                                                                                                                                password: ${{ secrets.HOSTGATOR_FTP_PASSWORD }}
+                                                                                                                                                                          port: 21
+                                                                                                                                                                                    local-dir: ./dist/
+                                                                                                                                                                                              server-dir: ${{ secrets.HOSTGATOR_FTP_SERVER_DIR }}
+                                                                                                                                                                                              
+                                                                                                                                                                                                    - name: Verify live domain
+                                                                                                                                                                                                            continue-on-error: true
+                                                                                                                                                                                                                    run: |
+                                                                                                                                                                                                                              sleep 30
+                                                                                                                                                                                                                                        curl -fsSL -H 'Cache-Control: no-cache' "https://itskin.com.br" -o live-index.html
+                                                                                                                                                                                                                                                  echo "Deploy concluido com sucesso para itskin.com.br"
