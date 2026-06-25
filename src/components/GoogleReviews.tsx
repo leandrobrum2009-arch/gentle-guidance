@@ -54,7 +54,23 @@ const REVIEWS = [
   }
 ];
 
-const GoogleReviews = () => {
+interface GoogleReviewsProps {
+  customReviewsJson?: string | null;
+}
+
+const GoogleReviews = ({ customReviewsJson }: GoogleReviewsProps = {}) => {
+  const reviewsToShow = React.useMemo(() => {
+    if (customReviewsJson && customReviewsJson.trim().length > 0) {
+      try {
+        const parsed = JSON.parse(customReviewsJson);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch (e) {
+        console.warn("[GoogleReviews] JSON inválido em home_testimonials_json", e);
+      }
+    }
+    return REVIEWS;
+  }, [customReviewsJson]);
+
   const [emblaRef, emblaApi] = useEmblaCarousel({ 
     loop: true,
     align: "start",
@@ -91,7 +107,7 @@ const GoogleReviews = () => {
       <div className="relative">
         <div className="overflow-hidden px-4 py-8" ref={emblaRef}>
           <div className="flex gap-6">
-            {REVIEWS.map((review) => (
+            {reviewsToShow.map((review: any) => (
               <div key={review.id} className="flex-[0_0_100%] md:flex-[0_0_45%] lg:flex-[0_0_31%] min-w-0">
                 <motion.div 
                   whileHover={{ y: -8 }}

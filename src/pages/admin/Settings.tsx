@@ -86,7 +86,12 @@ export default function AdminSettings() {
     layout_mode: "Modelo de Layout das Campanhas",
     inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
     inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)",
-    site_theme: "Tema do Site (Claro/Escuro)"
+    site_theme: "Tema do Site (Claro/Escuro)",
+    home_show_testimonials: "Exibir Depoimentos na Home",
+    home_show_hall_fame: "Exibir Hall da Fama na Home",
+    home_show_live_activity: "Exibir Atividade em Tempo Real (Flutuante)",
+    home_testimonials_json: "Depoimentos Personalizados (JSON)",
+    home_hall_fame_json: "Hall da Fama Personalizado (JSON)"
   };
 
   useEffect(() => {
@@ -420,6 +425,51 @@ export default function AdminSettings() {
                       label={settingNames['home_marquee_text']}
                       getIcon={getIcon}
                     />
+                  </div>
+
+                  <div className="md:col-span-3 grid gap-6 md:grid-cols-3 pt-2 border-t border-border/50">
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_show_testimonials')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_show_testimonials']}
+                      getIcon={getIcon}
+                    />
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_show_hall_fame')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_show_hall_fame']}
+                      getIcon={getIcon}
+                    />
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_show_live_activity')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_show_live_activity']}
+                      getIcon={getIcon}
+                    />
+                  </div>
+
+                  <div className="md:col-span-3">
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_testimonials_json')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_testimonials_json']}
+                      getIcon={getIcon}
+                      type="textarea"
+                      placeholder='[{"id":1,"name":"João","date":"hoje","rating":5,"text":"Excelente!","avatar":"https://...","verified":true}]'
+                    />
+                    <p className="text-[10px] text-muted-foreground mt-1 px-1">Deixe vazio para usar os depoimentos padrão. Formato: array JSON com id, name, date, rating, text, avatar, verified.</p>
+                  </div>
+
+                  <div className="md:col-span-3">
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_hall_fame_json')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_hall_fame_json']}
+                      getIcon={getIcon}
+                      type="textarea"
+                      placeholder='[{"id":"1","winner_name":"Maria","prize_description":"iPhone 15","ticket_number":"1234","campaigns":{"title":"Rifa"},"avatar_url":"https://...","winner_type":"raffle","draw_date":"2025-01-01"}]'
+                    />
+                    <p className="text-[10px] text-muted-foreground mt-1 px-1">Deixe vazio para usar os ganhadores reais do banco. Aceita JSON com os mesmos campos.</p>
                   </div>
                   
                   <div className="md:col-span-1">
