@@ -861,13 +861,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "mystery_box_wins_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
-          },
-          {
             foreignKeyName: "mystery_box_wins_user_id_profiles_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -1322,13 +1315,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "campaigns"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "roulette_spins_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["user_id"]
           },
           {
             foreignKeyName: "roulette_spins_user_id_profiles_fkey"
