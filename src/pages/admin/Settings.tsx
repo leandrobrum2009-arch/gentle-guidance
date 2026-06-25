@@ -86,7 +86,12 @@ export default function AdminSettings() {
     layout_mode: "Modelo de Layout das Campanhas",
     inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
     inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)",
-    site_theme: "Tema do Site (Claro/Escuro)"
+    site_theme: "Tema do Site (Claro/Escuro)",
+    home_show_testimonials: "Exibir Depoimentos na Home",
+    home_show_hall_fame: "Exibir Hall da Fama na Home",
+    home_show_live_activity: "Exibir Atividade em Tempo Real (Flutuante)",
+    home_testimonials_json: "Depoimentos Personalizados (JSON)",
+    home_hall_fame_json: "Hall da Fama Personalizado (JSON)"
   };
 
   useEffect(() => {
