@@ -560,6 +560,7 @@ const Index = () => {
 
 
           {/* Ganhadores Cinematic Section - Hall da Fama */}
+          {String(siteSettings?.home_show_hall_fame ?? 'true') !== 'false' && (
           <section className="container py-24 md:py-32 relative">
             <div className="absolute top-0 right-0 -mr-20 -mt-20 h-64 w-64 bg-primary/10 blur-[100px] rounded-full" />
             
@@ -606,6 +607,7 @@ const Index = () => {
               </div>
             )}
           </section>
+          )}
 
           {/* Rifas Encerradas Section at the end - Optimized Loading */}
           <div ref={endedRef} className="scroll-mt-20">
@@ -642,7 +644,11 @@ const Index = () => {
             )}
           </div>
 
-          <GoogleReviews />
+          {String(siteSettings?.home_show_testimonials ?? 'true') !== 'false' && (
+            <GoogleReviews 
+              customReviewsJson={siteSettings?.home_testimonials_json}
+            />
+          )}
         </>
       )}
 
