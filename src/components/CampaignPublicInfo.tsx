@@ -82,6 +82,8 @@ const CampaignPublicInfo = ({ campaign }: CampaignPublicInfoProps) => {
 
   const getTypeLabel = (t: string) => t === 'mystery' ? 'Caixa Misteriosa' : t === 'roulette' ? 'Roleta' : 'Cota Premiada';
 
+  if (allWinners.length === 0) return null;
+
   return (
     <div className="flex flex-col gap-8">
        {/* Winners History */}
