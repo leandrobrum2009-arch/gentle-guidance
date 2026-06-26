@@ -88,8 +88,8 @@ const CampaignDetail = () => {
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: scratchPrizes } = useScratchCardPrizes(campaignId);
-  const scratchEnabled = !!scratchEnabled || (scratchPrizes?.length || 0) > 0;
-  const rouletteEnabled = !!rouletteEnabled || (roulettePrizes?.length || 0) > 0;
+  const scratchEnabled = !!(campaign as any)?.scratch_cards_enabled || (scratchPrizes?.length || 0) > 0;
+  const rouletteEnabled = !!(campaign as any)?.roulette_enabled || (roulettePrizes?.length || 0) > 0;
   const { data: rouletteWins } = useCampaignRouletteSpins(campaignId, 200);
   const { data: scratchWins } = useCampaignScratchWins(campaignId, 200);
   const { data: boxWins } = useCampaignMysteryBoxWins(campaignId, 200);
