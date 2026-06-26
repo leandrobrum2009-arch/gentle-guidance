@@ -51,6 +51,10 @@ const Header = () => {
   const navigate = useNavigate();
   const headerRef = React.useRef<HTMLElement>(null);
 
+  const navLinks = ALL_NAV_LINKS.filter(
+    (l) => String((siteSettings as any)?.[`menu_${l.key}_enabled`] ?? "true") !== "false"
+  );
+
   useEffect(() => {
     if (headerRef.current) {
       const height = headerRef.current.offsetHeight;
