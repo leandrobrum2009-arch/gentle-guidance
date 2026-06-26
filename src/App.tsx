@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import PWAInstallBanner from "./components/PWAInstallBanner";
+import FloatingWhatsAppGroup from "./components/FloatingWhatsAppGroup";
 import { AffiliateTracker } from "./components/AffiliateTracker";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
@@ -76,6 +77,7 @@ const RouteExtras = () => {
   return (
     <>
       {showLiveActivity && <LiveNotifications />}
+      <FloatingWhatsAppGroup />
       <PWAInstallBanner />
     </>
   );
