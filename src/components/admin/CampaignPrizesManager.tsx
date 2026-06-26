@@ -7,7 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, Trash2, Sparkles, Gift, RotateCw, Trophy, Loader2, ChevronDown, ChevronUp, Crown } from "lucide-react";
+import { Plus, Trash2, Sparkles, Gift, RotateCw, Trophy, Loader2, ChevronDown, ChevronUp, Crown, Info } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ScratchPrize = { id: string; campaign_id: string | null; label: string; value: number; prize_type: string; chance_percent: number; is_active: boolean };
 type RoulettePrize = { id: string; campaign_id: string | null; label: string; value: number | null; prize_type: string; chance_percent: number | null; color: string | null };
@@ -206,7 +207,26 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
                     <span className="col-span-4">Nome do prêmio</span>
                     <span className="col-span-3">Tipo do prêmio</span>
                     <span className="col-span-2" title="Quanto o ganhador recebe (R$ para saldo, número de pontos, etc.)">Valor entregue</span>
-                    <span className="col-span-2" title="Probabilidade relativa de este prêmio ser sorteado">Chance (%)</span>
+                    <span className="col-span-2 flex items-center gap-1">
+                      Chance
+                      <TooltipProvider delayDuration={100}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <button type="button" className="text-muted-foreground hover:text-foreground">
+                              <Info className="h-3 w-3" />
+                            </button>
+                          </TooltipTrigger>
+                          <TooltipContent side="top" className="max-w-[260px] text-[11px] leading-relaxed normal-case">
+                            <p className="font-semibold mb-1">Como funciona a Chance:</p>
+                            <p>É um <b>peso proporcional</b>, não precisa somar 100.</p>
+                            <p className="mt-1">A probabilidade real de cada prêmio é:</p>
+                            <p className="font-mono bg-muted/40 rounded px-1 my-1">chance ÷ soma de todas as chances</p>
+                            <p>Ex.: prêmios com chances 10, 5 e 1 (soma 16) saem em 62,5%, 31,25% e 6,25% das aberturas.</p>
+                            <p className="mt-1 text-muted-foreground">Quer dar 1% de chance? Use 1 e coloque os outros com pesos altos (ex.: 99).</p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </span>
                     <span className="col-span-1"></span>
                   </div>
                   <div className="rounded-md border border-dashed border-primary/30 bg-primary/5 p-2 text-[11px] text-muted-foreground">
