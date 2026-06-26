@@ -180,6 +180,9 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
         <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
           Crie uma caixa, defina o <b>custo de abertura</b> e adicione os <b>prêmios</b> que podem sair. A <b>% de chance</b> de cada prêmio determina a probabilidade de sair (a soma não precisa ser 100, é proporcional). Sem prêmios cadastrados, a caixa <b>não aparece no site</b>.
         </p>
+        <div className="text-[11px] mb-3 rounded-md border border-amber-500/30 bg-amber-500/5 p-2 leading-relaxed">
+          <b className="text-amber-600">Sobre os tipos de prêmio:</b> use <b>Saldo</b> para creditar R$ na carteira, <b>Cota Grátis da Rifa</b> para presentear bilhetes da campanha, <b>Giro/Raspadinha/Caixa Grátis</b> para liberar tentativas extras sem custo (útil quando o usuário comprou X cotas e ganhou o direito de jogar), <b>Prêmio Físico</b> para produtos entregues à parte e <b>Sem prêmio</b> para a chance de "não ganhou".
+        </div>
         <div className="space-y-3">
           {boxes.length > 0 && (
             <div className="grid grid-cols-12 gap-2 px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
