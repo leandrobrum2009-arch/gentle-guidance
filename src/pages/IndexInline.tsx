@@ -27,10 +27,10 @@ const IndexInline = () => {
   const showGamesCombo = String(settings?.home_show_games_combo ?? "true") === "true";
 
   const games = [
-    { label: "Roleta", icon: RotateCw },
-    { label: "Raspadinha", icon: Sparkles },
-    { label: "Caixas", icon: Gift },
-  ];
+    { key: "roleta", label: "Roleta", icon: RotateCw },
+    { key: "raspadinha", label: "Raspadinha", icon: Sparkles },
+    { key: "caixa", label: "Caixas", icon: Gift },
+  ].filter((g) => String((settings as any)?.[`home_show_game_${g.key}`] ?? "true") === "true");
 
   const [campaignsRef] = useEmblaCarousel(
     { loop: active.length > 1, align: "start" },
@@ -81,7 +81,7 @@ const IndexInline = () => {
         </section>
 
         {/* 3) Combo de jogos em carrossel (sem links) */}
-        {showGamesCombo && (
+        {showGamesCombo && games.length > 0 && (
         <section className="px-3 pb-3">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">

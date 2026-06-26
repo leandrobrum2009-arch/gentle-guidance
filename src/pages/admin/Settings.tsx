@@ -92,8 +92,12 @@ export default function AdminSettings() {
     home_show_live_activity: "Exibir Atividade em Tempo Real (Flutuante)",
     home_testimonials_json: "Depoimentos Personalizados (JSON)",
     home_hall_fame_json: "Hall da Fama Personalizado (JSON)",
-    home_show_games_combo: "Exibir Combo de Jogos (Roleta/Raspadinha/Caixa/Ranking/Afiliados)"
-    ,
+    home_show_games_combo: "Exibir Combo de Jogos (mestre liga/desliga toda a seção)",
+    home_show_game_roleta: "Bloco: Roleta Premiada",
+    home_show_game_raspadinha: "Bloco: Raspadinha",
+    home_show_game_caixa: "Bloco: Caixa Misteriosa",
+    home_show_game_ranking: "Bloco: Ranking Top",
+    home_show_game_afiliados: "Bloco: Afiliados",
     whatsapp_group_link: "Link do Grupo do WhatsApp (botão flutuante)",
     whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp",
     menu_campanhas_enabled: "Menu: Campanhas",
@@ -463,6 +467,15 @@ export default function AdminSettings() {
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
+                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados'].map((k) => (
+                      <SettingField
+                        key={k}
+                        s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
+                        onUpdate={handleUpdate}
+                        label={(settingNames as any)[k]}
+                        getIcon={getIcon}
+                      />
+                    ))}
                   </div>
 
                   <div className="md:col-span-3">
