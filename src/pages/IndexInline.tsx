@@ -81,7 +81,7 @@ const IndexInline = () => {
         </section>
 
         {/* 3) Combo de jogos em carrossel (sem links) */}
-        {showGamesCombo && (
+        {showGamesCombo && games.length > 0 && (
         <section className="px-3 pb-3">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
