@@ -659,7 +659,7 @@ const CampaignDetail = () => {
               )}
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-6 min-w-0">
               {(() => {
                 const filledPrizes = (campaign.main_prizes || []).filter((p: any) => p?.prize && String(p.prize).trim() !== "");
                 return (rouletteEnabled || campaign.mystery_box_enabled || scratchEnabled || filledPrizes.length > 0);
