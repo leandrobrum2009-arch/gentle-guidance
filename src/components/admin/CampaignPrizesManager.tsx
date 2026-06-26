@@ -159,7 +159,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
               <Input className="col-span-4" value={p.label} onChange={(e) => updScratch(i, { label: e.target.value })} placeholder="Nome do prêmio" />
               <Select value={p.prize_type} onValueChange={(v) => updScratch(i, { prize_type: v })}>
                 <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                <SelectContent>{PRIZE_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                  </SelectItem>
+                ))}</SelectContent>
               </Select>
               <Input className="col-span-2" type="number" step="0.01" value={p.value} onChange={(e) => updScratch(i, { value: parseFloat(e.target.value) || 0 })} placeholder="Valor" />
               <Input className="col-span-2" type="number" step="0.01" value={p.chance_percent} onChange={(e) => updScratch(i, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="% chance" />
@@ -257,7 +261,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
                       <Input className="col-span-4" value={bp.title} onChange={(e) => updBoxPrize(b.id, idx, { title: e.target.value })} placeholder="Ex: R$ 50 no saldo" />
                       <Select value={bp.prize_type} onValueChange={(v) => updBoxPrize(b.id, idx, { prize_type: v })}>
                         <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                        <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                        <SelectContent>{PRIZE_TYPES.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                          </SelectItem>
+                        ))}</SelectContent>
                       </Select>
                       <Input className="col-span-2" type="number" step="0.01" value={bp.prize_value ?? 0} onChange={(e) => updBoxPrize(b.id, idx, { prize_value: parseFloat(e.target.value) || 0 })} placeholder="Ex: 50" title="Quantia que o ganhador recebe (R$ ou pontos, conforme o tipo)" />
                       <Input className="col-span-2" type="number" step="0.01" value={bp.chance_percent} onChange={(e) => updBoxPrize(b.id, idx, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="Ex: 10" title="Chance de sair: 10 = 10% se a soma der 100; é proporcional ao total" />
@@ -282,7 +290,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
               <Input className="col-span-4" value={p.label} onChange={(e) => updRoulette(i, { label: e.target.value })} placeholder="Nome do prêmio" />
               <Select value={p.prize_type} onValueChange={(v) => updRoulette(i, { prize_type: v })}>
                 <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                <SelectContent>{PRIZE_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                  </SelectItem>
+                ))}</SelectContent>
               </Select>
               <Input className="col-span-2" type="number" step="0.01" value={p.value ?? 0} onChange={(e) => updRoulette(i, { value: parseFloat(e.target.value) || 0 })} placeholder="Valor" />
               <Input className="col-span-2" type="number" step="0.01" value={p.chance_percent ?? 0} onChange={(e) => updRoulette(i, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="% chance" />
