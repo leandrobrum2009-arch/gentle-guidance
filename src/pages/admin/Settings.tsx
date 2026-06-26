@@ -95,7 +95,13 @@ export default function AdminSettings() {
     home_show_games_combo: "Exibir Combo de Jogos (Roleta/Raspadinha/Caixa/Ranking/Afiliados)"
     ,
     whatsapp_group_link: "Link do Grupo do WhatsApp (botão flutuante)",
-    whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp"
+    whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp",
+    menu_campanhas_enabled: "Menu: Campanhas",
+    menu_ganhadores_enabled: "Menu: Ganhadores",
+    menu_federal_enabled: "Menu: Federal (Resultados)",
+    menu_comunicados_enabled: "Menu: Comunicados",
+    menu_suporte_enabled: "Menu: Suporte",
+    menu_minha_conta_enabled: "Menu: Minha Conta"
   };
 
   useEffect(() => {
