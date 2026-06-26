@@ -3,6 +3,8 @@ import { runContrastAudit, initContrastShortcut } from "@/lib/accessibility";
 import LiveNotifications from "./components/LiveNotifications";
 import PWAInstallBanner from "./components/PWAInstallBanner";
 import FloatingWhatsAppGroup from "./components/FloatingWhatsAppGroup";
+import FloatingWhatsAppSupport from "./components/FloatingWhatsAppSupport";
+import WhatsAppGroupInviteDialog from "./components/WhatsAppGroupInviteDialog";
 import { AffiliateTracker } from "./components/AffiliateTracker";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
 import Roulette from "./pages/Roulette";
@@ -125,6 +127,8 @@ const RouteExtras = () => {
     <>
       {showLiveActivity && <LiveNotifications />}
       <FloatingWhatsAppGroup />
+      <FloatingWhatsAppSupport />
+      <WhatsAppGroupInviteDialog />
       <PWAInstallBanner />
     </>
   );
