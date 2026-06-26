@@ -467,6 +467,15 @@ export default function AdminSettings() {
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
+                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados'].map((k) => (
+                      <SettingField
+                        key={k}
+                        s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
+                        onUpdate={handleUpdate}
+                        label={(settingNames as any)[k]}
+                        getIcon={getIcon}
+                      />
+                    ))}
                   </div>
 
                   <div className="md:col-span-3">
