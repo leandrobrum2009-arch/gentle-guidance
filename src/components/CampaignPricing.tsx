@@ -59,7 +59,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
 
       {/* Discount Bundles Grid */}
       {bundles.length > 0 && (
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+      <div className="grid grid-cols-3 gap-2 sm:gap-3">
         {bundles.map((bundle) => {
           const isSelected = Number(quantity) === Number(bundle.quantity);
           const discountPercent = Math.round((1 - (bundle.price / (bundle.quantity * unitPrice))) * 100);
@@ -71,7 +71,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               whileTap={{ scale: 0.95 }}
               onClick={() => setQuantity(bundle.quantity)}
               className={cn(
-                "relative flex flex-col items-center rounded-2xl border p-4 transition-all duration-300 overflow-hidden",
+                "relative flex flex-col items-center justify-center text-center rounded-2xl border p-2 sm:p-4 min-w-0 transition-all duration-300 overflow-hidden",
                 isSelected
                   ? "border-primary bg-primary shadow-[0_0_25px_rgba(var(--primary-rgb),0.5)] text-white scale-105 z-10"
                   : cn("border-primary/30 bg-card hover:border-primary/60 text-foreground shadow-sm", 
@@ -101,7 +101,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
                 </Badge>
               )}
 
-              <span className="text-xl sm:text-2xl font-black italic tracking-tighter mt-1">+{bundle.quantity}</span>
+              <span className="text-lg sm:text-2xl font-black italic tracking-tighter mt-1 leading-none">+{bundle.quantity}</span>
               <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-widest opacity-70">Cotas</span>
               
               {bundle.label && (
@@ -114,7 +114,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
               )}
               
               <div className={cn(
-                "mt-2 text-xs sm:text-sm font-black italic",
+                "mt-2 text-[11px] sm:text-sm font-black italic whitespace-nowrap",
                 isSelected ? "text-white" : "text-primary"
               )}>
                 R$ {bundle.price.toFixed(2).replace(".", ",")}
@@ -132,7 +132,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
       )}
 
       {/* Manual Selection and Summary */}
-      <div className="bg-card rounded-2xl p-6 border border-border shadow-sm space-y-6">
+      <div className="bg-card rounded-2xl p-4 sm:p-6 border border-border shadow-sm space-y-5 sm:space-y-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between px-1">
             <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2">
