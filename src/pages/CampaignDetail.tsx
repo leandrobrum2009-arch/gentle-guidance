@@ -819,7 +819,7 @@ const CampaignDetail = () => {
                          </div>
                        )}
 
-                       {campaign.mystery_box_enabled && (
+                       {(mysteryBoxes?.length || 0) > 0 && (
                          <div className="space-y-2">
                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Caixas Misteriosas</p>
                            <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
@@ -1264,7 +1264,7 @@ const CampaignDetail = () => {
         );
 
       case 'box_footer':
-        return campaign.mystery_box_enabled && mysteryBoxes && mysteryBoxes.length > 0 && (
+        return mysteryBoxes && mysteryBoxes.length > 0 && (
           <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
             <div className="flex flex-col items-center text-center">
               <Badge className="bg-purple-500/20 text-purple-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Surpresas</Badge>
