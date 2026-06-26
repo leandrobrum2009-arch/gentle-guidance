@@ -118,8 +118,9 @@ const CampaignInlineView: React.FC<Props> = ({
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: scratchPrizes } = useScratchCardPrizes(campaignId);
-  const scratchEnabled = !!(campaign as any)?.scratch_cards_enabled || (scratchPrizes?.length || 0) > 0;
-  const rouletteEnabled = !!(campaign as any)?.roulette_enabled || (roulettePrizes?.length || 0) > 0;
+  const isFinished = campaign?.status === 'completed';
+  const scratchEnabled = !isFinished && (!!(campaign as any)?.scratch_cards_enabled || (scratchPrizes?.length || 0) > 0);
+  const rouletteEnabled = !isFinished && (!!(campaign as any)?.roulette_enabled || (roulettePrizes?.length || 0) > 0);
   const { data: luckyHours } = useLuckyHours(campaignId);
   const { data: allWinners } = useWinners();
   const { data: ranking } = useCampaignRanking(campaignId, 10);
@@ -449,7 +450,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* CAIXAS GANHADORES (clicáveis abrem MysteryBox) */}
       <SectionSlot id="box_footer">
-      {(mysteryBoxes?.length || 0) > 0 && (
+      {!isFinished && (mysteryBoxes?.length || 0) > 0 && (
         <SectionCard
           icon={<Gift className="h-3.5 w-3.5 text-orange-500" />}
           title="Caixas Surpresas"
