@@ -368,10 +368,14 @@ const Index = () => {
             )}
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
+          {String(siteSettings?.home_show_games_combo ?? "true") === "true" && (
           <section className="container relative z-30 -mt-6 md:-mt-12 py-6 md:py-8">
             <div className="grid grid-cols-2 md:grid-cols-5 gap-2 md:gap-6">
                 {[
+                  { icon: RotateCw, title: "Roleta Premiada", desc: "Gire e Ganhe", color: "from-emerald-500/40", href: "/roleta-premiada", badge: "NEW" },
+                  { icon: Sparkles, title: "Raspadinha", desc: "Raspe e Ganhe", color: "from-yellow-500/40", href: "/raspadinha-da-sorte" },
                   { icon: Gift, title: "Caixa Misteriosa", desc: "Prêmios Secretos", color: "from-orange-500/40", href: "/caixa-misteriosa-de-premios", badge: "HOT" },
+                  { icon: Trophy, title: "Ranking Top", desc: "Maiores Ganhadores", color: "from-amber-500/40", href: "/ranking" },
                   { icon: Users, title: "Afiliados", desc: "Ganhe Comissões", color: "from-purple-500/40", href: "/afiliados" },
                 ].map((item, i) => (
                   <Link key={i} to={item.href} onClick={() => { playSound('click'); hapticFeedback(); }}>
@@ -401,6 +405,7 @@ const Index = () => {
               ))}
             </div>
           </section>
+          )}
 
            {/* Active Campaigns Sections */}
            <section className="container py-12 md:py-20 space-y-20">
