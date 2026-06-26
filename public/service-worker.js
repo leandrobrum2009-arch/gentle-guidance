@@ -1,30 +1,18 @@
-// Service Worker for PWA installation
-const CACHE_NAME = 'rifa-pro-v1';
-const urlsToCache = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/favicon.ico',
-  '/placeholder.svg'
-];
+// Kill-switch service worker: clears old caches and unregisters itself so
+// returning browsers stop intercepting requests (the previous version was
+// breaking Supabase POSTs).
+self.addEventListener('install', () => self.skipWaiting());
 
-self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then((cache) => {
-        return cache.addAll(urlsToCache);
-      })
-  );
-});
-
-self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        if (response) {
-          return response;
-        }
-        return fetch(event.request);
-      })
-  );
+self.addEventListener('activate', (event) => {
+  event.waitUntil((async () => {
+    try {
+      const names = await caches.keys();
+      await Promise.allSettled(names.map((n) => caches.delete(n)));
+      await self.clients.claim();
+      const clients = await self.clients.matchAll({ type: 'window' });
+      await Promise.allSettled(clients.map((c) => c.navigate(c.url)));
+    } finally {
+      await self.registration.unregister();
+    }
+  })());
 });
