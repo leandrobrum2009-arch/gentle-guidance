@@ -112,6 +112,11 @@ const RouteExtras = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSiteSettings();
 
+  useEffect(() => {
+    const start = performance.now();
+    return () => logPerf("route", pathname, performance.now() - start);
+  }, [pathname]);
+
   if (pathname.startsWith("/admin")) return null;
 
   const showLiveActivity = String(settings?.home_show_live_activity) === "true";
