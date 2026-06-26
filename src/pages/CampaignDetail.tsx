@@ -534,8 +534,8 @@ const CampaignDetail = () => {
 
       case 'purchase':
         return (
-          <div key={section} className="grid gap-6 lg:grid-cols-3">
-            <div className="lg:col-span-2 space-y-6">
+          <div key={section} className="grid gap-6 lg:grid-cols-3 min-w-0">
+            <div className="lg:col-span-2 space-y-6 min-w-0">
 
               <div className="bg-card rounded-[2rem] shadow-sm border border-border overflow-hidden" id="purchase-tabs">
                 <Tabs defaultValue={campaign?.ticket_generation_type === 'manual' ? "manual" : "auto"} className="w-full">
