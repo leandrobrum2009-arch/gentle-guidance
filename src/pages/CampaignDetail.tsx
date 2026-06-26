@@ -1159,7 +1159,9 @@ const CampaignDetail = () => {
         );
 
       case 'ranking':
-        return campaign.ranking_enabled && (
+        const hasGreaterSmallerRule = Array.isArray(campaign.prize_rules)
+          && (campaign.prize_rules as any[]).some((r: any) => r?.type === 'greater_smaller' && r?.active !== false);
+        return campaign.ranking_enabled && hasGreaterSmallerRule && (
           <div key={section} className="bg-transparent border-none shadow-none">
             <UserRanking 
               title="Premiação por Números" 
