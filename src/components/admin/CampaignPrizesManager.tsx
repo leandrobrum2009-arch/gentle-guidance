@@ -209,6 +209,24 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
                     <span className="col-span-2" title="Probabilidade relativa de este prêmio ser sorteado">Chance (%)</span>
                     <span className="col-span-1"></span>
                   </div>
+                  <div className="rounded-md border border-dashed border-primary/30 bg-primary/5 p-2 text-[11px] text-muted-foreground">
+                    <b className="text-foreground">Exemplo preenchido:</b>
+                    <div className="mt-1 grid grid-cols-12 gap-2 items-center">
+                      <span className="col-span-4">R$ 50 no saldo</span>
+                      <span className="col-span-3">Saldo (R$)</span>
+                      <span className="col-span-2">50,00</span>
+                      <span className="col-span-2">10</span>
+                      <span className="col-span-1"></span>
+                    </div>
+                    <div className="mt-1 grid grid-cols-12 gap-2 items-center">
+                      <span className="col-span-4">iPhone 15</span>
+                      <span className="col-span-3">Produto</span>
+                      <span className="col-span-2">0,00</span>
+                      <span className="col-span-2">1</span>
+                      <span className="col-span-1"></span>
+                    </div>
+                    <p className="mt-1">Com chances 10 e 1 (soma 11), o saldo sai em ~91% e o iPhone em ~9% das aberturas.</p>
+                  </div>
                   {(boxPrizes[b.id] || []).map((bp, idx) => (
                     <div key={bp.id} className="grid grid-cols-12 gap-2 items-center">
                       <Input className="col-span-4" value={bp.title} onChange={(e) => updBoxPrize(b.id, idx, { title: e.target.value })} placeholder="Ex: R$ 50 no saldo" />
