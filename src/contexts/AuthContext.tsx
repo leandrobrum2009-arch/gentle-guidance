@@ -29,14 +29,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       setSession(refreshedSession);
       setUser(refreshedSession?.user ?? null);
-      
-      if (refreshedSession?.user) {
-        logAuthEvent({
-          event: 'session_refresh',
-          status: 'success',
-          userId: refreshedSession.user.id
-        });
-      }
     } catch (error) {
       console.error("Error refreshing session:", error);
       setSession(null);

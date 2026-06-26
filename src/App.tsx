@@ -59,7 +59,15 @@ import AdminOrders from "./pages/admin/Orders";
 import AdminWinners from "./pages/admin/Winners";
 import { supabase } from "@/integrations/supabase/client";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      staleTime: 30_000,
+      retry: 1,
+    },
+  },
+});
 
 const CampaignRedirect = () => {
   const { id } = useParams();
