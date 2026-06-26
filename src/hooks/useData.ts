@@ -981,11 +981,11 @@ export const useGlobalStats = () =>
     queryFn: async () => {
       const { count: usersCount } = await supabase
         .from("profiles")
-        .select("*", { count: 'exact', head: true });
+        .select("*", { count: 'estimated', head: true });
         
       const { count: ordersCount } = await supabase
         .from("orders")
-        .select("*", { count: 'exact', head: true });
+        .select("*", { count: 'estimated', head: true });
         
       const { data: recentActive } = await supabase
         .from("orders")
@@ -1000,7 +1000,8 @@ export const useGlobalStats = () =>
         onlineUsers: Math.max(activeCount, Math.floor((usersCount || 0) * 0.2) + 1) // At least 20% or 1
       };
     },
-    refetchInterval: 30000, // Refresh every 30s
+    refetchInterval: 120000, // Refresh every 2min
+    staleTime: 60000,
   });
 
 // User prizes grouped by campaign — for the "Meus Prêmios" panel.
