@@ -16,12 +16,17 @@ type Rarity = "common" | "rare" | "epic" | "legendary";
 type BoxConfig = { id: string; campaign_id: string | null; name: string; rarity: Rarity; cost: number; is_active: boolean | null };
 type BoxPrize = { id: string; config_id: string | null; title: string; description: string | null; prize_type: string; prize_value: number | null; chance_percent: number; rarity: Rarity };
 
+// Tipos de prêmio disponíveis para Raspadinha, Caixa Surpresa e Roleta.
+// "free_*" = brinde de tentativa grátis (não custa saldo ao usuário).
 const PRIZE_TYPES = [
-  { value: "balance", label: "Saldo (R$)" },
-  { value: "points", label: "Pontos" },
-  { value: "ticket", label: "Cota Grátis" },
-  { value: "physical", label: "Prêmio Físico" },
-  { value: "none", label: "Sem prêmio" },
+  { value: "balance", label: "Saldo em R$", hint: "Credita o valor na carteira do usuário." },
+  { value: "points", label: "Pontos", hint: "Pontos de fidelidade acumulados no perfil." },
+  { value: "ticket", label: "Cota Grátis da Rifa", hint: "Gera 1 bilhete grátis desta campanha." },
+  { value: "free_spin", label: "Giro Grátis na Roleta", hint: "Libera 1 giro sem custo na Roleta." },
+  { value: "free_scratch", label: "Raspadinha Grátis", hint: "Libera 1 raspadinha sem custo." },
+  { value: "free_box", label: "Caixa Surpresa Grátis", hint: "Libera 1 abertura de caixa sem custo." },
+  { value: "physical", label: "Prêmio Físico", hint: "Produto entregue manualmente pelo admin." },
+  { value: "none", label: "Sem prêmio (vazio)", hint: "O usuário não ganha nada nesta tentativa." },
 ];
 
 const RARITIES: Rarity[] = ["common", "rare", "epic", "legendary"];
