@@ -794,8 +794,9 @@ const CampaignInlineView: React.FC<Props> = ({
       </SectionSlot>
 
       <SectionSlot id="winners">
+        {recentWinners.length > 0 && (
         <SectionCard icon={<Trophy className="h-3.5 w-3.5 text-amber-500" />} title="Histórico de ganhadores" tag="Campanha">
-          {recentWinners.length > 0 ? recentWinners.map((winner, index) => (
+          {recentWinners.map((winner, index) => (
             <div key={`${winner.type}-${index}`} className="flex items-center justify-between gap-2 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 h-10 text-[11px]">
               <span className="flex items-center gap-2 min-w-0">
                 <Crown className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
@@ -803,12 +804,9 @@ const CampaignInlineView: React.FC<Props> = ({
               </span>
               <span className="text-[10px] font-bold text-emerald-400 uppercase truncate max-w-[130px]">{winner.type}: {winner.prize}</span>
             </div>
-          )) : (
-            <p className="rounded-lg border border-dashed border-border bg-secondary/30 px-3 py-4 text-center text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              Nenhum ganhador registrado ainda.
-            </p>
-          )}
+          ))}
         </SectionCard>
+        )}
       </SectionSlot>
 
       <SectionSlot id="social_proof">
