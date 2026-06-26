@@ -228,6 +228,7 @@ export default function AdminSettings() {
           <TabsTrigger value="payment" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pagamentos</TabsTrigger>
           <TabsTrigger value="finance" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Financeiro</TabsTrigger>
           <TabsTrigger value="company" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Empresa</TabsTrigger>
+          <TabsTrigger value="menu" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Menu</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none">
@@ -937,22 +938,32 @@ export default function AdminSettings() {
                   </div>
                 ))}
              </div>
-             <div className="mt-6 pt-6 border-t border-border/50">
-               <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground mb-4">Itens do Menu (Header)</h3>
-               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                 {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled'].map(key => (
-                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
-                     <SettingField
-                       s={settings.find(s => s.key === key)}
-                       onUpdate={handleUpdate}
-                       label={settingNames[key]}
-                       getIcon={getIcon}
-                     />
-                   </div>
-                 ))}
-               </div>
-             </div>
            </Card>
+        </TabsContent>
+
+        <TabsContent value="menu" className="space-y-6 outline-none">
+          <Card className="border-border/50 bg-card/50 backdrop-blur-sm rounded-3xl overflow-hidden border-2 shadow-sm">
+            <CardHeader className="bg-primary/5">
+              <CardTitle className="text-xl">Itens do Menu (Header)</CardTitle>
+              <CardDescription className="font-medium">
+                Ative ou desative os links do menu principal do site (ex: Federal, Ganhadores, Comunicados). Desabilitar oculta o item em todos os layouts.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="pt-8">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled'].map(key => (
+                  <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
+                    <SettingField
+                      s={settings.find(s => s.key === key)}
+                      onUpdate={handleUpdate}
+                      label={settingNames[key]}
+                      getIcon={getIcon}
+                    />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         <TabsContent value="company" className="space-y-6 outline-none">
