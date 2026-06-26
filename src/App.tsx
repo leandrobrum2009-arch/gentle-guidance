@@ -34,6 +34,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { QueryCache } from "@tanstack/react-query";
+import { initPerfMonitor, logPerf } from "@/lib/perf";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { useSiteSettings } from "@/hooks/useData";
@@ -59,6 +61,8 @@ import AdminOrders from "./pages/admin/Orders";
 import AdminWinners from "./pages/admin/Winners";
 import { supabase } from "@/integrations/supabase/client";
 
+const queryStartTimes = new Map<string, number>();
+
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -67,7 +71,37 @@ const queryClient = new QueryClient({
       retry: 1,
     },
   },
+  queryCache: new QueryCache({
+    onSuccess: (_data, query) => {
+      const key = JSON.stringify(query.queryKey);
+      const started = queryStartTimes.get(key);
+      if (started) {
+        logPerf("query", key, performance.now() - started, { status: "ok" });
+        queryStartTimes.delete(key);
+      }
+    },
+    onError: (error, query) => {
+      const key = JSON.stringify(query.queryKey);
+      const started = queryStartTimes.get(key);
+      if (started) {
+        logPerf("query", key, performance.now() - started, {
+          status: "error",
+          error: (error as Error)?.message,
+        });
+        queryStartTimes.delete(key);
+      }
+    },
+  }),
 });
+
+// Track query start times via fetch observer.
+queryClient.getQueryCache().subscribe((event) => {
+  if (event.type === "updated" && event.action.type === "fetch") {
+    queryStartTimes.set(JSON.stringify(event.query.queryKey), performance.now());
+  }
+});
+
+initPerfMonitor();
 
 const CampaignRedirect = () => {
   const { id } = useParams();
@@ -77,6 +111,11 @@ const CampaignRedirect = () => {
 const RouteExtras = () => {
   const { pathname } = useLocation();
   const { data: settings } = useSiteSettings();
+
+  useEffect(() => {
+    const start = performance.now();
+    return () => logPerf("route", pathname, performance.now() - start);
+  }, [pathname]);
 
   if (pathname.startsWith("/admin")) return null;
 
