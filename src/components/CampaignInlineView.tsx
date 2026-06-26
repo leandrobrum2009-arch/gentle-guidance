@@ -447,7 +447,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* CAIXAS GANHADORES (clicáveis abrem MysteryBox) */}
       <SectionSlot id="box_footer">
-      {campaign.mystery_box_enabled && (mysteryBoxes?.length || 0) > 0 && (
+      {(mysteryBoxes?.length || 0) > 0 && (
         <SectionCard
           icon={<Gift className="h-3.5 w-3.5 text-orange-500" />}
           title="Caixas Surpresas"
