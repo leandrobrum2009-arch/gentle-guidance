@@ -198,19 +198,26 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
                   <div className="flex justify-between items-center">
                     <div>
                       <Label className="text-xs font-bold">Prêmios desta caixa</Label>
-                      <p className="text-[10px] text-muted-foreground">Título · Tipo · Valor (R$/pontos) · % de chance</p>
+                      <p className="text-[10px] text-muted-foreground">Preencha um prêmio por linha. A soma das chances é proporcional (não precisa dar 100%).</p>
                     </div>
                     <Button size="sm" variant="outline" onClick={() => addBoxPrize(b.id)}><Plus className="h-3 w-3 mr-1" /> Prêmio</Button>
                   </div>
+                  <div className="grid grid-cols-12 gap-2 text-[10px] font-semibold text-muted-foreground uppercase px-1">
+                    <span className="col-span-4">Nome do prêmio</span>
+                    <span className="col-span-3">Tipo do prêmio</span>
+                    <span className="col-span-2" title="Quanto o ganhador recebe (R$ para saldo, número de pontos, etc.)">Valor entregue</span>
+                    <span className="col-span-2" title="Probabilidade relativa de este prêmio ser sorteado">Chance (%)</span>
+                    <span className="col-span-1"></span>
+                  </div>
                   {(boxPrizes[b.id] || []).map((bp, idx) => (
                     <div key={bp.id} className="grid grid-cols-12 gap-2 items-center">
-                      <Input className="col-span-4" value={bp.title} onChange={(e) => updBoxPrize(b.id, idx, { title: e.target.value })} placeholder="Título" />
+                      <Input className="col-span-4" value={bp.title} onChange={(e) => updBoxPrize(b.id, idx, { title: e.target.value })} placeholder="Ex: R$ 50 no saldo" />
                       <Select value={bp.prize_type} onValueChange={(v) => updBoxPrize(b.id, idx, { prize_type: v })}>
                         <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
                         <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
                       </Select>
-                      <Input className="col-span-2" type="number" step="0.01" value={bp.prize_value ?? 0} onChange={(e) => updBoxPrize(b.id, idx, { prize_value: parseFloat(e.target.value) || 0 })} placeholder="Valor" />
-                      <Input className="col-span-2" type="number" step="0.01" value={bp.chance_percent} onChange={(e) => updBoxPrize(b.id, idx, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="% chance" />
+                      <Input className="col-span-2" type="number" step="0.01" value={bp.prize_value ?? 0} onChange={(e) => updBoxPrize(b.id, idx, { prize_value: parseFloat(e.target.value) || 0 })} placeholder="Ex: 50" title="Quantia que o ganhador recebe (R$ ou pontos, conforme o tipo)" />
+                      <Input className="col-span-2" type="number" step="0.01" value={bp.chance_percent} onChange={(e) => updBoxPrize(b.id, idx, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="Ex: 10" title="Chance de sair: 10 = 10% se a soma der 100; é proporcional ao total" />
                       <Button variant="ghost" size="icon" className="text-destructive" onClick={() => delBoxPrize(b.id, bp.id)}><Trash2 className="h-3 w-3" /></Button>
                     </div>
                   ))}
