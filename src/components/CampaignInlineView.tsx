@@ -842,26 +842,6 @@ const CampaignInlineView: React.FC<Props> = ({
       </SectionCard>
       </SectionSlot>
 
-      {/* COMPARTILHAR */}
-      <SectionSlot id="cta">
-      <SectionCard icon={<Share2 className="h-3.5 w-3.5 text-primary" />} title="Indique e ganhe" tag="Compartilhar">
-        <Button
-          variant="outline"
-          className="w-full h-10 rounded-lg font-black uppercase tracking-widest text-[10px] gap-2"
-          onClick={async () => {
-            const url = window.location.href;
-            if (navigator.share) {
-              try { await navigator.share({ title: campaign.title, url }); } catch {}
-            } else {
-              await navigator.clipboard.writeText(url);
-              toast.success("Link copiado!");
-            }
-          }}
-        >
-          <Share2 className="h-3.5 w-3.5" /> Compartilhar campanha
-        </Button>
-      </SectionCard>
-      </SectionSlot>
     </div>
   );
 };
