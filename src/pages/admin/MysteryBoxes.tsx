@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { Info, ExternalLink } from "lucide-react";
 
 export default function AdminMysteryBoxes() {
   const { data: boxes, isLoading, refetch } = useAdminMysteryBoxes();
@@ -39,17 +41,20 @@ export default function AdminMysteryBoxes() {
 
     setIsSaving(true);
     try {
-      const { error } = await supabase.from("mystery_box_configs").insert({
+      const { data: created, error } = await supabase.from("mystery_box_configs").insert({
         campaign_id: formData.campaign_id,
         name: formData.name,
         rarity: formData.rarity as any,
         cost: parseFloat(formData.cost),
         is_active: formData.is_active
-      });
+      }).select().single();
 
       if (error) throw error;
 
-      toast.success("Caixa criada! Agora adicione prêmios pela edição da campanha.");
+      // Habilita o recurso na campanha automaticamente para que apareça no site
+      await supabase.from("campaigns").update({ mystery_box_enabled: true }).eq("id", formData.campaign_id);
+
+      toast.success("Caixa criada e recurso ativado na campanha! Agora cadastre os prêmios dentro da edição da campanha.");
       setIsDialogOpen(false);
       refetch();
       setFormData({ campaign_id: "", name: "", rarity: "common", cost: "10", is_active: true });
@@ -158,6 +163,22 @@ export default function AdminMysteryBoxes() {
         </Dialog>
       </div>
 
+      {/* Aviso explicativo */}
+      <Card className="border-amber-500/30 bg-amber-500/5 mb-6">
+        <CardContent className="p-4 flex gap-3">
+          <Info className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+          <div className="text-xs space-y-1">
+            <p className="font-bold text-foreground">Como funciona</p>
+            <p className="text-muted-foreground leading-relaxed">
+              1) Crie a caixa aqui vinculada a uma campanha (custo, raridade e nome). <br />
+              2) Para a caixa <b>aparecer no site</b>, é preciso adicionar pelo menos 1 <b>prêmio</b> dentro da edição da campanha (aba "Prêmios da Campanha" → seção "Caixas Surpresas"). <br />
+              3) O recurso é ativado automaticamente na campanha quando você cria a caixa por aqui.
+            </p>
+            <p className="text-muted-foreground"><b>Campos:</b> <i>Custo</i> = quanto o usuário paga para abrir (R$). <i>Raridade</i> = etiqueta visual. <i>Ativa</i> = mostra/oculta no site.</p>
+          </div>
+        </CardContent>
+      </Card>
+
       <div className="grid gap-6 md:grid-cols-4 mb-8">
         {[
           { key: 'common', label: 'Comum' },
@@ -222,9 +243,13 @@ export default function AdminMysteryBoxes() {
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-card/10">
-                        <Pencil className="h-4 w-4" />
-                      </Button>
+                      {b.campaign_id && (
+                        <Link to={`/admin/campanhas/editar/${b.campaign_id}`}>
+                          <Button variant="ghost" size="sm" className="h-8 text-xs text-primary hover:bg-primary/10">
+                            <ExternalLink className="h-3 w-3 mr-1" /> Prêmios
+                          </Button>
+                        </Link>
+                      )}
                       <Button 
                         variant="ghost" 
                         size="icon" 
