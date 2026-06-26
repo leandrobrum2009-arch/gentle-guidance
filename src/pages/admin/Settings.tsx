@@ -93,6 +93,9 @@ export default function AdminSettings() {
     home_testimonials_json: "Depoimentos Personalizados (JSON)",
     home_hall_fame_json: "Hall da Fama Personalizado (JSON)",
     home_show_games_combo: "Exibir Combo de Jogos (Roleta/Raspadinha/Caixa/Ranking/Afiliados)"
+    ,
+    whatsapp_group_link: "Link do Grupo do WhatsApp (botão flutuante)",
+    whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp"
   };
 
   useEffect(() => {
@@ -916,6 +919,16 @@ export default function AdminSettings() {
                         getIcon={getIcon}
                       />
                    </div>
+                ))}
+                {['whatsapp_group_link', 'whatsapp_group_enabled'].map(key => (
+                  <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50 hover:border-primary/20 transition-colors md:col-span-2">
+                    <SettingField
+                      s={settings.find(s => s.key === key)}
+                      onUpdate={handleUpdate}
+                      label={settingNames[key]}
+                      getIcon={getIcon}
+                    />
+                  </div>
                 ))}
              </div>
            </Card>
