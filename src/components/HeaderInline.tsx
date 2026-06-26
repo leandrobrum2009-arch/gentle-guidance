@@ -9,12 +9,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useData";
 import { toast } from "sonner";
 
-const navLinks = [
-  { label: "Campanhas", href: "/campanhas" },
-  { label: "Ganhadores", href: "/ganhadores" },
-  { label: "Federal", href: "/resultado-federal" },
-  { label: "Comunicados", href: "/comunicados" },
-  { label: "Minha Conta", href: "/minha-conta" },
+const ALL_NAV_LINKS = [
+  { key: "campanhas", label: "Campanhas", href: "/campanhas" },
+  { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
+  { key: "federal", label: "Federal", href: "/resultado-federal" },
+  { key: "comunicados", label: "Comunicados", href: "/comunicados" },
+  { key: "minha_conta", label: "Minha Conta", href: "/minha-conta" },
 ];
 
 const HeaderInline = () => {
@@ -24,6 +24,10 @@ const HeaderInline = () => {
   const { data: isAdmin } = useIsAdmin();
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
+
+  const navLinks = ALL_NAV_LINKS.filter(
+    (l) => String((siteSettings as any)?.[`menu_${l.key}_enabled`] ?? "true") !== "false"
+  );
 
   useEffect(() => {
     document.documentElement.style.setProperty('--header-height', `64px`);
