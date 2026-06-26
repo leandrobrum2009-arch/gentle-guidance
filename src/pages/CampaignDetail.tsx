@@ -658,17 +658,20 @@ const CampaignDetail = () => {
             </div>
 
             <div className="space-y-6">
-              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled || (campaign.main_prizes && campaign.main_prizes.length > 0)) && (
+              {(() => {
+                const filledPrizes = (campaign.main_prizes || []).filter((p: any) => p?.prize && String(p.prize).trim() !== "");
+                return (campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled || filledPrizes.length > 0);
+              })() && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
                     <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa rifa
                   </h3>
                   <div className="flex flex-col gap-4">
-                    {campaign.main_prizes && campaign.main_prizes.length > 0 && (
+                    {campaign.main_prizes && campaign.main_prizes.filter((p:any) => p?.prize && String(p.prize).trim() !== "").length > 0 && (
                       <div className="space-y-2">
                         <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Prêmios Principais</p>
                         <div className="grid grid-cols-1 gap-2">
-                          {campaign.main_prizes.sort((a, b) => a.position - b.position).map((p, idx) => {
+                          {campaign.main_prizes.filter((p:any) => p?.prize && String(p.prize).trim() !== "").sort((a, b) => a.position - b.position).map((p, idx) => {
                             const prizeWinner = raffleWinners.find(w => w.prize_index === p.position);
                             return (
                               <div key={idx} className="flex flex-col gap-2 p-3 rounded-xl bg-primary/5 border border-primary/20">
@@ -1156,7 +1159,9 @@ const CampaignDetail = () => {
         );
 
       case 'ranking':
-        return campaign.ranking_enabled && (
+        const hasGreaterSmallerRule = Array.isArray(campaign.prize_rules)
+          && (campaign.prize_rules as any[]).some((r: any) => r?.type === 'greater_smaller' && r?.active !== false);
+        return campaign.ranking_enabled && hasGreaterSmallerRule && (
           <div key={section} className="bg-transparent border-none shadow-none">
             <UserRanking 
               title="Premiação por Números" 

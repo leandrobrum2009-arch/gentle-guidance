@@ -63,7 +63,7 @@ const empty: CampaignForm = {
   auto_numbers: true, manual_numbers: false, ticket_generation_type: 'auto',
   lucky_numbers_prizes: [],
   roulette_rules: [],
-  main_prizes: [{position:1,prize:""},{position:2,prize:""},{position:3,prize:""},{position:4,prize:""},{position:5,prize:""}],
+  main_prizes: [],
   federal_lottery_draw: false, sales_goal: 0, roulette_free_tickets: 10,
   roulette_payout_rate: 0, roulette_spin_cost: 5.00, roulette_multiplier_max: 5,
   show_instant_prizes: true, show_roulette_status: true, min_tickets: 1, max_tickets: 10000,
