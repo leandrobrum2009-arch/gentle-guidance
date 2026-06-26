@@ -159,24 +159,29 @@ export default function AdminMysteryBoxes() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-4 mb-8">
-        {['Comum', 'Raro', 'Épico', 'Lendário'].map((rarity, i) => (
+        {[
+          { key: 'common', label: 'Comum' },
+          { key: 'rare', label: 'Raro' },
+          { key: 'epic', label: 'Épico' },
+          { key: 'legendary', label: 'Lendário' },
+        ].map(({ key: rarity, label }) => (
           <Card key={rarity} className="border-border bg-card/50 backdrop-blur-xl relative overflow-hidden group">
             <div className={`absolute top-0 left-0 w-full h-1 ${
-              rarity === 'Comum' ? 'bg-slate-400' :
-              rarity === 'Raro' ? 'bg-blue-400' :
-              rarity === 'Épico' ? 'bg-purple-400' : 'bg-amber-400'
+              rarity === 'common' ? 'bg-slate-400' :
+              rarity === 'rare' ? 'bg-blue-400' :
+              rarity === 'epic' ? 'bg-purple-400' : 'bg-amber-400'
             }`} />
             <CardContent className="p-4 flex items-center justify-between">
               <div>
-                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{rarity}</p>
+                <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</p>
                 <p className="text-xl font-bold text-foreground mt-1">
                   {boxes?.filter((b: any) => b.rarity === rarity).length || 0} Ativas
                 </p>
               </div>
               <Box className={`h-8 w-8 ${
-                rarity === 'Comum' ? 'text-muted-foreground' :
-                rarity === 'Raro' ? 'text-blue-600' :
-                rarity === 'Épico' ? 'text-purple-400' : 'text-amber-400'
+                rarity === 'common' ? 'text-muted-foreground' :
+                rarity === 'rare' ? 'text-blue-600' :
+                rarity === 'epic' ? 'text-purple-400' : 'text-amber-400'
               } opacity-20`} />
             </CardContent>
           </Card>
@@ -192,8 +197,8 @@ export default function AdminMysteryBoxes() {
               <TableHeader>
                 <TableRow className="border-border hover:bg-transparent">
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Caixa</TableHead>
+                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Campanha</TableHead>
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Custo</TableHead>
-                  <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Prêmio Máx</TableHead>
                   <TableHead className="text-muted-foreground font-bold uppercase text-[10px]">Status</TableHead>
                   <TableHead className="text-right text-muted-foreground font-bold uppercase text-[10px]">Ações</TableHead>
                 </TableRow>
@@ -203,15 +208,13 @@ export default function AdminMysteryBoxes() {
                   <TableRow key={b.id} className="border-border hover:bg-secondary/20 transition-colors group">
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-bold text-foreground tracking-tight">{b.title}</span>
+                        <span className="font-bold text-foreground tracking-tight">{b.name}</span>
                         <span className="text-[10px] text-muted-foreground">{(b as any).rarity || 'Geral'}</span>
                       </div>
                     </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">{b.campaigns?.title || '—'}</TableCell>
                     <TableCell className="text-foreground font-bold font-mono text-xs">
-                      R$ {Number(b.cost_to_open || 0).toFixed(2)}
-                    </TableCell>
-                    <TableCell className="text-emerald-500 font-bold font-mono text-xs">
-                      R$ {Number(b.prize_value || 0).toFixed(2)}
+                      R$ {Number(b.cost || 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <Badge className={`text-[10px] font-bold tracking-widest ${b.is_active ? 'bg-emerald-500/20 text-emerald-500 border-emerald-500/20' : 'bg-secondary/500/20 text-muted-foreground border-slate-500/20'}`}>
