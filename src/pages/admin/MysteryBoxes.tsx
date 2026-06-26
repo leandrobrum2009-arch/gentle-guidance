@@ -1,5 +1,6 @@
 import AdminLayout from "@/components/AdminLayout";
 import { useAdminMysteryBoxes } from "@/hooks/useAdmin";
+import { useCampaigns } from "@/hooks/useData";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent } from "@/components/ui/card";
 import { Loader2, Gift, Plus, Pencil, Trash2, Box, Save } from "lucide-react";
@@ -15,38 +16,43 @@ import { toast } from "sonner";
 
 export default function AdminMysteryBoxes() {
   const { data: boxes, isLoading, refetch } = useAdminMysteryBoxes();
+  const { data: campaigns } = useCampaigns();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
-    title: "",
-    rarity: "Comum",
-    cost_to_open: "10",
-    prize_value: "50",
+    campaign_id: "",
+    name: "",
+    rarity: "common",
+    cost: "10",
     is_active: true
   });
 
   const handleCreate = async () => {
-    if (!formData.title) {
+    if (!formData.name) {
       toast.error("Insira o nome da caixa");
+      return;
+    }
+    if (!formData.campaign_id) {
+      toast.error("Selecione uma campanha");
       return;
     }
 
     setIsSaving(true);
     try {
-      const { error } = await supabase.from("mystery_boxes").insert({
-        title: formData.title,
+      const { error } = await supabase.from("mystery_box_configs").insert({
+        campaign_id: formData.campaign_id,
+        name: formData.name,
         rarity: formData.rarity as any,
-        cost_to_open: parseFloat(formData.cost_to_open),
-        prize_value: parseFloat(formData.prize_value),
+        cost: parseFloat(formData.cost),
         is_active: formData.is_active
       });
 
       if (error) throw error;
 
-      toast.success("Caixa criada com sucesso!");
+      toast.success("Caixa criada! Agora adicione prêmios pela edição da campanha.");
       setIsDialogOpen(false);
       refetch();
-      setFormData({ title: "", rarity: "Comum", cost_to_open: "10", prize_value: "50", is_active: true });
+      setFormData({ campaign_id: "", name: "", rarity: "common", cost: "10", is_active: true });
     } catch (error: any) {
       toast.error("Erro ao criar caixa: " + error.message);
     } finally {
@@ -58,7 +64,7 @@ export default function AdminMysteryBoxes() {
     if (!confirm("Tem certeza que deseja excluir esta caixa?")) return;
     
     try {
-      const { error } = await supabase.from("mystery_boxes").delete().eq("id", id);
+      const { error } = await supabase.from("mystery_box_configs").delete().eq("id", id);
       if (error) throw error;
       toast.success("Caixa excluída!");
       refetch();
@@ -87,11 +93,27 @@ export default function AdminMysteryBoxes() {
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="space-y-2">
+                <Label>Campanha</Label>
+                <Select
+                  value={formData.campaign_id}
+                  onValueChange={v => setFormData({...formData, campaign_id: v})}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Selecione a campanha" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {campaigns?.map((c: any) => (
+                      <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
                 <Label>Nome da Caixa</Label>
                 <Input 
                   placeholder="Ex: Caixa de Ouro" 
-                  value={formData.title}
-                  onChange={e => setFormData({...formData, title: e.target.value})}
+                  value={formData.name}
+                  onChange={e => setFormData({...formData, name: e.target.value})}
                 />
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -105,10 +127,10 @@ export default function AdminMysteryBoxes() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Comum">Comum</SelectItem>
-                      <SelectItem value="Raro">Raro</SelectItem>
-                      <SelectItem value="Épico">Épico</SelectItem>
-                      <SelectItem value="Lendário">Lendário</SelectItem>
+                      <SelectItem value="common">Comum</SelectItem>
+                      <SelectItem value="rare">Raro</SelectItem>
+                      <SelectItem value="epic">Épico</SelectItem>
+                      <SelectItem value="legendary">Lendário</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -116,19 +138,14 @@ export default function AdminMysteryBoxes() {
                   <Label>Custo para Abrir (R$)</Label>
                   <Input 
                     type="number"
-                    value={formData.cost_to_open}
-                    onChange={e => setFormData({...formData, cost_to_open: e.target.value})}
+                    value={formData.cost}
+                    onChange={e => setFormData({...formData, cost: e.target.value})}
                   />
                 </div>
               </div>
-              <div className="space-y-2">
-                <Label>Valor Máximo do Prêmio (R$)</Label>
-                <Input 
-                  type="number"
-                  value={formData.prize_value}
-                  onChange={e => setFormData({...formData, prize_value: e.target.value})}
-                />
-              </div>
+              <p className="text-xs text-muted-foreground italic">
+                Os prêmios da caixa são cadastrados na página de edição da campanha, em "Prêmios da Campanha".
+              </p>
             </div>
             <DialogFooter>
               <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancelar</Button>
