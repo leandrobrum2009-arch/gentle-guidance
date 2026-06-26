@@ -128,7 +128,7 @@ export const useCampaignStats = (campaignId: string) =>
     queryFn: async () => {
       const { count, error } = await supabase
         .from("orders")
-        .select("*", { count: 'exact', head: true })
+        .select("*", { count: 'estimated', head: true })
         .eq("campaign_id", campaignId)
         .eq("payment_status", "paid");
       
@@ -138,7 +138,8 @@ export const useCampaignStats = (campaignId: string) =>
         .from("orders")
         .select("user_id")
         .eq("campaign_id", campaignId)
-        .eq("payment_status", "paid");
+        .eq("payment_status", "paid")
+        .limit(5000);
         
       const uniqueCount = new Set(uniqueUsers?.map(o => o.user_id)).size;
 
@@ -148,6 +149,8 @@ export const useCampaignStats = (campaignId: string) =>
       };
     },
     enabled: !!campaignId,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
  export interface Winner {
@@ -274,6 +277,8 @@ export const useCampaigns = () =>
       if (error) throw error;
       return (data as any) as Campaign[];
     },
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
 export const useActiveBanners = () => {
@@ -307,7 +312,8 @@ export const useCampaignRanking = (campaignId: string, limit = 10) =>
         .from('orders')
         .select('user_id, quantity, profiles(name, avatar_url)')
         .eq('campaign_id', campaignId)
-        .eq('payment_status', 'paid');
+        .eq('payment_status', 'paid')
+        .limit(2000);
       
       if (error) throw error;
 
@@ -326,7 +332,9 @@ export const useCampaignRanking = (campaignId: string, limit = 10) =>
 
       return Object.values(grouped).sort((a: any, b: any) => b.total_tickets - a.total_tickets).slice(0, limit);
     },
-    enabled: !!campaignId
+    enabled: !!campaignId,
+    staleTime: 60_000,
+    refetchOnWindowFocus: false,
   });
 
 export const useCampaignLuckyWinners = (campaignId: string) =>
@@ -465,10 +473,13 @@ export const useWinners = () =>
       const { data, error } = await supabase
         .from("winners")
         .select("*, campaigns(title)")
-        .order("draw_date", { ascending: false });
+        .order("draw_date", { ascending: false })
+        .limit(100);
       if (error) throw error;
       return data as Winner[];
     },
+    staleTime: 5 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
 export const useUserTickets = (userId: string, campaignId: string) =>
@@ -990,7 +1001,8 @@ export const useGlobalStats = () =>
       const { data: recentActive } = await supabase
         .from("orders")
         .select("user_id")
-        .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString()); // Active in last 30 mins
+        .gt("created_at", new Date(Date.now() - 30 * 60 * 1000).toISOString())
+        .limit(500);
         
       const activeCount = new Set(recentActive?.map(o => o.user_id)).size;
       
@@ -1000,8 +1012,9 @@ export const useGlobalStats = () =>
         onlineUsers: Math.max(activeCount, Math.floor((usersCount || 0) * 0.2) + 1) // At least 20% or 1
       };
     },
-    refetchInterval: 120000, // Refresh every 2min
-    staleTime: 60000,
+    refetchInterval: 5 * 60_000, // Refresh every 5min
+    staleTime: 4 * 60_000,
+    refetchOnWindowFocus: false,
   });
 
 // User prizes grouped by campaign — for the "Meus Prêmios" panel.
