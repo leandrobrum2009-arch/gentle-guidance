@@ -13,19 +13,13 @@ interface CampaignPricingProps {
   isPurchasing?: boolean;
 }
 
-const DEFAULT_BUNDLES: PriceBundle[] = [
-  { quantity: 50, price: 45.00, label: "ECONÔMICO" },
-  { quantity: 100, price: 80.00, label: "MAIS VENDIDO 🔥", is_popular: true },
-  { quantity: 500, price: 350.00, label: "VALOR VIP 👑" },
-];
-
 const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps) => {
   const [quantity, setQuantity] = useState<number>(0);
   const bundles = useMemo(() => {
     if (Array.isArray(campaign.price_bundles) && campaign.price_bundles.length > 0) {
       return campaign.price_bundles;
     }
-    return DEFAULT_BUNDLES;
+    return [];
   }, [campaign.price_bundles]);
 
   const unitPrice = Number(campaign.ticket_price);
@@ -64,6 +58,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
       </div>
 
       {/* Discount Bundles Grid */}
+      {bundles.length > 0 && (
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
         {bundles.map((bundle) => {
           const isSelected = Number(quantity) === Number(bundle.quantity);
@@ -134,6 +129,7 @@ const CampaignPricing = ({ campaign, onBuy, isPurchasing }: CampaignPricingProps
           );
         })}
       </div>
+      )}
 
       {/* Manual Selection and Summary */}
       <div className="bg-card rounded-2xl p-6 border border-border shadow-sm space-y-6">
