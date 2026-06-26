@@ -24,6 +24,7 @@ const IndexInline = () => {
 
   const testimonialsCount = parseInt(String(settings?.inline_testimonials_count ?? "3"), 10) || 3;
   const showFinished = String(settings?.inline_show_finished_raffles ?? "true") === "true";
+  const showGamesCombo = String(settings?.home_show_games_combo ?? "true") === "true";
 
   const games = [
     { label: "Roleta", icon: RotateCw },
@@ -80,6 +81,7 @@ const IndexInline = () => {
         </section>
 
         {/* 3) Combo de jogos em carrossel (sem links) */}
+        {showGamesCombo && (
         <section className="px-3 pb-3">
           <div className="mb-2 flex items-center justify-between">
             <h2 className="text-[10px] font-black uppercase tracking-[0.22em] text-muted-foreground">
@@ -108,6 +110,7 @@ const IndexInline = () => {
             </div>
           </div>
         </section>
+        )}
 
         <BannersInline />
 
