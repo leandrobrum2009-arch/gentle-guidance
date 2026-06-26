@@ -325,6 +325,7 @@ export type Database = {
       campaigns: {
         Row: {
           auto_numbers: boolean | null
+          concurso: string | null
           created_at: string
           description: string | null
           draw_date: string | null
@@ -391,6 +392,7 @@ export type Database = {
         }
         Insert: {
           auto_numbers?: boolean | null
+          concurso?: string | null
           created_at?: string
           description?: string | null
           draw_date?: string | null
@@ -457,6 +459,7 @@ export type Database = {
         }
         Update: {
           auto_numbers?: boolean | null
+          concurso?: string | null
           created_at?: string
           description?: string | null
           draw_date?: string | null
