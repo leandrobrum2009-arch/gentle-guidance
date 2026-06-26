@@ -88,8 +88,8 @@ const CampaignDetail = () => {
   const { data: mysteryBoxes } = useMysteryBoxConfigs(campaignId);
   const { data: roulettePrizes } = useRoulettePrizes(campaignId);
   const { data: scratchPrizes } = useScratchCardPrizes(campaignId);
-  const scratchEnabled = !!campaign?.scratch_cards_enabled || (scratchPrizes?.length || 0) > 0;
-  const rouletteEnabled = !!campaign?.roulette_enabled || (roulettePrizes?.length || 0) > 0;
+  const scratchEnabled = !!scratchEnabled || (scratchPrizes?.length || 0) > 0;
+  const rouletteEnabled = !!rouletteEnabled || (roulettePrizes?.length || 0) > 0;
   const { data: rouletteWins } = useCampaignRouletteSpins(campaignId, 200);
   const { data: scratchWins } = useCampaignScratchWins(campaignId, 200);
   const { data: boxWins } = useCampaignMysteryBoxWins(campaignId, 200);
@@ -582,9 +582,9 @@ const CampaignDetail = () => {
 
 
 
-              {(campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled) && (
+              {(rouletteEnabled || campaign.mystery_box_enabled || scratchEnabled) && (
                 <div className="space-y-4">
-                  {campaign.roulette_enabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
+                  {rouletteEnabled && campaign.roulette_rules && (campaign.roulette_rules as any[]).length > 0 && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -608,7 +608,7 @@ const CampaignDetail = () => {
                     </div>
                   )}
 
-                  {campaign.scratch_cards_enabled && campaign.scratch_card_rules && (campaign.scratch_card_rules as any[]).length > 0 && (
+                  {scratchEnabled && campaign.scratch_card_rules && (campaign.scratch_card_rules as any[]).length > 0 && (
                     <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -662,7 +662,7 @@ const CampaignDetail = () => {
             <div className="space-y-6">
               {(() => {
                 const filledPrizes = (campaign.main_prizes || []).filter((p: any) => p?.prize && String(p.prize).trim() !== "");
-                return (campaign.roulette_enabled || campaign.mystery_box_enabled || campaign.scratch_cards_enabled || filledPrizes.length > 0);
+                return (rouletteEnabled || campaign.mystery_box_enabled || scratchEnabled || filledPrizes.length > 0);
               })() && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
@@ -718,7 +718,7 @@ const CampaignDetail = () => {
                     )}
 
  
-                      {campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+                      {rouletteEnabled && roulettePrizes && roulettePrizes.length > 0 && (
                         <div className="space-y-2">
                           <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Vantagens da Roleta</p>
                           <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
@@ -766,7 +766,7 @@ const CampaignDetail = () => {
                       )}
 
                      <div className="flex flex-col gap-4">
-                       {campaign.scratch_cards_enabled && (
+                       {scratchEnabled && (
                          <div className="space-y-2">
                            <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Raspadinhas</p>
                            <div className="flex gap-2.5 overflow-x-auto no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory scroll-smooth pb-1">
@@ -868,7 +868,7 @@ const CampaignDetail = () => {
                        )}
                     </div>
 
-                    {(campaign.roulette_enabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
+                    {(rouletteEnabled || (campaign.prize_rules && campaign.prize_rules.length > 0)) && (
                       <Dialog onOpenChange={(open) => {
                         if (!open && isGameInProgress) return;
                       }}>
@@ -880,7 +880,7 @@ const CampaignDetail = () => {
                               </div>
                               <div className="text-left">
                                 <p className="text-xs font-black uppercase tracking-tight text-foreground">
-                                  {campaign.roulette_enabled ? 'Gire a roleta e ganhe prêmios' : 'Prêmios de Engajamento'}
+                                  {rouletteEnabled ? 'Gire a roleta e ganhe prêmios' : 'Prêmios de Engajamento'}
                                 </p>
                                 <p className="text-[10px] font-medium text-muted-foreground">
                                   {campaign.prize_rules && campaign.prize_rules.length > 0 
@@ -1190,7 +1190,7 @@ const CampaignDetail = () => {
         );
 
       case 'roulette_footer':
-        return campaign.roulette_enabled && roulettePrizes && roulettePrizes.length > 0 && (
+        return rouletteEnabled && roulettePrizes && roulettePrizes.length > 0 && (
           <div key={section} className="mt-12 mb-12 bg-card rounded-3xl p-8 border border-border shadow-sm space-y-8">
             <div className="flex flex-col items-center text-center">
               <Badge className="bg-primary/20 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">Simulador de Sorte</Badge>
@@ -1222,7 +1222,7 @@ const CampaignDetail = () => {
         );
 
       case 'scratch_footer':
-        return campaign?.scratch_cards_enabled && (
+        return scratchEnabled && (
           <div key={section} className="mt-12 mb-20">
              <div className="flex flex-col items-center text-center mb-8">
               <Badge className="bg-amber-500/20 text-amber-500 border-none text-[10px] font-black uppercase tracking-widest mb-2">Diversão Instantânea</Badge>
