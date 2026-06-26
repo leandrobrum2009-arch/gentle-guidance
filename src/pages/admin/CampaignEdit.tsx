@@ -263,8 +263,23 @@ export default function AdminCampaignEdit() {
   const save = async () => {
     setSaving(true);
     try {
-      if (!form.title) throw new Error("O título é obrigatório");
-      if (!form.slug) throw new Error("O slug da URL é obrigatório");
+      const title = (form.title || "").trim();
+      const slug = (form.slug || "").trim();
+      if (title.length < 3) throw new Error("O título deve ter pelo menos 3 caracteres");
+      if (title.length > 150) throw new Error("O título deve ter no máximo 150 caracteres");
+      if (!slug) throw new Error("O slug da URL é obrigatório");
+      if (!/^[a-z0-9-]+$/.test(slug)) throw new Error("Slug inválido: use apenas letras minúsculas, números e hífens");
+      const tp = Number(form.ticket_price);
+      const tt = Number(form.total_tickets);
+      if (!Number.isFinite(tp) || tp <= 0) throw new Error("Informe um valor de cota maior que zero");
+      if (!Number.isInteger(tt) || tt <= 0) throw new Error("Informe a quantidade total de cotas (número inteiro > 0)");
+      const minT = Number(form.min_tickets || 1);
+      const maxT = Number(form.max_tickets || tt);
+      if (minT < 1 || maxT < minT) throw new Error("Mín/Máx de cotas inválidos");
+      if (form.draw_date && isNaN(new Date(form.draw_date).getTime())) throw new Error("Data do sorteio inválida");
+      if (form.timer_end_date && isNaN(new Date(form.timer_end_date).getTime())) throw new Error("Data do cronômetro inválida");
+      const invalidBundle = (form.price_bundles || []).find((b: any) => !(Number(b.quantity) > 0) || !(Number(b.price) >= 0));
+      if (invalidBundle) throw new Error("Combos de desconto devem ter quantidade > 0 e preço >= 0");
 
       // Prepare clean payload for Supabase
       const { 
