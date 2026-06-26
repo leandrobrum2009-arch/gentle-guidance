@@ -6,7 +6,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
-import { ThemeToggle } from "./ThemeToggle";
 import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
@@ -193,7 +192,6 @@ const Header = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              <ThemeToggle />
               {user ? (
                 <div className="flex items-center gap-3">
                   <motion.div 
