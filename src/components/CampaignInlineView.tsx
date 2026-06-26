@@ -519,7 +519,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* RASPADINHAS - COMBOS */}
       <SectionSlot id="scratch_footer">
-      {campaign.scratch_cards_enabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
+      {scratchEnabled && Array.isArray(campaign.scratch_card_rules) && (campaign.scratch_card_rules as any[]).length > 0 && (
         <SectionCard icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />} title="Raspadinhas" tag="Combos">
           <SectionCaption>
             A cada faixa de cotas compradas você libera raspadinhas grátis com chance de ganhar saldo, pontos ou cotas extras.
@@ -533,7 +533,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* RASPADINHAS GANHADORES */}
       <SectionSlot id="scratch_footer">
-      {campaign.scratch_cards_enabled && (
+      {scratchEnabled && (
         <SectionCard
           icon={<Sparkles className="h-3.5 w-3.5 text-sky-400" />}
           title="Raspadinhas"
@@ -601,7 +601,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* ROLETAS - COMBOS */}
       <SectionSlot id="roulette_footer">
-      {campaign.roulette_enabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
+      {rouletteEnabled && Array.isArray(campaign.roulette_rules) && (campaign.roulette_rules as any[]).length > 0 && (
         <SectionCard icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />} title="Roletas Instantâneas" tag="Combos">
           <SectionCaption>
             Compre a partir da quantidade indicada e ganhe giros grátis na roleta para concorrer aos prêmios instantâneos.
@@ -666,7 +666,7 @@ const CampaignInlineView: React.FC<Props> = ({
 
       {/* ROLETAS GANHADORES (clicáveis) */}
       <SectionSlot id="roulette_footer">
-      {campaign.roulette_enabled && (roulettePrizes?.length || 0) > 0 && (
+      {rouletteEnabled && (roulettePrizes?.length || 0) > 0 && (
         <SectionCard
           icon={<RotateCw className="h-3.5 w-3.5 text-rose-500" />}
           title="Roletas Instantâneas"
