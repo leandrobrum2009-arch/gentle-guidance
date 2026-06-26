@@ -292,6 +292,10 @@ export default function AdminCampaignEdit() {
 
       const payload = {
         ...rest,
+        main_prizes: (form.main_prizes || []).filter((p: any) => p?.prize && String(p.prize).trim() !== ""),
+        price_bundles: (form.price_bundles || []).filter((b: any) => Number(b?.quantity) > 0 && Number(b?.price) >= 0),
+        gallery_urls: (form.gallery_urls || []).filter((u: string) => u && u.trim() !== ""),
+        prize_rules: (form.prize_rules || []).filter((r: any) => r && r.type),
         ticket_price: Number(form.ticket_price),
         total_tickets: Number(form.total_tickets),
         sales_goal: Number(form.sales_goal || 0),
