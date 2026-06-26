@@ -253,8 +253,8 @@ export const useAdminCampaigns = () =>
      queryKey: ["admin-mystery-boxes"],
      queryFn: async () => {
        const { data, error } = await supabase
-         .from("mystery_boxes")
-         .select("*")
+        .from("mystery_box_configs")
+        .select("*, campaigns(id, title)")
          .order("created_at", { ascending: false });
        if (error) throw error;
        return data;
