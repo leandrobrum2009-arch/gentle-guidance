@@ -16,12 +16,17 @@ type Rarity = "common" | "rare" | "epic" | "legendary";
 type BoxConfig = { id: string; campaign_id: string | null; name: string; rarity: Rarity; cost: number; is_active: boolean | null };
 type BoxPrize = { id: string; config_id: string | null; title: string; description: string | null; prize_type: string; prize_value: number | null; chance_percent: number; rarity: Rarity };
 
+// Tipos de prêmio disponíveis para Raspadinha, Caixa Surpresa e Roleta.
+// "free_*" = brinde de tentativa grátis (não custa saldo ao usuário).
 const PRIZE_TYPES = [
-  { value: "balance", label: "Saldo (R$)" },
-  { value: "points", label: "Pontos" },
-  { value: "ticket", label: "Cota Grátis" },
-  { value: "physical", label: "Prêmio Físico" },
-  { value: "none", label: "Sem prêmio" },
+  { value: "balance", label: "Saldo em R$", hint: "Credita o valor na carteira do usuário." },
+  { value: "points", label: "Pontos", hint: "Pontos de fidelidade acumulados no perfil." },
+  { value: "ticket", label: "Cota Grátis da Rifa", hint: "Gera 1 bilhete grátis desta campanha." },
+  { value: "free_spin", label: "Giro Grátis na Roleta", hint: "Libera 1 giro sem custo na Roleta." },
+  { value: "free_scratch", label: "Raspadinha Grátis", hint: "Libera 1 raspadinha sem custo." },
+  { value: "free_box", label: "Caixa Surpresa Grátis", hint: "Libera 1 abertura de caixa sem custo." },
+  { value: "physical", label: "Prêmio Físico", hint: "Produto entregue manualmente pelo admin." },
+  { value: "none", label: "Sem prêmio (vazio)", hint: "O usuário não ganha nada nesta tentativa." },
 ];
 
 const RARITIES: Rarity[] = ["common", "rare", "epic", "legendary"];
@@ -154,7 +159,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
               <Input className="col-span-4" value={p.label} onChange={(e) => updScratch(i, { label: e.target.value })} placeholder="Nome do prêmio" />
               <Select value={p.prize_type} onValueChange={(v) => updScratch(i, { prize_type: v })}>
                 <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                <SelectContent>{PRIZE_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                  </SelectItem>
+                ))}</SelectContent>
               </Select>
               <Input className="col-span-2" type="number" step="0.01" value={p.value} onChange={(e) => updScratch(i, { value: parseFloat(e.target.value) || 0 })} placeholder="Valor" />
               <Input className="col-span-2" type="number" step="0.01" value={p.chance_percent} onChange={(e) => updScratch(i, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="% chance" />
@@ -171,6 +180,9 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
         <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
           Crie uma caixa, defina o <b>custo de abertura</b> e adicione os <b>prêmios</b> que podem sair. A <b>% de chance</b> de cada prêmio determina a probabilidade de sair (a soma não precisa ser 100, é proporcional). Sem prêmios cadastrados, a caixa <b>não aparece no site</b>.
         </p>
+        <div className="text-[11px] mb-3 rounded-md border border-amber-500/30 bg-amber-500/5 p-2 leading-relaxed">
+          <b className="text-amber-600">Sobre os tipos de prêmio:</b> use <b>Saldo</b> para creditar R$ na carteira, <b>Cota Grátis da Rifa</b> para presentear bilhetes da campanha, <b>Giro/Raspadinha/Caixa Grátis</b> para liberar tentativas extras sem custo (útil quando o usuário comprou X cotas e ganhou o direito de jogar), <b>Prêmio Físico</b> para produtos entregues à parte e <b>Sem prêmio</b> para a chance de "não ganhou".
+        </div>
         <div className="space-y-3">
           {boxes.length > 0 && (
             <div className="grid grid-cols-12 gap-2 px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -252,7 +264,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
                       <Input className="col-span-4" value={bp.title} onChange={(e) => updBoxPrize(b.id, idx, { title: e.target.value })} placeholder="Ex: R$ 50 no saldo" />
                       <Select value={bp.prize_type} onValueChange={(v) => updBoxPrize(b.id, idx, { prize_type: v })}>
                         <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                        <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                        <SelectContent>{PRIZE_TYPES.map((t) => (
+                          <SelectItem key={t.value} value={t.value}>
+                            <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                          </SelectItem>
+                        ))}</SelectContent>
                       </Select>
                       <Input className="col-span-2" type="number" step="0.01" value={bp.prize_value ?? 0} onChange={(e) => updBoxPrize(b.id, idx, { prize_value: parseFloat(e.target.value) || 0 })} placeholder="Ex: 50" title="Quantia que o ganhador recebe (R$ ou pontos, conforme o tipo)" />
                       <Input className="col-span-2" type="number" step="0.01" value={bp.chance_percent} onChange={(e) => updBoxPrize(b.id, idx, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="Ex: 10" title="Chance de sair: 10 = 10% se a soma der 100; é proporcional ao total" />
@@ -277,7 +293,11 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
               <Input className="col-span-4" value={p.label} onChange={(e) => updRoulette(i, { label: e.target.value })} placeholder="Nome do prêmio" />
               <Select value={p.prize_type} onValueChange={(v) => updRoulette(i, { prize_type: v })}>
                 <SelectTrigger className="col-span-3"><SelectValue /></SelectTrigger>
-                <SelectContent>{PRIZE_TYPES.map((t) => <SelectItem key={t.value} value={t.value}>{t.label}</SelectItem>)}</SelectContent>
+                <SelectContent>{PRIZE_TYPES.map((t) => (
+                  <SelectItem key={t.value} value={t.value}>
+                    <div className="flex flex-col"><span>{t.label}</span><span className="text-[10px] text-muted-foreground">{t.hint}</span></div>
+                  </SelectItem>
+                ))}</SelectContent>
               </Select>
               <Input className="col-span-2" type="number" step="0.01" value={p.value ?? 0} onChange={(e) => updRoulette(i, { value: parseFloat(e.target.value) || 0 })} placeholder="Valor" />
               <Input className="col-span-2" type="number" step="0.01" value={p.chance_percent ?? 0} onChange={(e) => updRoulette(i, { chance_percent: parseFloat(e.target.value) || 0 })} placeholder="% chance" />
