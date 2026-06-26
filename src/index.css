@@ -408,6 +408,7 @@ html.inline-mode #root {
   min-height: 100vh;
   box-shadow: 0 0 60px hsl(0 0% 0% / 0.4);
   background: hsl(var(--background));
+  overflow-x: hidden;
 }
 @media (min-width: 481px) {
   html.inline-mode #root {
