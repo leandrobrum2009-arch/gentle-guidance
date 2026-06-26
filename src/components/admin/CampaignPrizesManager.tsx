@@ -167,7 +167,19 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
       {/* Mystery Boxes */}
       <Card className="p-6 rounded-2xl">
         <SectionHeader icon={Gift} title="Caixas Surpresas" color="bg-orange-500/10 text-orange-500" count={boxes.length} onAdd={addBox} addLabel="Nova Caixa" />
+        <p className="text-[11px] text-muted-foreground mb-3 leading-relaxed">
+          Crie uma caixa, defina o <b>custo de abertura</b> e adicione os <b>prêmios</b> que podem sair. A <b>% de chance</b> de cada prêmio determina a probabilidade de sair (a soma não precisa ser 100, é proporcional). Sem prêmios cadastrados, a caixa <b>não aparece no site</b>.
+        </p>
         <div className="space-y-3">
+          {boxes.length > 0 && (
+            <div className="grid grid-cols-12 gap-2 px-3 text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <span className="col-span-4">Nome da Caixa</span>
+              <span className="col-span-2">Raridade</span>
+              <span className="col-span-2">Custo (R$)</span>
+              <span className="col-span-2">Status</span>
+              <span className="col-span-2 text-right">Prêmios</span>
+            </div>
+          )}
           {boxes.map((b, i) => (
             <div key={b.id} className="bg-secondary/40 rounded-xl border border-border">
               <div className="grid grid-cols-12 gap-2 items-center p-3">
@@ -184,7 +196,10 @@ export default function CampaignPrizesManager({ campaignId }: { campaignId: stri
               {openBox === b.id && (
                 <div className="border-t border-border p-3 space-y-2 bg-background/40">
                   <div className="flex justify-between items-center">
-                    <Label className="text-xs font-bold">Prêmios desta caixa</Label>
+                    <div>
+                      <Label className="text-xs font-bold">Prêmios desta caixa</Label>
+                      <p className="text-[10px] text-muted-foreground">Título · Tipo · Valor (R$/pontos) · % de chance</p>
+                    </div>
                     <Button size="sm" variant="outline" onClick={() => addBoxPrize(b.id)}><Plus className="h-3 w-3 mr-1" /> Prêmio</Button>
                   </div>
                   {(boxPrizes[b.id] || []).map((bp, idx) => (
