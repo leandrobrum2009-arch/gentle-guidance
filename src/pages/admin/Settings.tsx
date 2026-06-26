@@ -91,7 +91,8 @@ export default function AdminSettings() {
     home_show_hall_fame: "Exibir Hall da Fama na Home",
     home_show_live_activity: "Exibir Atividade em Tempo Real (Flutuante)",
     home_testimonials_json: "Depoimentos Personalizados (JSON)",
-    home_hall_fame_json: "Hall da Fama Personalizado (JSON)"
+    home_hall_fame_json: "Hall da Fama Personalizado (JSON)",
+    home_show_games_combo: "Exibir Combo de Jogos (Roleta/Raspadinha/Caixa/Ranking/Afiliados)"
   };
 
   useEffect(() => {
@@ -444,6 +445,12 @@ export default function AdminSettings() {
                       s={settings.find(s => s.key === 'home_show_live_activity')} 
                       onUpdate={handleUpdate} 
                       label={settingNames['home_show_live_activity']}
+                      getIcon={getIcon}
+                    />
+                    <SettingField 
+                      s={settings.find(s => s.key === 'home_show_games_combo')} 
+                      onUpdate={handleUpdate} 
+                      label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
                   </div>
