@@ -228,6 +228,7 @@ export default function AdminSettings() {
           <TabsTrigger value="payment" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Pagamentos</TabsTrigger>
           <TabsTrigger value="finance" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Financeiro</TabsTrigger>
           <TabsTrigger value="company" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Empresa</TabsTrigger>
+          <TabsTrigger value="menu" className="rounded-xl px-4 py-2 data-[state=active]:bg-background data-[state=active]:shadow-md font-bold text-[10px] md:text-sm flex-1 md:flex-none">Menu</TabsTrigger>
         </TabsList>
 
         <TabsContent value="visual" className="space-y-8 outline-none">
