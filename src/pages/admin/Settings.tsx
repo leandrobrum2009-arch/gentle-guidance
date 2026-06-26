@@ -95,7 +95,13 @@ export default function AdminSettings() {
     home_show_games_combo: "Exibir Combo de Jogos (Roleta/Raspadinha/Caixa/Ranking/Afiliados)"
     ,
     whatsapp_group_link: "Link do Grupo do WhatsApp (botão flutuante)",
-    whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp"
+    whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp",
+    menu_campanhas_enabled: "Menu: Campanhas",
+    menu_ganhadores_enabled: "Menu: Ganhadores",
+    menu_federal_enabled: "Menu: Federal (Resultados)",
+    menu_comunicados_enabled: "Menu: Comunicados",
+    menu_suporte_enabled: "Menu: Suporte",
+    menu_minha_conta_enabled: "Menu: Minha Conta"
   };
 
   useEffect(() => {
@@ -930,6 +936,21 @@ export default function AdminSettings() {
                     />
                   </div>
                 ))}
+             </div>
+             <div className="mt-6 pt-6 border-t border-border/50">
+               <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground mb-4">Itens do Menu (Header)</h3>
+               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                 {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled'].map(key => (
+                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
+                     <SettingField
+                       s={settings.find(s => s.key === key)}
+                       onUpdate={handleUpdate}
+                       label={settingNames[key]}
+                       getIcon={getIcon}
+                     />
+                   </div>
+                 ))}
+               </div>
              </div>
            </Card>
         </TabsContent>

@@ -12,13 +12,12 @@ import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
 import HeaderInline from "./HeaderInline";
 
-const navLinks = [
-  
-  { label: "Campanhas", href: "/campanhas" },
-  { label: "Ganhadores", href: "/ganhadores" },
-  { label: "Federal", href: "/resultado-federal" },
-  { label: "Comunicados", href: "/comunicados" },
-  { label: "Suporte", href: "/contato" },
+const ALL_NAV_LINKS = [
+  { key: "campanhas", label: "Campanhas", href: "/campanhas" },
+  { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
+  { key: "federal", label: "Federal", href: "/resultado-federal" },
+  { key: "comunicados", label: "Comunicados", href: "/comunicados" },
+  { key: "suporte", label: "Suporte", href: "/contato" },
 ];
 
 const LogoFallback = ({ siteName }: { siteName?: string }) => (
@@ -51,6 +50,10 @@ const Header = () => {
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
   const headerRef = React.useRef<HTMLElement>(null);
+
+  const navLinks = ALL_NAV_LINKS.filter(
+    (l) => String((siteSettings as any)?.[`menu_${l.key}_enabled`] ?? "true") !== "false"
+  );
 
   useEffect(() => {
     if (headerRef.current) {
