@@ -77,7 +77,7 @@ const HeaderInline = () => {
             )}
           </Link>
 
-          {!user ? (
+          {!user && String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
             <button
               onClick={() => setRegisterOpen(true)}
               aria-label="Cadastre-se grátis"

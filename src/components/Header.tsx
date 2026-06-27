@@ -194,7 +194,7 @@ const Header = () => {
             </div>
 
             <div className="flex items-center gap-3">
-              {!user && (
+              {!user && String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" && (
                 <Button
                     onClick={() => setRegisterOpen(true)}
                     size="sm"
