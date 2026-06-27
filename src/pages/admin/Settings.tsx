@@ -478,7 +478,7 @@ export default function AdminSettings() {
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
-                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados'].map((k) => (
+                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados','home_show_how_it_works','home_show_faq','home_show_trust_badges','home_show_cta'].map((k) => (
                       <SettingField
                         key={k}
                         s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
