@@ -38,6 +38,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
 import { useTheme } from "@/components/ThemeProvider";
 import { SEO } from "@/components/SEO";
+import HomeExtraSections from "@/components/home/HomeExtraSections";
 
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
@@ -616,6 +617,8 @@ const Index = () => {
               customReviewsJson={siteSettings?.home_testimonials_json}
             />
           )}
+
+          <HomeExtraSections settings={siteSettings} />
         </>
       )}
 
