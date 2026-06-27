@@ -38,6 +38,7 @@ import { playSound, hapticFeedback } from "@/lib/sounds";
 import Particles from "@/components/Particles";
 import { useTheme } from "@/components/ThemeProvider";
 import { SEO } from "@/components/SEO";
+import HomeExtraSections from "@/components/home/HomeExtraSections";
 
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
@@ -513,50 +514,6 @@ const Index = () => {
                )}
              </div>
 
-             <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
-                {/* Small Featured Roulette - Redesigned */}
-                {featuredCampaign?.roulette_enabled && (
-                  <div className="rounded-3xl border border-primary/20 bg-gradient-to-br from-card via-card to-primary/10 p-8 shadow-2xl relative overflow-hidden group max-w-2xl mx-auto w-full">
-                    <div className="absolute -right-16 -top-16 h-48 w-48 bg-primary/30 blur-3xl rounded-full group-hover:bg-primary/40 transition-all duration-700" />
-                    <div className="absolute -left-16 -bottom-16 h-48 w-48 bg-secondary/30 blur-3xl rounded-full" />
-                    <div className="relative z-10 flex flex-col items-center text-center">
-                      <Badge className="bg-primary px-3 py-1 text-[10px] font-black uppercase tracking-[0.2em] mb-4 shadow-lg shadow-primary/20">
-                        🔥 OPORTUNIDADE ÚNICA
-                      </Badge>
-                      <h3 className="text-2xl md:text-3xl font-black uppercase italic tracking-tighter leading-tight mb-2">
-                        Gire a <span className="text-animate-gradient">Sorte</span> Agora!
-                      </h3>
-                      <p className="text-xs text-muted-foreground uppercase font-bold tracking-widest mb-6 max-w-xs">
-                        Prêmios instantâneos exclusivos para participantes ativos. Não fique de fora!
-                      </p>
-                      <div className="relative flex justify-center py-4 mb-6">
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                          className="relative h-40 w-40 rounded-full border-4 border-dashed border-primary/30 flex items-center justify-center p-3"
-                        >
-                          <div className="h-full w-full rounded-full bg-gradient-to-tr from-primary/20 via-card to-secondary/20 border-2 border-primary/30 flex items-center justify-center shadow-inner">
-                            <RotateCw className="h-12 w-12 text-primary opacity-60" />
-                          </div>
-                        </motion.div>
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <motion.div
-                            animate={{ scale: [1, 1.2, 1] }}
-                            transition={{ duration: 2, repeat: Infinity }}
-                          >
-                            <Gamepad2 className="h-12 w-12 text-primary drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)]" />
-                          </motion.div>
-                        </div>
-                      </div>
-                      <Link to={`/roleta`} className="w-full">
-                        <Button className="w-full h-14 rounded-2xl font-black uppercase italic tracking-widest glow-primary group shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all border-light-path border-[#22c55e]/30 relative z-10">
-                          ACESSAR ROLETA <Sparkles className="ml-2 h-5 w-5" />
-                        </Button>
-                      </Link>
-                    </div>
-                  </div>
-                )}
-             </div>
            </section>
 
 
@@ -660,6 +617,8 @@ const Index = () => {
               customReviewsJson={siteSettings?.home_testimonials_json}
             />
           )}
+
+          <HomeExtraSections settings={siteSettings} />
         </>
       )}
 

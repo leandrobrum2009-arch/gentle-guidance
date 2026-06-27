@@ -98,6 +98,10 @@ export default function AdminSettings() {
     home_show_game_caixa: "Bloco: Caixa Misteriosa",
     home_show_game_ranking: "Bloco: Ranking Top",
     home_show_game_afiliados: "Bloco: Afiliados",
+    home_show_how_it_works: "Bloco: Como Participar",
+    home_show_faq: "Bloco: Perguntas Frequentes (FAQ)",
+    home_show_trust_badges: "Bloco: Selos de Confiança",
+    home_show_cta: "Bloco: Chamada Final (CTA)",
     whatsapp_group_link: "Link do Grupo do WhatsApp (botão flutuante)",
     whatsapp_group_enabled: "Exibir botão flutuante do Grupo do WhatsApp",
     menu_campanhas_enabled: "Menu: Campanhas",
@@ -474,7 +478,7 @@ export default function AdminSettings() {
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
-                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados'].map((k) => (
+                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados','home_show_how_it_works','home_show_faq','home_show_trust_badges','home_show_cta'].map((k) => (
                       <SettingField
                         key={k}
                         s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
