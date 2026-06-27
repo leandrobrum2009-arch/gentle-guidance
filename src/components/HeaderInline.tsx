@@ -75,6 +75,15 @@ const HeaderInline = () => {
             )}
           </Link>
 
+          {!user ? (
+            <Link
+              to="/cadastrar"
+              aria-label="Cadastre-se grátis"
+              className="flex h-9 items-center gap-1 rounded-full px-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black font-black uppercase tracking-widest text-[9px] shadow-md ring-2 ring-yellow-300/60 animate-pulse"
+            >
+              Cadastre-se
+            </Link>
+          ) : (
           <a
             href={supportLink}
             target={supportLink.startsWith('http') ? "_blank" : undefined}
@@ -85,6 +94,7 @@ const HeaderInline = () => {
             <LifeBuoy className="h-5 w-5" />
             <span className="text-[9px] font-black uppercase tracking-widest">Suporte</span>
           </a>
+          )}
         </div>
       </header>
 
