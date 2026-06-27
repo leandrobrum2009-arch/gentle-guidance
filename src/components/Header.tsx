@@ -10,6 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
 import HeaderInline from "./HeaderInline";
+import { QuickRegisterDialog } from "./QuickRegisterDialog";
 
 const ALL_NAV_LINKS = [
   { key: "campanhas", label: "Campanhas", href: "/campanhas" },
@@ -39,6 +40,7 @@ const LogoFallback = ({ siteName }: { siteName?: string }) => (
 
 const Header = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [logoError, setLogoError] = useState(false);
   const { user, signOut } = useAuth();
@@ -193,8 +195,8 @@ const Header = () => {
 
             <div className="flex items-center gap-3">
               {!user && (
-                <Link to="/cadastrar" className="flex">
-                  <Button
+                <Button
+                    onClick={() => setRegisterOpen(true)}
                     size="sm"
                     className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-4 sm:px-5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black hover:opacity-95 shadow-[0_0_0_0_rgba(250,204,21,0.7)] animate-pulse ring-2 ring-yellow-300/60"
                     aria-label="Cadastre-se grátis"
@@ -202,7 +204,6 @@ const Header = () => {
                     <Zap className="h-3.5 w-3.5 fill-current" />
                     Cadastre-se
                   </Button>
-                </Link>
               )}
               {user ? (
                 <div className="flex items-center gap-3">
@@ -370,6 +371,7 @@ const Header = () => {
           </motion.div>
         )}
       </AnimatePresence>
+      <QuickRegisterDialog isOpen={registerOpen} onOpenChange={setRegisterOpen} onSuccess={() => navigate("/minha-conta")} />
     </header>
   );
 };
