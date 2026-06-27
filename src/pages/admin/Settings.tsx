@@ -977,7 +977,7 @@ export default function AdminSettings() {
             </CardHeader>
             <CardContent className="pt-8">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled'].map(key => (
+                {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled','header_register_button_enabled'].map(key => (
                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
                     <SettingField
                       s={settings.find(s => s.key === key)}
