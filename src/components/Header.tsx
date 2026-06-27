@@ -198,11 +198,10 @@ const Header = () => {
                 <Button
                     onClick={() => setRegisterOpen(true)}
                     size="sm"
-                    className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-4 sm:px-5 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black hover:opacity-95 shadow-[0_0_0_0_rgba(250,204,21,0.7)] animate-pulse ring-2 ring-yellow-300/60"
+                    className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6 sm:px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
                     aria-label="Cadastre-se grátis"
                   >
-                    <Zap className="h-3.5 w-3.5 fill-current" />
-                    Cadastre-se
+                    Cadastre-se <Zap className="ml-1 h-3 w-3 fill-current" />
                   </Button>
               )}
               {user ? (
@@ -248,11 +247,6 @@ const Header = () => {
                   <Link to="/entrar">
                     <Button size="sm" variant="ghost" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6">
                       Entrar
-                    </Button>
-                  </Link>
-                  <Link to="/cadastrar">
-                    <Button size="sm" className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30">
-                      Participar <Zap className="ml-1 h-3 w-3 fill-current" />
                     </Button>
                   </Link>
                 </div>
