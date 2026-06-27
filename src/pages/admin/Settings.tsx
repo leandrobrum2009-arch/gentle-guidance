@@ -126,7 +126,12 @@ export default function AdminSettings() {
   };
 
   const handleUpdate = (key: string, value: string) => {
-    setSettings(prev => prev.map(s => s.key === key ? { ...s, value } : s));
+    setSettings(prev => {
+      const exists = prev.some(s => s.key === key);
+      if (exists) return prev.map(s => s.key === key ? { ...s, value } : s);
+      // Insert new key (boolean toggle for keys missing from DB)
+      return [...prev, { key, value, type: /^(true|false)$/.test(value) ? 'boolean' : 'text' } as any];
+    });
   };
 
   const handleUpload = async (key: string, file: File) => {
@@ -160,7 +165,9 @@ export default function AdminSettings() {
     try {
       for (const s of settings) {
         const initial = initialSettings.find(i => i.key === s.key);
-        if (initial && initial.value !== s.value) {
+        if (!initial) {
+          await supabase.from("site_settings").insert({ key: s.key, value: s.value, type: (s as any).type ?? 'text' } as any);
+        } else if (initial.value !== s.value) {
           await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
         }
       }
