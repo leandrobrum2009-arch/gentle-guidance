@@ -110,6 +110,8 @@ export default function AdminSettings() {
     menu_comunicados_enabled: "Menu: Comunicados",
     menu_suporte_enabled: "Menu: Suporte",
     menu_minha_conta_enabled: "Menu: Minha Conta"
+    ,
+    header_register_button_enabled: "Botão 'Cadastre-se' destacado no header"
   };
 
   useEffect(() => {
