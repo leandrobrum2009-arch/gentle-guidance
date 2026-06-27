@@ -284,7 +284,7 @@ const Index = () => {
        />
        {/* Global Background Particles */}
 
-       <div className="fixed inset-0 z-0">
+       <div className="fixed inset-0 z-0 pointer-events-none">
          <Particles count={25} />
        </div>
 
