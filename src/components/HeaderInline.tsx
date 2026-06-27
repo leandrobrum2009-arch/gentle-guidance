@@ -8,6 +8,7 @@ import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useData";
 import { toast } from "sonner";
+import { QuickRegisterDialog } from "./QuickRegisterDialog";
 
 const ALL_NAV_LINKS = [
   { key: "campanhas", label: "Campanhas", href: "/campanhas" },
@@ -19,6 +20,7 @@ const ALL_NAV_LINKS = [
 
 const HeaderInline = () => {
   const [open, setOpen] = useState(false);
+  const [registerOpen, setRegisterOpen] = useState(false);
   const [profile, setProfile] = useState<any>(null);
   const { user, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
@@ -76,13 +78,13 @@ const HeaderInline = () => {
           </Link>
 
           {!user ? (
-            <Link
-              to="/cadastrar"
+            <button
+              onClick={() => setRegisterOpen(true)}
               aria-label="Cadastre-se grátis"
               className="flex h-9 items-center gap-1 rounded-full px-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black font-black uppercase tracking-widest text-[9px] shadow-md ring-2 ring-yellow-300/60 animate-pulse"
             >
               Cadastre-se
-            </Link>
+            </button>
           ) : (
           <a
             href={supportLink}
@@ -207,6 +209,7 @@ const HeaderInline = () => {
           </>
         )}
       </AnimatePresence>
+      <QuickRegisterDialog isOpen={registerOpen} onOpenChange={setRegisterOpen} onSuccess={() => navigate("/minha-conta")} />
     </>
   );
 };
