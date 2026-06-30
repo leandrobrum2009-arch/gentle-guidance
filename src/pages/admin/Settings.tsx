@@ -160,7 +160,8 @@ export default function AdminSettings() {
 
       let { bucket: uploadedBucket, error: uploadError } = await uploadToBucket(SITE_ASSETS_BUCKET);
 
-      const isBucketMissing = uploadError?.message?.toLowerCase().includes('bucket') && uploadError?.message?.toLowerCase().includes('not found');
+      const uploadErrorText = JSON.stringify(uploadError || {}).toLowerCase();
+      const isBucketMissing = uploadErrorText.includes('bucket') && uploadErrorText.includes('not found');
       if (isBucketMissing) {
         const fallbackResult = await uploadToBucket(FALLBACK_IMAGE_BUCKET);
         uploadedBucket = fallbackResult.bucket;
