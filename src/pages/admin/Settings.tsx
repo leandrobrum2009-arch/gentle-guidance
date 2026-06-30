@@ -14,6 +14,9 @@ import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRole } from "@/hooks/useAdmin";
 
+const SITE_ASSETS_BUCKET = 'site-assets';
+const FALLBACK_IMAGE_BUCKET = 'campaigns';
+
 export default function AdminSettings() {
   const queryClient = useQueryClient();
   const [settings, setSettings] = useState<any[]>([]);
@@ -144,17 +147,31 @@ export default function AdminSettings() {
     setUploading(key);
     try {
       const fileExt = file.name.split('.').pop();
-      const fileName = `${key}-${Math.random().toString(36).substring(7)}.${fileExt}`;
+      const fileName = `${key}-${crypto.randomUUID()}.${fileExt}`;
       const filePath = `settings/${fileName}`;
 
-      const { error: uploadError } = await supabase.storage
-        .from('site-assets')
-        .upload(filePath, file);
+      const uploadToBucket = async (bucket: string) => {
+        const { error } = await supabase.storage
+          .from(bucket)
+          .upload(filePath, file, { upsert: true });
+
+        return { bucket, error };
+      };
+
+      let { bucket: uploadedBucket, error: uploadError } = await uploadToBucket(SITE_ASSETS_BUCKET);
+
+      const uploadErrorText = JSON.stringify(uploadError || {}).toLowerCase();
+      const isBucketMissing = uploadErrorText.includes('bucket') && uploadErrorText.includes('not found');
+      if (isBucketMissing) {
+        const fallbackResult = await uploadToBucket(FALLBACK_IMAGE_BUCKET);
+        uploadedBucket = fallbackResult.bucket;
+        uploadError = fallbackResult.error;
+      }
 
       if (uploadError) throw uploadError;
 
       const { data: { publicUrl } } = supabase.storage
-        .from('site-assets')
+        .from(uploadedBucket)
         .getPublicUrl(filePath);
 
       handleUpdate(key, publicUrl);
