@@ -81,18 +81,23 @@ export default function AdminUsers() {
       if (isMaster) {
         // 2. Update Role (Master only)
         if (editingUser.role) {
-          const { error: roleError } = await supabase
+          // Replace all existing roles with the newly selected one so the
+          // user does not end up with multiple stacked roles (e.g. user + admin).
+          const { error: deleteError } = await supabase
             .from("user_roles")
-            .upsert({ 
-              user_id: editingUser.user_id, 
-              role: editingUser.role 
-            }, { onConflict: 'user_id,role' });
-          
-          if (roleError) {
-             // If unique constraint fails because they already have another role, we might need to handle it.
-             // Usually user_roles has (user_id, role) unique.
-             console.error("Role update error:", roleError);
-          }
+            .delete()
+            .eq("user_id", editingUser.user_id);
+
+          if (deleteError) throw deleteError;
+
+          const { error: insertError } = await supabase
+            .from("user_roles")
+            .insert({
+              user_id: editingUser.user_id,
+              role: editingUser.role,
+            });
+
+          if (insertError) throw insertError;
         }
 
         // 3. Update Feature Config (Master only)
