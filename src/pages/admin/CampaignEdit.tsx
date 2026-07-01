@@ -1053,7 +1053,7 @@ export default function AdminCampaignEdit() {
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Início do Período</Label>
                           <Input 
                             type="datetime-local" 
-                            value={p.start_date.slice(0, 16)} 
+                            value={(p.start_date || "").slice(0, 16)} 
                             onChange={(e) => {
                               const n = [...form.ranking_prizes];
                               n[i].start_date = new Date(e.target.value).toISOString();
