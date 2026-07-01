@@ -120,7 +120,17 @@ export default function AdminCampaignEdit() {
       lucky_numbers_prizes: (data.lucky_numbers_prizes as any[]) ?? [], 
       main_prizes: (data.main_prizes as any[]) ?? [], 
       roulette_rules: (data.roulette_rules as any[]) ?? [],
-      ranking_prizes: (data.ranking_prizes as any[]) ?? [],
+      ranking_prizes: ((data.ranking_prizes as any[]) ?? [])
+        .filter((p: any) => p && typeof p === "object" && ("start_date" in p || "title" in p || "prize_maior" in p))
+        .map((p: any) => ({
+          id: p.id ?? crypto.randomUUID(),
+          title: p.title ?? "",
+          start_date: p.start_date ?? "",
+          end_date: p.end_date ?? "",
+          prize_maior: p.prize_maior ?? "",
+          prize_menor: p.prize_menor ?? "",
+          active: !!p.active,
+        })),
       prize_rules: (data.prize_rules as any[]) ?? [],
       progress_text: data.progress_text ?? "",
       mystery_box_available_count: data.mystery_box_available_count ?? 0,
