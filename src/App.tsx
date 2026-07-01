@@ -6,6 +6,7 @@ import FloatingActions from "./components/FloatingActions";
 import WhatsAppGroupInviteDialog from "./components/WhatsAppGroupInviteDialog";
 import { AffiliateTracker } from "./components/AffiliateTracker";
 import { SiteSettingsInjector } from "./components/SiteSettingsInjector";
+import ScrollToTop from "./components/ScrollToTop";
 import Roulette from "./pages/Roulette";
 import ScratchCard from "./pages/ScratchCard";
 import MysteryBox from "./pages/MysteryBox";
@@ -163,6 +164,7 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ScrollToTop />
         <RouteExtras />
         <AffiliateTracker />
         <Routes>
