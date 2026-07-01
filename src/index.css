@@ -18,6 +18,13 @@ aside:has(a[href*="lovable.dev"]) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
+  /* Prevent italic/oblique last-letter clipping on gradient/neon headings */
+  .italic,
+  [class*="text-animate-gradient"],
+  [class*="neon-text"] {
+    padding-right: 0.12em;
+  }
 }
 
 .holographic-card::before {
