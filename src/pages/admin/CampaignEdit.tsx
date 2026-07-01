@@ -1065,7 +1065,7 @@ export default function AdminCampaignEdit() {
                           <Label className="text-xs font-bold uppercase tracking-wider text-muted-foreground">Fim do Período (Sorteio)</Label>
                           <Input 
                             type="datetime-local" 
-                            value={p.end_date.slice(0, 16)} 
+                            value={(p.end_date || "").slice(0, 16)} 
                             onChange={(e) => {
                               const n = [...form.ranking_prizes];
                               n[i].end_date = new Date(e.target.value).toISOString();
