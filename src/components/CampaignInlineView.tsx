@@ -816,7 +816,9 @@ const CampaignInlineView: React.FC<Props> = ({
             {[
               { label: "Compradores", value: ranking?.length || 0 },
               { label: "Prêmios", value: recentWinners.length },
-              { label: "Cotas", value: campaign.sold_tickets },
+              { label: "Cotas", value: (campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined && campaign.fake_progress_percentage !== null)
+                ? Math.round((campaign.total_tickets * Number(campaign.fake_progress_percentage)) / 100)
+                : campaign.sold_tickets },
             ].map((item) => (
               <div key={item.label} className="rounded-lg border border-border bg-secondary/30 p-2 text-center">
                 <p className="text-sm font-black text-primary leading-none">{Number(item.value).toLocaleString("pt-BR")}</p>

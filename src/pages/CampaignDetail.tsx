@@ -520,7 +520,7 @@ const CampaignDetail = () => {
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-black text-foreground italic">{progress}% <span className="text-muted-foreground not-italic font-bold">concluído</span></span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{campaign.sold_tickets.toLocaleString("pt-BR")} vendidos</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{((campaign.fake_progress_enabled && campaign.fake_progress_percentage != null) ? Math.round((campaign.total_tickets * Number(campaign.fake_progress_percentage)) / 100) : campaign.sold_tickets).toLocaleString("pt-BR")} vendidos</span>
             </div>
             <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
               <motion.div 

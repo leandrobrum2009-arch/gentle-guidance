@@ -16,7 +16,13 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
   const now = new Date();
   const isExpired = campaign.draw_date && new Date(campaign.draw_date) <= now;
   const isCompleted = campaign.status === "completed" || campaign.status === "finished" || campaign.status === "drawn" || isExpired;
-  const rawProgress = (campaign.sold_tickets / campaign.total_tickets) * 100;
+  const fakeEnabled = campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined && campaign.fake_progress_percentage !== null;
+  const rawProgress = fakeEnabled
+    ? Number(campaign.fake_progress_percentage)
+    : (campaign.sold_tickets / campaign.total_tickets) * 100;
+  const displaySoldTickets = fakeEnabled
+    ? Math.round((campaign.total_tickets * Number(campaign.fake_progress_percentage)) / 100)
+    : campaign.sold_tickets;
   const progress = Math.round(rawProgress);
   const displayProgress = rawProgress > 0 && rawProgress < 1 ? rawProgress.toFixed(2) : progress;
   
@@ -157,7 +163,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-[10px] font-black uppercase tracking-widest">
                 <span className="text-muted-foreground flex items-center gap-1">
-                  <TrendingUp className="h-3.5 w-3.5" /> {isCompleted ? 'Finalizado' : `${campaign.sold_tickets.toLocaleString()} vendidos`}
+                  <TrendingUp className="h-3.5 w-3.5" /> {isCompleted ? 'Finalizado' : `${displaySoldTickets.toLocaleString()} vendidos`}
                 </span>
                 <span className={cn("font-black", isCompleted ? "text-blue-500" : "text-primary")}>
                   {isCompleted ? '100%' : `${displayProgress}%`}
