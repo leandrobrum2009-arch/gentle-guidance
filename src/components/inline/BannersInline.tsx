@@ -38,10 +38,10 @@ const BannersInline = () => {
         <div className="flex">
           {banners.map((banner) => {
             const content = (
-              <div className="relative min-h-36 overflow-hidden">
-                <img src={banner.image_url} alt={banner.title} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
-                <div className="absolute inset-0 bg-gradient-to-r from-background/95 via-background/70 to-background/20" />
-                <div className="relative z-10 flex min-h-36 flex-col justify-end gap-2 p-4">
+              <div className="relative w-full overflow-hidden aspect-[2/1]">
+                <img src={banner.image_url} alt={banner.title} className="absolute inset-0 h-full w-full object-contain bg-card" loading="lazy" />
+                <div className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-background/90 via-background/40 to-transparent" />
+                <div className="relative z-10 flex h-full flex-col justify-end gap-2 p-4">
                   <div className="max-w-[78%]">
                     <h3 className="line-clamp-2 text-base font-black uppercase italic leading-tight tracking-normal text-foreground">{banner.title}</h3>
                     {banner.subtitle && <p className="mt-1 line-clamp-2 text-[11px] font-bold leading-snug text-muted-foreground">{banner.subtitle}</p>}
