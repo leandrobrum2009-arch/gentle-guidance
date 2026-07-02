@@ -369,6 +369,11 @@ const Index = () => {
               </div>
             )}
 
+          {/* Banners promocionais */}
+          <section className="container relative z-30 py-4">
+            <BannersInline />
+          </section>
+
           {/* Gamification Navigation - Improved Spacing and Visuals */}
           {String(siteSettings?.home_show_games_combo ?? "true") === "true" && (
           <section className="container relative z-30 -mt-6 md:-mt-12 py-6 md:py-8">
