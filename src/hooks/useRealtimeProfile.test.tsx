@@ -8,7 +8,7 @@ const on = vi.fn((_evt: string, _cfg: any, cb: any) => {
   capturedHandler = cb;
   return { subscribe };
 });
-const channel = vi.fn(() => ({ on }));
+const channel: (name: string) => any = vi.fn(() => ({ on }));
 const maybeSingle = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
