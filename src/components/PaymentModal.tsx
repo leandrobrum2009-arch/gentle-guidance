@@ -59,6 +59,28 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
       setOrder(data);
       setLoading(false);
 
+      // Auto-debit from balance when user has enough funds — avoids leaving the order stuck in PIX
+      if (data.payment_status === 'pending') {
+        const total = Number(data.total_amount || 0);
+        const bal = Number((await supabase.from('profiles').select('balance').eq('user_id', userData!.user!.id).single()).data?.balance || 0);
+        if (bal >= total && total > 0) {
+          try {
+            const { data: payResp } = await supabase.rpc('pay_with_balance', { p_order_id: orderId, p_user_id: userData!.user!.id });
+            const payData: any = payResp;
+            if (payData?.success) {
+              setUserBalance(bal - total);
+              setStatus('paid');
+              setOrder((prev: any) => ({ ...prev, payment_status: 'paid', paid_at: new Date().toISOString() }));
+              onPaymentSuccess();
+              toast.success('Pagamento realizado automaticamente com seu saldo!');
+              return;
+            }
+          } catch (e) {
+            console.warn('Auto pay with balance failed, falling back to PIX', e);
+          }
+        }
+      }
+
       if (data.payment_status === 'pending' && !data.pix_code) {
         setGeneratingPix(true);
         setPixError(null);
