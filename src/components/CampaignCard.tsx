@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import type { Campaign } from "@/hooks/useData";
 import CountdownTimer from "./CountdownTimer";
+import { getCampaignDisplaySales } from "@/lib/campaign-progress";
 
 interface CampaignCardProps {
   campaign: Campaign;
@@ -16,15 +17,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
   const now = new Date();
   const isExpired = campaign.draw_date && new Date(campaign.draw_date) <= now;
   const isCompleted = campaign.status === "completed" || campaign.status === "finished" || campaign.status === "drawn" || isExpired;
-  const fakeEnabled = campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined && campaign.fake_progress_percentage !== null;
-  const rawProgress = fakeEnabled
-    ? Number(campaign.fake_progress_percentage)
-    : (campaign.sold_tickets / campaign.total_tickets) * 100;
-  const displaySoldTickets = fakeEnabled
-    ? Math.round((campaign.total_tickets * Number(campaign.fake_progress_percentage)) / 100)
-    : campaign.sold_tickets;
-  const progress = Math.round(rawProgress);
-  const displayProgress = rawProgress > 0 && rawProgress < 1 ? rawProgress.toFixed(2) : progress;
+  const { displaySoldTickets, rawProgress, roundedProgress, progressText } = getCampaignDisplaySales(campaign);
   
   return (
     <motion.div
@@ -54,7 +47,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   Premium
                 </Badge>
               )}
-              {progress > 80 && campaign.status === 'active' && (
+              {roundedProgress > 80 && campaign.status === 'active' && (
                 <Badge variant="destructive" className="px-2 py-0.5 text-[8px] font-black uppercase tracking-widest animate-pulse">
                   Últimas Cotas
                 </Badge>
@@ -166,13 +159,13 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
                   <TrendingUp className="h-3.5 w-3.5" /> {isCompleted ? 'Finalizado' : `${displaySoldTickets.toLocaleString()} vendidos`}
                 </span>
                 <span className={cn("font-black", isCompleted ? "text-blue-500" : "text-primary")}>
-                  {isCompleted ? '100%' : `${displayProgress}%`}
+                  {isCompleted ? '100%' : `${progressText}%`}
                 </span>
               </div>
               <div className="h-1.5 w-full rounded-full bg-secondary overflow-hidden border border-border">
                 <motion.div
                   initial={{ width: 0 }}
-                  animate={{ width: isCompleted ? '100%' : `${Math.max(progress, rawProgress > 0 ? 0.5 : 0)}%` }}
+                  animate={{ width: isCompleted ? '100%' : `${Math.max(rawProgress, rawProgress > 0 ? 0.5 : 0)}%` }}
                   className={cn("h-full rounded-full shadow-[0_0_10px_rgba(var(--primary-rgb),0.3)]", 
                     isCompleted ? "bg-blue-500" : "bg-primary"
                   )}
