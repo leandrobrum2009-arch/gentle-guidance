@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
+import { useRealtimeProfile } from "@/hooks/useRealtimeProfile";
 import { Badge } from "@/components/ui/badge";
 import { useSiteSettings } from "@/hooks/useData";
 import HeaderInline from "./HeaderInline";
@@ -45,7 +46,7 @@ const Header = () => {
   const [logoError, setLogoError] = useState(false);
   const { user, signOut } = useAuth();
   const { data: isAdmin } = useIsAdmin();
-  const [profile, setProfile] = useState<any>(null);
+  const { profile } = useRealtimeProfile(user?.id);
   const [unreadCount, setUnreadCount] = useState(0);
   const [scrolled, setScrolled] = useState(false);
   const { data: siteSettings } = useSiteSettings();
@@ -113,15 +114,10 @@ const Header = () => {
 
   useEffect(() => {
     if (user) {
-      const fetchProfile = async () => {
-        const { data } = await supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle();
-        setProfile(data);
-      };
       const fetchUnread = async () => {
         const { count } = await supabase.from("notifications").select("*", { count: 'exact', head: true }).eq("user_id", user.id).eq("is_read", false);
         setUnreadCount(count || 0);
       };
-      fetchProfile();
       fetchUnread();
 
       // Realtime subscription for notifications

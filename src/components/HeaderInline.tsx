@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRealtimeProfile } from "@/hooks/useRealtimeProfile";
 import { useIsAdmin } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { useSiteSettings } from "@/hooks/useData";
@@ -21,8 +22,8 @@ const ALL_NAV_LINKS = [
 const HeaderInline = () => {
   const [open, setOpen] = useState(false);
   const [registerOpen, setRegisterOpen] = useState(false);
-  const [profile, setProfile] = useState<any>(null);
   const { user, signOut } = useAuth();
+  const { profile } = useRealtimeProfile(user?.id);
   const { data: isAdmin } = useIsAdmin();
   const { data: siteSettings } = useSiteSettings();
   const navigate = useNavigate();
@@ -34,12 +35,6 @@ const HeaderInline = () => {
   useEffect(() => {
     document.documentElement.style.setProperty('--header-height', `64px`);
   }, []);
-
-  useEffect(() => {
-    if (!user) { setProfile(null); return; }
-    supabase.from("profiles").select("*").eq("user_id", user.id).maybeSingle()
-      .then(({ data }) => setProfile(data));
-  }, [user]);
 
   const supportLink = siteSettings?.support_whatsapp
     ? `https://wa.me/${String(siteSettings.support_whatsapp).replace(/\D/g, '')}`
