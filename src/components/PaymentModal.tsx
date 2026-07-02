@@ -59,6 +59,11 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
       setOrder(data);
       setLoading(false);
 
+      if (data.payment_status === 'expired') {
+        setStatus('expired');
+        return;
+      }
+
       if (data.payment_status === 'pending' && !data.pix_code) {
         setGeneratingPix(true);
         setPixError(null);
@@ -136,6 +141,10 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
             // Refresh order data to get tickets and updated status
             fetchOrder();
             onPaymentSuccess(); 
+          }
+          if (payload.new.payment_status === 'expired') {
+            setStatus('expired');
+            toast.error("Tempo esgotado! Gere um novo PIX para continuar.");
           }
         })
         .subscribe();
