@@ -368,9 +368,24 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
               </div>
               <div className="space-y-2">
                 <h2 className="text-2xl font-black uppercase italic tracking-tighter">TEMPO ESGOTADO</h2>
-                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">Infelizmente o tempo para pagamento expirou e seus números foram liberados para outros usuários.</p>
+                <p className="text-xs text-muted-foreground font-medium uppercase tracking-widest">O prazo para pagar este PIX expirou e seus números foram devolvidos ao estoque.</p>
               </div>
-              <Button variant="outline" className="w-full h-12 rounded-xl" onClick={() => onOpenChange(false)}>VOLTAR</Button>
+              <div className="w-full rounded-2xl border border-border/60 bg-muted/40 p-4 text-left space-y-2">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary">Como tentar novamente</p>
+                <ol className="text-xs text-muted-foreground space-y-1 list-decimal list-inside">
+                  <li>Feche esta janela.</li>
+                  <li>Escolha novamente a quantidade de cotas.</li>
+                  <li>Gere um novo PIX e finalize em até 15 minutos.</li>
+                </ol>
+              </div>
+              <div className="w-full space-y-2">
+                <Button className="w-full h-12 rounded-xl" onClick={() => { onOpenChange(false); onBuyMore?.(); }}>
+                  GERAR NOVO PIX
+                </Button>
+                <Button variant="ghost" className="w-full h-10 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={() => onOpenChange(false)}>
+                  Fechar
+                </Button>
+              </div>
             </motion.div>
           ) : (
             <motion.div 
