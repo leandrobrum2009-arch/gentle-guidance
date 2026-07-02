@@ -44,6 +44,7 @@ import CampaignLiveDraw from "@/components/CampaignLiveDraw";
 import LiveStreamPlayer from "@/components/LiveStreamPlayer";
 import CampaignInlineView from "@/components/CampaignInlineView";
 import { useSiteSettings } from "@/hooks/useData";
+import { getCampaignDisplaySales } from "@/lib/campaign-progress";
 
 
 
@@ -269,28 +270,9 @@ const CampaignDetail = () => {
   }, [campaignId, queryClient, user?.id]);
 
   const progressData = useMemo(() => {
-    if (!campaign) return { bar: 0, text: "0" };
-    
-    let val = 0;
-    
-    // If fake progress is enabled, use the fake percentage
-    if (campaign.fake_progress_enabled && campaign.fake_progress_percentage !== undefined) {
-      val = campaign.fake_progress_percentage;
-    } else {
-      if (campaign.sales_goal && campaign.sales_goal > 0) {
-        const currentSales = campaign.sold_tickets * Number(campaign.ticket_price);
-        val = (currentSales / campaign.sales_goal) * 100;
-      } else {
-        val = (campaign.sold_tickets / campaign.total_tickets) * 100;
-      }
-    }
-
-    const rounded = Math.round(val);
-    const defaultText = val > 0 && val < 1 ? val.toFixed(2) : String(rounded);
-    const text = campaign.progress_text || defaultText;
-    const bar = Math.min(100, Math.max(val, val > 0 ? 0.5 : 0));
-    
-    return { bar, text };
+    if (!campaign) return { bar: 0, text: "0", sold: 0 };
+    const display = getCampaignDisplaySales(campaign);
+    return { bar: display.progressBar, text: display.progressText, sold: display.displaySoldTickets };
   }, [campaign]);
 
   const progress = progressData.text;
@@ -304,8 +286,11 @@ const CampaignDetail = () => {
   const handlePaymentSuccess = useCallback(() => {
     // Just invalidate queries, don't navigate yet so user can see SuccessFlow
     queryClient.invalidateQueries({ queryKey: ["user-tickets"] });
-    queryClient.invalidateQueries({ queryKey: ["campaign"] });
-  }, [queryClient]);
+    queryClient.invalidateQueries({ queryKey: ["campaign", id || ""] });
+    queryClient.invalidateQueries({ queryKey: ["campaigns"] });
+    queryClient.invalidateQueries({ queryKey: ["tickets", campaignId] });
+    queryClient.invalidateQueries({ queryKey: ["campaign-ranking", campaignId] });
+  }, [queryClient, id, campaignId]);
 
   const handleOpenChange = useCallback((open: boolean) => {
     setIsPaymentModalOpen(open);
@@ -520,7 +505,7 @@ const CampaignDetail = () => {
           <div key={section} className="bg-card rounded-3xl p-6 md:p-8 shadow-sm border border-border space-y-4 md:space-y-6">
             <div className="flex items-center justify-between">
               <span className="text-sm font-black text-foreground italic">{progress}% <span className="text-muted-foreground not-italic font-bold">concluído</span></span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{((campaign.fake_progress_enabled && campaign.fake_progress_percentage != null) ? Math.round((campaign.total_tickets * Number(campaign.fake_progress_percentage)) / 100) : campaign.sold_tickets).toLocaleString("pt-BR")} vendidos</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">{progressData.sold.toLocaleString("pt-BR")} vendidos</span>
             </div>
             <div className="h-2 w-full bg-secondary rounded-full overflow-hidden">
               <motion.div 

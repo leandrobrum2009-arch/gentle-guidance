@@ -59,28 +59,6 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
       setOrder(data);
       setLoading(false);
 
-      // Auto-debit from balance when user has enough funds — avoids leaving the order stuck in PIX
-      if (data.payment_status === 'pending') {
-        const total = Number(data.total_amount || 0);
-        const bal = Number((await supabase.from('profiles').select('balance').eq('user_id', userData!.user!.id).single()).data?.balance || 0);
-        if (bal >= total && total > 0) {
-          try {
-            const { data: payResp } = await supabase.rpc('pay_with_balance', { p_order_id: orderId, p_user_id: userData!.user!.id });
-            const payData: any = payResp;
-            if (payData?.success) {
-              setUserBalance(bal - total);
-              setStatus('paid');
-              setOrder((prev: any) => ({ ...prev, payment_status: 'paid', paid_at: new Date().toISOString() }));
-              onPaymentSuccess();
-              toast.success('Pagamento realizado automaticamente com seu saldo!');
-              return;
-            }
-          } catch (e) {
-            console.warn('Auto pay with balance failed, falling back to PIX', e);
-          }
-        }
-      }
-
       if (data.payment_status === 'pending' && !data.pix_code) {
         setGeneratingPix(true);
         setPixError(null);
@@ -259,6 +237,9 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
 
       if (data.success) {
         toast.success(data.message || "Pagamento realizado com sucesso!");
+        if (typeof data.new_balance === 'number') {
+          setUserBalance(Number(data.new_balance));
+        }
         setStatus('paid');
         // Update local order state immediately to avoid UI lag/skipping steps
         setOrder((prev: any) => ({ ...prev, payment_status: 'paid', paid_at: new Date().toISOString() }));
@@ -485,7 +466,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
                   </div>
 
                   <div className="w-full space-y-3">
-                    {userBalance >= Number(order?.total_amount) ? (
+                    {userBalance >= Number(order?.total_amount) && order?.campaign_id !== '00000000-0000-0000-0000-000000000001' ? (
                       <div className="space-y-3 p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20">
                         <div className="flex items-center justify-between mb-2">
                            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600">Saldo Disponível</span>
