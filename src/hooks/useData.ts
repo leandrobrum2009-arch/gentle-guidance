@@ -282,21 +282,14 @@ export const useCampaigns = () =>
   });
 
 export const useActiveBanners = () => {
-  const tenantId = import.meta.env.VITE_TENANT_ID;
-
   return useQuery({
-    queryKey: ["active-banners", tenantId],
+    queryKey: ["active-banners"],
     queryFn: async () => {
-      if (!tenantId) return [];
-
-      const query = (supabase as any)
+      const { data, error } = await (supabase as any)
         .from("banners")
         .select("id, title, subtitle, image_url, link_url, order_index, is_active")
         .eq("is_active", true)
-        .eq("tenant_id", tenantId)
         .order("order_index", { ascending: true });
-
-      const { data, error } = await query;
       if (error) throw error;
       return (data as any) as Banner[];
     },

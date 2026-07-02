@@ -39,6 +39,7 @@ import Particles from "@/components/Particles";
 import { useTheme } from "@/components/ThemeProvider";
 import { SEO } from "@/components/SEO";
 import HomeExtraSections from "@/components/home/HomeExtraSections";
+import BannersInline from "@/components/inline/BannersInline";
 
 
 const SectionHeading = ({ icon: Icon, title, subtitle, badge }: { icon: any, title: string, subtitle: string, badge?: string }) => (
@@ -367,6 +368,11 @@ const Index = () => {
                   )}
               </div>
             )}
+
+          {/* Banners promocionais */}
+          <section className="container relative z-30 py-4">
+            <BannersInline />
+          </section>
 
           {/* Gamification Navigation - Improved Spacing and Visuals */}
           {String(siteSettings?.home_show_games_combo ?? "true") === "true" && (
