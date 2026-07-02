@@ -379,7 +379,7 @@ export const PaymentModal = ({ orderId, isOpen, onOpenChange, onPaymentSuccess, 
                 </ol>
               </div>
               <div className="w-full space-y-2">
-                <Button className="w-full h-12 rounded-xl" onClick={() => { onOpenChange(false); onBuyMore?.(); }}>
+                <Button className="w-full h-12 rounded-xl" onClick={() => { onOpenChange(false); onBuyMore?.(order?.quantity || 1); }}>
                   GERAR NOVO PIX
                 </Button>
                 <Button variant="ghost" className="w-full h-10 rounded-xl text-[10px] font-black uppercase tracking-widest text-muted-foreground" onClick={() => onOpenChange(false)}>
