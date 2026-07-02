@@ -245,6 +245,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_versions: {
+        Row: {
+          created_at: string
+          id: string
+          notes: string | null
+          released_at: string
+          type: string
+          version: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          released_at?: string
+          type: string
+          version: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          notes?: string | null
+          released_at?: string
+          type?: string
+          version?: string
+        }
+        Relationships: []
+      }
       auth_audit_logs: {
         Row: {
           created_at: string

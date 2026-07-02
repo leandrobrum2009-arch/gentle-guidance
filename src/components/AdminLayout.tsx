@@ -5,7 +5,7 @@ import { useIsAdmin, useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { supabase } from "@/integrations/supabase/client";
 import { 
   LayoutDashboard, Megaphone, ShoppingCart, Trophy, Dices, ArrowLeft, Loader2, ShieldAlert, LogOut,
-  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket, Activity, History
+  Users, CreditCard, Percent, Image as ImageIcon, Bell, Gift, Star, UsersRound, Settings, Menu, Zap, Ticket, Activity, History, GitBranch
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -40,6 +40,7 @@ import { useSiteSettings } from "@/hooks/useData";
       { title: "Configurações do Sistema", url: "/admin/configuracoes", icon: Settings },
       { title: "Logs de Segurança", url: "/admin/audit-logs", icon: ShieldAlert },
       { title: "Diagnóstico", url: "/admin/diagnostico", icon: Activity },
+      { title: "Versões", url: "/admin/versoes", icon: GitBranch },
     ]},
   ];
 
