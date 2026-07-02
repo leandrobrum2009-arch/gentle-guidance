@@ -2,14 +2,11 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const invoke = vi.fn();
 const maybeSingle = vi.fn();
-const from = vi.fn(() => ({
-  select: () => ({ eq: () => ({ maybeSingle }) }),
-}));
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    functions: { invoke: (...a: unknown[]) => invoke(...a) },
-    from: (...a: unknown[]) => from(...a),
+    functions: { invoke: (name: string, opts: unknown) => invoke(name, opts) },
+    from: () => ({ select: () => ({ eq: () => ({ maybeSingle }) }) }),
   },
 }));
 
