@@ -64,6 +64,18 @@ describe("checkPixConfirmation", () => {
     const r = await checkPixConfirmation("order-1");
     expect(r.paid).toBe(true);
   });
+
+  it("reports expired PIX (not paid) after timeout", async () => {
+    maybeSingle.mockResolvedValueOnce({ data: { payment_status: "expired" }, error: null });
+    const r = await checkPixConfirmation("order-1");
+    expect(r).toEqual({ paid: false, status: "expired" });
+  });
+
+  it("handles missing order (unknown status)", async () => {
+    maybeSingle.mockResolvedValueOnce({ data: null, error: null });
+    const r = await checkPixConfirmation("order-1");
+    expect(r).toEqual({ paid: false, status: "unknown" });
+  });
 });
 
 describe("progress bar after PIX confirmation", () => {
