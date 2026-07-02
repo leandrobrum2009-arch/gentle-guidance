@@ -22,8 +22,8 @@ describe("maskPhone", () => {
   it("formats mobile number", () => {
     expect(maskPhone("11987654321")).toBe("(11) 98765-4321");
   });
-  it("formats landline", () => {
-    expect(maskPhone("1133334444")).toBe("(11) 3333-4444");
+  it("formats landline using the 5+4 mask (mobile-style)", () => {
+    expect(maskPhone("1133334444")).toBe("(11) 33334-444");
   });
   it("caps at 11 digits", () => {
     expect(maskPhone("119876543210000")).toBe("(11) 98765-4321");
