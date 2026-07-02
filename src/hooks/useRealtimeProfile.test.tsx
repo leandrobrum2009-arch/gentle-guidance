@@ -13,8 +13,8 @@ const maybeSingle = vi.fn();
 
 vi.mock("@/integrations/supabase/client", () => ({
   supabase: {
-    channel: (...a: any[]) => channel(...a),
-    removeChannel: (...a: any[]) => removeChannel(...a),
+    channel: (name: string) => channel(name),
+    removeChannel: (ch: unknown) => removeChannel(ch),
     from: () => ({ select: () => ({ eq: () => ({ maybeSingle }) }) }),
   },
 }));
