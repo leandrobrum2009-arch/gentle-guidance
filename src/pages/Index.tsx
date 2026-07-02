@@ -445,30 +445,32 @@ const Index = () => {
                    paginatedCampaigns.map((campaign, i) => (
                      <CampaignCard key={campaign.id} campaign={campaign} index={i} />
                    ))
-                 ) : (
-                   <div className="col-span-full py-20 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
-                     <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
-                       <Search className="h-10 w-10 text-muted-foreground opacity-30" />
-                     </div>
-                     <div className="space-y-2">
-                       <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">
-                         {searchTerm ? "Nenhum resultado encontrado" : "Nenhum sorteio ativo"}
-                       </h3>
-                       <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">
-                         {searchTerm ? "Tente buscar por outros termos ou limpe o filtro." : "Estamos preparando novos prêmios incríveis para você."}
-                       </p>
-                       {searchTerm && (
-                         <Button 
-                           variant="link" 
-                           onClick={() => setSearchTerm("")}
-                           className="text-primary font-black uppercase tracking-widest text-[10px]"
-                         >
-                           Limpar busca
-                         </Button>
-                       )}
-                     </div>
-                   </div>
-                 )}
+                  ) : searchTerm ? (
+                    <div className="col-span-full py-20 px-6 rounded-3xl border border-dashed border-border bg-card/50 flex flex-col items-center text-center gap-6 animate-fade-in">
+                      <div className="h-20 w-20 rounded-full bg-secondary flex items-center justify-center shadow-inner">
+                        <Search className="h-10 w-10 text-muted-foreground opacity-30" />
+                      </div>
+                      <div className="space-y-2">
+                        <h3 className="font-display text-2xl font-black uppercase italic tracking-tighter text-foreground">
+                          Nenhum resultado encontrado
+                        </h3>
+                        <p className="text-sm text-muted-foreground uppercase font-bold tracking-widest max-w-md mx-auto">
+                          Tente buscar por outros termos ou limpe o filtro.
+                        </p>
+                        <Button
+                          variant="link"
+                          onClick={() => setSearchTerm("")}
+                          className="text-primary font-black uppercase tracking-widest text-[10px]"
+                        >
+                          Limpar busca
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="col-span-full">
+                      <BannersInline />
+                    </div>
+                  )}
                </div>
 
                {/* Pagination UI */}
