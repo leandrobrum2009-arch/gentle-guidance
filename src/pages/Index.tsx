@@ -449,11 +449,12 @@ const Index = () => {
                         </Button>
                       </div>
                     </div>
-                  ) : (
-                    <div className="col-span-full">
-                      <BannersInline />
-                    </div>
-                  )}
+                   ) : null}
+               </div>
+
+               {/* Banners cadastrados no painel admin */}
+               <div className="pt-4">
+                 <BannersInline />
                </div>
 
                {/* Pagination UI */}
