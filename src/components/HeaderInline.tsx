@@ -72,7 +72,18 @@ const HeaderInline = () => {
             )}
           </Link>
 
-          {!user && String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
+          {user ? (
+            <Link
+              to="/minha-conta"
+              aria-label="Minha conta"
+              className="flex h-9 max-w-[140px] items-center gap-1.5 rounded-full px-3 bg-primary/15 text-primary ring-1 ring-primary/30 font-black uppercase tracking-widest text-[9px]"
+            >
+              <User className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">
+                {(profile?.name || user.email || "").split(" ")[0] || (user.email || "").split("@")[0]}
+              </span>
+            </Link>
+          ) : String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
             <button
               onClick={() => setRegisterOpen(true)}
               aria-label="Cadastre-se grátis"
@@ -178,7 +189,7 @@ const HeaderInline = () => {
                     onClick={() => setOpen(false)}
                     className="mt-2 flex items-center justify-between rounded-xl px-3 py-3 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 bg-primary/5"
                   >
-                    <span className="flex items-center gap-2"><Settings className="h-4 w-4" /> Painel Admin</span>
+                    <span className="flex items-center gap-2"><Settings className="h-4 w-4" /> Painel</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}
