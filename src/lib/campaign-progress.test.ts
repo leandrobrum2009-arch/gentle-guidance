@@ -65,3 +65,89 @@ describe("getCampaignDisplaySales", () => {
     expect(p2.displaySoldTickets).toBe(35);
   });
 });
+
+describe("getCampaignDisplaySales — fake vs normal parity", () => {
+  it("normal mode equals real sold/total exactly", () => {
+    const r = getCampaignDisplaySales({ ...base, sold_tickets: 42, total_tickets: 200 });
+    expect(r.displaySoldTickets).toBe(42);
+    expect(r.rawProgress).toBeCloseTo(21, 5);
+    expect(r.progressBar).toBeCloseTo(21, 5);
+  });
+
+  it("fake mode never reports LESS than normal mode for same real sales", () => {
+    const real = getCampaignDisplaySales({ ...base, sold_tickets: 20 });
+    const fake = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 20,
+      fake_progress_enabled: true,
+      fake_progress_percentage: 40,
+    });
+    expect(fake.displaySoldTickets).toBeGreaterThanOrEqual(real.displaySoldTickets);
+    expect(fake.roundedProgress).toBeGreaterThanOrEqual(real.roundedProgress);
+  });
+
+  it("sales_goal drives progress only when fake is OFF", () => {
+    const normalWithGoal = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 50, // 50 * 10 = 500 out of 1000 goal = 50%
+      sales_goal: 1000,
+    });
+    expect(normalWithGoal.roundedProgress).toBe(50);
+
+    // With fake on, sales_goal is ignored and % comes from tickets
+    const fakeWithGoal = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 50,
+      sales_goal: 1000,
+      fake_progress_enabled: true,
+      fake_progress_percentage: 20,
+    });
+    // 20% * 100 + 50 = 70 displayed / 100 total = 70%
+    expect(fakeWithGoal.roundedProgress).toBe(70);
+  });
+
+  it("fake stays disabled when percentage is null/undefined even if flag is true", () => {
+    const r = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 10,
+      fake_progress_enabled: true,
+      fake_progress_percentage: null,
+    });
+    expect(r.displaySoldTickets).toBe(10);
+  });
+
+  it("clamps invalid inputs (negative sold, zero total) safely", () => {
+    const r = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: -5,
+      total_tickets: 0,
+    });
+    expect(r.displaySoldTickets).toBe(0);
+    expect(r.roundedProgress).toBe(0);
+    expect(r.progressBar).toBe(0);
+  });
+
+  it("progressBar shows minimum visible sliver (0.5) once any progress exists", () => {
+    const zero = getCampaignDisplaySales({ ...base, sold_tickets: 0 });
+    const tiny = getCampaignDisplaySales({ ...base, sold_tickets: 1, total_tickets: 10_000 });
+    expect(zero.progressBar).toBe(0);
+    expect(tiny.progressBar).toBeGreaterThanOrEqual(0.5);
+  });
+
+  it("custom progress_text overrides numeric label in both modes", () => {
+    const normal = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 10,
+      progress_text: "Quase esgotado!",
+    });
+    const fake = getCampaignDisplaySales({
+      ...base,
+      sold_tickets: 10,
+      fake_progress_enabled: true,
+      fake_progress_percentage: 50,
+      progress_text: "Quase esgotado!",
+    });
+    expect(normal.progressText).toBe("Quase esgotado!");
+    expect(fake.progressText).toBe("Quase esgotado!");
+  });
+});
