@@ -362,6 +362,7 @@ export type Database = {
           featured: boolean | null
           federal_lottery_draw: boolean | null
           gallery_urls: Json | null
+          hero_image_url: string | null
           id: string
           image_overlay_enabled: boolean
           image_url: string | null
@@ -429,6 +430,7 @@ export type Database = {
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
+          hero_image_url?: string | null
           id?: string
           image_overlay_enabled?: boolean
           image_url?: string | null
@@ -496,6 +498,7 @@ export type Database = {
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
+          hero_image_url?: string | null
           id?: string
           image_overlay_enabled?: boolean
           image_url?: string | null

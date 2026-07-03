@@ -51,6 +51,7 @@ interface CampaignForm {
   roulette_available_count: number;
   scratch_cards_available_count: number;
   image_overlay_enabled: boolean;
+  hero_image_url: string;
 }
 
 
@@ -88,6 +89,7 @@ const empty: CampaignForm = {
   roulette_available_count: 0,
   scratch_cards_available_count: 0,
   image_overlay_enabled: true,
+  hero_image_url: "",
 };
 
 
@@ -137,6 +139,7 @@ export default function AdminCampaignEdit() {
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
+      hero_image_url: (data as any).hero_image_url ?? "",
       sections_order: (() => {
         const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "events", "description", "prizes", "roulette_footer", "scratch_footer", "box_footer", "winners", "ranking"]);
         if (data.show_timer && !order.includes("timer")) {
@@ -850,8 +853,16 @@ export default function AdminCampaignEdit() {
                  
                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                    {form.gallery_urls.map((url, index) => (
-                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-border group">
+                      <div key={index} className={`relative aspect-square rounded-xl overflow-hidden border group ${form.hero_image_url === url ? 'border-primary ring-2 ring-primary' : 'border-border'}`}>
                        <img src={url} alt={`Galeria ${index}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => set("hero_image_url", form.hero_image_url === url ? "" : url)}
+                          className={`absolute bottom-1 left-1 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition ${form.hero_image_url === url ? 'bg-primary text-primary-foreground' : 'bg-black/60 text-white opacity-0 group-hover:opacity-100'}`}
+                          title="Definir como imagem de destaque do carrossel principal (Clássico Full)"
+                        >
+                          {form.hero_image_url === url ? '★ Destaque' : '☆ Destacar'}
+                        </button>
                        <button 
                          onClick={() => removeGalleryImage(index)}
                          className="absolute top-1 right-1 p-1.5 bg-destructive text-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
