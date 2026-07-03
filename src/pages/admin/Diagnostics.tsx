@@ -26,6 +26,24 @@ export default function AdminDiagnostics() {
   const [drawLogs, setDrawLogs] = useState<any[]>([]);
   const [permissions, setPermissions] = useState<any[]>([]);
   const [currentUserRole, setCurrentUserRole] = useState<string | null>(null);
+  const [integrity, setIntegrity] = useState<any | null>(null);
+  const [integrityLoading, setIntegrityLoading] = useState(false);
+
+  const runIntegrityCheck = async () => {
+    setIntegrityLoading(true);
+    try {
+      const { data, error } = await (supabase.rpc as any)("check_data_integrity");
+      if (error) throw error;
+      setIntegrity(data);
+      if (data?.ok) toast.success("Integridade OK — nenhum problema encontrado");
+      else toast.warning("Foram encontradas divergências — veja o relatório");
+    } catch (err: any) {
+      console.error("Integrity check error:", err);
+      toast.error("Falha ao verificar integridade: " + (err?.message || ""));
+    } finally {
+      setIntegrityLoading(false);
+    }
+  };
 
   const runDiagnostics = async () => {
     setLoading(true);
@@ -153,6 +171,61 @@ export default function AdminDiagnostics() {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
+        <Card className="border-border bg-card shadow-sm md:col-span-2">
+          <CardHeader className="flex flex-row items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldCheck className="h-5 w-5 text-primary" />
+              <div>
+                <CardTitle className="text-lg">Verificação de Integridade</CardTitle>
+                <CardDescription className="text-xs">
+                  Compara saldos, tickets vendidos, reservas e configurações contra o estado real do banco.
+                </CardDescription>
+              </div>
+            </div>
+            <Button
+              size="sm"
+              disabled={integrityLoading}
+              onClick={runIntegrityCheck}
+              className="rounded-xl gap-2 font-bold uppercase tracking-widest text-[10px]"
+            >
+              <RefreshCw className={`h-4 w-4 ${integrityLoading ? "animate-spin" : ""}`} />
+              Executar
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {!integrity && (
+              <p className="text-sm text-muted-foreground">Clique em Executar para rodar a checagem.</p>
+            )}
+            {integrity && (
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  {integrity.ok ? (
+                    <Badge className="bg-emerald-500/10 text-emerald-500 border-emerald-500/30">Tudo OK</Badge>
+                  ) : (
+                    <Badge variant="destructive">Divergências encontradas</Badge>
+                  )}
+                  <span className="text-xs text-muted-foreground">
+                    Verificado em {new Date(integrity.checked_at).toLocaleString("pt-BR")}
+                  </span>
+                </div>
+                <ul className="text-sm space-y-1">
+                  <li>Campanhas com progresso divergente: <b>{integrity.campaigns_progress_mismatch?.length ?? 0}</b></li>
+                  <li>Perfis com saldo negativo: <b>{integrity.negative_balances?.length ?? 0}</b></li>
+                  <li>Tickets órfãos: <b>{integrity.orphan_tickets}</b></li>
+                  <li>Pedidos pagos sem tickets: <b>{integrity.paid_orders_without_tickets}</b></li>
+                  <li>Reservas expiradas pendentes de limpeza: <b>{integrity.expired_reservations_pending_cleanup}</b></li>
+                  <li>Chaves duplicadas em site_settings: <b>{integrity.duplicate_site_settings_keys?.length ?? 0}</b></li>
+                </ul>
+                {!integrity.ok && (
+                  <pre className="bg-muted/40 rounded-lg p-3 text-[11px] overflow-x-auto max-h-64">
+                    {JSON.stringify(integrity, null, 2)}
+                  </pre>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         {/* Order Audit - New Section */}
         <Card className="border-border bg-card shadow-sm md:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between">
