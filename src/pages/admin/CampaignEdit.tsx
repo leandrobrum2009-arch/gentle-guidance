@@ -139,6 +139,7 @@ export default function AdminCampaignEdit() {
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
+      hero_image_url: (data as any).hero_image_url ?? "",
       sections_order: (() => {
         const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "events", "description", "prizes", "roulette_footer", "scratch_footer", "box_footer", "winners", "ranking"]);
         if (data.show_timer && !order.includes("timer")) {
