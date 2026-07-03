@@ -1915,6 +1915,7 @@ export type Database = {
     }
     Functions: {
       audit_all_paid_orders: { Args: never; Returns: Json }
+      check_data_integrity: { Args: never; Returns: Json }
       check_is_master: { Args: { user_id: string }; Returns: boolean }
       cleanup_expired_reservations: { Args: never; Returns: undefined }
       diagnose_table_permissions: {
