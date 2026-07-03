@@ -34,6 +34,7 @@ export interface Campaign {
   featured: boolean;
   gallery_urls?: string[];
   video_url?: string;
+  hero_image_url?: string | null;
   regulations?: string;
   auto_numbers?: boolean;
   manual_numbers?: boolean;
