@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Loader2, DollarSign, Wallet } from "lucide-react";
+import { Loader2, DollarSign, Wallet, Gift, Sparkles } from "lucide-react";
 
 interface DepositModalProps {
   isOpen: boolean;
@@ -13,12 +13,50 @@ interface DepositModalProps {
   onSuccess: (orderId: string) => void;
 }
 
+type BonusTier = { min: number; bonus: number };
+
+const fmtBRL = (n: number) =>
+  n.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
 export const DepositModal = ({ isOpen, onOpenChange, onSuccess }: DepositModalProps) => {
   const [amount, setAmount] = useState<string>("50");
   const [loading, setLoading] = useState(false);
+  const [tiers, setTiers] = useState<BonusTier[]>([]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    (async () => {
+      const { data } = await supabase
+        .from("site_settings")
+        .select("value")
+        .eq("key", "deposit_bonus_tiers")
+        .maybeSingle();
+      try {
+        const parsed = data?.value ? JSON.parse(data.value) : [];
+        if (Array.isArray(parsed)) {
+          const clean = parsed
+            .map((t: any) => ({ min: Number(t.min), bonus: Number(t.bonus) }))
+            .filter((t) => !isNaN(t.min) && !isNaN(t.bonus) && t.bonus > 0)
+            .sort((a, b) => a.min - b.min);
+          setTiers(clean);
+        }
+      } catch {
+        setTiers([]);
+      }
+    })();
+  }, [isOpen]);
+
+  const numAmount = parseFloat(amount) || 0;
+  const currentBonus = useMemo(() => {
+    const eligible = tiers.filter((t) => t.min <= numAmount);
+    return eligible.length ? eligible[eligible.length - 1].bonus : 0;
+  }, [tiers, numAmount]);
+  const nextTier = useMemo(
+    () => tiers.find((t) => t.min > numAmount),
+    [tiers, numAmount]
+  );
 
   const handleDeposit = async () => {
-    const numAmount = parseFloat(amount);
     if (isNaN(numAmount) || numAmount <= 0) {
       toast.error("Informe um valor válido para depósito");
       return;
@@ -72,6 +110,31 @@ export const DepositModal = ({ isOpen, onOpenChange, onSuccess }: DepositModalPr
         </div>
 
         <div className="p-6 space-y-6">
+          {tiers.length > 0 && (
+            <div className="rounded-2xl border-2 border-emerald-500/40 bg-emerald-500/5 p-3 space-y-2">
+              <div className="flex items-center gap-2 text-emerald-500">
+                <Gift className="h-4 w-4" />
+                <p className="text-[10px] font-black uppercase tracking-widest">Bônus por depósito</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {tiers.map((t) => (
+                  <button
+                    key={t.min}
+                    type="button"
+                    onClick={() => setAmount(String(t.min))}
+                    className={`rounded-lg border px-2 py-1 text-[10px] font-black uppercase tracking-wider transition-colors ${
+                      numAmount >= t.min
+                        ? "border-emerald-500 bg-emerald-500/10 text-emerald-500"
+                        : "border-border text-muted-foreground hover:border-emerald-500/50"
+                    }`}
+                  >
+                    R$ {t.min} → +R$ {t.bonus}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="space-y-3">
             <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Valor do Depósito (R$)</Label>
             <div className="relative">
@@ -84,7 +147,18 @@ export const DepositModal = ({ isOpen, onOpenChange, onSuccess }: DepositModalPr
                 className="h-14 pl-12 rounded-2xl bg-secondary/50 border-border focus:border-primary/50 font-black text-xl text-emerald-500"
               />
             </div>
-            <p className="text-[10px] text-muted-foreground font-medium text-center italic">Crédito liberado imediatamente após o pagamento.</p>
+            {currentBonus > 0 ? (
+              <div className="flex items-center justify-center gap-1.5 text-[11px] font-black text-emerald-500">
+                <Sparkles className="h-3.5 w-3.5" />
+                Você recebe {fmtBRL(numAmount + currentBonus)} (bônus de +{fmtBRL(currentBonus)})
+              </div>
+            ) : nextTier ? (
+              <p className="text-[10px] text-muted-foreground font-medium text-center italic">
+                Deposite +{fmtBRL(nextTier.min - numAmount)} e ganhe +{fmtBRL(nextTier.bonus)} de bônus!
+              </p>
+            ) : (
+              <p className="text-[10px] text-muted-foreground font-medium text-center italic">Crédito liberado imediatamente após o pagamento.</p>
+            )}
           </div>
 
           <div className="grid grid-cols-3 gap-2">

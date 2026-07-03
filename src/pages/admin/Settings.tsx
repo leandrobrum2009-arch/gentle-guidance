@@ -72,6 +72,7 @@ export default function AdminSettings() {
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
     min_withdrawal_amount: "Valor Mínimo de Saque (R$)",
+    deposit_bonus_tiers: "Bônus por Depósito (JSON de faixas)",
     company_name: "Nome Fantasia / Razão Social",
     company_cnpj: "CNPJ",
     company_address: "Endereço Completo",
@@ -1021,6 +1022,34 @@ export default function AdminSettings() {
                   </div>
                 ))}
              </div>
+           </Card>
+
+           <Card className="border-emerald-500/40 bg-emerald-500/5 backdrop-blur-sm rounded-3xl overflow-hidden border-2 shadow-sm">
+             <CardHeader className="bg-emerald-500/10">
+               <CardTitle className="text-xl flex items-center gap-2">
+                 <DollarSign className="h-5 w-5 text-emerald-500" />
+                 Bônus por Depósito
+               </CardTitle>
+               <CardDescription className="font-medium">
+                 Configure faixas de bônus creditadas automaticamente no saldo do usuário quando ele confirmar um depósito PIX. Formato: <code className="text-[11px] bg-background/60 px-1.5 py-0.5 rounded">[{'{'}"min":200,"bonus":25{'}'}]</code>. Ex.: depositando R$ 200 → ganha +R$ 25 no saldo.
+               </CardDescription>
+             </CardHeader>
+             <CardContent className="pt-6 space-y-3">
+               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                 Faixas (JSON)
+               </Label>
+               <textarea
+                 value={getSetting('deposit_bonus_tiers', '[]').value}
+                 onChange={(e) => handleUpdate('deposit_bonus_tiers', e.target.value)}
+                 rows={6}
+                 spellCheck={false}
+                 className="w-full rounded-2xl bg-background/60 border border-border p-3 font-mono text-xs focus:border-emerald-500/50 focus:outline-none"
+                 placeholder='[{"min":50,"bonus":5},{"min":100,"bonus":15},{"min":200,"bonus":40}]'
+               />
+               <p className="text-[10px] text-muted-foreground italic">
+                 A faixa aplicada será a de maior <strong>min</strong> igual ou menor que o valor depositado. Deixe como <code>[]</code> para desativar o bônus.
+               </p>
+             </CardContent>
            </Card>
         </TabsContent>
 
