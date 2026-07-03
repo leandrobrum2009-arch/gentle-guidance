@@ -76,10 +76,10 @@ const HeaderInline = () => {
             <Link
               to="/minha-conta"
               aria-label="Minha conta"
-              className="flex h-9 max-w-[140px] items-center gap-1.5 rounded-full px-3 bg-primary/15 text-primary ring-1 ring-primary/30 font-black uppercase tracking-widest text-[9px]"
+              className="flex h-9 max-w-[38vw] xs:max-w-[140px] items-center gap-1 rounded-full pl-2 pr-2.5 bg-primary/15 text-primary ring-1 ring-primary/30 font-black uppercase tracking-widest text-[9px]"
             >
               <User className="h-3.5 w-3.5 shrink-0" />
-              <span className="truncate">
+              <span className="truncate min-w-0">
                 {(profile?.name || user.email || "").split(" ")[0] || (user.email || "").split("@")[0]}
               </span>
             </Link>
