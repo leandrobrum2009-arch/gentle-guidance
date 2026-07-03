@@ -983,3 +983,38 @@ function EditProfileDialog({
     </Dialog>
   );
 }
+
+function DepositBonusCTA({ settings, onDeposit }: { settings: any; onDeposit: () => void }) {
+  const raw = settings?.deposit_bonus_tiers;
+  let tiers: { min: number; bonus: number }[] = [];
+  try {
+    const parsed = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(parsed)) {
+      tiers = parsed
+        .map((t: any) => ({ min: Number(t.min), bonus: Number(t.bonus) }))
+        .filter((t) => !isNaN(t.min) && !isNaN(t.bonus) && t.bonus > 0)
+        .sort((a, b) => b.min - a.min);
+    }
+  } catch {
+    tiers = [];
+  }
+  if (!tiers.length) return null;
+  const top = tiers[0];
+  return (
+    <button
+      onClick={onDeposit}
+      className="mt-3 w-full flex items-center gap-3 rounded-xl border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent p-3 text-left hover:border-emerald-500/70 transition-colors"
+    >
+      <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0">
+        <Gift className="h-5 w-5 text-emerald-500" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Bônus por depósito</p>
+        <p className="text-xs font-bold text-foreground truncate">
+          Recarregue R$ {top.min} e ganhe <span className="text-emerald-500">+R$ {top.bonus}</span> de saldo grátis
+        </p>
+      </div>
+      <ChevronRight className="h-4 w-4 text-emerald-500 shrink-0" />
+    </button>
+  );
+}
