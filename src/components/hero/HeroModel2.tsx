@@ -37,7 +37,7 @@ const HeroModel2 = ({ campaigns, delay = 6000, transitionType = 'slide' }: HeroM
             <img
               src={pickHeroImage(campaign)}
               alt={campaign.title}
-              className="w-full h-auto max-h-[80vh] object-contain md:object-cover md:aspect-[21/9] block"
+              className="block w-full h-auto object-contain"
               loading="eager"
             />
           </Link>
