@@ -17,6 +17,17 @@ import { buildSettingsMutations, verifySiteSettingsSchema } from "@/lib/settings
 
 const SITE_ASSETS_BUCKET = 'site-assets';
 const FALLBACK_IMAGE_BUCKET = 'campaigns';
+const HOME_GAME_SETTING_KEYS = [
+  'home_show_game_roleta',
+  'home_show_game_raspadinha',
+  'home_show_game_caixa',
+  'home_show_game_ranking',
+  'home_show_game_afiliados',
+  'home_show_how_it_works',
+  'home_show_faq',
+  'home_show_trust_badges',
+  'home_show_cta',
+];
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
@@ -147,10 +158,13 @@ export default function AdminSettings() {
     setSettings(prev => {
       const exists = prev.some(s => s.key === key);
       if (exists) return prev.map(s => s.key === key ? { ...s, value } : s);
-      // Insert new key (boolean toggle for keys missing from DB)
-      return [...prev, { key, value, type: /^(true|false)$/.test(value) ? 'boolean' : 'text' } as any];
+      // Keep new settings aligned with the real table shape: only key/value.
+      return [...prev, { key, value }];
     });
   };
+
+  const getSetting = (key: string, fallbackValue = 'true') =>
+    settings.find(s => s.key === key) || { key, value: fallbackValue };
 
   const handleUpload = async (key: string, file: File) => {
     setUploading(key);
@@ -518,15 +532,15 @@ export default function AdminSettings() {
                       getIcon={getIcon}
                     />
                     <SettingField 
-                      s={settings.find(s => s.key === 'home_show_games_combo')} 
+                      s={getSetting('home_show_games_combo')} 
                       onUpdate={handleUpdate} 
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
-                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados','home_show_how_it_works','home_show_faq','home_show_trust_badges','home_show_cta'].map((k) => (
+                    {HOME_GAME_SETTING_KEYS.map((k) => (
                       <SettingField
                         key={k}
-                        s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
+                        s={getSetting(k)}
                         onUpdate={handleUpdate}
                         label={(settingNames as any)[k]}
                         getIcon={getIcon}
