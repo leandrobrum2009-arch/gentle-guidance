@@ -51,6 +51,7 @@ interface CampaignForm {
   roulette_available_count: number;
   scratch_cards_available_count: number;
   image_overlay_enabled: boolean;
+  hero_image_url: string;
 }
 
 
@@ -88,6 +89,7 @@ const empty: CampaignForm = {
   roulette_available_count: 0,
   scratch_cards_available_count: 0,
   image_overlay_enabled: true,
+  hero_image_url: "",
 };
 
 
