@@ -19,6 +19,56 @@ export type SettingMutation =
   | { op: "upsert"; key: string; value: string }
   | { op: "update"; key: string; value: string };
 
+/**
+ * Shape of a single row returned from `public.site_settings`.
+ * Used to verify at runtime that the DB response matches the columns
+ * the client relies on (`key`, `value`). Extra columns are tolerated,
+ * but a missing/renamed column surfaces immediately instead of silently
+ * breaking the settings screen.
+ */
+export const siteSettingsRowSchema = z
+  .object({
+    key: z.string().min(1),
+    value: z.union([z.string(), z.null()]),
+  })
+  .passthrough();
+
+export const siteSettingsResponseSchema = z.array(siteSettingsRowSchema);
+
+export type SiteSettingsRow = z.infer<typeof siteSettingsRowSchema>;
+
+export type SchemaVerification =
+  | { ok: true; rows: SiteSettingsRow[] }
+  | { ok: false; error: string; issues: string[] };
+
+/**
+ * Validate a `site_settings` response payload. Returns a discriminated
+ * result so callers can show a clear error toast when the DB schema
+ * drifts (e.g. column renamed, wrong table selected) instead of
+ * crashing the admin UI with an obscure `undefined` access.
+ */
+export function verifySiteSettingsSchema(data: unknown): SchemaVerification {
+  if (!Array.isArray(data)) {
+    return {
+      ok: false,
+      error: "Resposta de site_settings não é uma lista",
+      issues: [`typeof=${typeof data}`],
+    };
+  }
+  const parsed = siteSettingsResponseSchema.safeParse(data);
+  if (!parsed.success) {
+    const issues = parsed.error.issues.map(
+      (i) => `${i.path.join(".") || "(root)"}: ${i.message}`,
+    );
+    return {
+      ok: false,
+      error: "Schema de site_settings inválido",
+      issues,
+    };
+  }
+  return { ok: true, rows: parsed.data };
+}
+
 /** Coerce any value to the string form used by the settings table. */
 export function normalizeSettingValue(value: unknown): string {
   if (value === null || value === undefined) return "";
