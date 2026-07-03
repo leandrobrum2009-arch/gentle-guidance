@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "@/components/AdminLayout";
-import { useAdminUsers, useIsMaster, useFeatureAccess } from "@/hooks/useAdmin";
+import { useAdminUsers, useIsMaster, useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2 } from "lucide-react";
@@ -22,6 +22,7 @@ export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
   const { data: features } = useFeatureAccess();
   const isMaster = useIsMaster();
+  const { data: currentRole } = useRole();
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -234,7 +235,21 @@ export default function AdminUsers() {
                 {filtered?.length === 0 && (
                   <TableRow>
                     <TableCell colSpan={5} className="text-center py-10 text-muted-foreground font-medium italic">
-                      Nenhum usuário encontrado.
+                      {(!currentRole || currentRole === "user") ? (
+                        <div className="flex flex-col items-center gap-2 px-6">
+                          <ShieldCheck className="h-8 w-8 text-destructive/60" />
+                          <p className="not-italic font-bold text-foreground">Sem permissão para listar usuários</p>
+                          <p className="text-xs not-italic">
+                            Sua conta atual não possui cargo de <b>Master</b>, <b>Admin</b> ou <b>Admin Restrito</b>.
+                            Por isso as políticas de segurança do banco retornam a lista vazia. Peça ao Master do sistema
+                            para atribuir um cargo à sua conta em <b>Usuários → Editar → Cargo</b>.
+                          </p>
+                        </div>
+                      ) : search ? (
+                        <>Nenhum usuário encontrado para "<b>{search}</b>".</>
+                      ) : (
+                        <>Nenhum usuário cadastrado ainda.</>
+                      )}
                     </TableCell>
                   </TableRow>
                 )}
