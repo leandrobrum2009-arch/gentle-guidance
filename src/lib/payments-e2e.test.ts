@@ -102,7 +102,7 @@ describe("E2E: PIX Mercado Pago", () => {
       error: null,
     });
     let confirmed = await checkPixConfirmation("order-pix-1");
-    expect(confirmed).toBe(false);
+    expect(confirmed.paid).toBe(false);
 
     // Webhook fires -> payment_status flips to 'paid'
     orderSelect.mockResolvedValueOnce({
@@ -110,7 +110,7 @@ describe("E2E: PIX Mercado Pago", () => {
       error: null,
     });
     confirmed = await checkPixConfirmation("order-pix-1");
-    expect(confirmed).toBe(true);
+    expect(confirmed.paid).toBe(true);
   });
 });
 
