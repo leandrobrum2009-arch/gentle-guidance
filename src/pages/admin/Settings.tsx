@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRole } from "@/hooks/useAdmin";
+import { buildSettingsMutations } from "@/lib/settings-mutations";
 
 const SITE_ASSETS_BUCKET = 'site-assets';
 const FALLBACK_IMAGE_BUCKET = 'campaigns';
@@ -188,19 +189,19 @@ export default function AdminSettings() {
     const toastId = toast.loading("Salvando configurações...");
     try {
       const errors: string[] = [];
-      for (const s of settings) {
-        const initial = initialSettings.find(i => i.key === s.key);
-        if (!initial) {
+      const mutations = buildSettingsMutations(settings, initialSettings);
+      for (const m of mutations) {
+        if (m.op === "upsert") {
           const { error } = await supabase
             .from("site_settings")
-            .upsert({ key: s.key, value: s.value } as any, { onConflict: "key" });
-          if (error) errors.push(`${s.key}: ${error.message}`);
-        } else if (initial.value !== s.value) {
+            .upsert({ key: m.key, value: m.value } as any, { onConflict: "key" });
+          if (error) errors.push(`${m.key}: ${error.message}`);
+        } else {
           const { error } = await supabase
             .from("site_settings")
-            .update({ value: s.value })
-            .eq("key", s.key);
-          if (error) errors.push(`${s.key}: ${error.message}`);
+            .update({ value: m.value })
+            .eq("key", m.key);
+          if (error) errors.push(`${m.key}: ${error.message}`);
         }
       }
       if (errors.length) {
