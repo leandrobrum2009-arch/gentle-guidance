@@ -178,13 +178,13 @@ describe("verifySiteSettingsSchema", () => {
   it("fails when payload is not an array", () => {
     const res = verifySiteSettingsSchema({ oops: true } as unknown);
     expect(res.ok).toBe(false);
-    if (!res.ok) expect(res.error).toMatch(/não é uma lista/);
+    if (res.ok === false) expect(res.error).toMatch(/não é uma lista/);
   });
 
   it("fails when a required column (value) is missing", () => {
     const res = verifySiteSettingsSchema([{ key: "x" }]);
     expect(res.ok).toBe(false);
-    if (!res.ok) {
+    if (res.ok === false) {
       expect(res.error).toMatch(/Schema/);
       expect(res.issues.join(" ")).toMatch(/value/);
     }
