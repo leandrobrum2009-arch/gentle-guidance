@@ -185,6 +185,7 @@ export default function AdminSettings() {
 
   const saveSettings = async () => {
     setSaving(true);
+    const toastId = toast.loading("Salvando configurações...");
     try {
       const errors: string[] = [];
       for (const s of settings) {
@@ -204,14 +205,14 @@ export default function AdminSettings() {
       }
       if (errors.length) {
         console.error("Settings save errors:", errors);
-        toast.error(`Falha ao salvar: ${errors[0]}`);
+        toast.error(`Falha ao salvar: ${errors[0]}`, { id: toastId });
       } else {
-        toast.success("Todas as configurações foram atualizadas!");
+        toast.success("Todas as configurações foram atualizadas!", { id: toastId });
       }
       await fetchSettings();
       queryClient.invalidateQueries({ queryKey: ["site-settings"] });
     } catch (error: any) {
-      toast.error("Erro ao salvar algumas configurações: " + (error?.message || ""));
+      toast.error("Erro ao salvar algumas configurações: " + (error?.message || ""), { id: toastId });
     } finally {
       setSaving(false);
     }
