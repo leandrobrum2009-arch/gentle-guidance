@@ -72,6 +72,7 @@ export default function AdminSettings() {
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
     min_withdrawal_amount: "Valor Mínimo de Saque (R$)",
+    deposit_bonus_tiers: "Bônus por Depósito (JSON de faixas)",
     company_name: "Nome Fantasia / Razão Social",
     company_cnpj: "CNPJ",
     company_address: "Endereço Completo",
