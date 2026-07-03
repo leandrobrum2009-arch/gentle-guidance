@@ -186,19 +186,32 @@ export default function AdminSettings() {
   const saveSettings = async () => {
     setSaving(true);
     try {
+      const errors: string[] = [];
       for (const s of settings) {
         const initial = initialSettings.find(i => i.key === s.key);
         if (!initial) {
-          await supabase.from("site_settings").insert({ key: s.key, value: s.value, type: (s as any).type ?? 'text' } as any);
+          const { error } = await supabase
+            .from("site_settings")
+            .upsert({ key: s.key, value: s.value } as any, { onConflict: "key" });
+          if (error) errors.push(`${s.key}: ${error.message}`);
         } else if (initial.value !== s.value) {
-          await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
+          const { error } = await supabase
+            .from("site_settings")
+            .update({ value: s.value })
+            .eq("key", s.key);
+          if (error) errors.push(`${s.key}: ${error.message}`);
         }
       }
-      setInitialSettings(JSON.parse(JSON.stringify(settings)));
+      if (errors.length) {
+        console.error("Settings save errors:", errors);
+        toast.error(`Falha ao salvar: ${errors[0]}`);
+      } else {
+        toast.success("Todas as configurações foram atualizadas!");
+      }
+      await fetchSettings();
       queryClient.invalidateQueries({ queryKey: ["site-settings"] });
-      toast.success("Todas as configurações foram atualizadas!");
-    } catch (error) {
-      toast.error("Erro ao salvar algumas configurações.");
+    } catch (error: any) {
+      toast.error("Erro ao salvar algumas configurações: " + (error?.message || ""));
     } finally {
       setSaving(false);
     }
