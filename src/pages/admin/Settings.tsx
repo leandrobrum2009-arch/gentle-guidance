@@ -132,7 +132,7 @@ export default function AdminSettings() {
       return;
     }
     const verified = verifySiteSettingsSchema(data ?? []);
-    if (!verified.ok) {
+    if (verified.ok === false) {
       console.error("site_settings schema mismatch:", verified.error, verified.issues);
       toast.error(`${verified.error}: ${verified.issues[0] ?? "formato inesperado"}`);
       setLoading(false);
