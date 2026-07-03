@@ -230,7 +230,7 @@ export default function AccountInline() {
             <div className="mt-4 grid grid-cols-2 gap-2.5">
               <Button
                 onClick={() => setDepositOpen(true)}
-                className="h-12 rounded-xl text-sm font-black gap-2"
+                className="h-12 rounded-xl text-sm font-black gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all"
               >
                 <Plus className="h-4 w-4" /> Depositar
               </Button>
@@ -1012,18 +1012,20 @@ function DepositBonusCTA({ settings, onDeposit }: { settings: any; onDeposit: ()
   return (
     <button
       onClick={onDeposit}
-      className="mt-3 w-full flex items-center gap-3 rounded-xl border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent p-3 text-left hover:border-emerald-500/70 transition-colors"
+      className="group mt-3 w-full flex items-center gap-3 rounded-xl border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent p-3 text-left hover:border-emerald-500/80 hover:from-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all"
     >
-      <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0">
+      <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 ring-2 ring-emerald-500/30 group-hover:ring-emerald-500/60 group-hover:scale-110 transition-all">
         <Gift className="h-5 w-5 text-emerald-500" />
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500">Bônus por depósito</p>
+        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1">
+          <Sparkles className="h-3 w-3 animate-pulse" /> Bônus por depósito
+        </p>
         <p className="text-xs font-bold text-foreground truncate">
           Recarregue R$ {top.min} e ganhe <span className="text-emerald-500">+R$ {top.bonus}</span> de saldo grátis
         </p>
       </div>
-      <ChevronRight className="h-4 w-4 text-emerald-500 shrink-0" />
+      <ChevronRight className="h-4 w-4 text-emerald-500 shrink-0 group-hover:translate-x-0.5 transition-transform" />
     </button>
   );
 }
