@@ -226,7 +226,7 @@ const Header = () => {
                       <Link to="/admin" className="flex items-center">
                         <Button size="sm" variant="outline" className="h-10 rounded-full gap-2 border-primary/50 bg-primary/5 hover:bg-primary/10 font-black uppercase tracking-widest text-[10px] px-4 italic group">
                           <Settings className="h-4 w-4 text-primary group-hover:rotate-90 transition-transform duration-500" />
-                          <span className="hidden sm:inline">Painel Admin</span>
+                          <span className="hidden sm:inline">Painel</span>
                         </Button>
                       </Link>
                     )}
