@@ -242,6 +242,7 @@ export default function AccountInline() {
                 <Minus className="h-4 w-4" /> Sacar
               </Button>
             </div>
+            <DepositBonusCTA settings={siteSettings} onDeposit={() => setDepositOpen(true)} />
           </div>
         </section>
 
