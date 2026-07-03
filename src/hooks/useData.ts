@@ -976,7 +976,9 @@ export const useSiteSettings = () =>
       }
       return settingsMap;
     },
-    staleTime: 1000 * 60 * 5, // 5 minutes
+    staleTime: 1000 * 30, // 30s — settings change from admin and must reflect quickly
+    refetchOnWindowFocus: true,
+    refetchOnMount: true,
   });
 
 export const useGlobalStats = () =>

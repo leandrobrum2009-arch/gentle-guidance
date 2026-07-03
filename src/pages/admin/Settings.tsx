@@ -219,7 +219,10 @@ export default function AdminSettings() {
         toast.success("Todas as configurações foram atualizadas!", { id: toastId });
       }
       await fetchSettings();
-      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
+      await queryClient.invalidateQueries({
+        queryKey: ["site-settings"],
+        refetchType: "all",
+      });
     } catch (error: any) {
       toast.error("Erro ao salvar algumas configurações: " + (error?.message || ""), { id: toastId });
     } finally {
