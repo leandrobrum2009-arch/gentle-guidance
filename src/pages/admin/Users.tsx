@@ -22,6 +22,7 @@ export default function AdminUsers() {
   const { data: users, isLoading } = useAdminUsers();
   const { data: features } = useFeatureAccess();
   const isMaster = useIsMaster();
+  const { data: currentRole } = useRole();
   const [search, setSearch] = useState("");
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
