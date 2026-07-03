@@ -164,3 +164,34 @@ describe("settingRowSchema", () => {
     expect(settingRowSchema.safeParse({ key: "", value: "x" }).success).toBe(false);
   });
 });
+
+describe("verifySiteSettingsSchema", () => {
+  it("accepts a well-formed rows array (extra columns tolerated)", () => {
+    const res = verifySiteSettingsSchema([
+      { key: "home_show_game_caixa", value: "false", description: "x", updated_at: "2024-01-01" },
+      { key: "menu_federal_enabled", value: null },
+    ]);
+    expect(res.ok).toBe(true);
+    if (res.ok) expect(res.rows).toHaveLength(2);
+  });
+
+  it("fails when payload is not an array", () => {
+    const res = verifySiteSettingsSchema({ oops: true } as unknown);
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error).toMatch(/não é uma lista/);
+  });
+
+  it("fails when a required column (value) is missing", () => {
+    const res = verifySiteSettingsSchema([{ key: "x" }]);
+    expect(res.ok).toBe(false);
+    if (!res.ok) {
+      expect(res.error).toMatch(/Schema/);
+      expect(res.issues.join(" ")).toMatch(/value/);
+    }
+  });
+
+  it("fails when key is empty", () => {
+    const res = verifySiteSettingsSchema([{ key: "", value: "x" }]);
+    expect(res.ok).toBe(false);
+  });
+});
