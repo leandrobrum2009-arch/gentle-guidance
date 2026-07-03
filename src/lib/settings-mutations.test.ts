@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
-import { buildSettingsMutations } from "./settings-mutations";
+import {
+  buildSettingsMutations,
+  normalizeSettingValue,
+  settingRowSchema,
+} from "./settings-mutations";
 
 describe("buildSettingsMutations", () => {
   it("upserts new keys not present in initial (e.g. home_show_game_caixa)", () => {
@@ -59,5 +63,103 @@ describe("buildSettingsMutations", () => {
       { op: "update", key: "a", value: "1" },
       { op: "upsert", key: "c", value: "3" },
     ]);
+  });
+
+  describe("edge cases", () => {
+    it("coerces booleans and numbers to strings", () => {
+      const result = buildSettingsMutations(
+        [
+          { key: "flag", value: false as any },
+          { key: "count", value: 42 as any },
+        ],
+        [],
+      );
+      expect(result).toEqual([
+        { op: "upsert", key: "flag", value: "false" },
+        { op: "upsert", key: "count", value: "42" },
+      ]);
+    });
+
+    it("skips rows with empty or malformed keys", () => {
+      const result = buildSettingsMutations(
+        [
+          { key: "", value: "x" },
+          { key: "   ", value: "x" },
+          { key: "bad key!", value: "x" },
+          { key: "ok_key", value: "x" },
+        ],
+        [],
+      );
+      expect(result).toEqual([{ op: "upsert", key: "ok_key", value: "x" }]);
+    });
+
+    it("skips rows whose value exceeds the 10k character limit", () => {
+      const big = "a".repeat(10_001);
+      const result = buildSettingsMutations([{ key: "huge", value: big }], []);
+      expect(result).toEqual([]);
+    });
+
+    it("collapses duplicate keys with last-write-wins", () => {
+      const result = buildSettingsMutations(
+        [
+          { key: "menu_federal_enabled", value: "true" },
+          { key: "menu_federal_enabled", value: "false" },
+        ],
+        [{ key: "menu_federal_enabled", value: "true" }],
+      );
+      expect(result).toEqual([
+        { op: "update", key: "menu_federal_enabled", value: "false" },
+      ]);
+    });
+
+    it("treats null/undefined values as empty strings", () => {
+      const result = buildSettingsMutations(
+        [
+          { key: "a", value: null as any },
+          { key: "b", value: undefined as any },
+        ],
+        [{ key: "a", value: "" }],
+      );
+      expect(result).toEqual([{ op: "upsert", key: "b", value: "" }]);
+    });
+
+    it("serializes object values to JSON", () => {
+      const result = buildSettingsMutations(
+        [{ key: "obj", value: { a: 1 } as any }],
+        [],
+      );
+      expect(result).toEqual([{ op: "upsert", key: "obj", value: '{"a":1}' }]);
+    });
+  });
+});
+
+describe("normalizeSettingValue", () => {
+  it("returns strings unchanged", () => {
+    expect(normalizeSettingValue("hello")).toBe("hello");
+  });
+  it("stringifies primitives", () => {
+    expect(normalizeSettingValue(true)).toBe("true");
+    expect(normalizeSettingValue(0)).toBe("0");
+  });
+  it("returns empty string for null/undefined", () => {
+    expect(normalizeSettingValue(null)).toBe("");
+    expect(normalizeSettingValue(undefined)).toBe("");
+  });
+});
+
+describe("settingRowSchema", () => {
+  it("accepts valid keys", () => {
+    expect(
+      settingRowSchema.safeParse({ key: "home_show_game_caixa", value: "false" })
+        .success,
+    ).toBe(true);
+  });
+  it("rejects keys with spaces or symbols", () => {
+    expect(settingRowSchema.safeParse({ key: "bad key", value: "x" }).success).toBe(
+      false,
+    );
+  });
+  it("rejects empty keys", () => {
+    expect(settingRowSchema.safeParse({ key: "", value: "x" }).success).toBe(false);
   });
 });
