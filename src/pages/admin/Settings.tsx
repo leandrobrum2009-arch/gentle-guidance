@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRole } from "@/hooks/useAdmin";
-import { buildSettingsMutations } from "@/lib/settings-mutations";
+import { buildSettingsMutations, verifySiteSettingsSchema } from "@/lib/settings-mutations";
 
 const SITE_ASSETS_BUCKET = 'site-assets';
 const FALLBACK_IMAGE_BUCKET = 'campaigns';
@@ -125,13 +125,21 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("site_settings").select("*");
-    if (!error) {
-      setSettings(data || []);
-      setInitialSettings(JSON.parse(JSON.stringify(data || [])));
-    } else {
+    if (error) {
       console.error("Error fetching settings:", error);
       toast.error("Erro ao carregar configurações: " + error.message);
+      setLoading(false);
+      return;
     }
+    const verified = verifySiteSettingsSchema(data ?? []);
+    if (verified.ok === false) {
+      console.error("site_settings schema mismatch:", verified.error, verified.issues);
+      toast.error(`${verified.error}: ${verified.issues[0] ?? "formato inesperado"}`);
+      setLoading(false);
+      return;
+    }
+    setSettings(verified.rows);
+    setInitialSettings(JSON.parse(JSON.stringify(verified.rows)));
     setLoading(false);
   };
 
