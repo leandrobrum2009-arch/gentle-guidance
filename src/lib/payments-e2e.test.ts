@@ -82,7 +82,7 @@ describe("E2E: balance checkout", () => {
     });
     const r = await confirmBalancePurchase("order-x", "u1");
     expect(r.success).toBe(false);
-    if (!r.success) expect(r.message).toMatch(/insuficiente/i);
+    if (r.success === false) expect(r.message).toMatch(/insuficiente/i);
   });
 });
 
