@@ -1105,7 +1105,7 @@ export default function AdminSettings() {
   );
 }
 
-function SettingField({ 
+export function SettingField({ 
   s, 
   onUpdate, 
   getIcon, 
