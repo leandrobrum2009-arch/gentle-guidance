@@ -365,19 +365,28 @@ export default function AccountInline() {
                 <div className="space-y-2">
                   {(txs || []).slice(0, 5).map((t: any) => {
                     const credit = Number(t.amount) >= 0;
-                    const Icon = credit ? ArrowDownLeft : ArrowUpRight;
+                    const isBonus = t.type === "bonus";
+                    const Icon = isBonus ? Gift : credit ? ArrowDownLeft : ArrowUpRight;
+                    const label = isBonus
+                      ? (t.description || "Bônus de depósito")
+                      : (t.description || t.type || "Transação");
                     return (
                       <div key={t.id} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
-                        <div className={`h-9 w-9 rounded-full flex items-center justify-center ${credit ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}>
+                        <div className={`h-9 w-9 rounded-full flex items-center justify-center ${isBonus ? "bg-amber-500/15 text-amber-500 ring-2 ring-amber-500/30" : credit ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}>
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold truncate">{t.description || t.type || "Transação"}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-bold truncate">{label}</p>
+                            {isBonus && (
+                              <Badge className="text-[9px] font-black bg-amber-500/20 text-amber-500 border-0 px-1.5 py-0 h-4">BÔNUS</Badge>
+                            )}
+                          </div>
                           <p className="text-[11px] text-muted-foreground">
                             {format(new Date(t.created_at), "dd MMM, HH:mm", { locale: ptBR })}
                           </p>
                         </div>
-                        <p className={`text-sm font-black ${credit ? "text-emerald-500" : "text-rose-500"}`}>
+                        <p className={`text-sm font-black ${isBonus ? "text-amber-500" : credit ? "text-emerald-500" : "text-rose-500"}`}>
                           {credit ? "+" : ""}{fmtBRL(t.amount)}
                         </p>
                       </div>
