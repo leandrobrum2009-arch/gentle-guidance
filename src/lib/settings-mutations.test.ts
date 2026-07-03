@@ -3,6 +3,7 @@ import {
   buildSettingsMutations,
   normalizeSettingValue,
   settingRowSchema,
+  verifySiteSettingsSchema,
 } from "./settings-mutations";
 
 describe("buildSettingsMutations", () => {
