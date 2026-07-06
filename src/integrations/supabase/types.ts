@@ -2408,6 +2408,7 @@ export type Database = {
       check_data_integrity: { Args: never; Returns: Json }
       check_is_master: { Args: { user_id: string }; Returns: boolean }
       cleanup_expired_reservations: { Args: never; Returns: undefined }
+      current_tenant_id: { Args: never; Returns: string }
       diagnose_table_permissions: {
         Args: never
         Returns: {
