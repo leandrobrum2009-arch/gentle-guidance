@@ -1014,7 +1014,7 @@ export default function AdminSettings() {
                 {['whatsapp_group_link', 'whatsapp_group_enabled'].map(key => (
                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50 hover:border-primary/20 transition-colors md:col-span-2">
                     <SettingField
-                      s={settings.find(s => s.key === key)}
+                      s={getSetting(key, 'true')}
                       onUpdate={handleUpdate}
                       label={settingNames[key]}
                       getIcon={getIcon}
