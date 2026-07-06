@@ -282,10 +282,9 @@ export const useCampaigns = () =>
   useQuery({
     queryKey: ["campaigns"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("campaigns")
-        .select("*, winners(*)")
-        .order("created_at", { ascending: false });
+      const { data, error } = await scopeTenant(
+        supabase.from("campaigns").select("*, winners(*)"),
+      ).order("created_at", { ascending: false });
       if (error) throw error;
       return (data as any) as Campaign[];
     },
@@ -297,11 +296,12 @@ export const useActiveBanners = () => {
   return useQuery({
     queryKey: ["active-banners"],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
-        .from("banners")
-        .select("id, title, subtitle, image_url, link_url, order_index, is_active")
-        .eq("is_active", true)
-        .order("order_index", { ascending: true });
+      const { data, error } = await scopeTenant(
+        (supabase as any)
+          .from("banners")
+          .select("id, title, subtitle, image_url, link_url, order_index, is_active")
+          .eq("is_active", true),
+      ).order("order_index", { ascending: true });
       if (error) throw error;
       return (data as any) as Banner[];
     },
@@ -475,9 +475,9 @@ export const useWinners = () =>
   useQuery({
     queryKey: ["winners"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("winners")
-        .select("*, campaigns(title)")
+      const { data, error } = await scopeTenant(
+        supabase.from("winners").select("*, campaigns(title)"),
+      )
         .order("draw_date", { ascending: false })
         .limit(100);
       if (error) throw error;
@@ -508,10 +508,9 @@ export const useAnnouncements = () =>
   useQuery({
     queryKey: ["announcements"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("announcements")
-        .select("*")
-        .order("published_at", { ascending: false });
+      const { data, error } = await scopeTenant(
+        supabase.from("announcements").select("*"),
+      ).order("published_at", { ascending: false });
       if (error) throw error;
       return data as Announcement[];
     },
