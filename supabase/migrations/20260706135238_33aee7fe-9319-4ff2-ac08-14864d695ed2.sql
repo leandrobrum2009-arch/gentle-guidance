@@ -60,8 +60,8 @@ CREATE TRIGGER trg_tenant_settings_updated_at BEFORE UPDATE ON public.tenant_set
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
 WITH new_tenant AS (
-  INSERT INTO public.tenants (slug, name, plan)
-  VALUES ('default', 'Default Tenant', 'default')
+  INSERT INTO public.tenants (id, slug, name, plan)
+  VALUES ('1dcddd4d-e3ad-4bbb-b758-d1e94ebe0e73', 'default', 'Default Tenant', 'default')
   RETURNING id
 )
 INSERT INTO public.tenant_domains (tenant_id, domain, is_primary)
