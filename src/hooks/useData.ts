@@ -1,5 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getCurrentTenantId } from "@/lib/tenant";
+
+/**
+ * Apply the current tenant filter to any Supabase query builder.
+ * No-op when the tenant id is not yet resolved so the very first
+ * render doesn't crash — RLS (Fase 7) is the hard security boundary.
+ */
+const scopeTenant = <T,>(q: T): T => {
+  const tid = getCurrentTenantId();
+  return tid ? ((q as any).eq("tenant_id", tid) as T) : q;
+};
 
 export interface PriceBundle {
   quantity: number;
