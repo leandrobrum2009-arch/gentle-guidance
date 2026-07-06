@@ -63,6 +63,80 @@ export const SiteSettingsInjector = () => {
       if (metaKeywords) metaKeywords.setAttribute('content', settings.site_keywords);
     }
 
+    // Canonical + og:url point at current origin (per-tenant domain)
+    const origin = typeof window !== "undefined" ? window.location.origin : "";
+    if (origin) {
+      let canonical = document.querySelector("link[rel='canonical']") as HTMLLinkElement | null;
+      if (!canonical) {
+        canonical = document.createElement("link");
+        canonical.rel = "canonical";
+        document.head.appendChild(canonical);
+      }
+      canonical.href = origin + window.location.pathname;
+      const ogUrl = document.querySelector('meta[property="og:url"]');
+      if (ogUrl) ogUrl.setAttribute("content", origin + window.location.pathname);
+    }
+
+    // og:image and twitter:image — clear hardcoded lovable.app placeholder
+    // when no tenant image is configured, so hosting can inject the correct one.
+    const tenantImage = settings.site_og_image || settings.site_logo_url || "";
+    ["og:image", "twitter:image"].forEach((key) => {
+      const sel = key.startsWith("og:")
+        ? `meta[property='${key}']`
+        : `meta[name='${key}']`;
+      const el = document.querySelector(sel);
+      if (!el) return;
+      if (tenantImage) el.setAttribute("content", tenantImage);
+      else el.setAttribute("content", "");
+    });
+
+    // Dynamic Web App Manifest per tenant
+    try {
+      const manifest = {
+        name: settings.site_title || settings.site_name || "Rifas",
+        short_name: settings.site_name || settings.site_title || "Rifas",
+        description:
+          settings.site_description ||
+          "Sistema de rifas online com pagamento via PIX.",
+        start_url: "/",
+        display: "standalone",
+        background_color: "#0f1729",
+        theme_color: settings.primary_color || "#0f1729",
+        orientation: "portrait",
+        icons: settings.site_logo_url
+          ? [
+              {
+                src: settings.site_logo_url,
+                sizes: "512x512",
+                type: "image/png",
+                purpose: "any maskable",
+              },
+            ]
+          : [
+              {
+                src: "/placeholder.svg",
+                sizes: "512x512",
+                type: "image/svg+xml",
+                purpose: "any maskable",
+              },
+            ],
+      };
+      const blob = new Blob([JSON.stringify(manifest)], {
+        type: "application/manifest+json",
+      });
+      const url = URL.createObjectURL(blob);
+      let link = document.querySelector("link[rel='manifest']") as HTMLLinkElement | null;
+      if (!link) {
+        link = document.createElement("link");
+        link.rel = "manifest";
+        document.head.appendChild(link);
+      }
+      const prev = link.getAttribute("data-blob");
+      if (prev) URL.revokeObjectURL(prev);
+      link.href = url;
+      link.setAttribute("data-blob", url);
+    } catch { /* ignore */ }
+
     // Apply Primary Color
     if (settings.primary_color) {
       const hex = settings.primary_color;
