@@ -964,17 +964,59 @@ export const useSiteSettings = () =>
   useQuery({
     queryKey: ["site-settings"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const hostname =
+        typeof window !== "undefined" ? window.location.hostname : "";
+
+      // 1) Base site_settings (legacy global table).
+      const { data: baseRows, error: baseErr } = await supabase
         .from("site_settings")
         .select("key, value");
-      if (error) throw error;
-      
+      if (baseErr) throw baseErr;
+
       const settingsMap: Record<string, string> = {};
-      if (data) {
-        data.forEach(s => {
-          settingsMap[s.key] = s.value;
-        });
+      (baseRows ?? []).forEach((s: any) => {
+        settingsMap[s.key] = s.value;
+      });
+
+      // 2) Overlay tenant_settings for the current hostname (white-label).
+      // Resolved by domain match; falls back to the `default` tenant so the
+      // legacy global settings remain the source of truth until tenants
+      // are configured per client.
+      try {
+        let tenantId: string | null = null;
+        if (hostname) {
+          const { data: dom } = await supabase
+            .from("tenant_domains")
+            .select("tenant_id")
+            .ilike("domain", hostname)
+            .maybeSingle();
+          tenantId = (dom as any)?.tenant_id ?? null;
+        }
+        if (!tenantId) {
+          const { data: def } = await supabase
+            .from("tenants")
+            .select("id")
+            .eq("slug", "default")
+            .maybeSingle();
+          tenantId = (def as any)?.id ?? null;
+        }
+        if (tenantId) {
+          const { data: tRows } = await supabase
+            .from("tenant_settings")
+            .select("key, value")
+            .eq("tenant_id", tenantId);
+          (tRows ?? []).forEach((s: any) => {
+            if (s?.value !== null && s?.value !== undefined && s.value !== "") {
+              settingsMap[s.key] = s.value;
+            }
+          });
+          settingsMap.__tenant_id = tenantId;
+        }
+      } catch (e) {
+        // Non-fatal: tenant overlay is opportunistic while Fase 5+ rolls out.
+        console.warn("[useSiteSettings] tenant overlay failed", e);
       }
+
       return settingsMap;
     },
     staleTime: 1000 * 30, // 30s — settings change from admin and must reflect quickly
