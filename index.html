@@ -9,8 +9,16 @@
     <link rel="canonical" href="/" />
     <script>
       (function() {
-        const cachedColor = localStorage.getItem('cached_primary_color');
-        let cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
+        const host = window.location.hostname;
+        const p = 'cached::' + host + '::';
+        const cachedColor =
+          localStorage.getItem(p + 'primary_color') ||
+          localStorage.getItem('cached_primary_color');
+        let cachedName =
+          localStorage.getItem(p + 'site_name') ||
+          localStorage.getItem(p + 'site_title') ||
+          localStorage.getItem('cached_site_name') ||
+          localStorage.getItem('cached_site_title');
         
         // Prevent old branding from appearing
         if (cachedName && (cachedName.toLowerCase().includes('rifa pro') || cachedName.toLowerCase().includes('rifapro'))) {
