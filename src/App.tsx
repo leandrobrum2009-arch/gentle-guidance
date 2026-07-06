@@ -41,6 +41,7 @@ import { QueryCache } from "@tanstack/react-query";
 import { initPerfMonitor, logPerf } from "@/lib/perf";
 import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { TenantProvider } from "@/contexts/TenantContext";
 import { useSiteSettings } from "@/hooks/useData";
 
 import { ThemeProvider } from "./components/ThemeProvider";
@@ -236,10 +237,12 @@ const App = () => {
       <HelmetProvider>
         <ThemeProvider defaultTheme="dark" storageKey="platform-theme">
           <TooltipProvider>
-            <SiteSettingsInjector />
-            <Toaster />
-            <Sonner />
-            <AppContent />
+            <TenantProvider>
+              <SiteSettingsInjector />
+              <Toaster />
+              <Sonner />
+              <AppContent />
+            </TenantProvider>
           </TooltipProvider>
         </ThemeProvider>
       </HelmetProvider>
