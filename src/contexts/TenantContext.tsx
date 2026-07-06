@@ -1,6 +1,7 @@
 import { createContext, useContext, ReactNode } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { setCurrentTenantId } from "@/lib/tenant";
 
 export interface TenantInfo {
   id: string;
@@ -70,11 +71,15 @@ export const TenantProvider = ({ children }: { children: ReactNode }) => {
     queryFn: async () => {
       const result = await fetchTenant(hostname);
       writeCache(hostname, result);
+      setCurrentTenantId(result.tenant?.id ?? null);
       return result;
     },
     staleTime: 5 * 60 * 1000,
     initialData: cached ?? undefined,
   });
+
+  // Keep the sync mirror fresh (e.g. when hydrating from the cache).
+  if (data?.tenant?.id) setCurrentTenantId(data.tenant.id);
 
   const value: TenantContextValue = data ?? {
     tenant: null,
