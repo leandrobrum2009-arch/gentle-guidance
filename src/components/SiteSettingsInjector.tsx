@@ -25,11 +25,15 @@ export const SiteSettingsInjector = () => {
       root.classList.add(theme);
     }
 
-    // Cache basic settings for early injection on next load
-    if (settings.primary_color) localStorage.setItem('cached_primary_color', settings.primary_color);
-    if (settings.site_name) localStorage.setItem('cached_site_name', settings.site_name);
-    if (settings.site_title) localStorage.setItem('cached_site_title', settings.site_title);
-    if (settings.site_logo_url) localStorage.setItem('cached_site_logo', settings.site_logo_url);
+    // Cache basic settings for early injection on next load — scoped per
+    // hostname so multiple tenants sharing a browser don't clobber each
+    // other's cached branding.
+    const host = typeof window !== "undefined" ? window.location.hostname : "";
+    const prefix = host ? `cached::${host}::` : "cached_";
+    if (settings.primary_color) localStorage.setItem(`${prefix}primary_color`, settings.primary_color);
+    if (settings.site_name) localStorage.setItem(`${prefix}site_name`, settings.site_name);
+    if (settings.site_title) localStorage.setItem(`${prefix}site_title`, settings.site_title);
+    if (settings.site_logo_url) localStorage.setItem(`${prefix}site_logo`, settings.site_logo_url);
 
     // Apply Site Name or Site Title to Title
     const siteTitle = settings.site_title || settings.site_name || "Carregando...";
