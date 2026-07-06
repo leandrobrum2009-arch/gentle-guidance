@@ -33,13 +33,13 @@ jobs:
       - name: Deploy via FTP to GoDaddy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server: ${{ secrets.FTP_SERVER || secrets.FTP_HOST }}
-          username: ${{ secrets.FTP_USERNAME }}
+          server: 107.180.112.212
+          username: github-deploy@sortedomilhao.app
           password: ${{ secrets.FTP_PASSWORD_GODADDY }}
           port: 21
           protocol: ftp
           local-dir: ./dist/
-          server-dir: ${{ secrets.FTP_SERVER_DIR || '/public_html/' }}
+          server-dir: /
           exclude: |
             **/.git*
             **/.git*/**
