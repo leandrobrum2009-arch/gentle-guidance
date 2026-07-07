@@ -1249,7 +1249,7 @@ export default function AdminCampaignEdit() {
                 </div>
              </Card>
 
-             {form.ticket_generation_type === 'manual' && id && (
+             {id && (
                <GiftPrizesManager
                  campaignId={id}
                  totalTickets={Number(form.total_tickets) || 0}
@@ -1259,7 +1259,7 @@ export default function AdminCampaignEdit() {
                  onChangeSetting={(patch) => setForm((p) => ({ ...p, ...patch }))}
                />
              )}
-             {form.ticket_generation_type === 'manual' && !id && (
+             {!id && (
                <Card className="p-4 rounded-2xl border-dashed">
                  <p className="text-xs text-muted-foreground text-center">
                    Salve a campanha primeiro para configurar a modalidade "Presente Premiado".
