@@ -1,4 +1,3 @@
-
 CREATE TABLE public.tenants (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   slug TEXT UNIQUE NOT NULL,
@@ -59,15 +58,13 @@ CREATE TRIGGER trg_tenant_domains_updated_at BEFORE UPDATE ON public.tenant_doma
 CREATE TRIGGER trg_tenant_settings_updated_at BEFORE UPDATE ON public.tenant_settings
   FOR EACH ROW EXECUTE FUNCTION public.update_updated_at_column();
 
-WITH new_tenant AS (
-  INSERT INTO public.tenants (slug, name, plan)
-  VALUES ('default', 'Default Tenant', 'default')
+WITH default_tenant AS (
+  INSERT INTO public.tenants (id, slug, name, plan)
+  VALUES ('1dcddd4d-e3ad-4bbb-b758-d1e94ebe0e73', 'default', 'Luckskins', 'pro')
   RETURNING id
 )
 INSERT INTO public.tenant_domains (tenant_id, domain, is_primary)
 SELECT id, d.domain, d.is_primary
-FROM new_tenant, (VALUES
-  ('sistemarifas.lovable.app', true),
-  ('sistemaparaleiloes.site', false),
-  ('sortedomilhao.app', false)
+FROM default_tenant, (VALUES
+  ('luckskins.com.br', true)
 ) AS d(domain, is_primary);

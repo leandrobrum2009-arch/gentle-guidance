@@ -9,16 +9,8 @@
     <link rel="canonical" href="/" />
     <script>
       (function() {
-        const host = window.location.hostname;
-        const p = 'cached::' + host + '::';
-        const cachedColor =
-          localStorage.getItem(p + 'primary_color') ||
-          localStorage.getItem('cached_primary_color');
-        let cachedName =
-          localStorage.getItem(p + 'site_name') ||
-          localStorage.getItem(p + 'site_title') ||
-          localStorage.getItem('cached_site_name') ||
-          localStorage.getItem('cached_site_title');
+        const cachedColor = localStorage.getItem('cached_primary_color');
+        let cachedName = localStorage.getItem('cached_site_name') || localStorage.getItem('cached_site_title');
         
         // Prevent old branding from appearing
         if (cachedName && (cachedName.toLowerCase().includes('rifa pro') || cachedName.toLowerCase().includes('rifapro'))) {
@@ -71,12 +63,12 @@
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Plataforma de Rifas Online — Sorteios e Prêmios Garantidos">
     <meta property="og:description" content="Participe das melhores rifas online com pagamento via PIX, sorteios pela Loteria Federal e prêmios entregues com total segurança e transparência.">
-    <meta property="og:image" content="">
+    <meta property="og:image" content="https://sistemarifas.lovable.app/placeholder.svg">
 
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Plataforma de Rifas Online — Sorteios e Prêmios Garantidos">
     <meta name="twitter:description" content="Participe das melhores rifas online com pagamento via PIX, sorteios pela Loteria Federal e prêmios entregues com total segurança e transparência.">
-    <meta name="twitter:image" content="">
+    <meta name="twitter:image" content="https://sistemarifas.lovable.app/placeholder.svg">
   </head>
 
   <body>

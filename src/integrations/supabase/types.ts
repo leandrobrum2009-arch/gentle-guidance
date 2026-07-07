@@ -432,70 +432,6 @@ export type Database = {
           },
         ]
       }
-      campaign_gift_prizes: {
-        Row: {
-          campaign_id: string
-          created_at: string
-          id: string
-          prize_image_url: string | null
-          prize_title: string
-          prize_type: string
-          prize_value_cents: number | null
-          revealed_at: string | null
-          ticket_number: string
-          updated_at: string
-          winner_order_id: string | null
-        }
-        Insert: {
-          campaign_id: string
-          created_at?: string
-          id?: string
-          prize_image_url?: string | null
-          prize_title: string
-          prize_type: string
-          prize_value_cents?: number | null
-          revealed_at?: string | null
-          ticket_number: string
-          updated_at?: string
-          winner_order_id?: string | null
-        }
-        Update: {
-          campaign_id?: string
-          created_at?: string
-          id?: string
-          prize_image_url?: string | null
-          prize_title?: string
-          prize_type?: string
-          prize_value_cents?: number | null
-          revealed_at?: string | null
-          ticket_number?: string
-          updated_at?: string
-          winner_order_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "campaign_gift_prizes_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "campaign_gift_prizes_winner_order_id_fkey"
-            columns: ["winner_order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "campaign_gift_prizes_winner_order_id_fkey"
-            columns: ["winner_order_id"]
-            isOneToOne: false
-            referencedRelation: "orders_public_ranking"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       campaigns: {
         Row: {
           auto_numbers: boolean | null
@@ -509,9 +445,6 @@ export type Database = {
           featured: boolean | null
           federal_lottery_draw: boolean | null
           gallery_urls: Json | null
-          gift_mode_enabled: boolean
-          gift_results_revealed: boolean
-          gift_reveal_mode: string
           hero_image_url: string | null
           id: string
           image_overlay_enabled: boolean
@@ -581,9 +514,6 @@ export type Database = {
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
-          gift_mode_enabled?: boolean
-          gift_results_revealed?: boolean
-          gift_reveal_mode?: string
           hero_image_url?: string | null
           id?: string
           image_overlay_enabled?: boolean
@@ -653,9 +583,6 @@ export type Database = {
           featured?: boolean | null
           federal_lottery_draw?: boolean | null
           gallery_urls?: Json | null
-          gift_mode_enabled?: boolean
-          gift_results_revealed?: boolean
-          gift_reveal_mode?: string
           hero_image_url?: string | null
           id?: string
           image_overlay_enabled?: boolean
@@ -2342,29 +2269,6 @@ export type Database = {
       }
     }
     Views: {
-      campaign_gift_prizes_public: {
-        Row: {
-          campaign_id: string | null
-          id: string | null
-          prize_image_url: string | null
-          prize_title: string | null
-          prize_type: string | null
-          prize_value_cents: number | null
-          revealed_at: string | null
-          ticket_number: string | null
-          winner_name: string | null
-          winner_order_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "campaign_gift_prizes_campaign_id_fkey"
-            columns: ["campaign_id"]
-            isOneToOne: false
-            referencedRelation: "campaigns"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       lucky_hours_public: {
         Row: {
           campaign_id: string | null
@@ -2642,7 +2546,6 @@ export type Database = {
         }
         Returns: string
       }
-      reveal_gift_results: { Args: { p_campaign_id: string }; Returns: Json }
       run_lucky_hour_draw: { Args: { p_lucky_hour_id: string }; Returns: Json }
       slugify: { Args: { input: string }; Returns: string }
       sync_federal_lottery: { Args: never; Returns: undefined }

@@ -7,10 +7,10 @@ interface FooterInlineProps {
 }
 
 const compactLinks = [
-  { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
-  { key: "federal", label: "Federal", href: "/resultado-federal" },
-  { key: "minha_conta", label: "Minha Conta", href: "/minha-conta" },
-  { key: "termos", label: "Termos", href: "/termos-de-uso" },
+  { label: "Ganhadores", href: "/ganhadores" },
+  { label: "Federal", href: "/resultado-federal" },
+  { label: "Minha Conta", href: "/minha-conta" },
+  { label: "Termos", href: "/termos-de-uso" },
 ];
 
 const FooterInline = ({ settings }: FooterInlineProps) => {
@@ -23,10 +23,6 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
   const phone = settings?.company_phone || settings?.support_whatsapp;
   const email = settings?.company_email;
   const address = settings?.company_address;
-
-  const visibleLinks = compactLinks.filter(
-    (l) => String((settings as any)?.[`menu_${l.key}_enabled`] ?? "true") !== "false"
-  );
 
   return (
     <footer className="border-t border-border bg-background px-3 pb-6 pt-4">
@@ -78,7 +74,7 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
         </div>
 
         <div className="mt-4 grid grid-cols-2 gap-2">
-          {visibleLinks.map((link) => (
+          {compactLinks.map((link) => (
             <Link key={link.href} to={link.href} className="rounded-xl border border-border bg-background/50 px-3 py-2 text-center text-[10px] font-black uppercase tracking-widest text-foreground">
               {link.label}
             </Link>
@@ -93,9 +89,6 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
 
       <p className="mt-4 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
         © {new Date().getFullYear()} {settings?.site_name || companyName}. Todos os direitos reservados.
-      </p>
-      <p className="mt-2 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
-        Versao alpha 0.1
       </p>
     </footer>
   );

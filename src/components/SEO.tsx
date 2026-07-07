@@ -29,7 +29,7 @@ export const SEO = ({
   const seoTitle = !title || title === siteName ? siteName : `${title} | ${siteName}`;
   const seoDescription = description || defaultDescription;
   const seoKeywords = keywords ? `${keywords}, ${defaultKeywords}` : defaultKeywords;
-  const seoImage = image || "https://sistemarifas.lovable.app/placeholder.svg";
+  const seoImage = image || "/placeholder.svg";
   const seoUrl = url || window.location.href;
 
   return (

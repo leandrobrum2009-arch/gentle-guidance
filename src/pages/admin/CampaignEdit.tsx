@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/AdminLayout";
@@ -23,7 +23,6 @@ import { compressImage } from "@/lib/image-upload";
 import LuckyHourManager from "@/components/admin/LuckyHourManager";
 import CampaignPrizesManager from "@/components/admin/CampaignPrizesManager";
 import SectionsOrderManager from "@/components/admin/SectionsOrderManager";
-import GiftPrizesManager from "@/components/admin/GiftPrizesManager";
 
 
 interface CampaignForm {
@@ -52,10 +51,6 @@ interface CampaignForm {
   roulette_available_count: number;
   scratch_cards_available_count: number;
   image_overlay_enabled: boolean;
-  hero_image_url: string;
-  gift_mode_enabled?: boolean;
-  gift_reveal_mode?: 'on_draw' | 'on_sold_out';
-  gift_results_revealed?: boolean;
 }
 
 
@@ -93,38 +88,12 @@ const empty: CampaignForm = {
   roulette_available_count: 0,
   scratch_cards_available_count: 0,
   image_overlay_enabled: true,
-  hero_image_url: "",
-  gift_mode_enabled: false,
-  gift_reveal_mode: 'on_draw',
-  gift_results_revealed: false,
-};
-
-// Preset applied when a campaign is created with the "Presente Premiado" type.
-// Keeps only the fields that make sense for the gift-box modality and disables
-// engagement modules that don't apply (roulette, scratch, mystery box, timer).
-const GIFT_MODE_DEFAULTS: Partial<CampaignForm> = {
-  gift_mode_enabled: true,
-  gift_reveal_mode: 'on_sold_out',
-  ticket_generation_type: 'manual',
-  manual_numbers: true,
-  auto_numbers: false,
-  federal_lottery_draw: false,
-  mystery_box_enabled: false,
-  roulette_enabled: false,
-  show_instant_prizes: false,
-  show_roulette_status: false,
-  show_timer: false,
-  fake_progress_enabled: false,
-  min_tickets: 1,
-  max_tickets: 100,
-  total_tickets: 100,
 };
 
 
 export default function AdminCampaignEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: features } = useFeatureAccess();
@@ -138,16 +107,6 @@ export default function AdminCampaignEdit() {
   useEffect(() => {
     if (id) fetchCampaign();
   }, [id]);
-
-  useEffect(() => {
-    if (id) return;
-    if (searchParams.get("tipo") === "presente") {
-      setForm((p) => ({
-        ...p,
-        ...GIFT_MODE_DEFAULTS,
-      }));
-    }
-  }, [id, searchParams]);
 
   const fetchCampaign = async () => {
     setLoading(true);
@@ -178,7 +137,6 @@ export default function AdminCampaignEdit() {
       roulette_available_count: data.roulette_available_count ?? 0,
       scratch_cards_available_count: data.scratch_cards_available_count ?? 0,
       image_overlay_enabled: (data as any).image_overlay_enabled ?? true,
-      hero_image_url: (data as any).hero_image_url ?? "",
       sections_order: (() => {
         const order = ((data.sections_order as string[]) ?? ["gallery", "header", "timer", "progress", "purchase", "events", "description", "prizes", "roulette_footer", "scratch_footer", "box_footer", "winners", "ranking"]);
         if (data.show_timer && !order.includes("timer")) {
@@ -333,44 +291,6 @@ export default function AdminCampaignEdit() {
       const invalidBundle = (form.price_bundles || []).find((b: any) => !(Number(b.quantity) > 0) || !(Number(b.price) >= 0));
       if (invalidBundle) throw new Error("Combos de desconto devem ter quantidade > 0 e preço >= 0");
 
-      // Gift Mode ("Presente Premiado") — validações extras ao publicar
-      const willBePublic = form.status === 'active' || form.status === 'paused';
-      if (form.gift_mode_enabled && willBePublic) {
-        if (form.ticket_generation_type !== 'manual') {
-          throw new Error("Presente Premiado exige tipo de geração de cotas 'Manual'");
-        }
-        if (id) {
-          const { data: gp, error: gpErr } = await (supabase as any)
-            .from("campaign_gift_prizes")
-            .select("ticket_number, prize_title, prize_value_cents")
-            .eq("campaign_id", id);
-          if (gpErr) throw gpErr;
-          const prizes = (gp as any[]) ?? [];
-          if (prizes.length === 0) {
-            throw new Error("Adicione pelo menos 1 número premiado antes de publicar (aba Prêmios).");
-          }
-          const padLen = String(Math.max(1, tt - 1)).length;
-          const seen = new Set<string>();
-          for (const p of prizes) {
-            const n = String(p.ticket_number ?? "").trim();
-            if (!n) throw new Error("Existe um prêmio sem número definido.");
-            const idx = parseInt(n, 10);
-            if (!Number.isInteger(idx) || idx < 0 || idx >= tt) {
-              throw new Error(`Número premiado "${n}" está fora do intervalo (0 a ${tt - 1}).`);
-            }
-            const key = n.padStart(padLen, "0");
-            if (seen.has(key)) throw new Error(`Número premiado duplicado: ${key}`);
-            seen.add(key);
-            if (!p.prize_title || String(p.prize_title).trim() === "") {
-              throw new Error(`Prêmio do número ${key} está sem título.`);
-            }
-          }
-        } else {
-          // Nova campanha: obriga salvar como rascunho antes de publicar com prêmios
-          throw new Error("Salve como Rascunho primeiro para cadastrar os prêmios do Presente Premiado.");
-        }
-      }
-
       // Prepare clean payload for Supabase
       const { 
         id: _, 
@@ -477,67 +397,6 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="general" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
-              <div className="mb-6 pb-6 border-b">
-                <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground mb-3 block">
-                  Tipo de Campanha
-                </Label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  <button
-                    type="button"
-                    disabled={!!id}
-                    onClick={() => {
-                      set("gift_mode_enabled", false);
-                    }}
-                    className={cn(
-                      "text-left p-4 rounded-xl border-2 transition-all",
-                      !form.gift_mode_enabled
-                        ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/50",
-                      id && "opacity-60 cursor-not-allowed hover:border-border"
-                    )}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Ticket className="h-4 w-4 text-primary" />
-                      <span className="font-bold text-sm">Rifa Padrão</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Modelo tradicional: números visíveis, escolha manual ou automática, sorteio por Loteria Federal.
-                    </p>
-                  </button>
-                  <button
-                    type="button"
-                    disabled={!!id}
-                    onClick={() => {
-                      setForm((p) => ({ ...p, ...GIFT_MODE_DEFAULTS }));
-                    }}
-                    className={cn(
-                      "text-left p-4 rounded-xl border-2 transition-all",
-                      form.gift_mode_enabled
-                        ? "border-pink-500 bg-pink-500/5 shadow-sm"
-                        : "border-border hover:border-pink-500/50",
-                      id && "opacity-60 cursor-not-allowed hover:border-border"
-                    )}
-                  >
-                    <div className="flex items-center gap-2 mb-1">
-                      <Gift className="h-4 w-4 text-pink-500" />
-                      <span className="font-bold text-sm">Presente Premiado</span>
-                    </div>
-                    <p className="text-[11px] text-muted-foreground leading-relaxed">
-                      Caixas-surpresa: números ocultos, prêmios definidos por bilhete e revelados no encerramento.
-                    </p>
-                  </button>
-                </div>
-                {id && (
-                  <p className="text-[10px] text-amber-500 mt-3 font-bold uppercase tracking-wider">
-                    Tipo bloqueado para campanhas existentes — protege rifas antigas de alterações acidentais.
-                  </p>
-                )}
-                {form.gift_mode_enabled && !id && (
-                  <p className="text-[10px] text-pink-500 mt-3 font-bold uppercase tracking-wider">
-                    Configure os prêmios por número na aba "Prêmios" após salvar.
-                  </p>
-                )}
-              </div>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                  <div className="space-y-2 min-w-0">
                    <Label>Título da Campanha</Label>
@@ -991,16 +850,8 @@ export default function AdminCampaignEdit() {
                  
                  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                    {form.gallery_urls.map((url, index) => (
-                      <div key={index} className={`relative aspect-square rounded-xl overflow-hidden border group ${form.hero_image_url === url ? 'border-primary ring-2 ring-primary' : 'border-border'}`}>
+                     <div key={index} className="relative aspect-square rounded-xl overflow-hidden border border-border group">
                        <img src={url} alt={`Galeria ${index}`} className="w-full h-full object-cover" />
-                        <button
-                          type="button"
-                          onClick={() => set("hero_image_url", form.hero_image_url === url ? "" : url)}
-                          className={`absolute bottom-1 left-1 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider transition ${form.hero_image_url === url ? 'bg-primary text-primary-foreground' : 'bg-black/60 text-white opacity-0 group-hover:opacity-100'}`}
-                          title="Definir como imagem de destaque do carrossel principal (Clássico Full)"
-                        >
-                          {form.hero_image_url === url ? '★ Destaque' : '☆ Destacar'}
-                        </button>
                        <button 
                          onClick={() => removeGalleryImage(index)}
                          className="absolute top-1 right-1 p-1.5 bg-destructive text-foreground rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
@@ -1379,44 +1230,6 @@ export default function AdminCampaignEdit() {
                   ))}
                 </div>
              </Card>
-
-             {id && (
-               <>
-               {form.gift_mode_enabled && (
-                 <Card className="p-5 rounded-2xl border border-pink-500/30 bg-pink-500/5 space-y-3">
-                   <div className="flex items-center gap-2">
-                     <Gift className="h-5 w-5 text-pink-500" />
-                     <h3 className="text-sm font-black uppercase tracking-tight">Como funciona o Presente Premiado</h3>
-                   </div>
-                   <ol className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 list-decimal pl-4">
-                     <li>O usuário vê apenas <b>caixas-surpresa</b> — os números ficam ocultos.</li>
-                     <li>Ele escolhe a quantidade de caixas e paga normalmente.</li>
-                     <li>Após o pagamento, os <b>números dele</b> são revelados (mas não se são premiados).</li>
-                     <li>Você define abaixo <b>quais números têm prêmio</b> (PIX ou item) e sua foto.</li>
-                     <li>No encerramento (ou quando clicar em <b>"Revelar resultados"</b>), os prêmios e ganhadores aparecem publicamente.</li>
-                   </ol>
-                   <p className="text-[10px] text-pink-500 font-bold uppercase tracking-wider">
-                     Dica: cadastre todos os prêmios antes de mudar o status para "Ativa".
-                   </p>
-                 </Card>
-               )}
-               <GiftPrizesManager
-                 campaignId={id}
-                 totalTickets={Number(form.total_tickets) || 0}
-                 giftModeEnabled={!!form.gift_mode_enabled}
-                 giftRevealMode={(form.gift_reveal_mode as any) || 'on_draw'}
-                 giftResultsRevealed={!!form.gift_results_revealed}
-                 onChangeSetting={(patch) => setForm((p) => ({ ...p, ...patch }))}
-               />
-               </>
-             )}
-             {!id && (
-               <Card className="p-4 rounded-2xl border-dashed">
-                 <p className="text-xs text-muted-foreground text-center">
-                   Salve a campanha primeiro para configurar a modalidade "Presente Premiado".
-                 </p>
-               </Card>
-             )}
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">

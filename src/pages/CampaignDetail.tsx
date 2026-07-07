@@ -26,8 +26,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import RaffleGallery from "@/components/RaffleGallery";
 import TicketGrid from "@/components/TicketGrid";
-import GiftBoxGrid from "@/components/GiftBoxGrid";
-import GiftResultsSection from "@/components/GiftResultsSection";
 import PurchaseAnimation from "@/components/PurchaseAnimation";
 import CampaignPricing from "@/components/CampaignPricing";
 import Roulette from "@/components/Roulette";
@@ -547,31 +545,21 @@ const CampaignDetail = () => {
                   <TabsContent value="manual" className="p-6">
                     <div className="space-y-6">
                       <p className="text-xs text-muted-foreground text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
-                      {(campaign as any).gift_mode_enabled ? (
-                        <GiftBoxGrid
-                          totalTickets={campaign.total_tickets}
-                          soldTickets={[...soldTickets, ...protectedNumbers]}
-                          selectedTickets={selectedTickets}
-                          onSelect={handleToggleTicket}
-                          onClearAll={() => setSelectedTickets([])}
-                        />
-                      ) : (
-                        <TicketGrid
-                          totalTickets={campaign.total_tickets}
-                          soldTickets={[...soldTickets, ...protectedNumbers]}
-                          selectedTickets={selectedTickets}
-                          onSelect={handleToggleTicket}
-                          onClearAll={() => setSelectedTickets([])}
-                          luckyNumbers={luckyNumbersList}
-                        />
-                      )}
+                      <TicketGrid 
+                        totalTickets={campaign.total_tickets}
+                        soldTickets={[...soldTickets, ...protectedNumbers]}
+                        selectedTickets={selectedTickets}
+                        onSelect={handleToggleTicket}
+                        onClearAll={() => setSelectedTickets([])}
+                        luckyNumbers={luckyNumbersList}
+                      />
                       <Button 
                         className="w-full h-14 rounded-2xl font-black uppercase tracking-wide border-light-path border-[#22c55e]/30"
                         disabled={selectedTickets.length === 0 || isPurchasing || campaign.status !== "active"}
                         onClick={() => handleBuy(selectedTickets)}
                       >
                         {isPurchasing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                        {(campaign as any).gift_mode_enabled ? "Reservar Caixas-Surpresa" : "Reservar Números"}
+                        Reservar Números
                       </Button>
                     </div>
                   </TabsContent>
@@ -1639,12 +1627,6 @@ const CampaignDetail = () => {
         ) : (
           <div className="flex flex-col gap-8 md:gap-12 mt-0">
             {sectionsOrder.map((section) => renderSection(section))}
-            {(campaign as any).gift_mode_enabled && (
-              <GiftResultsSection
-                campaignId={campaign.id}
-                revealed={!!(campaign as any).gift_results_revealed}
-              />
-            )}
           </div>
         )}
       </div>

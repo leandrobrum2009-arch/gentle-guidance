@@ -1,3 +1,1 @@
 project_id = "hjmjhjwvfsefanmnbsdd"
-[functions.import-auth-users]
-verify_jwt = false

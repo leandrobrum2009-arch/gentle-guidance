@@ -13,21 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Separator } from "@/components/ui/separator";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRole } from "@/hooks/useAdmin";
-import { buildSettingsMutations, verifySiteSettingsSchema } from "@/lib/settings-mutations";
 
 const SITE_ASSETS_BUCKET = 'site-assets';
 const FALLBACK_IMAGE_BUCKET = 'campaigns';
-const HOME_GAME_SETTING_KEYS = [
-  'home_show_game_roleta',
-  'home_show_game_raspadinha',
-  'home_show_game_caixa',
-  'home_show_game_ranking',
-  'home_show_game_afiliados',
-  'home_show_how_it_works',
-  'home_show_faq',
-  'home_show_trust_badges',
-  'home_show_cta',
-];
 
 export default function AdminSettings() {
   const queryClient = useQueryClient();
@@ -72,7 +60,6 @@ export default function AdminSettings() {
     cashback_percent: "% de Cashback por Compra",
     affiliate_commission_percent: "% de Comissão de Afiliados",
     min_withdrawal_amount: "Valor Mínimo de Saque (R$)",
-    deposit_bonus_tiers: "Bônus por Depósito (JSON de faixas)",
     company_name: "Nome Fantasia / Razão Social",
     company_cnpj: "CNPJ",
     company_address: "Endereço Completo",
@@ -137,21 +124,13 @@ export default function AdminSettings() {
   const fetchSettings = async () => {
     setLoading(true);
     const { data, error } = await supabase.from("site_settings").select("*");
-    if (error) {
+    if (!error) {
+      setSettings(data || []);
+      setInitialSettings(JSON.parse(JSON.stringify(data || [])));
+    } else {
       console.error("Error fetching settings:", error);
       toast.error("Erro ao carregar configurações: " + error.message);
-      setLoading(false);
-      return;
     }
-    const verified = verifySiteSettingsSchema(data ?? []);
-    if (verified.ok === false) {
-      console.error("site_settings schema mismatch:", verified.error, verified.issues);
-      toast.error(`${verified.error}: ${verified.issues[0] ?? "formato inesperado"}`);
-      setLoading(false);
-      return;
-    }
-    setSettings(verified.rows);
-    setInitialSettings(JSON.parse(JSON.stringify(verified.rows)));
     setLoading(false);
   };
 
@@ -159,13 +138,10 @@ export default function AdminSettings() {
     setSettings(prev => {
       const exists = prev.some(s => s.key === key);
       if (exists) return prev.map(s => s.key === key ? { ...s, value } : s);
-      // Keep new settings aligned with the real table shape: only key/value.
-      return [...prev, { key, value }];
+      // Insert new key (boolean toggle for keys missing from DB)
+      return [...prev, { key, value, type: /^(true|false)$/.test(value) ? 'boolean' : 'text' } as any];
     });
   };
-
-  const getSetting = (key: string, fallbackValue = 'true') =>
-    settings.find(s => s.key === key) || { key, value: fallbackValue };
 
   const handleUpload = async (key: string, file: File) => {
     setUploading(key);
@@ -209,37 +185,20 @@ export default function AdminSettings() {
 
   const saveSettings = async () => {
     setSaving(true);
-    const toastId = toast.loading("Salvando configurações...");
     try {
-      const errors: string[] = [];
-      const mutations = buildSettingsMutations(settings, initialSettings);
-      for (const m of mutations) {
-        if (m.op === "upsert") {
-          const { error } = await supabase
-            .from("site_settings")
-            .upsert({ key: m.key, value: m.value } as any, { onConflict: "key" });
-          if (error) errors.push(`${m.key}: ${error.message}`);
-        } else {
-          const { error } = await supabase
-            .from("site_settings")
-            .update({ value: m.value })
-            .eq("key", m.key);
-          if (error) errors.push(`${m.key}: ${error.message}`);
+      for (const s of settings) {
+        const initial = initialSettings.find(i => i.key === s.key);
+        if (!initial) {
+          await supabase.from("site_settings").insert({ key: s.key, value: s.value, type: (s as any).type ?? 'text' } as any);
+        } else if (initial.value !== s.value) {
+          await supabase.from("site_settings").update({ value: s.value }).eq("key", s.key);
         }
       }
-      if (errors.length) {
-        console.error("Settings save errors:", errors);
-        toast.error(`Falha ao salvar: ${errors[0]}`, { id: toastId });
-      } else {
-        toast.success("Todas as configurações foram atualizadas!", { id: toastId });
-      }
-      await fetchSettings();
-      await queryClient.invalidateQueries({
-        queryKey: ["site-settings"],
-        refetchType: "all",
-      });
-    } catch (error: any) {
-      toast.error("Erro ao salvar algumas configurações: " + (error?.message || ""), { id: toastId });
+      setInitialSettings(JSON.parse(JSON.stringify(settings)));
+      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
+      toast.success("Todas as configurações foram atualizadas!");
+    } catch (error) {
+      toast.error("Erro ao salvar algumas configurações.");
     } finally {
       setSaving(false);
     }
@@ -533,15 +492,15 @@ export default function AdminSettings() {
                       getIcon={getIcon}
                     />
                     <SettingField 
-                      s={getSetting('home_show_games_combo')} 
+                      s={settings.find(s => s.key === 'home_show_games_combo')} 
                       onUpdate={handleUpdate} 
                       label={settingNames['home_show_games_combo']}
                       getIcon={getIcon}
                     />
-                    {HOME_GAME_SETTING_KEYS.map((k) => (
+                    {['home_show_game_roleta','home_show_game_raspadinha','home_show_game_caixa','home_show_game_ranking','home_show_game_afiliados','home_show_how_it_works','home_show_faq','home_show_trust_badges','home_show_cta'].map((k) => (
                       <SettingField
                         key={k}
-                        s={getSetting(k)}
+                        s={settings.find(s => s.key === k) || { key: k, value: 'true', type: 'boolean' } as any}
                         onUpdate={handleUpdate}
                         label={(settingNames as any)[k]}
                         getIcon={getIcon}
@@ -1014,7 +973,7 @@ export default function AdminSettings() {
                 {['whatsapp_group_link', 'whatsapp_group_enabled'].map(key => (
                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50 hover:border-primary/20 transition-colors md:col-span-2">
                     <SettingField
-                      s={getSetting(key, 'true')}
+                      s={settings.find(s => s.key === key)}
                       onUpdate={handleUpdate}
                       label={settingNames[key]}
                       getIcon={getIcon}
@@ -1022,34 +981,6 @@ export default function AdminSettings() {
                   </div>
                 ))}
              </div>
-           </Card>
-
-           <Card className="border-emerald-500/40 bg-emerald-500/5 backdrop-blur-sm rounded-3xl overflow-hidden border-2 shadow-sm">
-             <CardHeader className="bg-emerald-500/10">
-               <CardTitle className="text-xl flex items-center gap-2">
-                 <DollarSign className="h-5 w-5 text-emerald-500" />
-                 Bônus por Depósito
-               </CardTitle>
-               <CardDescription className="font-medium">
-                 Configure faixas de bônus creditadas automaticamente no saldo do usuário quando ele confirmar um depósito PIX. Formato: <code className="text-[11px] bg-background/60 px-1.5 py-0.5 rounded">[{'{'}"min":200,"bonus":25{'}'}]</code>. Ex.: depositando R$ 200 → ganha +R$ 25 no saldo.
-               </CardDescription>
-             </CardHeader>
-             <CardContent className="pt-6 space-y-3">
-               <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                 Faixas (JSON)
-               </Label>
-               <textarea
-                 value={getSetting('deposit_bonus_tiers', '[]').value}
-                 onChange={(e) => handleUpdate('deposit_bonus_tiers', e.target.value)}
-                 rows={6}
-                 spellCheck={false}
-                 className="w-full rounded-2xl bg-background/60 border border-border p-3 font-mono text-xs focus:border-emerald-500/50 focus:outline-none"
-                 placeholder='[{"min":50,"bonus":5},{"min":100,"bonus":15},{"min":200,"bonus":40}]'
-               />
-               <p className="text-[10px] text-muted-foreground italic">
-                 A faixa aplicada será a de maior <strong>min</strong> igual ou menor que o valor depositado. Deixe como <code>[]</code> para desativar o bônus.
-               </p>
-             </CardContent>
            </Card>
         </TabsContent>
 
@@ -1066,7 +997,7 @@ export default function AdminSettings() {
                 {['menu_campanhas_enabled','menu_ganhadores_enabled','menu_federal_enabled','menu_comunicados_enabled','menu_suporte_enabled','menu_minha_conta_enabled','header_register_button_enabled'].map(key => (
                   <div key={key} className="bg-secondary/30 p-4 rounded-2xl border border-border/50">
                     <SettingField
-                      s={settings.find(s => s.key === key)}
+                      s={settings.find(s => s.key === key) ?? { key, value: 'true' }}
                       onUpdate={handleUpdate}
                       label={settingNames[key]}
                       getIcon={getIcon}
@@ -1159,7 +1090,7 @@ export default function AdminSettings() {
   );
 }
 
-export function SettingField({ 
+function SettingField({ 
   s, 
   onUpdate, 
   getIcon, 
