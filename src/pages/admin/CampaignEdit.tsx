@@ -428,6 +428,7 @@ export default function AdminCampaignEdit() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   <button
                     type="button"
+                    disabled={!!id}
                     onClick={() => {
                       set("gift_mode_enabled", false);
                     }}
@@ -435,7 +436,8 @@ export default function AdminCampaignEdit() {
                       "text-left p-4 rounded-xl border-2 transition-all",
                       !form.gift_mode_enabled
                         ? "border-primary bg-primary/5 shadow-sm"
-                        : "border-border hover:border-primary/50"
+                        : "border-border hover:border-primary/50",
+                      id && "opacity-60 cursor-not-allowed hover:border-border"
                     )}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -448,6 +450,7 @@ export default function AdminCampaignEdit() {
                   </button>
                   <button
                     type="button"
+                    disabled={!!id}
                     onClick={() => {
                       set("gift_mode_enabled", true);
                       set("ticket_generation_type", 'manual');
@@ -458,7 +461,8 @@ export default function AdminCampaignEdit() {
                       "text-left p-4 rounded-xl border-2 transition-all",
                       form.gift_mode_enabled
                         ? "border-pink-500 bg-pink-500/5 shadow-sm"
-                        : "border-border hover:border-pink-500/50"
+                        : "border-border hover:border-pink-500/50",
+                      id && "opacity-60 cursor-not-allowed hover:border-border"
                     )}
                   >
                     <div className="flex items-center gap-2 mb-1">
@@ -470,7 +474,12 @@ export default function AdminCampaignEdit() {
                     </p>
                   </button>
                 </div>
-                {form.gift_mode_enabled && (
+                {id && (
+                  <p className="text-[10px] text-amber-500 mt-3 font-bold uppercase tracking-wider">
+                    Tipo bloqueado para campanhas existentes — protege rifas antigas de alterações acidentais.
+                  </p>
+                )}
+                {form.gift_mode_enabled && !id && (
                   <p className="text-[10px] text-pink-500 mt-3 font-bold uppercase tracking-wider">
                     Configure os prêmios por número na aba "Prêmios" após salvar.
                   </p>
