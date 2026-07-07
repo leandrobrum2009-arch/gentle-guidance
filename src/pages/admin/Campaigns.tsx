@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2, Ticket, Zap, CheckSquare, Square } from "lucide-react";
+import { Loader2, Plus, Pencil, Trash2, Trophy, Search, Filter, MoreHorizontal, ExternalLink, Copy, CheckCircle2, Ticket, Zap, CheckSquare, Square, Gift } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { DrawCeremony } from "@/components/DrawCeremony";
@@ -39,6 +39,7 @@ export default function AdminCampaigns() {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [typePickerOpen, setTypePickerOpen] = useState(false);
   
   // Draw Ceremony States
   const [isCeremonyOpen, setIsCeremonyOpen] = useState(false);
@@ -177,13 +178,50 @@ export default function AdminCampaigns() {
             </Button>
           )}
           <Button 
-            onClick={() => navigate("/admin/campanhas/nova")}
+            onClick={() => setTypePickerOpen(true)}
             className="bg-primary hover:bg-primary/90 text-foreground font-bold h-12 px-6 rounded-xl shadow-[0_0_20px_rgba(var(--primary-rgb),0.3)] border-none"
           >
             <Plus className="mr-2 h-5 w-5" /> Nova Campanha
           </Button>
         </div>
       </div>
+
+      <Dialog open={typePickerOpen} onOpenChange={setTypePickerOpen}>
+        <DialogContent className="sm:max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Escolha o tipo de campanha</DialogTitle>
+            <DialogDescription>Selecione a modalidade para começar a configuração.</DialogDescription>
+          </DialogHeader>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => { setTypePickerOpen(false); navigate("/admin/campanhas/nova?tipo=padrao"); }}
+              className="text-left p-4 rounded-xl border-2 border-border hover:border-primary hover:bg-primary/5 transition-all"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Ticket className="h-5 w-5 text-primary" />
+                <span className="font-bold text-sm">Rifa Padrão</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Números visíveis, escolha manual ou automática, sorteio por Loteria Federal.
+              </p>
+            </button>
+            <button
+              type="button"
+              onClick={() => { setTypePickerOpen(false); navigate("/admin/campanhas/nova?tipo=presente"); }}
+              className="text-left p-4 rounded-xl border-2 border-border hover:border-pink-500 hover:bg-pink-500/5 transition-all"
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <Gift className="h-5 w-5 text-pink-500" />
+                <span className="font-bold text-sm">Presente Premiado</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                Caixas-surpresa: números ocultos e prêmios definidos por bilhete.
+              </p>
+            </button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Card className="border-border bg-card/50 backdrop-blur-xl overflow-hidden">
         <CardHeader className="border-b border-border bg-secondary/20 pb-4">
