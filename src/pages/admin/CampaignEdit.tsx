@@ -23,6 +23,7 @@ import { compressImage } from "@/lib/image-upload";
 import LuckyHourManager from "@/components/admin/LuckyHourManager";
 import CampaignPrizesManager from "@/components/admin/CampaignPrizesManager";
 import SectionsOrderManager from "@/components/admin/SectionsOrderManager";
+import GiftPrizesManager from "@/components/admin/GiftPrizesManager";
 
 
 interface CampaignForm {
@@ -52,6 +53,9 @@ interface CampaignForm {
   scratch_cards_available_count: number;
   image_overlay_enabled: boolean;
   hero_image_url: string;
+  gift_mode_enabled?: boolean;
+  gift_reveal_mode?: 'on_draw' | 'on_sold_out';
+  gift_results_revealed?: boolean;
 }
 
 
@@ -90,6 +94,9 @@ const empty: CampaignForm = {
   scratch_cards_available_count: 0,
   image_overlay_enabled: true,
   hero_image_url: "",
+  gift_mode_enabled: false,
+  gift_reveal_mode: 'on_draw',
+  gift_results_revealed: false,
 };
 
 
@@ -1241,6 +1248,24 @@ export default function AdminCampaignEdit() {
                   ))}
                 </div>
              </Card>
+
+             {form.ticket_generation_type === 'manual' && id && (
+               <GiftPrizesManager
+                 campaignId={id}
+                 totalTickets={Number(form.total_tickets) || 0}
+                 giftModeEnabled={!!form.gift_mode_enabled}
+                 giftRevealMode={(form.gift_reveal_mode as any) || 'on_draw'}
+                 giftResultsRevealed={!!form.gift_results_revealed}
+                 onChangeSetting={(patch) => setForm((p) => ({ ...p, ...patch }))}
+               />
+             )}
+             {form.ticket_generation_type === 'manual' && !id && (
+               <Card className="p-4 rounded-2xl border-dashed">
+                 <p className="text-xs text-muted-foreground text-center">
+                   Salve a campanha primeiro para configurar a modalidade "Presente Premiado".
+                 </p>
+               </Card>
+             )}
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
