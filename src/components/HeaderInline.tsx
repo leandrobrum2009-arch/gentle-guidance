@@ -53,18 +53,18 @@ const HeaderInline = () => {
   return (
     <>
       <header className="fixed left-1/2 top-0 z-50 w-full max-w-[480px] -translate-x-1/2 bg-background/95 backdrop-blur-xl border-b border-border/60">
-        <div className="relative mx-auto flex h-16 max-w-[480px] items-center justify-between px-4">
+        <div className="relative mx-auto flex h-16 max-w-[480px] items-center justify-between gap-2 px-4">
           <button
             onClick={() => setOpen(true)}
             aria-label="Abrir menu"
-            className="flex h-10 w-10 items-center justify-center rounded-xl text-foreground hover:bg-secondary/60 transition-colors"
+            className="flex h-10 w-10 shrink-0 self-center items-center justify-center rounded-xl text-foreground hover:bg-secondary/60 transition-colors"
           >
             <Menu className="h-5 w-5" />
           </button>
 
-          <Link to="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center">
+          <Link to="/" className="pointer-events-auto absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center">
             {siteSettings?.site_logo_url ? (
-              <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-9 w-auto object-contain" />
+              <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-9 w-auto max-w-[45vw] object-contain" />
             ) : (
               <span className="font-display text-base font-black uppercase tracking-tighter text-animate-gradient">
                 {siteSettings?.site_name || "Rifa"}
@@ -72,11 +72,22 @@ const HeaderInline = () => {
             )}
           </Link>
 
-          {!user && String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
+          {user ? (
+            <Link
+              to="/minha-conta"
+              aria-label="Minha conta"
+              className="flex h-9 max-w-[32vw] sm:max-w-[140px] shrink-0 self-center items-center gap-1 rounded-full pl-2 pr-2.5 bg-primary/15 text-primary ring-1 ring-primary/30 font-black uppercase tracking-widest text-[9px] leading-none"
+            >
+              <User className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate min-w-0">
+                {(profile?.name || user.email || "").split(" ")[0] || (user.email || "").split("@")[0]}
+              </span>
+            </Link>
+          ) : String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
             <button
               onClick={() => setRegisterOpen(true)}
               aria-label="Cadastre-se grátis"
-              className="flex h-9 items-center gap-1 rounded-full px-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black font-black uppercase tracking-widest text-[9px] shadow-md ring-2 ring-yellow-300/60 animate-pulse"
+              className="flex h-9 shrink-0 self-center items-center gap-1 rounded-full px-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black font-black uppercase tracking-widest text-[9px] leading-none shadow-md ring-2 ring-yellow-300/60 animate-pulse"
             >
               Cadastre-se
             </button>
@@ -86,10 +97,10 @@ const HeaderInline = () => {
             target={supportLink.startsWith('http') ? "_blank" : undefined}
             rel="noreferrer"
             aria-label="Suporte"
-            className="flex h-10 min-w-10 items-center gap-1.5 rounded-xl px-2 text-foreground hover:bg-secondary/60 transition-colors"
+            className="flex h-10 min-w-10 shrink-0 self-center items-center gap-1.5 rounded-xl px-2 text-foreground hover:bg-secondary/60 transition-colors"
           >
             <LifeBuoy className="h-5 w-5" />
-            <span className="text-[9px] font-black uppercase tracking-widest">Suporte</span>
+            <span className="text-[9px] font-black uppercase tracking-widest leading-none">Suporte</span>
           </a>
           )}
         </div>
@@ -178,7 +189,7 @@ const HeaderInline = () => {
                     onClick={() => setOpen(false)}
                     className="mt-2 flex items-center justify-between rounded-xl px-3 py-3 text-xs font-black uppercase tracking-widest text-primary border border-primary/30 bg-primary/5"
                   >
-                    <span className="flex items-center gap-2"><Settings className="h-4 w-4" /> Painel Admin</span>
+                    <span className="flex items-center gap-2"><Settings className="h-4 w-4" /> Painel</span>
                     <ArrowRight className="h-3.5 w-3.5" />
                   </Link>
                 )}

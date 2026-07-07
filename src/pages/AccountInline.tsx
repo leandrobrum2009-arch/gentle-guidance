@@ -230,7 +230,7 @@ export default function AccountInline() {
             <div className="mt-4 grid grid-cols-2 gap-2.5">
               <Button
                 onClick={() => setDepositOpen(true)}
-                className="h-12 rounded-xl text-sm font-black gap-2"
+                className="h-12 rounded-xl text-sm font-black gap-2 shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.98] transition-all"
               >
                 <Plus className="h-4 w-4" /> Depositar
               </Button>
@@ -242,6 +242,7 @@ export default function AccountInline() {
                 <Minus className="h-4 w-4" /> Sacar
               </Button>
             </div>
+            <DepositBonusCTA settings={siteSettings} onDeposit={() => setDepositOpen(true)} />
           </div>
         </section>
 
@@ -364,19 +365,28 @@ export default function AccountInline() {
                 <div className="space-y-2">
                   {(txs || []).slice(0, 5).map((t: any) => {
                     const credit = Number(t.amount) >= 0;
-                    const Icon = credit ? ArrowDownLeft : ArrowUpRight;
+                    const isBonus = t.type === "bonus";
+                    const Icon = isBonus ? Gift : credit ? ArrowDownLeft : ArrowUpRight;
+                    const label = isBonus
+                      ? (t.description || "Bônus de depósito")
+                      : (t.description || t.type || "Transação");
                     return (
                       <div key={t.id} className="flex items-center gap-3 py-2 border-b border-border/50 last:border-0">
-                        <div className={`h-9 w-9 rounded-full flex items-center justify-center ${credit ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}>
+                        <div className={`h-9 w-9 rounded-full flex items-center justify-center ${isBonus ? "bg-amber-500/15 text-amber-500 ring-2 ring-amber-500/30" : credit ? "bg-emerald-500/10 text-emerald-500" : "bg-rose-500/10 text-rose-500"}`}>
                           <Icon className="h-4 w-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm font-bold truncate">{t.description || t.type || "Transação"}</p>
+                          <div className="flex items-center gap-1.5">
+                            <p className="text-sm font-bold truncate">{label}</p>
+                            {isBonus && (
+                              <Badge className="text-[9px] font-black bg-amber-500/20 text-amber-500 border-0 px-1.5 py-0 h-4">BÔNUS</Badge>
+                            )}
+                          </div>
                           <p className="text-[11px] text-muted-foreground">
                             {format(new Date(t.created_at), "dd MMM, HH:mm", { locale: ptBR })}
                           </p>
                         </div>
-                        <p className={`text-sm font-black ${credit ? "text-emerald-500" : "text-rose-500"}`}>
+                        <p className={`text-sm font-black ${isBonus ? "text-amber-500" : credit ? "text-emerald-500" : "text-rose-500"}`}>
                           {credit ? "+" : ""}{fmtBRL(t.amount)}
                         </p>
                       </div>
@@ -980,5 +990,42 @@ function EditProfileDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function DepositBonusCTA({ settings, onDeposit }: { settings: any; onDeposit: () => void }) {
+  const raw = settings?.deposit_bonus_tiers;
+  let tiers: { min: number; bonus: number }[] = [];
+  try {
+    const parsed = raw ? JSON.parse(raw) : [];
+    if (Array.isArray(parsed)) {
+      tiers = parsed
+        .map((t: any) => ({ min: Number(t.min), bonus: Number(t.bonus) }))
+        .filter((t) => !isNaN(t.min) && !isNaN(t.bonus) && t.bonus > 0)
+        .sort((a, b) => b.min - a.min);
+    }
+  } catch {
+    tiers = [];
+  }
+  if (!tiers.length) return null;
+  const top = tiers[0];
+  return (
+    <button
+      onClick={onDeposit}
+      className="group mt-3 w-full flex items-center gap-3 rounded-xl border-2 border-emerald-500/40 bg-gradient-to-r from-emerald-500/15 via-emerald-500/5 to-transparent p-3 text-left hover:border-emerald-500/80 hover:from-emerald-500/25 hover:shadow-lg hover:shadow-emerald-500/20 hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.99] transition-all"
+    >
+      <div className="h-9 w-9 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 ring-2 ring-emerald-500/30 group-hover:ring-emerald-500/60 group-hover:scale-110 transition-all">
+        <Gift className="h-5 w-5 text-emerald-500" />
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] font-black uppercase tracking-widest text-emerald-500 flex items-center gap-1">
+          <Sparkles className="h-3 w-3 animate-pulse" /> Bônus por depósito
+        </p>
+        <p className="text-xs font-bold text-foreground truncate">
+          Recarregue R$ {top.min} e ganhe <span className="text-emerald-500">+R$ {top.bonus}</span> de saldo grátis
+        </p>
+      </div>
+      <ChevronRight className="h-4 w-4 text-emerald-500 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+    </button>
   );
 }

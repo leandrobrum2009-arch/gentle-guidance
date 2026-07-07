@@ -115,19 +115,24 @@ import { Button } from "@/components/ui/button";
                 key={ticket.number}
                 disabled={ticket.isSold}
                 onClick={() => onSelect(ticket.number)}
-                className={cn(
-                  "relative aspect-square flex items-center justify-center rounded-md md:rounded-lg text-[10px] font-bold transition-all",
-                  !ticket.isSold && "hover:scale-110 hover:z-10 active:scale-95",
-                 ticket.isSold 
-                   ? "bg-muted-foreground/10 text-muted-foreground/50 cursor-not-allowed" 
-                   : ticket.isSelected 
-                     ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] scale-110 z-10" 
-                     : ticket.isLucky 
-                       ? "bg-amber-500 text-white shadow-[0_0_10px_rgba(245,158,11,0.5)] border border-amber-300 animate-pulse"
-                       : "bg-secondary/50 hover:bg-secondary border border-border/50 text-foreground"
-               )}
-             >
-               {ticket.isSold ? <Lock className="h-3 w-3" /> : ticket.number}
+                 className={cn(
+                   "relative aspect-square flex flex-col items-center justify-center rounded-md md:rounded-lg text-[10px] font-bold transition-all",
+                   !ticket.isSold && "hover:scale-110 hover:z-10 active:scale-95",
+                  ticket.isSold 
+                    ? "bg-muted-foreground/30 text-foreground/70 border border-muted-foreground/40 cursor-not-allowed line-through decoration-muted-foreground/60" 
+                    : ticket.isSelected 
+                      ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(var(--primary-rgb),0.5)] scale-110 z-10" 
+                      : ticket.isLucky 
+                        ? "bg-amber-500 text-white shadow-[0_0_10px_rgba(245,158,11,0.5)] border border-amber-300 animate-pulse"
+                        : "bg-secondary/50 hover:bg-secondary border border-border/50 text-foreground"
+                )}
+              >
+                {ticket.isSold ? (
+                  <>
+                    <span className="leading-none">{ticket.number}</span>
+                    <Lock className="h-2.5 w-2.5 mt-0.5 opacity-70" />
+                  </>
+                ) : ticket.number}
                
                 {ticket.isSelected && (
                   <div className="absolute -top-1 -right-1 h-3 w-3 bg-white rounded-full flex items-center justify-center shadow-lg">

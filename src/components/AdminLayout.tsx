@@ -165,7 +165,10 @@ export default function AdminLayout({ children }: { children: ReactNode }) {
               </h3>
               <div className="space-y-1.5">
                 {group.items.map((item) => {
-                  const active = pathname === item.url;
+                  const active =
+                    item.url === "/admin"
+                      ? pathname === "/admin"
+                      : pathname === item.url || pathname.startsWith(item.url + "/");
                   return (
                     <Link
                       key={item.url}

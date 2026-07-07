@@ -4,19 +4,23 @@ import { useSiteSettings } from "@/hooks/useData";
 
 
 const footerLinks = [
-  { label: "Início", href: "/" },
-  { label: "Campanhas", href: "/campanhas" },
-  { label: "Ganhadores", href: "/ganhadores" },
-  { label: "Comunicados", href: "/comunicados" },
-  { label: "Meus Títulos", href: "/minha-conta#tickets" },
-  { label: "Afiliados", href: "/afiliados" },
-  { label: "Filantropia", href: "/filantropia" },
-  { label: "Termos de Uso", href: "/termos-de-uso" },
-  { label: "Suporte", href: "/contato" },
+  { key: "inicio", label: "Início", href: "/" },
+  { key: "campanhas", label: "Campanhas", href: "/campanhas" },
+  { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
+  { key: "federal", label: "Federal", href: "/resultado-federal" },
+  { key: "comunicados", label: "Comunicados", href: "/comunicados" },
+  { key: "tickets", label: "Meus Títulos", href: "/minha-conta#tickets" },
+  { key: "afiliados", label: "Afiliados", href: "/afiliados" },
+  { key: "filantropia", label: "Filantropia", href: "/filantropia" },
+  { key: "termos", label: "Termos de Uso", href: "/termos-de-uso" },
+  { key: "suporte", label: "Suporte", href: "/contato" },
 ];
 
 const Footer = () => {
   const { data: siteSettings } = useSiteSettings();
+  const visibleLinks = footerLinks.filter(
+    (l) => String((siteSettings as any)?.[`menu_${l.key}_enabled`] ?? "true") !== "false"
+  );
 
   return (
     <footer className="relative border-t border-border bg-background pt-20 pb-10 overflow-hidden">
@@ -78,7 +82,7 @@ const Footer = () => {
           <div className="space-y-6">
             <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-primary neon-text-primary">Navegação</h3>
             <div className="grid grid-cols-2 gap-4">
-              {footerLinks.slice(0, 6).map((link) => (
+              {visibleLinks.slice(0, 6).map((link) => (
                 <a key={link.href} href={link.href} className="text-[10px] font-black uppercase tracking-widest text-foreground hover:text-primary transition-colors opacity-80">{link.label}</a>
               ))}
             </div>
@@ -124,6 +128,9 @@ const Footer = () => {
           <div className="text-center md:text-left">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
               © {new Date().getFullYear()} {siteSettings?.site_name || "Sua Empresa"}. Todos os direitos reservados.
+            </p>
+            <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Versao alpha 0.1
             </p>
             <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
               <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
