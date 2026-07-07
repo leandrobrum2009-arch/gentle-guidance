@@ -1381,6 +1381,24 @@ export default function AdminCampaignEdit() {
              </Card>
 
              {id && (
+               {form.gift_mode_enabled && (
+                 <Card className="p-5 rounded-2xl border border-pink-500/30 bg-pink-500/5 space-y-3">
+                   <div className="flex items-center gap-2">
+                     <Gift className="h-5 w-5 text-pink-500" />
+                     <h3 className="text-sm font-black uppercase tracking-tight">Como funciona o Presente Premiado</h3>
+                   </div>
+                   <ol className="text-[11px] text-muted-foreground leading-relaxed space-y-1.5 list-decimal pl-4">
+                     <li>O usuário vê apenas <b>caixas-surpresa</b> — os números ficam ocultos.</li>
+                     <li>Ele escolhe a quantidade de caixas e paga normalmente.</li>
+                     <li>Após o pagamento, os <b>números dele</b> são revelados (mas não se são premiados).</li>
+                     <li>Você define abaixo <b>quais números têm prêmio</b> (PIX ou item) e sua foto.</li>
+                     <li>No encerramento (ou quando clicar em <b>"Revelar resultados"</b>), os prêmios e ganhadores aparecem publicamente.</li>
+                   </ol>
+                   <p className="text-[10px] text-pink-500 font-bold uppercase tracking-wider">
+                     Dica: cadastre todos os prêmios antes de mudar o status para "Ativa".
+                   </p>
+                 </Card>
+               )}
                <GiftPrizesManager
                  campaignId={id}
                  totalTickets={Number(form.total_tickets) || 0}
