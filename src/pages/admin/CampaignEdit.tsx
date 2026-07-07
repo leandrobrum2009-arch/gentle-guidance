@@ -334,6 +334,12 @@ export default function AdminCampaignEdit() {
       if (invalidBundle) throw new Error("Combos de desconto devem ter quantidade > 0 e preço >= 0");
 
       // Gift Mode ("Presente Premiado") — validações extras ao publicar
+      // Nova campanha com Presente Premiado: força salvar como Rascunho primeiro,
+      // pois os prêmios só podem ser cadastrados após a criação.
+      if (form.gift_mode_enabled && !id && (form.status === 'active' || form.status === 'paused')) {
+        form.status = 'draft';
+        toast.info("Nova campanha salva como Rascunho. Cadastre os prêmios na aba Prêmios e depois publique.");
+      }
       const willBePublic = form.status === 'active' || form.status === 'paused';
       if (form.gift_mode_enabled && willBePublic) {
         if (form.ticket_generation_type !== 'manual') {
@@ -365,9 +371,6 @@ export default function AdminCampaignEdit() {
               throw new Error(`Prêmio do número ${key} está sem título.`);
             }
           }
-        } else {
-          // Nova campanha: obriga salvar como rascunho antes de publicar com prêmios
-          throw new Error("Salve como Rascunho primeiro para cadastrar os prêmios do Presente Premiado.");
         }
       }
 
