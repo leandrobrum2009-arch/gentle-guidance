@@ -1248,6 +1248,24 @@ export default function AdminCampaignEdit() {
                   ))}
                 </div>
              </Card>
+
+             {form.ticket_generation_type === 'manual' && id && (
+               <GiftPrizesManager
+                 campaignId={id}
+                 totalTickets={Number(form.total_tickets) || 0}
+                 giftModeEnabled={!!form.gift_mode_enabled}
+                 giftRevealMode={(form.gift_reveal_mode as any) || 'on_draw'}
+                 giftResultsRevealed={!!form.gift_results_revealed}
+                 onChangeSetting={(patch) => setForm((p) => ({ ...p, ...patch }))}
+               />
+             )}
+             {form.ticket_generation_type === 'manual' && !id && (
+               <Card className="p-4 rounded-2xl border-dashed">
+                 <p className="text-xs text-muted-foreground text-center">
+                   Salve a campanha primeiro para configurar a modalidade "Presente Premiado".
+                 </p>
+               </Card>
+             )}
           </TabsContent>
 
           <TabsContent value="engagement" className="mt-6 space-y-6">
