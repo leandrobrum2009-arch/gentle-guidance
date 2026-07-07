@@ -1381,6 +1381,7 @@ export default function AdminCampaignEdit() {
              </Card>
 
              {id && (
+               <>
                {form.gift_mode_enabled && (
                  <Card className="p-5 rounded-2xl border border-pink-500/30 bg-pink-500/5 space-y-3">
                    <div className="flex items-center gap-2">
@@ -1407,6 +1408,7 @@ export default function AdminCampaignEdit() {
                  giftResultsRevealed={!!form.gift_results_revealed}
                  onChangeSetting={(patch) => setForm((p) => ({ ...p, ...patch }))}
                />
+               </>
              )}
              {!id && (
                <Card className="p-4 rounded-2xl border-dashed">
