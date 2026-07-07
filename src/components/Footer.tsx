@@ -7,7 +7,6 @@ const footerLinks = [
   { key: "inicio", label: "Início", href: "/" },
   { key: "campanhas", label: "Campanhas", href: "/campanhas" },
   { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
-  { key: "federal", label: "Federal", href: "/resultado-federal" },
   { key: "comunicados", label: "Comunicados", href: "/comunicados" },
   { key: "tickets", label: "Meus Títulos", href: "/minha-conta#tickets" },
   { key: "afiliados", label: "Afiliados", href: "/afiliados" },
@@ -128,9 +127,6 @@ const Footer = () => {
           <div className="text-center md:text-left">
             <p className="text-[10px] font-black uppercase tracking-[0.2em] text-foreground">
               © {new Date().getFullYear()} {siteSettings?.site_name || "Sua Empresa"}. Todos os direitos reservados.
-            </p>
-            <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-              Versao alpha 0.1
             </p>
             <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
               <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">

@@ -14,7 +14,6 @@ import { QuickRegisterDialog } from "./QuickRegisterDialog";
 const ALL_NAV_LINKS = [
   { key: "campanhas", label: "Campanhas", href: "/campanhas" },
   { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
-  { key: "federal", label: "Federal", href: "/resultado-federal" },
   { key: "comunicados", label: "Comunicados", href: "/comunicados" },
   { key: "minha_conta", label: "Minha Conta", href: "/minha-conta" },
 ];

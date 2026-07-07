@@ -8,7 +8,6 @@ interface FooterInlineProps {
 
 const compactLinks = [
   { key: "ganhadores", label: "Ganhadores", href: "/ganhadores" },
-  { key: "federal", label: "Federal", href: "/resultado-federal" },
   { key: "minha_conta", label: "Minha Conta", href: "/minha-conta" },
   { key: "termos", label: "Termos", href: "/termos-de-uso" },
 ];
@@ -93,9 +92,6 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
 
       <p className="mt-4 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
         © {new Date().getFullYear()} {settings?.site_name || companyName}. Todos os direitos reservados.
-      </p>
-      <p className="mt-2 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
-        Versao alpha 0.1
       </p>
     </footer>
   );
