@@ -99,6 +99,27 @@ const empty: CampaignForm = {
   gift_results_revealed: false,
 };
 
+// Preset applied when a campaign is created with the "Presente Premiado" type.
+// Keeps only the fields that make sense for the gift-box modality and disables
+// engagement modules that don't apply (roulette, scratch, mystery box, timer).
+const GIFT_MODE_DEFAULTS: Partial<CampaignForm> = {
+  gift_mode_enabled: true,
+  gift_reveal_mode: 'on_sold_out',
+  ticket_generation_type: 'manual',
+  manual_numbers: true,
+  auto_numbers: false,
+  federal_lottery_draw: false,
+  mystery_box_enabled: false,
+  roulette_enabled: false,
+  show_instant_prizes: false,
+  show_roulette_status: false,
+  show_timer: false,
+  fake_progress_enabled: false,
+  min_tickets: 1,
+  max_tickets: 100,
+  total_tickets: 100,
+};
+
 
 export default function AdminCampaignEdit() {
   const { id } = useParams();
@@ -123,10 +144,7 @@ export default function AdminCampaignEdit() {
     if (searchParams.get("tipo") === "presente") {
       setForm((p) => ({
         ...p,
-        gift_mode_enabled: true,
-        ticket_generation_type: 'manual',
-        manual_numbers: true,
-        auto_numbers: false,
+        ...GIFT_MODE_DEFAULTS,
       }));
     }
   }, [id, searchParams]);
@@ -452,10 +470,7 @@ export default function AdminCampaignEdit() {
                     type="button"
                     disabled={!!id}
                     onClick={() => {
-                      set("gift_mode_enabled", true);
-                      set("ticket_generation_type", 'manual');
-                      set("manual_numbers", true);
-                      set("auto_numbers", false);
+                      setForm((p) => ({ ...p, ...GIFT_MODE_DEFAULTS }));
                     }}
                     className={cn(
                       "text-left p-4 rounded-xl border-2 transition-all",
