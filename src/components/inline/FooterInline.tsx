@@ -94,6 +94,9 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
       <p className="mt-4 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
         © {new Date().getFullYear()} {settings?.site_name || companyName}. Todos os direitos reservados.
       </p>
+      <p className="mt-2 text-center text-[9px] font-black uppercase tracking-[0.18em] text-muted-foreground">
+        Versao alpha 0.1
+      </p>
     </footer>
   );
 };
