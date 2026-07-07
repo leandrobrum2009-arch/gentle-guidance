@@ -1,7 +1,7 @@
 import { AlertCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { cn } from "@/lib/utils";
 import AdminLayout from "@/components/AdminLayout";
@@ -103,6 +103,7 @@ const empty: CampaignForm = {
 export default function AdminCampaignEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const { toast } = useToast();
   const { data: features } = useFeatureAccess();
@@ -116,6 +117,19 @@ export default function AdminCampaignEdit() {
   useEffect(() => {
     if (id) fetchCampaign();
   }, [id]);
+
+  useEffect(() => {
+    if (id) return;
+    if (searchParams.get("tipo") === "presente") {
+      setForm((p) => ({
+        ...p,
+        gift_mode_enabled: true,
+        ticket_generation_type: 'manual',
+        manual_numbers: true,
+        auto_numbers: false,
+      }));
+    }
+  }, [id, searchParams]);
 
   const fetchCampaign = async () => {
     setLoading(true);
