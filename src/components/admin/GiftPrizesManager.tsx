@@ -98,10 +98,10 @@ export default function GiftPrizesManager({
     try {
       const compressed = await compressImage(file);
       const ext = compressed.name.split(".").pop() || "jpg";
-      const path = `${campaignId}/${crypto.randomUUID()}.${ext}`;
-      const { error: upErr } = await supabase.storage.from("gift-prizes").upload(path, compressed);
+      const path = `gift-prizes/${campaignId}/${crypto.randomUUID()}.${ext}`;
+      const { error: upErr } = await supabase.storage.from("campaigns").upload(path, compressed);
       if (upErr) throw upErr;
-      const { data } = supabase.storage.from("gift-prizes").getPublicUrl(path);
+      const { data } = supabase.storage.from("campaigns").getPublicUrl(path);
       updateRow(i, { prize_image_url: data.publicUrl });
     } catch (e: any) {
       toast({ title: "Erro no upload", description: e.message, variant: "destructive" });
