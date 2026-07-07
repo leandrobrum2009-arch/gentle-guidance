@@ -333,6 +333,44 @@ export default function AdminCampaignEdit() {
       const invalidBundle = (form.price_bundles || []).find((b: any) => !(Number(b.quantity) > 0) || !(Number(b.price) >= 0));
       if (invalidBundle) throw new Error("Combos de desconto devem ter quantidade > 0 e preço >= 0");
 
+      // Gift Mode ("Presente Premiado") — validações extras ao publicar
+      const willBePublic = form.status === 'active' || form.status === 'paused';
+      if (form.gift_mode_enabled && willBePublic) {
+        if (form.ticket_generation_type !== 'manual') {
+          throw new Error("Presente Premiado exige tipo de geração de cotas 'Manual'");
+        }
+        if (id) {
+          const { data: gp, error: gpErr } = await (supabase as any)
+            .from("campaign_gift_prizes")
+            .select("ticket_number, prize_title, prize_value_cents")
+            .eq("campaign_id", id);
+          if (gpErr) throw gpErr;
+          const prizes = (gp as any[]) ?? [];
+          if (prizes.length === 0) {
+            throw new Error("Adicione pelo menos 1 número premiado antes de publicar (aba Prêmios).");
+          }
+          const padLen = String(Math.max(1, tt - 1)).length;
+          const seen = new Set<string>();
+          for (const p of prizes) {
+            const n = String(p.ticket_number ?? "").trim();
+            if (!n) throw new Error("Existe um prêmio sem número definido.");
+            const idx = parseInt(n, 10);
+            if (!Number.isInteger(idx) || idx < 0 || idx >= tt) {
+              throw new Error(`Número premiado "${n}" está fora do intervalo (0 a ${tt - 1}).`);
+            }
+            const key = n.padStart(padLen, "0");
+            if (seen.has(key)) throw new Error(`Número premiado duplicado: ${key}`);
+            seen.add(key);
+            if (!p.prize_title || String(p.prize_title).trim() === "") {
+              throw new Error(`Prêmio do número ${key} está sem título.`);
+            }
+          }
+        } else {
+          // Nova campanha: obriga salvar como rascunho antes de publicar com prêmios
+          throw new Error("Salve como Rascunho primeiro para cadastrar os prêmios do Presente Premiado.");
+        }
+      }
+
       // Prepare clean payload for Supabase
       const { 
         id: _, 
