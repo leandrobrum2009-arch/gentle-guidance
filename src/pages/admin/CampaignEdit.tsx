@@ -338,7 +338,7 @@ export default function AdminCampaignEdit() {
       // pois os prêmios só podem ser cadastrados após a criação.
       if (form.gift_mode_enabled && !id && (form.status === 'active' || form.status === 'paused')) {
         form.status = 'draft';
-        toast.info("Nova campanha salva como Rascunho. Cadastre os prêmios na aba Prêmios e depois publique.");
+        toast({ title: "Salvo como Rascunho", description: "Cadastre os prêmios na aba Prêmios e depois publique." });
       }
       const willBePublic = form.status === 'active' || form.status === 'paused';
       if (form.gift_mode_enabled && willBePublic) {
