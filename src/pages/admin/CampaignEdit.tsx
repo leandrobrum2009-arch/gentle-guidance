@@ -470,10 +470,7 @@ export default function AdminCampaignEdit() {
                     type="button"
                     disabled={!!id}
                     onClick={() => {
-                      set("gift_mode_enabled", true);
-                      set("ticket_generation_type", 'manual');
-                      set("manual_numbers", true);
-                      set("auto_numbers", false);
+                      setForm((p) => ({ ...p, ...GIFT_MODE_DEFAULTS }));
                     }}
                     className={cn(
                       "text-left p-4 rounded-xl border-2 transition-all",
