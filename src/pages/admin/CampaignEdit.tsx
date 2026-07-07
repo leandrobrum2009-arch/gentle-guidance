@@ -407,6 +407,61 @@ export default function AdminCampaignEdit() {
 
           <TabsContent value="general" className="mt-6 space-y-6">
             <Card className="p-6 rounded-2xl border-border shadow-sm">
+              <div className="mb-6 pb-6 border-b">
+                <Label className="font-bold text-xs uppercase tracking-wider text-muted-foreground mb-3 block">
+                  Tipo de Campanha
+                </Label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      set("gift_mode_enabled", false);
+                    }}
+                    className={cn(
+                      "text-left p-4 rounded-xl border-2 transition-all",
+                      !form.gift_mode_enabled
+                        ? "border-primary bg-primary/5 shadow-sm"
+                        : "border-border hover:border-primary/50"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Ticket className="h-4 w-4 text-primary" />
+                      <span className="font-bold text-sm">Rifa Padrão</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      Modelo tradicional: números visíveis, escolha manual ou automática, sorteio por Loteria Federal.
+                    </p>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      set("gift_mode_enabled", true);
+                      set("ticket_generation_type", 'manual');
+                      set("manual_numbers", true);
+                      set("auto_numbers", false);
+                    }}
+                    className={cn(
+                      "text-left p-4 rounded-xl border-2 transition-all",
+                      form.gift_mode_enabled
+                        ? "border-pink-500 bg-pink-500/5 shadow-sm"
+                        : "border-border hover:border-pink-500/50"
+                    )}
+                  >
+                    <div className="flex items-center gap-2 mb-1">
+                      <Gift className="h-4 w-4 text-pink-500" />
+                      <span className="font-bold text-sm">Presente Premiado</span>
+                    </div>
+                    <p className="text-[11px] text-muted-foreground leading-relaxed">
+                      Caixas-surpresa: números ocultos, prêmios definidos por bilhete e revelados no encerramento.
+                    </p>
+                  </button>
+                </div>
+                {form.gift_mode_enabled && (
+                  <p className="text-[10px] text-pink-500 mt-3 font-bold uppercase tracking-wider">
+                    Configure os prêmios por número na aba "Prêmios" após salvar.
+                  </p>
+                )}
+              </div>
                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                  <div className="space-y-2 min-w-0">
                    <Label>Título da Campanha</Label>
