@@ -123,10 +123,7 @@ export default function AdminCampaignEdit() {
     if (searchParams.get("tipo") === "presente") {
       setForm((p) => ({
         ...p,
-        gift_mode_enabled: true,
-        ticket_generation_type: 'manual',
-        manual_numbers: true,
-        auto_numbers: false,
+        ...GIFT_MODE_DEFAULTS,
       }));
     }
   }, [id, searchParams]);
