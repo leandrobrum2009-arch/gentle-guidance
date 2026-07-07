@@ -1639,6 +1639,12 @@ const CampaignDetail = () => {
         ) : (
           <div className="flex flex-col gap-8 md:gap-12 mt-0">
             {sectionsOrder.map((section) => renderSection(section))}
+            {(campaign as any).gift_mode_enabled && (
+              <GiftResultsSection
+                campaignId={campaign.id}
+                revealed={!!(campaign as any).gift_results_revealed}
+              />
+            )}
           </div>
         )}
       </div>
