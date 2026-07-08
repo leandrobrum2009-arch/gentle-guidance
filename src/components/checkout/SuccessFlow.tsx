@@ -163,7 +163,7 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
   const handleShare = () => {
     if (navigator.share) {
       navigator.share({
-        title: `Meu pedido na rifa ${campaign.title}`,
+        title: `Meu pedido na ação ${campaign.title}`,
         text: `Acabei de comprar ${order.quantity} cotas para concorrer a ${campaign.title}! Meus números: ${displayTickets.map((t: any) => t.number).join(', ')}`,
         url: window.location.href
       });
@@ -690,7 +690,7 @@ export default function SuccessFlow({ order, campaign, onClose, onBuyMore }: Suc
                     className="w-full text-white/30 hover:text-white/60 font-bold uppercase tracking-widest text-[10px]" 
                     onClick={() => onClose ? onClose() : navigate(`/campanha/${campaign.slug || campaign.id}`)}
                   >
-                    FECHAR E VOLTAR PARA RIFA
+                    FECHAR E VOLTAR PARA AÇÃO
                   </Button>
                 </div>
               </CardContent>

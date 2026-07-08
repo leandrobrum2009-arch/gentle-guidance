@@ -45,14 +45,14 @@ const IndexInline = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <SEO title={settings?.site_title || settings?.site_name || "Rifas Online"} />
+      <SEO title={settings?.site_title || settings?.site_name || "Ações Online"} />
       <Header />
 
       <main className="pt-[calc(var(--header-height,64px)+0.75rem)]">
         {/* 1) Campanha(s) ativas em carrossel — logo abaixo do logotipo */}
         <section className="px-3 pt-2 pb-3">
           {active.length === 0 ? (
-            <p className="text-xs text-muted-foreground italic">Nenhuma rifa ativa no momento.</p>
+            <p className="text-xs text-muted-foreground italic">Nenhuma ação ativa no momento.</p>
           ) : active.length === 1 ? (
             <CampaignCard campaign={active[0] as any} index={0} />
           ) : (

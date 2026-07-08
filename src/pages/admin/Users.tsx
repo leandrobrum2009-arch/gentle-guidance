@@ -196,7 +196,7 @@ export default function AdminUsers() {
         </div>
         <div className="p-3 rounded-2xl bg-secondary/50 border border-border">
           <p className="text-[10px] font-black uppercase text-muted-foreground mb-1">Usuário Comum</p>
-          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Clientes que participam das rifas e compram bilhetes.</p>
+          <p className="text-[9px] text-muted-foreground leading-tight font-medium">Clientes que participam das ações e compram bilhetes.</p>
         </div>
       </div>
 

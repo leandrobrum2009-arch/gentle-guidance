@@ -71,7 +71,7 @@ export default function AdminDashboard() {
       color: "from-purple-500 to-pink-600" 
     },
     { 
-      label: "Rifas Ativas", 
+      label: "Ações Ativas", 
       value: activeCampaigns, 
       icon: Megaphone, 
       trend: "Estável", 
@@ -89,7 +89,7 @@ export default function AdminDashboard() {
   ];
 
   const quickActions = [
-    { title: "Nova Rifa", icon: Plus, color: "bg-primary", url: "/admin/campanhas/nova" },
+    { title: "Nova Ação", icon: Plus, color: "bg-primary", url: "/admin/campanhas/nova" },
     { title: "Ver Pedidos", icon: ShoppingCart, color: "bg-blue-600", url: "/admin/pedidos" },
     { title: "Ganhadores", icon: Trophy, color: "bg-amber-500", url: "/admin/ganhadores" },
     { title: "Federal", icon: Target, color: "bg-emerald-600", url: "/admin/federal" },
@@ -128,7 +128,7 @@ export default function AdminDashboard() {
               Painel de Controle
             </h1>
           </div>
-          <p className="text-muted-foreground text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de rifas.</p>
+          <p className="text-muted-foreground text-sm font-medium pl-1 italic uppercase tracking-wider text-[10px]">Monitoramento em tempo real do seu ecossistema de ações.</p>
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 rounded-xl bg-emerald-500/10 px-4 py-2.5 border border-emerald-500/20">
@@ -267,7 +267,7 @@ export default function AdminDashboard() {
               <CardContent className="h-[350px] pt-4">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={[
-                    { name: 'Rifas', value: orders?.filter(o => o.payment_status === 'paid').length ?? 0 },
+                    { name: 'Ações', value: orders?.filter(o => o.payment_status === 'paid').length ?? 0 },
                     { name: 'Roleta', value: rouletteStats?.totalSpins ?? 0 },
                     { name: 'Caixas', value: 86 }
                   ]}>
@@ -299,7 +299,7 @@ export default function AdminDashboard() {
               <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle className="text-lg font-bold text-foreground tracking-tight">Campanhas em Alta</CardTitle>
-                  <CardDescription className="text-xs text-muted-foreground">Rifas com melhor conversão</CardDescription>
+                  <CardDescription className="text-xs text-muted-foreground">Ações com melhor conversão</CardDescription>
                 </div>
                 <Button variant="ghost" size="sm" className="text-[10px] font-bold uppercase tracking-widest text-primary hover:bg-primary/10" onClick={() => window.location.href='/admin/campanhas'}>
                   Ver Todas

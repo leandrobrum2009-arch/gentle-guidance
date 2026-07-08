@@ -166,7 +166,7 @@ const Header = () => {
                 {siteSettings?.site_logo_url && siteSettings.site_logo_url.trim() !== "" && !logoError ? (
                   <img 
                     src={siteSettings.site_logo_url} 
-                    alt={`${siteSettings?.site_name || "Plataforma de Rifas"} - logotipo da página inicial`} 
+                    alt={`${siteSettings?.site_name || "Plataforma de Ações"} - logotipo da página inicial`} 
                     className="h-[var(--logo-height-mobile,36px)] md:h-[var(--logo-height-desktop,44px)] w-auto object-contain site-logo-img" 
                     onError={() => setLogoError(true)}
                   />

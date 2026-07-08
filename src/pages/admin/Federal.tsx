@@ -122,7 +122,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
        <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
          <div>
            <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Loteria Federal</h1>
-           <p className="text-muted-foreground mt-1">Sincronize ou registre resultados oficiais para as rifas.</p>
+           <p className="text-muted-foreground mt-1">Sincronize ou registre resultados oficiais para as ações.</p>
          </div>
           <div className="flex gap-2">
              <Dialog open={open} onOpenChange={(v) => { setOpen(v); if (!v) setEditingId(null); }}>

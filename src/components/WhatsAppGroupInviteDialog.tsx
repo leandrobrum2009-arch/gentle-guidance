@@ -46,7 +46,7 @@ export default function WhatsAppGroupInviteDialog() {
             Entre no nosso Grupo do WhatsApp
           </DialogTitle>
           <DialogDescription className="text-center">
-            Receba avisos de novas rifas, sorteios ao vivo e promoções exclusivas em primeira mão.
+            Receba avisos de novas ações, sorteios ao vivo e promoções exclusivas em primeira mão.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex-col gap-2 sm:flex-col">

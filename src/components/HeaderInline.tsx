@@ -42,7 +42,7 @@ const HeaderInline = () => {
   const handleShare = async () => {
     const url = window.location.href;
     if (navigator.share) {
-      try { await navigator.share({ title: siteSettings?.site_name || "Rifa", url }); } catch {}
+      try { await navigator.share({ title: siteSettings?.site_name || "Ação", url }); } catch {}
     } else {
       await navigator.clipboard.writeText(url);
       toast.success("Link copiado!");
@@ -66,7 +66,7 @@ const HeaderInline = () => {
               <img src={siteSettings.site_logo_url} alt={siteSettings?.site_name || "Logo"} className="h-9 w-auto max-w-[45vw] object-contain" />
             ) : (
               <span className="font-display text-base font-black uppercase tracking-tighter text-animate-gradient">
-                {siteSettings?.site_name || "Rifa"}
+                {siteSettings?.site_name || "Ação"}
               </span>
             )}
           </Link>
@@ -146,7 +146,7 @@ const HeaderInline = () => {
                   {siteSettings?.site_logo_url ? (
                     <img src={siteSettings.site_logo_url} alt="Logo" className="h-8 w-auto" />
                   ) : (
-                    <span className="font-display text-sm font-black uppercase tracking-tighter">{siteSettings?.site_name || "Rifa"}</span>
+                    <span className="font-display text-sm font-black uppercase tracking-tighter">{siteSettings?.site_name || "Ação"}</span>
                   )}
                 </Link>
                 <button onClick={() => setOpen(false)} className="h-9 w-9 rounded-lg hover:bg-secondary flex items-center justify-center">

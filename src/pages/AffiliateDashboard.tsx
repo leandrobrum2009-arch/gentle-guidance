@@ -47,7 +47,7 @@ export default function AffiliateDashboard() {
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Participe da nossa Rifa!',
+          title: 'Participe da nossa Ação!',
           text: 'Confira esta campanha incrível e concorra a prêmios!',
           url: link,
         });

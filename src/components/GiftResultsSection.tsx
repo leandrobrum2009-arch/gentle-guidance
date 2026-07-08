@@ -47,7 +47,7 @@ export default function GiftResultsSection({ campaignId, revealed }: Props) {
         </div>
         <h3 className="text-lg font-black uppercase italic tracking-tight">Resultado em breve</h3>
         <p className="text-xs text-muted-foreground max-w-md mx-auto">
-          Esta rifa tem <span className="font-black text-pink-500">{rows.length} caixa(s) premiada(s)</span>. Os prêmios serão revelados aqui após o encerramento.
+          Esta ação tem <span className="font-black text-pink-500">{rows.length} caixa(s) premiada(s)</span>. Os prêmios serão revelados aqui após o encerramento.
         </p>
       </Card>
     );

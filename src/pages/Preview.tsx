@@ -34,7 +34,7 @@ const mockWinner = {
   winner_name: "Carlos Alberto",
   prize_description: "iPhone 15 Pro Max",
   ticket_number: "0492",
-  campaigns: { title: "Rifa Premium Apple" },
+  campaigns: { title: "Ação Premium Apple" },
   avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop"
 };
 

@@ -17,7 +17,7 @@ const FooterInline = ({ settings }: FooterInlineProps) => {
     ? `https://wa.me/${String(settings.support_whatsapp).replace(/\D/g, "")}`
     : "/contato";
 
-  const companyName = settings?.company_name || settings?.site_name || "Plataforma de Rifas";
+  const companyName = settings?.company_name || settings?.site_name || "Plataforma de Ações";
   const document = settings?.company_cnpj;
   const phone = settings?.company_phone || settings?.support_whatsapp;
   const email = settings?.company_email;

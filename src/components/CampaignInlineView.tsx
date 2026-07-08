@@ -939,7 +939,7 @@ const QuickActionPrizes: React.FC<{
       <DialogTrigger asChild>
         <button className="w-full rounded-xl border border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent hover:from-amber-500/20 text-foreground transition-all shadow-[0_0_15px_rgba(245,158,11,0.15)] overflow-hidden">
           <div className="h-10 px-3 flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-wide">
-            <span className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500 animate-pulse" /> Prêmios da Rifa</span>
+            <span className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500 animate-pulse" /> Prêmios da Ação</span>
             <span className="text-[9px] font-black text-amber-400">{sortedMain.length > 0 ? `1º ao ${sortedMain.length}º` : "Ver"}</span>
           </div>
           {sortedMain.length > 0 && (
@@ -959,7 +959,7 @@ const QuickActionPrizes: React.FC<{
       </DialogTrigger>
       <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" /> Prêmios desta Rifa</DialogTitle>
+          <DialogTitle className="flex items-center gap-2"><Trophy className="h-4 w-4 text-amber-500" /> Prêmios desta Ação</DialogTitle>
           <DialogDescription>O prêmio principal vai para o número sorteado. Veja também 2º ao 5º lugar e os combos extras.</DialogDescription>
         </DialogHeader>
         <div className="space-y-5">

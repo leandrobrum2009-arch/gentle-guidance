@@ -155,7 +155,7 @@ export default function AdminWinners() {
         <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input 
-            placeholder="Buscar por nome, rifa ou número..." 
+            placeholder="Buscar por nome, ação ou número..." 
             className="pl-10 border-border bg-card/50 text-foreground focus:border-primary/50 h-12 rounded-xl"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

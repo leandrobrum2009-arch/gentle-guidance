@@ -175,8 +175,8 @@ const AppContent = () => {
           <Route path="/demonstracao" element={isInline ? <IndexInline /> : <Index />} />
           <Route path="/campanhas" element={<Navigate to={showSalesPage ? "/demonstracao" : "/"} replace />} />
           <Route path="/campanha/:id" element={<CampaignDetail />} />
-          <Route path="/rifa/:id" element={<CampaignRedirect />} />
-          <Route path="/rifas/:id" element={<CampaignRedirect />} />
+          <Route path="/ação/:id" element={<CampaignRedirect />} />
+          <Route path="/ações/:id" element={<CampaignRedirect />} />
           <Route path="/cadastrar" element={<Register />} />
           <Route path="/entrar" element={<Login />} />
           <Route path="/ganhadores" element={<Winners />} />

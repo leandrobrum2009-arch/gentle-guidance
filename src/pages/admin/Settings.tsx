@@ -101,7 +101,7 @@ export default function AdminSettings() {
     pay2m_enabled: "Habilitar Pay2m",
     layout_mode: "Modelo de Layout das Campanhas",
     inline_testimonials_count: "Qtd. de Depoimentos (Em Linha)",
-    inline_show_finished_raffles: "Listar Rifas Finalizadas (Em Linha)",
+    inline_show_finished_raffles: "Listar Ações Finalizadas (Em Linha)",
     site_theme: "Tema do Site (Claro/Escuro)",
     home_show_testimonials: "Exibir Depoimentos na Home",
     home_show_hall_fame: "Exibir Hall da Fama na Home",
@@ -568,7 +568,7 @@ export default function AdminSettings() {
                       label={settingNames['home_hall_fame_json']}
                       getIcon={getIcon}
                       type="textarea"
-                      placeholder='[{"id":"1","winner_name":"Maria","prize_description":"iPhone 15","ticket_number":"1234","campaigns":{"title":"Rifa"},"avatar_url":"https://...","winner_type":"raffle","draw_date":"2025-01-01"}]'
+                      placeholder='[{"id":"1","winner_name":"Maria","prize_description":"iPhone 15","ticket_number":"1234","campaigns":{"title":"Ação"},"avatar_url":"https://...","winner_type":"raffle","draw_date":"2025-01-01"}]'
                     />
                     <p className="text-[10px] text-muted-foreground mt-1 px-1">Deixe vazio para usar os ganhadores reais do banco. Aceita JSON com os mesmos campos.</p>
                   </div>
@@ -1126,7 +1126,7 @@ export default function AdminSettings() {
                   <SettingField 
                     s={settings.find(s => s.key === 'sales_page_type')} 
                     onUpdate={handleUpdate} 
-                    label="Tipo da Plataforma (ex: rifas, leilões)"
+                    label="Tipo da Plataforma (ex: ações, leilões)"
                     getIcon={getIcon}
                   />
                   <SettingField 
@@ -1145,7 +1145,7 @@ export default function AdminSettings() {
                   <Input 
                     value={settings.find(s => s.key === 'sales_page_keywords')?.value || ''}
                     onChange={(e) => handleUpdate('sales_page_keywords', e.target.value)}
-                    placeholder="Ex: sistema para rifas online, script para rifas online..."
+                    placeholder="Ex: sistema para ações online, script para ações online..."
                     className="rounded-xl border-2 h-12"
                   />
                   <p className="text-xs text-muted-foreground">Separe por vírgulas. A primeira será o título principal da página.</p>

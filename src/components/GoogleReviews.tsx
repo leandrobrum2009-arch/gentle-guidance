@@ -21,7 +21,7 @@ const REVIEWS = [
     name: "Juliana Ferreira",
     date: "há 1 semana",
     rating: 5,
-    text: "A entrega foi super rápida e o treinamento incluso me ajudou a configurar tudo. Minha primeira rifa foi um sucesso, faturei R$ 12.000,00 limpo. A estabilidade do sistema é impressionante.",
+    text: "A entrega foi super rápida e o treinamento incluso me ajudou a configurar tudo. Minha primeira ação foi um sucesso, faturei R$ 12.000,00 limpo. A estabilidade do sistema é impressionante.",
     avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop",
     verified: true
   },

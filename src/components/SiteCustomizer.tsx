@@ -8,7 +8,7 @@ export const SiteCustomizer = () => {
     if (!settings) return;
 
     // Update Title
-    const siteTitle = settings.site_title || settings.site_name || "Plataforma de Rifas";
+    const siteTitle = settings.site_title || settings.site_name || "Plataforma de Ações";
     if (document.title !== siteTitle) {
       document.title = siteTitle;
     }
