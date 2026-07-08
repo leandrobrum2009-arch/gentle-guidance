@@ -3,7 +3,7 @@ import AdminLayout from "@/components/AdminLayout";
 import { useAdminUsers, useIsMaster, useFeatureAccess, useRole } from "@/hooks/useAdmin";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2 } from "lucide-react";
+import { Loader2, Search, Mail, User as UserIcon, Pencil, DollarSign, Save, X, Phone, ShieldCheck, Settings2, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -17,6 +17,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminUsers() {
   const { data: users, isLoading, error: usersError } = useAdminUsers();
@@ -27,8 +29,12 @@ export default function AdminUsers() {
   const [editingUser, setEditingUser] = useState<any>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deletingUser, setDeletingUser] = useState<any>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
 
   if (features && !features.users_management_enabled) {
     return (
@@ -136,6 +142,26 @@ export default function AdminUsers() {
      u.phone?.includes(search)
    );
 
+  const handleDelete = async () => {
+    if (!deletingUser) return;
+    setIsDeleting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-delete-user", {
+        body: { user_id: deletingUser.user_id },
+      });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast.success("Usuário excluído permanentemente.");
+      setDeletingUser(null);
+      setDeleteConfirmText("");
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+    } catch (e: any) {
+      toast.error("Erro ao excluir: " + (e?.message || "erro desconhecido"));
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="mb-8">
@@ -229,14 +255,27 @@ export default function AdminUsers() {
                       {format(new Date(u.created_at), 'dd MMM yyyy')}
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button 
+                      <div className="flex items-center justify-end gap-1">
+                        <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={() => handleEdit(u)}
                         className="h-8 w-8 text-muted-foreground hover:text-primary transition-colors"
                       >
                         <Pencil className="h-4 w-4" />
-                      </Button>
+                        </Button>
+                        {(currentRole === "master" || (currentRole === "admin" && u.role !== "master")) && u.user_id !== currentUser?.id && (
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => { setDeletingUser(u); setDeleteConfirmText(""); }}
+                            className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors"
+                            title="Excluir usuário"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        )}
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
