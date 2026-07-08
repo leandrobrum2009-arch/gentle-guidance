@@ -129,11 +129,27 @@ export const useAdminCampaigns = () =>
          .from("profiles")
          .select("*")
          .order("created_at", { ascending: false });
-       if (error) throw error;
-       
-       // Fetch roles and feature configs
-       const { data: userRoles } = await supabase.from("user_roles").select("*");
-       const { data: featureConfigs } = await supabase.from("admin_features_config").select("*");
+      if (error) {
+        console.error("[useAdminUsers] profiles error:", error);
+        throw new Error(
+          `Falha ao listar profiles: ${error.message}` +
+          (error.details ? ` | detalhes: ${error.details}` : "") +
+          (error.hint ? ` | hint: ${error.hint}` : "") +
+          (error.code ? ` | code: ${error.code}` : "")
+        );
+      }
+
+      // Fetch roles and feature configs — surface errors instead of silently ignoring
+      const { data: userRoles, error: rolesError } = await supabase.from("user_roles").select("*");
+      if (rolesError) {
+        console.error("[useAdminUsers] user_roles error:", rolesError);
+        throw new Error(`Falha ao listar user_roles: ${rolesError.message}${rolesError.hint ? ` | hint: ${rolesError.hint}` : ""}`);
+      }
+      const { data: featureConfigs, error: featuresError } = await supabase.from("admin_features_config").select("*");
+      if (featuresError) {
+        console.error("[useAdminUsers] admin_features_config error:", featuresError);
+        throw new Error(`Falha ao listar admin_features_config: ${featuresError.message}${featuresError.hint ? ` | hint: ${featuresError.hint}` : ""}`);
+      }
        
         let results = profiles.map(profile => {
           const matchingRoles = userRoles?.filter(r => r.user_id === profile.user_id).map(r => r.role) || [];
