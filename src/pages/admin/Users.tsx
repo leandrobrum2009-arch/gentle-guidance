@@ -496,6 +496,52 @@ export default function AdminUsers() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog open={!!deletingUser} onOpenChange={(open) => { if (!open) { setDeletingUser(null); setDeleteConfirmText(""); } }}>
+        <AlertDialogContent className="bg-card border-border">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-destructive flex items-center gap-2">
+              <Trash2 className="h-5 w-5" /> Excluir usuário permanentemente
+            </AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3 text-sm">
+                <p>
+                  Você está prestes a excluir <b className="text-foreground">{deletingUser?.name || "este usuário"}</b>{deletingUser?.phone ? ` (${deletingUser.phone})` : ""}.
+                </p>
+                {Number(deletingUser?.balance || 0) > 0 && (
+                  <p className="rounded-lg border border-destructive/40 bg-destructive/10 p-2 text-destructive">
+                    Atenção: este usuário possui saldo de <b>R$ {Number(deletingUser?.balance || 0).toFixed(2)}</b>. O saldo será perdido.
+                  </p>
+                )}
+                <p className="text-muted-foreground">
+                  Essa ação é irreversível: conta de acesso, perfil, bilhetes, transações e histórico serão removidos.
+                </p>
+                <div>
+                  <Label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    Digite EXCLUIR para confirmar
+                  </Label>
+                  <Input
+                    value={deleteConfirmText}
+                    onChange={(e) => setDeleteConfirmText(e.target.value)}
+                    placeholder="EXCLUIR"
+                    className="mt-1 h-11 rounded-xl bg-secondary/50"
+                  />
+                </div>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={(e) => { e.preventDefault(); handleDelete(); }}
+              disabled={isDeleting || deleteConfirmText.trim().toUpperCase() !== "EXCLUIR"}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Excluir definitivamente"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </AdminLayout>
   );
 }
