@@ -93,11 +93,11 @@ export const SiteSettingsInjector = () => {
     // Dynamic Web App Manifest per tenant
     try {
       const manifest = {
-        name: settings.site_title || settings.site_name || "Rifas",
-        short_name: settings.site_name || settings.site_title || "Rifas",
+        name: settings.site_title || settings.site_name || "Ações",
+        short_name: settings.site_name || settings.site_title || "Ações",
         description:
           settings.site_description ||
-          "Sistema de rifas online com pagamento via PIX.",
+          "Sistema de ações online com pagamento via PIX.",
         start_url: "/",
         display: "standalone",
         background_color: "#0f1729",

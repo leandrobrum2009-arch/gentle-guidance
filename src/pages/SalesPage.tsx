@@ -15,9 +15,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import GoogleReviews from "@/components/GoogleReviews";
 
 const faqs = [
-  { q: "Preciso de conhecimento técnico para usar o sistema?", a: "Absolutamente não. Nosso painel é extremamente intuitivo, permitindo que qualquer pessoa gerencie rifas, banners e financeiro com poucos cliques." },
+  { q: "Preciso de conhecimento técnico para usar o sistema?", a: "Absolutamente não. Nosso painel é extremamente intuitivo, permitindo que qualquer pessoa gerencie ações, banners e financeiro com poucos cliques." },
   { q: "Como funciona a integração de pagamentos?", a: "Integramos automaticamente com os principais gateways de pagamento (Mercado Pago, Paggue, etc.). O sistema confirma o pagamento instantaneamente e libera os números para o cliente." },
-  { q: "O sistema é responsivo para celular?", a: "Sim! Nosso design é 100% mobile-first, garantindo uma experiência fluida para seus clientes comprarem rifas pelo celular ou computador." },
+  { q: "O sistema é responsivo para celular?", a: "Sim! Nosso design é 100% mobile-first, garantindo uma experiência fluida para seus clientes comprarem ações pelo celular ou computador." },
   { q: "Posso personalizar as cores e logotipo?", a: "Com certeza. Você tem controle total da identidade visual através do painel administrativo, sem precisar editar código." },
   { q: "Existe suporte técnico?", a: "Sim, todos os nossos planos contam com suporte dedicado. Além disso, oferecemos treinamento e tutoriais em vídeo para você começar com o pé direito." },
   { q: "Como funciona o sistema de afiliados?", a: "Você pode ativar um programa de afiliados onde seus vendedores ganham comissões por vendas realizadas, aumentando exponencialmente sua divulgação." },
@@ -30,8 +30,8 @@ const faqs = [
 export default function SalesPage() {
   const navigate = useNavigate();
   const { data: settings } = useSiteSettings();
-  const siteName = settings?.site_name || "Plataforma de Rifas";
-  const mainKeyword = settings?.sales_page_keywords?.split(",")?.[0]?.trim() || "sistema para rifas online";
+  const siteName = settings?.site_name || "Plataforma de Ações";
+  const mainKeyword = settings?.sales_page_keywords?.split(",")?.[0]?.trim() || "sistema para ações online";
   const supportWhatsapp = settings?.sales_page_whatsapp || settings?.support_whatsapp || "";
 
   const handleWhatsApp = () => {
@@ -111,7 +111,7 @@ export default function SalesPage() {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 mb-8"
           >
             <Star className="w-4 h-4 fill-emerald-400" />
-            <span className="text-sm font-semibold">Tecnologia de elite para rifas profissionais</span>
+            <span className="text-sm font-semibold">Tecnologia de elite para ações profissionais</span>
           </motion.div>
           <h1 className="text-5xl md:text-7xl font-black mb-8 leading-[1.1]">
             O Mais Completo <br />
@@ -157,7 +157,7 @@ export default function SalesPage() {
                   <Gamepad2 className="w-8 h-8" />
                   <span className="text-sm font-black uppercase tracking-[0.3em]">Super Gamificação</span>
                 </div>
-                <h3 className="text-4xl font-black mb-8 leading-tight italic">Mais do que rifas: Uma <span className="text-emerald-400">experiência de jogo</span></h3>
+                <h3 className="text-4xl font-black mb-8 leading-tight italic">Mais do que ações: Uma <span className="text-emerald-400">experiência de jogo</span></h3>
                 <div className="space-y-6 text-zinc-400">
                   <div className="flex gap-4">
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Sparkles className="w-5 h-5 text-emerald-500" /></div>
@@ -289,7 +289,7 @@ export default function SalesPage() {
                      <div className="flex items-center gap-4 mb-6">
                         <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center text-purple-500 font-bold">JD</div>
                         <div>
-                           <p className="text-white font-bold">João das Rifas</p>
+                           <p className="text-white font-bold">João das Ações</p>
                            <p className="text-[10px] text-zinc-500 font-black uppercase tracking-widest">Cliente Platinum</p>
                         </div>
                      </div>
@@ -349,7 +349,7 @@ export default function SalesPage() {
               </h2>
               <div className="space-y-6">
                 {[
-                  { title: "Escalabilidade Sem Travamentos", desc: "Infraestrutura pronta para suportar rifas de 100 mil até 10 milhões de números com fluidez total." },
+                  { title: "Escalabilidade Sem Travamentos", desc: "Infraestrutura pronta para suportar ações de 100 mil até 10 milhões de números com fluidez total." },
                   { title: "Vídeos e Sliders", desc: "Personalize sua página de venda com vídeos do YouTube/Vimeo e sliders de imagens em alta definição." },
                   { title: "Baixa Automática PIX", desc: "O sistema detecta o pagamento via QR Code e envia os números no WhatsApp do cliente em segundos." },
                   { title: "Recuperação de Carrinho & Utmify", desc: "Ferramentas automáticas para entrar em contato com clientes que não finalizaram a compra e rastreio avançado de UTM." }
@@ -418,7 +418,7 @@ export default function SalesPage() {
                     <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0"><Play className="w-5 h-5 text-emerald-500" /></div>
                     <div>
                       <h4 className="text-white font-bold text-xl mb-2">Vídeos de Demonstração</h4>
-                      <p>Insira vídeos do YouTube ou Vimeo diretamente na página da rifa para explicar o prêmio e gerar desejo imediato.</p>
+                      <p>Insira vídeos do YouTube ou Vimeo diretamente na página da ação para explicar o prêmio e gerar desejo imediato.</p>
                     </div>
                   </div>
                   <div className="flex gap-4">
@@ -474,7 +474,7 @@ export default function SalesPage() {
               { icon: TrendingUp, title: "Desconto progressivo", desc: "Incentive compras maiores com descontos automáticos conforme o cliente compra mais números." },
               { icon: Trophy, title: "Cotas premiadas", desc: "Defina números específicos que dão prêmios instantâneos." },
               { icon: BarChart3, title: "Relatórios completos", desc: "Acompanhe vendas, acessos e lucros em tempo real." },
-              { icon: Users, title: "Programa de afiliados", desc: "Permita que usuários divulguem suas rifas e ganhem comissão automaticamente por cada venda gerada." },
+              { icon: Users, title: "Programa de afiliados", desc: "Permita que usuários divulguem suas ações e ganhem comissão automaticamente por cada venda gerada." },
               { icon: Smartphone, title: "Aplicativo web (PWA)", desc: "Seu sistema instalado no celular do cliente como um App." },
               { icon: Star, title: "Ranking de clientes", desc: "Gere competição e aumente as vendas com ranking público." },
               { icon: Gift, title: "Caixas surpresas", desc: "Engajamento extra com abertura de prêmios misteriosos." },
@@ -574,7 +574,7 @@ export default function SalesPage() {
             <Zap className="w-64 h-64" />
           </div>
           <h2 className="text-4xl md:text-6xl font-black mb-8 text-white relative z-10">Sua jornada começa aqui</h2>
-          <p className="text-emerald-100 text-xl mb-12 max-w-xl mx-auto relative z-10">Escalabilidade, segurança e lucro. Tenha a melhor plataforma de rifas do Brasil hoje mesmo.</p>
+          <p className="text-emerald-100 text-xl mb-12 max-w-xl mx-auto relative z-10">Escalabilidade, segurança e lucro. Tenha a melhor plataforma de ações do Brasil hoje mesmo.</p>
           <Button size="lg" onClick={handleWhatsApp} className="h-16 px-12 text-xl font-bold rounded-full bg-white text-emerald-900 hover:bg-emerald-50 relative z-10 shadow-2xl">
             Ativar minha plataforma AGORA
           </Button>

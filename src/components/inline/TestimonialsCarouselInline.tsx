@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const REVIEWS = [
   { id: 1, name: "Adriano Silva", text: "Em 15 dias já recuperei todo o investimento. Sistema impecável!", rating: 5 },
-  { id: 2, name: "Juliana Ferreira", text: "Faturei R$ 12.000 na primeira rifa. Suporte rápido.", rating: 5 },
+  { id: 2, name: "Juliana Ferreira", text: "Faturei R$ 12.000 na primeira ação. Suporte rápido.", rating: 5 },
   { id: 3, name: "Ricardo Mendes", text: "Engajamento dobrou com as raspadinhas e roletas.", rating: 5 },
   { id: 4, name: "Patrícia Souza", text: "Treinamento perfeito, automações do WhatsApp são ouro.", rating: 5 },
   { id: 5, name: "Bruno Oliveira", text: "Faturamento estabilizou em 5 dígitos por mês.", rating: 5 },

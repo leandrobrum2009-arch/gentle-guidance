@@ -306,7 +306,7 @@ const Index = () => {
           <div className="space-y-2">
             <h2 className="text-2xl font-black uppercase italic tracking-tighter">Opa! Algo deu errado</h2>
             <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest max-w-md">
-              Não conseguimos carregar as rifas no momento. Por favor, tente atualizar a página.
+              Não conseguimos carregar as ações no momento. Por favor, tente atualizar a página.
             </p>
             {isAdmin && <pre className="text-[10px] bg-secondary p-4 rounded-xl mt-4 max-w-full overflow-auto">{(error as any)?.message}</pre>}
           </div>
@@ -532,7 +532,7 @@ const Index = () => {
                      } catch (e) { console.warn("[HallDaFama] JSON inválido", e); }
                    }
                    return (winners && winners.length > 0 ? winners : [
-                    { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Rifa de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "raffle", draw_date: new Date().toISOString() },
+                    { id: "1", winner_name: "José Ferreira", prize_description: "iPhone 15 Pro", ticket_number: "8293", campaigns: { title: "Ação de Verão" }, avatar_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "raffle", draw_date: new Date().toISOString() },
                     { id: "2", winner_name: "Maria Luiza", prize_description: "R$ 5.000,00 no PIX", ticket_number: "1029", campaigns: { title: "Super PIX" }, avatar_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "lucky_number", draw_date: new Date().toISOString() },
                     { id: "3", winner_name: "Carlos Manoel", prize_description: "R$ 100,00 de Saldo", ticket_number: "ROLETA", campaigns: { title: "Giro da Sorte" }, avatar_url: "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "roulette", draw_date: new Date().toISOString() },
                     { id: "4", winner_name: "Beatriz Souza", prize_description: "R$ 50,00 Instantâneo", ticket_number: "RASPA", campaigns: { title: "Raspadinha" }, avatar_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&h=256&auto=format&fit=crop", winner_type: "scratchcard", draw_date: new Date().toISOString() }
@@ -564,13 +564,13 @@ const Index = () => {
           </section>
           )}
 
-          {/* Rifas Encerradas Section at the end - Optimized Loading */}
+          {/* Ações Encerradas Section at the end - Optimized Loading */}
           <div ref={endedRef} className="scroll-mt-20">
             {campaigns && campaigns.some(c => (c.status === "completed" || c.status === "finished" || c.status === "drawn" || (c.draw_date && new Date(c.draw_date) <= new Date()))) && (
               <section className="container py-12 md:py-20 border-t border-border mt-12">
                 <SectionHeading 
                   icon={Clock} 
-                  title="Rifas Finalizadas" 
+                  title="Ações Finalizadas" 
                   subtitle="Confira os resultados dos sorteios anteriores"
                   badge="Encerradas"
                 />

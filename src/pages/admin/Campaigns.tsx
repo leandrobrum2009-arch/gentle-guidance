@@ -163,7 +163,7 @@ export default function AdminCampaigns() {
       <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="font-display text-3xl font-bold text-foreground tracking-tight">Campanhas</h1>
-          <p className="text-muted-foreground mt-1">Gerencie suas rifas, sorteios e prêmios.</p>
+          <p className="text-muted-foreground mt-1">Gerencie suas ações, sorteios e prêmios.</p>
         </div>
         <div className="flex items-center gap-3">
           {selectedIds.length > 0 && (
@@ -200,7 +200,7 @@ export default function AdminCampaigns() {
             >
               <div className="flex items-center gap-2 mb-2">
                 <Ticket className="h-5 w-5 text-primary" />
-                <span className="font-bold text-sm">Rifa Padrão</span>
+                <span className="font-bold text-sm">Ação Padrão</span>
               </div>
               <p className="text-[11px] text-muted-foreground leading-relaxed">
                 Números visíveis, escolha manual ou automática, sorteio por Loteria Federal.
@@ -422,7 +422,7 @@ export default function AdminCampaigns() {
                                <ExternalLink className="h-4 w-4 text-muted-foreground" /> Ver no Site
                              </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => duplicate(c.id)} className="gap-2 cursor-pointer">
-                                <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Rifa
+                                <Copy className="h-4 w-4 text-muted-foreground" /> Duplicar Ação
                               </DropdownMenuItem>
                              <DropdownMenuSeparator className="bg-secondary/20" />
                              <DropdownMenuItem onClick={() => remove(c.id)} className="gap-2 cursor-pointer text-rose-400 hover:text-rose-300 hover:bg-rose-500/10">
@@ -536,7 +536,7 @@ export default function AdminCampaigns() {
                     }
                   }}
                 >
-                  <optgroup label="Sorteio da Rifa">
+                  <optgroup label="Sorteio da Ação">
                     <option value={1}>1º Prêmio (Principal)</option>
                     <option value={2}>2º Prêmio</option>
                     <option value={3}>3º Prêmio</option>

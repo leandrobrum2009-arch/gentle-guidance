@@ -129,8 +129,8 @@ const Footer = () => {
               © {new Date().getFullYear()} {siteSettings?.site_name || "Sua Empresa"}. Todos os direitos reservados.
             </p>
             <p className="mt-2 text-[9px] font-black uppercase tracking-[0.2em]">
-              <a href="https://ncbrasil.com.br/sistema-de-rifas" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
-                Sistema de Rifas
+              <a href="https://ncbrasil.com.br/sistema-de-ações" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                Sistema de Ações
               </a>
             </p>
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">

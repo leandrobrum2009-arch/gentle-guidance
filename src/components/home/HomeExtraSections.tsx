@@ -34,7 +34,7 @@ const HomeExtraSections = ({ settings }: Props) => {
           </div>
           <div className="grid gap-4 md:grid-cols-3">
             {[
-              { n: "01", t: "Escolha sua rifa", d: "Navegue pelas campanhas ativas e selecione a sua favorita." },
+              { n: "01", t: "Escolha sua ação", d: "Navegue pelas campanhas ativas e selecione a sua favorita." },
               { n: "02", t: "Compre suas cotas", d: "Pague rápido via PIX e receba seus bilhetes na hora." },
               { n: "03", t: "Concorra e ganhe", d: "Acompanhe o sorteio e ganhe prêmios instantâneos no caminho." },
             ].map((s) => (

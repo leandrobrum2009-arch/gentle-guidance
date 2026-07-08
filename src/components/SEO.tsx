@@ -23,8 +23,8 @@ export const SEO = ({
   const siteName = settings?.site_title || settings?.site_name || "";
   const defaultDescription =
     settings?.description ||
-    "Plataforma online de rifas com pagamento via PIX, sorteios oficiais pela Loteria Federal e prêmios entregues com segurança.";
-  const defaultKeywords = settings?.site_keywords || "rifas online, sorteios, prêmios, pix, loteria federal";
+    "Plataforma online de ações com pagamento via PIX, sorteios oficiais pela Loteria Federal e prêmios entregues com segurança.";
+  const defaultKeywords = settings?.site_keywords || "ações online, sorteios, prêmios, pix, loteria federal";
   
   const seoTitle = !title || title === siteName ? siteName : `${title} | ${siteName}`;
   const seoDescription = description || defaultDescription;

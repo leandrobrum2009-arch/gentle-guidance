@@ -18,7 +18,7 @@ const SECTION_LABELS: Record<string, string> = {
   events: "Hora Premiada / Próximos Eventos",
   prizes: "Cotas Premiadas",
   ranking: "Ranking de Compradores",
-  description: "Descrição da Rifa",
+  description: "Descrição da Ação",
   social_proof: "Depoimentos e Prova Social",
   faq: "Dúvidas Frequentes (FAQ)",
   cta: "Chamada Final (CTA)",

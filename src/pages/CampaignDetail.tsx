@@ -664,7 +664,7 @@ const CampaignDetail = () => {
               })() && (
                 <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-4">
                   <h3 className="text-sm font-black uppercase italic tracking-tighter text-foreground flex items-center gap-2">
-                    <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa rifa
+                    <Gamepad2 className="h-4 w-4 text-primary" /> Premiações dessa ação
                   </h3>
                   <div className="flex flex-col gap-4">
                     {campaign.main_prizes && campaign.main_prizes.filter((p:any) => p?.prize && String(p.prize).trim() !== "").length > 0 && (
@@ -1460,7 +1460,7 @@ const CampaignDetail = () => {
                 },
                 { 
                   q: "Posso comprar quantas cotas?", 
-                  a: "O limite depende de cada campanha, mas você pode comprar quantas desejar até atingir o limite máximo por usuário ou o esgotamento da rifa. Quanto mais cotas, maiores as chances!",
+                  a: "O limite depende de cada campanha, mas você pode comprar quantas desejar até atingir o limite máximo por usuário ou o esgotamento da ação. Quanto mais cotas, maiores as chances!",
                   icon: Ticket
                 }
               ].map((item, i) => (

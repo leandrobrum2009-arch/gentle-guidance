@@ -501,7 +501,7 @@ export default function AdminCampaignEdit() {
                   >
                     <div className="flex items-center gap-2 mb-1">
                       <Ticket className="h-4 w-4 text-primary" />
-                      <span className="font-bold text-sm">Rifa Padrão</span>
+                      <span className="font-bold text-sm">Ação Padrão</span>
                     </div>
                     <p className="text-[11px] text-muted-foreground leading-relaxed">
                       Modelo tradicional: números visíveis, escolha manual ou automática, sorteio por Loteria Federal.
@@ -532,7 +532,7 @@ export default function AdminCampaignEdit() {
                 </div>
                 {id && (
                   <p className="text-[10px] text-amber-500 mt-3 font-bold uppercase tracking-wider">
-                    Tipo bloqueado para campanhas existentes — protege rifas antigas de alterações acidentais.
+                    Tipo bloqueado para campanhas existentes — protege ações antigas de alterações acidentais.
                   </p>
                 )}
                 {form.gift_mode_enabled && !id && (

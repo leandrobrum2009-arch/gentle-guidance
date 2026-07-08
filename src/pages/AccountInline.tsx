@@ -156,7 +156,7 @@ export default function AccountInline() {
     if (!code) return;
     const link = `${window.location.origin}/?ref=${code}`;
     if (navigator.share) {
-      try { await navigator.share({ title: "Participe da rifa!", url: link }); }
+      try { await navigator.share({ title: "Participe da ação!", url: link }); }
       catch { copyReferral(); }
     } else copyReferral();
   };
@@ -510,7 +510,7 @@ export default function AccountInline() {
                           {extraPrizes.length > 0 && (
                             <div>
                               <p className="text-[11px] font-black uppercase tracking-wider text-muted-foreground mb-2 flex items-center gap-1">
-                                <Sparkles className="h-3 w-3" /> Prêmios extras nesta rifa
+                                <Sparkles className="h-3 w-3" /> Prêmios extras nesta ação
                               </p>
                               <div className="space-y-1.5">
                                 {extraPrizes.map((p, i) => (

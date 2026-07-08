@@ -128,7 +128,7 @@ import { PaymentModal } from "@/components/PaymentModal";
     { key: 'referral_1', title: 'Embaixador', description: 'Convide 1 amigo que realize um depósito', icon: Users, points: 500, category: 'Social' },
     { key: 'spin_10', title: 'Mestre da Roleta', description: 'Realize 10 giros na roleta', icon: RotateCw, points: 200, category: 'Jogos' },
     { key: 'box_5', title: 'Caçador de Tesouros', description: 'Abra 5 caixas misteriosas', icon: Package, points: 300, category: 'Jogos' },
-    { key: 'lucky_win', title: 'Pé Quente', description: 'Ganhe seu primeiro prêmio em uma rifa', icon: Trophy, points: 1000, category: 'Rifas' },
+    { key: 'lucky_win', title: 'Pé Quente', description: 'Ganhe seu primeiro prêmio em uma ação', icon: Trophy, points: 1000, category: 'Ações' },
     { key: 'vip_silver', title: 'Membro Prata', description: 'Alcance o nível 5 VIP', icon: Star, points: 2000, category: 'Nível' },
   ];
 
@@ -459,7 +459,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                 { label: "Saldo", val: `R$ ${Number(profile?.balance || 0).toFixed(2)}`, icon: Wallet, color: "text-emerald-400" },
                 { label: "Títulos Ativos", val: orders?.filter((o:any) => o.payment_status === 'paid').length || 0, icon: Ticket, color: "text-primary", hint: "Cotas pagas em campanhas" },
                 { label: "Giros Disponíveis", val: `${spins?.filter((s:any) => !s.used).length || 0}`, icon: RotateCw, color: "text-amber-400", hint: "Roletas para girar" },
-                { label: "Prêmios Ganhos", val: (spins?.filter((s:any)=>s.prize_value>0).length || 0) + (boxWins?.length || 0), icon: Trophy, color: "text-purple-400", hint: "Em jogos e rifas" },
+                { label: "Prêmios Ganhos", val: (spins?.filter((s:any)=>s.prize_value>0).length || 0) + (boxWins?.length || 0), icon: Trophy, color: "text-purple-400", hint: "Em jogos e ações" },
               ].map((stat: any, i) => (
                 <Card key={i} className="bg-card border-border p-3 sm:p-4 group hover:bg-secondary/50 transition-all duration-300">
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -548,7 +548,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                       )) : (
                         <div className="text-center py-6 space-y-3">
                           <Star className="h-8 w-8 text-muted-foreground/30 mx-auto" />
-                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Participe de rifas e jogos para desbloquear conquistas</p>
+                          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Participe de ações e jogos para desbloquear conquistas</p>
                           <Button size="sm" variant="outline" onClick={() => setActiveTab("achievements")} className="text-[10px] font-black uppercase">Ver conquistas</Button>
                         </div>
                       )}
@@ -610,7 +610,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                       </div>
                     )) : (
                       <div className="text-center py-10 opacity-40">
-                        <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma rifa participada</p>
+                        <p className="text-xs font-black uppercase tracking-widest italic">Nenhuma ação participada</p>
                       </div>
                     )}
                   </div>
@@ -747,7 +747,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                         <div className="text-center py-24 opacity-30">
                             <Ticket className="h-16 w-16 mx-auto mb-4 text-foreground" />
                             <p className="text-xs font-black uppercase tracking-widest italic">Você ainda não participou de nenhum sorteio</p>
-                            <Button onClick={() => window.location.href='/'} variant="link" className="text-primary mt-2">Explorar Rifas Ativas</Button>
+                            <Button onClick={() => window.location.href='/'} variant="link" className="text-primary mt-2">Explorar Ações Ativas</Button>
                         </div>
                       )}
                     </div>
@@ -869,7 +869,7 @@ import { PaymentModal } from "@/components/PaymentModal";
                       </CardHeader>
                       
                       <div className="space-y-8">
-                        {['Jogos', 'Financeiro', 'Social', 'Rifas', 'Nível'].map((cat) => {
+                        {['Jogos', 'Financeiro', 'Social', 'Ações', 'Nível'].map((cat) => {
                           const catAchievements = ALL_ACHIEVEMENTS.filter(a => a.category === cat);
                           if (catAchievements.length === 0) return null;
                           
@@ -1308,7 +1308,7 @@ function PrizesByCampaignPanel({ userId }: { userId: string }) {
                 <div className="flex items-center gap-2">
                   <Trophy className="h-4 w-4 text-amber-400" />
                   <div>
-                    <p className="text-xs font-black uppercase">Prêmio Principal da Rifa</p>
+                    <p className="text-xs font-black uppercase">Prêmio Principal da Ação</p>
                     <p className="text-[10px] text-muted-foreground font-bold">Número premiado: {g.mainPrize.number}</p>
                   </div>
                 </div>
