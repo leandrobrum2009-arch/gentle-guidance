@@ -49,7 +49,7 @@ export default function GiftBoxGrid({
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-2 flex-wrap">
         <div className="flex items-center gap-2 text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
-          <Sparkles className="h-3.5 w-3.5 text-pink-500" />
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
           Escolha suas caixas-surpresa
         </div>
         <div className="flex items-center gap-2">
@@ -76,14 +76,14 @@ export default function GiftBoxGrid({
             className={cn(
               "relative aspect-square rounded-xl flex items-center justify-center transition-all border-2",
               it.isSold && "bg-muted/60 border-muted-foreground/30 cursor-not-allowed opacity-50",
-              !it.isSold && !it.isSelected && "bg-gradient-to-br from-pink-500/10 to-purple-500/10 border-pink-500/30 hover:border-pink-500 hover:shadow-lg hover:shadow-pink-500/20",
-              it.isSelected && "bg-gradient-to-br from-primary to-purple-600 border-primary shadow-lg shadow-primary/40 scale-105",
+              !it.isSold && !it.isSelected && "bg-gradient-to-br from-primary/10 to-primary/5 border-primary/30 hover:border-primary hover:shadow-lg hover:shadow-primary/20",
+              it.isSelected && "bg-gradient-to-br from-primary to-primary/70 border-primary shadow-lg shadow-primary/40 scale-105",
             )}
           >
             {it.isSold ? (
               <Lock className="h-5 w-5 text-muted-foreground/70" />
             ) : (
-              <Gift className={cn("h-6 w-6", it.isSelected ? "text-white" : "text-pink-500")} />
+              <Gift className={cn("h-6 w-6", it.isSelected ? "text-primary-foreground" : "text-primary")} />
             )}
             {it.isSelected && (
               <div className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-white flex items-center justify-center text-[8px] font-black text-primary">
