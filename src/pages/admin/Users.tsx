@@ -19,7 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 
 export default function AdminUsers() {
-  const { data: users, isLoading } = useAdminUsers();
+  const { data: users, isLoading, error: usersError } = useAdminUsers();
   const { data: features } = useFeatureAccess();
   const isMaster = useIsMaster();
   const { data: currentRole } = useRole();
@@ -178,6 +178,14 @@ export default function AdminUsers() {
         <CardContent className="p-0 overflow-x-auto">
           {isLoading ? (
             <div className="flex justify-center py-20"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
+          ) : usersError ? (
+            <div className="px-6 py-12 text-center">
+              <ShieldCheck className="mx-auto mb-3 h-8 w-8 text-destructive/70" />
+              <p className="font-bold text-foreground">Erro ao carregar usuários</p>
+              <p className="mx-auto mt-2 max-w-2xl text-xs text-muted-foreground">
+                {(usersError as any)?.message || "Não foi possível consultar a lista de usuários no momento."}
+              </p>
+            </div>
           ) : (
             <Table className="min-w-[600px]">
               <TableHeader>
