@@ -394,7 +394,7 @@ export default function AdminCampaigns() {
                                    <Zap className="h-4 w-4 text-primary" /> Sorteio Aleatório
                                  </DropdownMenuItem>
                                  <DropdownMenuItem onClick={() => openManualDrawDialog(c)} className="gap-2 cursor-pointer font-bold text-xs py-3">
-                                   <Ticket className="h-4 w-4 text-amber-500" /> Escolher Ganhador
+                                  <Ticket className="h-4 w-4 text-amber-500" /> Selecionar
                                  </DropdownMenuItem>
                                </DropdownMenuContent>
                              </DropdownMenu>
