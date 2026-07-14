@@ -546,6 +546,17 @@ const CampaignDetail = () => {
 
                   <TabsContent value="manual" className="p-6">
                     <div className="space-y-6">
+                      <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-secondary/30 border border-border/50">
+                        <p className="text-[8px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">Valor por Cota</p>
+                        <div className="flex items-center gap-2 sm:gap-3">
+                          <span className="text-2xl sm:text-3xl font-black italic tracking-tighter text-foreground">
+                            R$ {Number(campaign.ticket_price).toFixed(2).replace(".", ",")}
+                          </span>
+                          <Badge variant="outline" className="bg-primary/10 text-primary border-primary/20 text-[8px] sm:text-[9px] font-black uppercase px-2 h-5 sm:h-6">
+                            Promoção
+                          </Badge>
+                        </div>
+                      </div>
                       <p className="text-xs text-muted-foreground text-center font-bold uppercase tracking-widest">Escolha seus números da sorte abaixo</p>
                       {(campaign as any).gift_mode_enabled ? (
                         <GiftBoxGrid
