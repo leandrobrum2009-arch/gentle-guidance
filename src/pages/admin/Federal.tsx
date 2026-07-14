@@ -192,7 +192,7 @@ import { Loader2, RefreshCw, Trophy, Plus, Trash2, Pencil, Calendar, Hash, Targe
                       <TableCell>
                         <div className="flex items-center gap-2 text-muted-foreground">
                           <Calendar className="h-3.5 w-3.5" />
-                          <span className="text-[10px] font-bold uppercase tracking-widest">{format(new Date(r.data_sorteio), "dd MMM, yyyy")}</span>
+                          <span className="text-[10px] font-bold uppercase tracking-widest">{format(new Date(r.data_sorteio + "T12:00:00"), "dd MMM, yyyy")}</span>
                         </div>
                       </TableCell>
                       <TableCell className="py-4">
