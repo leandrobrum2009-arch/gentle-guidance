@@ -174,24 +174,38 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
             </div>
 
             {isCompleted && (
-              <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
-                <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
-                  <Trophy className="h-5 w-5 text-blue-500" />
-                </div>
-                <div className="min-w-0">
-                  <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">
-                    {campaign.status === 'drawn' && campaign.draw_number ? 'Número Sorteado' : (campaign.winners && campaign.winners.length > 0 ? 'Ganhador(a)' : 'Status')}
-                  </p>
-                  <p className="text-xs font-black text-foreground truncate">
-                    {campaign.status === 'drawn' && campaign.draw_number 
-                      ? campaign.draw_number 
-                      : (campaign.winners && campaign.winners.length > 0 
-                        ? (campaign.winners.find(w => w.winner_type === 'raffle')?.winner_name || campaign.winners[0].winner_name)
-                        : 'Acumulada / Sem Ganhador')
-                    }
-                  </p>
-                </div>
-              </div>
+              (() => {
+                const raffleWinner = campaign.winners?.find(w => w.winner_type === 'raffle') || campaign.winners?.[0];
+                const winnerName = raffleWinner?.winner_name || (campaign as any)?.winner_name;
+                const winningNumber = raffleWinner?.ticket_number || (campaign as any)?.draw_number || (campaign as any)?.winning_number;
+                const drawDate = raffleWinner?.draw_date || (campaign as any)?.draw_date;
+                return (
+                  <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
+                    <div className="h-10 w-10 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0">
+                      <Trophy className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-[10px] font-black uppercase tracking-tighter text-blue-600">
+                        {winnerName ? 'Ganhador(a)' : (winningNumber ? 'Número Sorteado' : 'Status')}
+                      </p>
+                      <p className="text-xs font-black text-foreground truncate">
+                        {winnerName || (winningNumber ? `#${winningNumber}` : 'Acumulada / Sem Ganhador')}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1 text-[9px] font-bold uppercase tracking-widest text-muted-foreground">
+                        {winningNumber && (
+                          <span className="font-mono text-blue-600">Nº {winningNumber}</span>
+                        )}
+                        {drawDate && (
+                          <span className="flex items-center gap-0.5">
+                            <Calendar className="h-2.5 w-2.5" />
+                            {new Date(drawDate).toLocaleDateString('pt-BR')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()
             )}
 
             <div className="flex items-center justify-between pt-1">
