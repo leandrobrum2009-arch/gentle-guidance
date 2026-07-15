@@ -1655,7 +1655,10 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
+  const baseSectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
+  const sectionsOrder = (isFinished || (campaign as any)?.status === 'drawn' || (campaign as any)?.status === 'finished')
+    ? ["winner_banner", ...baseSectionsOrder.filter((s: string) => s !== "winner_banner")]
+    : baseSectionsOrder;
 
   const isInlineLayout = siteSettings?.layout_mode === 'inline';
 
