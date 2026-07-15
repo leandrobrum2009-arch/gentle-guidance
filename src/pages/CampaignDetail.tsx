@@ -493,6 +493,42 @@ const CampaignDetail = () => {
           </div>
         );
 
+      case 'winner_banner': {
+        if (!isFinished && (campaign as any)?.status !== 'drawn' && (campaign as any)?.status !== 'finished') return null;
+        const mainWinner = raffleWinners[0] || (campaign as any)?.winners?.[0];
+        const winnerName = mainWinner?.winner_name || (campaign as any)?.winner_name;
+        const winningNumber = mainWinner?.winning_number || (campaign as any)?.draw_number || (campaign as any)?.winning_number;
+        if (!winnerName && !winningNumber) return null;
+        return (
+          <div key={section} className="bg-gradient-to-br from-blue-500/10 via-primary/5 to-emerald-500/10 rounded-3xl p-6 md:p-8 border-2 border-blue-500/30 shadow-xl">
+            <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
+              <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0">
+                <Trophy className="h-8 w-8 md:h-10 md:w-10 text-blue-500" />
+              </div>
+              <div className="flex-1 min-w-0 text-center md:text-left">
+                <p className="text-[10px] md:text-xs font-black uppercase tracking-[0.2em] text-blue-500 mb-1">Ação Finalizada — Ganhador(a) Oficial</p>
+                <h2 className="text-2xl md:text-4xl font-black uppercase italic tracking-tight text-foreground break-words">
+                  {winnerName || "Aguardando validação"}
+                </h2>
+                {winningNumber && (
+                  <p className="text-sm md:text-base font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                    Número Sorteado: <span className="text-primary font-black">#{winningNumber}</span>
+                  </p>
+                )}
+                {(campaign as any)?.draw_date && (
+                  <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
+                    Sorteado em {new Date((campaign as any).draw_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                  </p>
+                )}
+              </div>
+              <Badge className="bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
+                Resultado Oficial
+              </Badge>
+            </div>
+          </div>
+        );
+      }
+
       case 'timer':
         return campaign.show_timer && (campaign.timer_end_date || campaign.draw_date) && (
           <div key={section} className="flex flex-col items-center justify-center p-8 bg-card border-2 border-primary/20 rounded-[2.5rem] shadow-xl shadow-primary/5 relative overflow-hidden group">
@@ -1619,7 +1655,10 @@ const CampaignDetail = () => {
     }
   };
 
-  const sectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
+  const baseSectionsOrder = campaign.sections_order || ["gallery", "features", "header", "timer", "live_stream", "steps", "progress", "purchase", "live_draw", "events", "prizes", "ranking", "winners", "description", "social_proof", "faq", "cta", "roulette_footer", "scratch_footer", "box_footer"];
+  const sectionsOrder = (isFinished || (campaign as any)?.status === 'drawn' || (campaign as any)?.status === 'finished')
+    ? ["winner_banner", ...baseSectionsOrder.filter((s: string) => s !== "winner_banner")]
+    : baseSectionsOrder;
 
   const isInlineLayout = siteSettings?.layout_mode === 'inline';
 
