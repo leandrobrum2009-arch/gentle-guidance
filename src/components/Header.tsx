@@ -191,7 +191,7 @@ const Header = () => {
             <div className="flex items-center gap-3">
               {!user && String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" && (
                 <Button
-                    onClick={() => setRegisterOpen(true)}
+                    onClick={() => navigate("/cadastrar")}
                     size="sm"
                     className="h-10 rounded-full font-black uppercase tracking-widest text-[10px] px-6 sm:px-8 glow-primary shadow-lg shadow-primary/20 border-light-path border-[#22c55e]/30"
                     aria-label="Cadastre-se grátis"
