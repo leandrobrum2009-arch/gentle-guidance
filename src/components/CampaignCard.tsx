@@ -177,7 +177,7 @@ const CampaignCard = ({ campaign, index }: CampaignCardProps) => {
               (() => {
                 const raffleWinner = campaign.winners?.find(w => w.winner_type === 'raffle') || campaign.winners?.[0];
                 const winnerName = raffleWinner?.winner_name || (campaign as any)?.winner_name;
-                const winningNumber = raffleWinner?.winning_number || (campaign as any)?.draw_number || (campaign as any)?.winning_number;
+                const winningNumber = raffleWinner?.ticket_number || (campaign as any)?.draw_number || (campaign as any)?.winning_number;
                 const drawDate = raffleWinner?.draw_date || (campaign as any)?.draw_date;
                 return (
                   <div className="bg-blue-500/5 border border-blue-500/20 rounded-xl p-3 flex items-center gap-3 animate-fade-in">
