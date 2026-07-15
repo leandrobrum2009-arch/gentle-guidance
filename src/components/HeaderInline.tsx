@@ -84,7 +84,7 @@ const HeaderInline = () => {
             </Link>
           ) : String((siteSettings as any)?.header_register_button_enabled ?? "true") !== "false" ? (
             <button
-              onClick={() => setRegisterOpen(true)}
+              onClick={() => navigate("/cadastrar")}
               aria-label="Cadastre-se grátis"
               className="flex h-9 shrink-0 self-center items-center gap-1 rounded-full px-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 text-black font-black uppercase tracking-widest text-[9px] leading-none shadow-md ring-2 ring-yellow-300/60 animate-pulse"
             >
