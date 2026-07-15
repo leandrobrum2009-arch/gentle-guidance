@@ -23,7 +23,7 @@ import {
 
 import { supabase } from "@/integrations/supabase/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import RaffleGallery from "@/components/RaffleGallery";
 import TicketGrid from "@/components/TicketGrid";
 import GiftBoxGrid from "@/components/GiftBoxGrid";
@@ -500,7 +500,9 @@ const CampaignDetail = () => {
         const winningNumber = mainWinner?.winning_number || (campaign as any)?.draw_number || (campaign as any)?.winning_number;
         if (!winnerName && !winningNumber) return null;
         return (
-          <div key={section} className="bg-gradient-to-br from-blue-500/10 via-primary/5 to-emerald-500/10 rounded-3xl p-6 md:p-8 border-2 border-blue-500/30 shadow-xl">
+          <Dialog key={section}>
+            <DialogTrigger asChild>
+              <button type="button" className="w-full text-left bg-gradient-to-br from-blue-500/10 via-primary/5 to-emerald-500/10 rounded-3xl p-6 md:p-8 border-2 border-blue-500/30 shadow-xl hover:border-blue-500/60 hover:shadow-2xl transition-all cursor-pointer">
             <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
               <div className="h-16 w-16 md:h-20 md:w-20 rounded-2xl bg-blue-500/20 flex items-center justify-center shrink-0">
                 <Trophy className="h-8 w-8 md:h-10 md:w-10 text-blue-500" />
@@ -520,12 +522,74 @@ const CampaignDetail = () => {
                     Sorteado em {new Date((campaign as any).draw_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
                   </p>
                 )}
+                <p className="text-[10px] font-black uppercase tracking-widest text-blue-500 mt-2 inline-flex items-center gap-1">
+                  <Info className="h-3 w-3" /> Toque para ver detalhes
+                </p>
               </div>
               <Badge className="bg-blue-500 text-white text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full shadow-lg">
                 Resultado Oficial
               </Badge>
             </div>
-          </div>
+              </button>
+            </DialogTrigger>
+            <DialogContent className="max-w-md">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2 uppercase italic tracking-tight">
+                  <Trophy className="h-5 w-5 text-blue-500" /> Detalhes do Ganhador
+                </DialogTitle>
+                <DialogDescription className="text-xs uppercase tracking-widest font-bold">
+                  Resultado Oficial da Ação
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-3 pt-2">
+                <div className="flex items-center gap-3 p-3 rounded-2xl bg-secondary/40 border border-border">
+                  <Avatar className="h-14 w-14 border-2 border-blue-500/30">
+                    <AvatarImage src={(mainWinner as any)?.avatar_url || ""} />
+                    <AvatarFallback className="font-bold bg-blue-500/10 text-blue-500">
+                      {winnerName?.substring(0, 2).toUpperCase() || "?"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="text-base font-black uppercase break-words">{winnerName || "Aguardando validação"}</p>
+                    <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest">Vencedor Verificado</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {winningNumber && (
+                    <div className="p-3 rounded-xl bg-primary/5 border border-primary/10 col-span-2">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Número Sorteado</p>
+                      <p className="text-2xl font-black text-primary">#{winningNumber}</p>
+                    </div>
+                  )}
+                  {(mainWinner as any)?.prize_description && (
+                    <div className="p-3 rounded-xl bg-yellow-500/5 border border-yellow-500/20 col-span-2">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1">Prêmio</p>
+                      <p className="text-sm font-black text-yellow-600">{(mainWinner as any).prize_description}</p>
+                    </div>
+                  )}
+                  {(campaign as any)?.draw_date && (
+                    <div className="p-3 rounded-xl bg-secondary/40 border border-border col-span-2 flex items-center gap-2">
+                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <p className="text-xs font-bold text-foreground">
+                        Sorteado em {new Date((campaign as any).draw_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                      </p>
+                    </div>
+                  )}
+                  {(mainWinner as any)?.video_url && (
+                    <a
+                      href={(mainWinner as any).video_url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="p-3 rounded-xl bg-blue-500/5 border border-blue-500/20 col-span-2 flex items-center gap-2 hover:bg-blue-500/10"
+                    >
+                      <Video className="h-4 w-4 text-blue-500" />
+                      <p className="text-xs font-black uppercase tracking-widest text-blue-500">Assistir Vídeo da Entrega</p>
+                    </a>
+                  )}
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         );
       }
 
