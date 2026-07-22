@@ -12,6 +12,11 @@ interface WinnerCardProps {
 
 const WinnerCard = ({ winner, index }: WinnerCardProps) => {
   const campaignTitle = winner.campaigns?.title || "Campanha";
+  const logoUrl =
+    (typeof window !== "undefined" &&
+      (localStorage.getItem("site_logo") ||
+        localStorage.getItem("tenant_site_logo"))) ||
+    "/placeholder.svg";
   const typeLabels = {
     raffle: { label: "Sorteio da Ação", icon: Ticket, color: "bg-primary/20 text-primary" },
     roulette: { label: "Roleta da Sorte", icon: RotateCw, color: "bg-purple-500/20 text-purple-500" },
@@ -35,16 +40,11 @@ const WinnerCard = ({ winner, index }: WinnerCardProps) => {
       <div className="relative z-10">
         <div className="mb-4 flex items-start justify-between">
           <div className="relative">
-            <div className="h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-lg sm:rounded-xl border-2 border-primary/20 bg-secondary/30">
-              <img 
-                src={winner.avatar_url || `https://images.unsplash.com/photo-${[
-                  "1507003211169-0a1dd7228f2d",
-                  "1544005313-94ddf0286df2",
-                  "1506794778202-cad84cf45f1d",
-                  "1494790108377-be9c29b29330"
-                ][index % 4]}?q=80&w=256&h=256&auto=format&fit=crop`} 
-                alt={winner.winner_name}
-                className="h-full w-full object-cover transition-transform group-hover:scale-110"
+            <div className="h-12 w-12 sm:h-16 sm:w-16 overflow-hidden rounded-lg sm:rounded-xl border-2 border-primary/20 bg-secondary/30 flex items-center justify-center p-2">
+              <img
+                src={logoUrl}
+                alt="Logo"
+                className="h-full w-full object-contain opacity-90"
               />
             </div>
             <div className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-primary border-2 border-card flex items-center justify-center shadow-lg">
